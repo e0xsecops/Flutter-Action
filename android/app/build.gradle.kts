@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.action_app"
+    namespace = "com.solvex.actionapp"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -15,8 +15,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.action_app"
+        // Permanent once published to Google Play. Must match the package name
+        // registered in the Firebase console (google-services.json).
+        applicationId = "com.solvex.actionapp"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
