@@ -20,6 +20,13 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Action'),
           bottom: const TabBar(
+            // Three equal tabs on a 360dp-wide phone leave ~120dp each, and
+            // "Needs attention" truncates at the default 14sp with 16dp side
+            // padding. Trimming both keeps the product's wording intact rather
+            // than shortening the label to fit.
+            labelPadding: EdgeInsets.symmetric(horizontal: 4),
+            labelStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            unselectedLabelStyle: TextStyle(fontSize: 13),
             tabs: [
               Tab(text: 'Needs attention'),
               Tab(text: 'Upcoming'),

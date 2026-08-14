@@ -52,6 +52,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -94,3 +96,28 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Source art lives in assets/ but is not declared under flutter.assets: both
+# tools consume it at generation time and write into android/app/src/main/res,
+# so shipping it inside the APK as well would be dead weight.
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: false
+  image_path: "assets/icon/icon.png"
+  min_sdk_android: 24
+  # Adaptive icons are masked by the launcher, so the foreground is drawn at 72%
+  # scale to stay inside the safe zone while the background supplies the colour.
+  adaptive_icon_background: "#2563EB"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+
+flutter_native_splash:
+  android: true
+  ios: false
+  web: false
+  color: "#2563EB"
+  image: "assets/splash/splash.png"
+  # Android 12+ draws the splash itself from a separate, smaller icon slot.
+  android_12:
+    color: "#2563EB"
+    image: "assets/splash/splash.png"
+    icon_background_color: "#2563EB"
