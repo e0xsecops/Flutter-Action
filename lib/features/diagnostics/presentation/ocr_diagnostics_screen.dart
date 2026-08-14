@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../app/router.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../capture/application/capture_controller.dart';
@@ -170,6 +171,13 @@ class _OcrDiagnosticsScreenState extends ConsumerState<OcrDiagnosticsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Extraction diagnostics',
+            icon: const Icon(Icons.rule_folder_outlined),
+            onPressed: () => context.push(Routes.extractionDiagnostics),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(Space.page),

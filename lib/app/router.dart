@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/diagnostics/presentation/extraction_diagnostics_screen.dart';
 import '../features/diagnostics/presentation/ocr_diagnostics_screen.dart';
 import '../features/capture/presentation/paste_text_screen.dart';
 import '../features/capture/presentation/preview_screen.dart';
@@ -21,6 +22,7 @@ abstract final class Routes {
 
   /// Debug builds only — see the route table.
   static const diagnostics = '/diagnostics';
+  static const extractionDiagnostics = '/diagnostics/extraction';
 
   static String source(String id) => '/source/$id';
 }
@@ -55,11 +57,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       // Registered only in debug builds so the harness cannot be reached in a
       // release APK even by a crafted link.
-      if (kDebugMode)
+      if (kDebugMode) ...[
         GoRoute(
           path: Routes.diagnostics,
           builder: (context, state) => const OcrDiagnosticsScreen(),
         ),
+        GoRoute(
+          path: Routes.extractionDiagnostics,
+          builder: (context, state) => const ExtractionDiagnosticsScreen(),
+        ),
+      ],
     ],
     errorBuilder: (context, state) => const HomeScreen(),
   );
