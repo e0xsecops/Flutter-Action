@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/diagnostics/presentation/ocr_diagnostics_screen.dart';
 import '../features/capture/presentation/paste_text_screen.dart';
 import '../features/capture/presentation/preview_screen.dart';
+import '../features/capture/presentation/source_detail_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 
 /// Route paths in one place so navigation is never stringly-typed.
@@ -14,6 +17,12 @@ abstract final class Routes {
   static const home = '/';
   static const capturePreview = '/capture/preview';
   static const captureText = '/capture/text';
+  static const sourcePattern = '/source/:id';
+
+  /// Debug builds only — see the route table.
+  static const diagnostics = '/diagnostics';
+
+  static String source(String id) => '/source/$id';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -39,6 +48,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.captureText,
         builder: (context, state) => const PasteTextScreen(),
       ),
+      GoRoute(
+        path: Routes.sourcePattern,
+        builder: (context, state) =>
+            SourceDetailScreen(id: state.pathParameters['id']!),
+      ),
+      // Registered only in debug builds so the harness cannot be reached in a
+      // release APK even by a crafted link.
+      if (kDebugMode)
+        GoRoute(
+          path: Routes.diagnostics,
+          builder: (context, state) => const OcrDiagnosticsScreen(),
+        ),
     ],
     errorBuilder: (context, state) => const HomeScreen(),
   );

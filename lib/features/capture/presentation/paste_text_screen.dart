@@ -50,12 +50,11 @@ class _PasteTextScreenState extends ConsumerState<PasteTextScreen> {
   Future<void> _analyse() async {
     setState(() => _busy = true);
     try {
-      await ref.read(sourcesProvider.notifier).addPastedText(_controller.text);
+      final item =
+          await ref.read(sourcesProvider.notifier).addPastedText(_controller.text);
       if (!mounted) return;
       context.go(Routes.home);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Saved. Reading it comes next.')),
-      );
+      context.push(Routes.source(item.id));
     } on Object {
       if (!mounted) return;
       setState(() => _busy = false);

@@ -1,9 +1,13 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/router.dart';
 import '../../../design/components/section_header.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
@@ -13,6 +17,7 @@ import '../../../shared/widgets/loading_view.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../capture/domain/source_item.dart';
 import '../../capture/presentation/capture_sheet.dart';
+import '../../capture/presentation/preview_screen.dart';
 
 /// The Action Inbox.
 ///
@@ -24,11 +29,47 @@ import '../../capture/presentation/capture_sheet.dart';
 /// Empty sections are hidden rather than rendered as rows of nothing — three
 /// permanently empty headings is what makes a productivity app feel like a
 /// spreadsheet.
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _recoverLostCapture());
+  }
+
+  /// Android can kill this app while the camera activity is in the foreground,
+  /// in which case the picker's result is never delivered to the call that is
+  /// waiting for it — that call died with the process. image_picker holds the
+  /// result until `retrieveLostData` is asked for it.
+  ///
+  /// This recovers the *picked file* only. Anything the user had typed
+  /// elsewhere is genuinely gone, and the routing structure on its own does not
+  /// change that.
+  Future<void> _recoverLostCapture() async {
+    final XFile? file;
+    try {
+      file = await ref.read(capturePickerProvider).recoverLostCapture();
+    } on Object {
+      return;
+    }
+    if (file == null || !mounted) return;
+
+    // The lost activity is almost always the camera; gallery picking does not
+    // put another app in the foreground long enough to be reclaimed.
+    context.push(
+      Routes.capturePreview,
+      extra: PreviewArgs(path: file.path, type: SourceType.photo),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final sources = ref.watch(sourcesProvider);
 
     return Scaffold(
@@ -112,12 +153,29 @@ class _Greeting extends StatelessWidget {
         Space.page,
         Space.xs,
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(greeting, style: text.displaySmall),
-          const SizedBox(height: Space.xs),
-          Text(DateFormat('EEEE, d MMMM').format(now), style: text.bodyMedium),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(greeting, style: text.displaySmall),
+                const SizedBox(height: Space.xs),
+                Text(
+                  DateFormat('EEEE, d MMMM').format(now),
+                  style: text.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+          // Debug builds only; the route itself is not registered in release.
+          if (kDebugMode)
+            IconButton(
+              tooltip: 'OCR diagnostics',
+              icon: const Icon(Icons.science_outlined),
+              onPressed: () => context.push(Routes.diagnostics),
+            ),
         ],
       ),
     );
@@ -139,46 +197,96 @@ class _SourceRow extends StatelessWidget {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surfaceElevated,
+    return Material(
+      color: colors.surfaceElevated,
+      borderRadius: Radii.rMd,
+      child: InkWell(
         borderRadius: Radii.rMd,
-        border: Border.all(color: colors.border, width: Strokes.hairline),
-      ),
-      padding: const EdgeInsets.all(Space.md),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _Thumbnail(item: item),
-          const SizedBox(width: Space.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.type.provenanceLabel,
-                  style: text.titleSmall,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: Space.xxs),
-                Text(
-                  item.hasText ? item.rawText!.trim() : 'Not read yet',
-                  style: text.bodySmall,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: Space.sm),
-                Text(
-                  _relativeTime(item.capturedAt),
-                  style: text.labelSmall?.copyWith(color: colors.textTertiary),
-                ),
-              ],
-            ),
+        onTap: () => context.push(Routes.source(item.id)),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: Radii.rMd,
+            border: Border.all(color: colors.border, width: Strokes.hairline),
           ),
-        ],
+          padding: const EdgeInsets.all(Space.md),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Thumbnail(item: item),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.type.provenanceLabel,
+                      style: text.titleSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: Space.xxs),
+                    _Status(item: item),
+                    const SizedBox(height: Space.sm),
+                    Text(
+                      _relativeTime(item.capturedAt),
+                      style:
+                          text.labelSmall?.copyWith(color: colors.textTertiary),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
+  }
+}
+
+/// One line describing where the capture has got to.
+///
+/// "Reading" and "couldn't read" are states the user needs to distinguish, so
+/// they read as sentences rather than as a badge they have to decode.
+class _Status extends StatelessWidget {
+  const _Status({required this.item});
+
+  final SourceItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+
+    return switch (item.state) {
+      SourceProcessingState.pending ||
+      SourceProcessingState.processing =>
+        Row(
+          children: [
+            SizedBox(
+              width: 12,
+              height: 12,
+              child: CircularProgressIndicator(
+                strokeWidth: 1.6,
+                color: colors.textTertiary,
+              ),
+            ),
+            const SizedBox(width: Space.sm),
+            Text('Reading the text…', style: text.bodySmall),
+          ],
+        ),
+      SourceProcessingState.failed => Text(
+          item.failureReason ?? "Couldn't read this",
+          style: text.bodySmall?.copyWith(color: colors.danger),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      SourceProcessingState.ready => Text(
+          item.hasText ? item.analysisText : 'No text found',
+          style: text.bodySmall,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+    };
   }
 }
 

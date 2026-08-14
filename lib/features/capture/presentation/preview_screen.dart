@@ -19,9 +19,11 @@ class PreviewArgs {
 
 /// Confirm-or-retake before anything is kept.
 ///
-/// Nothing has been written to storage at this point: the file is still in the
-/// OS temp directory. Backing out here leaves no trace, which is the behaviour
-/// the privacy screen will promise.
+/// At this point the file is still where the picker left it, in OS temp
+/// storage; this app has written nothing. Backing out therefore stores no
+/// capture. That is a statement about the capture flow only — it says nothing
+/// about what later stages do, and remote extraction will need its own explicit
+/// disclosure when it is introduced.
 class PreviewScreen extends ConsumerStatefulWidget {
   const PreviewScreen({required this.args, super.key});
 
@@ -47,14 +49,14 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
   Future<void> _keep() async {
     setState(() => _busy = true);
     try {
-      await ref
+      final item = await ref
           .read(sourcesProvider.notifier)
           .addImage(_path, widget.args.type);
       if (!mounted) return;
+      // Reset to Home first so the capture stack is gone, then open the
+      // capture: back from here returns to the inbox, not into the picker.
       context.go(Routes.home);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Saved. Reading it comes next.')),
-      );
+      context.push(Routes.source(item.id));
     } on Object {
       if (!mounted) return;
       setState(() => _busy = false);

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,66 +6,63 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../data/image_normalizer.dart';
+import '../data/ocr_service.dart';
+import '../data/source_file_store.dart';
 import '../data/source_store.dart';
 import '../domain/source_item.dart';
+import '../domain/text_normalizer.dart';
 
 final _uuid = Uuid();
 
 final imagePickerProvider = Provider<ImagePicker>((ref) => ImagePicker());
 
-/// The extension of the file we were handed, defaulting to `jpg`.
-///
-/// image_picker preserves the source encoding, so a picked screenshot arrives
-/// as a PNG. Naming every stored file `.jpg` regardless would make the filename
-/// lie about its contents, and anything downstream that infers a MIME type from
-/// the extension — upload headers, OCR input handling — would then be wrong.
-///
-/// Note this only makes the *name* honest. PNG screenshots still bypass
-/// `imageQuality`, which is a JPEG-only setting, so they are not actually being
-/// compressed. Re-encoding belongs with the day-4 image pipeline.
-String imageExtensionFor(String path) {
-  final dot = path.lastIndexOf('.');
-  final separator = path.lastIndexOf(Platform.pathSeparator);
-  if (dot <= separator || dot == path.length - 1) return 'jpg';
-
-  final extension = path.substring(dot + 1).toLowerCase();
-  // Guard against a long trailing segment after a dot in a directory name
-  // being mistaken for an extension.
-  return extension.length <= 5 ? extension : 'jpg';
-}
+final _documentsDirectoryProvider = FutureProvider<Directory>(
+  (ref) => getApplicationDocumentsDirectory(),
+);
 
 final sourceStoreProvider = FutureProvider<SourceStore>((ref) async {
-  final dir = await getApplicationDocumentsDirectory();
-  return JsonFileSourceStore(dir);
+  return JsonFileSourceStore(await ref.watch(_documentsDirectoryProvider.future));
+});
+
+final sourceFileStoreProvider = FutureProvider<SourceFileStore>((ref) async {
+  return DirectorySourceFileStore(
+    await ref.watch(_documentsDirectoryProvider.future),
+  );
+});
+
+final imageNormalizerProvider =
+    Provider<ImageNormalizer>((ref) => const IsolateImageNormalizer());
+
+final ocrServiceProvider = Provider<OcrService>((ref) {
+  final service = MlKitOcrService();
+  ref.onDispose(service.dispose);
+  return service;
 });
 
 /// Picks images and hands back a temp file. Nothing is persisted here — the
-/// user has not agreed to keep it yet. Persistence happens only when they
-/// continue from the preview screen.
+/// user has not agreed to keep it yet.
 class CapturePicker {
   const CapturePicker(this._picker);
 
   final ImagePicker _picker;
 
-  /// Downscaled and re-encoded at pick time. Doing it here rather than after
-  /// the fact means the full-resolution bytes never reach our storage, which
-  /// keeps both the footprint and the eventual upload small.
-  static const _maxEdge = 2048.0;
-  static const _quality = 85;
+  /// No `maxWidth`/`imageQuality` here on purpose. Those only re-encode JPEG,
+  /// so a PNG screenshot passed through untouched — which is how day 3 stored a
+  /// 5.6MB "compressed" capture. Resizing and re-encoding now happen in
+  /// [ImageNormalizer], where they apply to every format.
+  Future<XFile?> fromCamera() => _picker.pickImage(source: ImageSource.camera);
 
-  Future<XFile?> fromCamera() => _picker.pickImage(
-        source: ImageSource.camera,
-        maxWidth: _maxEdge,
-        maxHeight: _maxEdge,
-        imageQuality: _quality,
-      );
+  Future<XFile?> fromGallery() => _picker.pickImage(source: ImageSource.gallery);
 
-  Future<XFile?> fromGallery() => _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: _maxEdge,
-        maxHeight: _maxEdge,
-        imageQuality: _quality,
-      );
+  /// Android can reclaim this app while the camera is in the foreground. When
+  /// that happens the picker's result is delivered here on next launch instead
+  /// of to the awaiting call, which was discarded along with the process.
+  Future<XFile?> recoverLostCapture() async {
+    final response = await _picker.retrieveLostData();
+    if (response.isEmpty || response.file == null) return null;
+    return response.file;
+  }
 }
 
 final capturePickerProvider = Provider<CapturePicker>(
@@ -84,45 +82,152 @@ class SourcesNotifier extends AsyncNotifier<List<SourceItem>> {
       id: _uuid.v4(),
       type: SourceType.pastedText,
       capturedAt: DateTime.now(),
-      rawText: text.trim(),
+      pastedText: normalizeOcrText(text),
+      // Pasted text needs no recognition; it is analysis-ready on arrival.
+      state: SourceProcessingState.ready,
     );
-    await _persist(item);
+    await _add(item);
     return item;
   }
 
-  /// Copies the picked file out of the OS temp directory, where it would
-  /// otherwise be reclaimed, and into our documents directory.
+  /// Normalizes the picked file, writes the processed bytes, records the
+  /// capture, then starts recognition in the background.
   Future<SourceItem> addImage(String pickedPath, SourceType type) async {
     final store = await ref.read(sourceStoreProvider.future);
+    final files = await ref.read(sourceFileStoreProvider.future);
     final id = _uuid.v4();
 
-    final imagesDir = (store as JsonFileSourceStore).imagesDirectory;
-    await imagesDir.create(recursive: true);
+    final original = await File(pickedPath).readAsBytes();
 
-    final destination =
-        '${imagesDir.path}${Platform.pathSeparator}$id.${imageExtensionFor(pickedPath)}';
-    final saved = await File(pickedPath).copy(destination);
+    SourceItem item;
+    try {
+      final normalized = await ref
+          .read(imageNormalizerProvider)
+          .normalize(NormalizeRequest(bytes: original));
 
-    final item = SourceItem(
-      id: id,
-      type: type,
-      capturedAt: DateTime.now(),
-      imagePath: saved.path,
-      byteSize: await saved.length(),
-    );
-    await _persist(item);
+      final path = await files.save(
+        id: id,
+        bytes: normalized.bytes,
+        extension: normalized.format.extension,
+      );
+
+      item = SourceItem(
+        id: id,
+        type: type,
+        capturedAt: DateTime.now(),
+        imagePath: path,
+        mimeType: normalized.format.mimeType,
+        originalFormat: normalized.originalFormat.name,
+        imageWidth: normalized.width,
+        imageHeight: normalized.height,
+        originalByteSize: normalized.originalByteSize,
+        byteSize: normalized.processedByteSize,
+      );
+    } on ImageDecodeException catch (error) {
+      // Keep the bytes we were given so the user still has their capture and
+      // can type the details in, rather than losing the whole thing.
+      final detected = error.detectedFormat;
+      final path = await files.save(
+        id: id,
+        bytes: original,
+        extension: detected.extension,
+      );
+      item = SourceItem(
+        id: id,
+        type: type,
+        capturedAt: DateTime.now(),
+        imagePath: path,
+        mimeType: detected.mimeType,
+        originalFormat: detected.name,
+        originalByteSize: original.length,
+        byteSize: original.length,
+        state: SourceProcessingState.failed,
+        failureReason: "That image format couldn't be read on this device.",
+      );
+    }
+
+    await store.add(item);
+    state = AsyncValue.data(await store.all());
+
+    if (item.state != SourceProcessingState.failed) {
+      unawaited(runOcr(item.id));
+    }
     return item;
+  }
+
+  /// Runs recognition and folds the outcome back into the stored record.
+  Future<void> runOcr(String id) async {
+    final store = await ref.read(sourceStoreProvider.future);
+    final existing = await store.byId(id);
+    if (existing == null || existing.imagePath == null) return;
+
+    await _replace(
+      store,
+      existing.copyWith(
+        state: SourceProcessingState.processing,
+        clearFailure: true,
+      ),
+    );
+
+    try {
+      final outcome =
+          await ref.read(ocrServiceProvider).recognize(existing.imagePath!);
+      await _replace(
+        store,
+        existing.copyWith(
+          ocr: outcome,
+          state: SourceProcessingState.ready,
+          clearFailure: true,
+        ),
+      );
+    } on OcrFailure catch (error) {
+      await _replace(
+        store,
+        existing.copyWith(
+          state: SourceProcessingState.failed,
+          failureReason: error.message,
+        ),
+      );
+    }
+  }
+
+  /// Manual fallback when recognition fails or finds nothing usable. The typed
+  /// text becomes the analysis text; the raw OCR output, if any, is left intact
+  /// so the record of what the machine actually read is not overwritten.
+  Future<void> setManualText(String id, String text) async {
+    final store = await ref.read(sourceStoreProvider.future);
+    final existing = await store.byId(id);
+    if (existing == null) return;
+
+    await _replace(
+      store,
+      existing.copyWith(
+        pastedText: normalizeOcrText(text),
+        state: SourceProcessingState.ready,
+        clearFailure: true,
+      ),
+    );
   }
 
   Future<void> delete(String id) async {
     final store = await ref.read(sourceStoreProvider.future);
+    final files = await ref.read(sourceFileStoreProvider.future);
+
+    final item = await store.byId(id);
+    if (item?.imagePath != null) await files.delete(item!.imagePath!);
+
     await store.delete(id);
     state = AsyncValue.data(await store.all());
   }
 
-  Future<void> _persist(SourceItem item) async {
+  Future<void> _add(SourceItem item) async {
     final store = await ref.read(sourceStoreProvider.future);
     await store.add(item);
+    state = AsyncValue.data(await store.all());
+  }
+
+  Future<void> _replace(SourceStore store, SourceItem item) async {
+    await store.update(item);
     state = AsyncValue.data(await store.all());
   }
 }

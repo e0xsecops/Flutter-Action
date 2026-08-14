@@ -1,0 +1,113 @@
+{
+  "note": "Synthetic fixtures generated for OCR evaluation. No personal or real customer data. Anchors are strings we expect a competent recogniser to find; they are not a ground-truth transcription, so recall here is a regression signal, not an accuracy score.",
+  "fixtures": [
+    {
+      "file": "01_clean_notice.jpg",
+      "description": "Clean printed renewal notice, portrait, JPEG",
+      "expectsText": true,
+      "anchors": ["Northgate Mutual", "NM-4471-882", "30 September 2026", "780.00"]
+    },
+    {
+      "file": "02_screenshot_confirmation.png",
+      "description": "Screenshot-style PNG, landscape, light UI background",
+      "expectsText": true,
+      "anchors": ["Booking confirmed", "BK-99204", "22 September 2026", "14:30", "45.00"]
+    },
+    {
+      "file": "03_utility_bill.jpg",
+      "description": "Utility bill with aligned amount column",
+      "expectsText": true,
+      "anchors": ["Cityline Energy", "88-221-9043", "168.99", "14 October 2026"]
+    },
+    {
+      "file": "04_receipt.jpg",
+      "description": "Narrow receipt, small type",
+      "expectsText": true,
+      "anchors": ["HARBOUR GROCERS", "0099-4412", "15.34", "03/08/2026"]
+    },
+    {
+      "file": "05_appointment_letter.jpg",
+      "description": "Appointment letter, prose with a date and time",
+      "expectsText": true,
+      "anchors": ["Meadow Park Clinic", "5 October 2026", "09:15", "MPC-77310"]
+    },
+    {
+      "file": "06_rotated.jpg",
+      "description": "Whole page rotated 8 degrees",
+      "expectsText": true,
+      "anchors": ["Vehicle Tax", "KP19 XTR", "31 August 2026", "165.00"]
+    },
+    {
+      "file": "07_low_contrast.jpg",
+      "description": "Light grey text on grey - deliberately hard",
+      "expectsText": true,
+      "anchors": ["Service Reminder", "12 November 2026", "SV-2261"]
+    },
+    {
+      "file": "08_low_light.jpg",
+      "description": "Dark background, sensor noise, heavier JPEG compression",
+      "expectsText": true,
+      "anchors": ["PCN-553120", "09 August 2026", "60.00", "23 August 2026"]
+    },
+    {
+      "file": "09_long_text.jpg",
+      "description": "Dense multi-clause page, small type",
+      "expectsText": true,
+      "anchors": ["Terms of Renewal", "Clause 1", "14 days", "Clause 26"]
+    },
+    {
+      "file": "10_sparse.jpg",
+      "description": "Almost no text - tests the low-signal path",
+      "expectsText": true,
+      "anchors": ["Due 12 Sept", "45.00"]
+    },
+    {
+      "file": "11_mixed_formats.jpg",
+      "description": "Competing date and decimal conventions plus an IBAN",
+      "expectsText": true,
+      "anchors": ["2026-08-14", "14/09/2026", "14 Sep 2026", "1,234.56", "GB29 NWBK"]
+    },
+    {
+      "file": "12_table_heavy.jpg",
+      "description": "Monospaced column layout - the layout-loss case",
+      "expectsText": true,
+      "anchors": ["Widget A", "24.00", "51.49", "28 August 2026"]
+    },
+    {
+      "file": "13_landscape_notice.jpg",
+      "description": "Landscape orientation notice",
+      "expectsText": true,
+      "anchors": ["Passport Renewal", "18 January 2027", "PR-4410-77"]
+    },
+    {
+      "file": "14_multilingual_fr.jpg",
+      "description": "French, Latin script with accents",
+      "expectsText": true,
+      "anchors": ["FR-8821-04", "30 septembre 2026", "245,90"]
+    },
+    {
+      "file": "15_multilingual_es.jpg",
+      "description": "Spanish, Latin script",
+      "expectsText": true,
+      "anchors": ["ES-3390-12", "5 de octubre de 2026", "312,40"]
+    },
+    {
+      "file": "16_multilingual_de.jpg",
+      "description": "German, Latin script with compound words",
+      "expectsText": true,
+      "anchors": ["DE-5510-88", "21. September 2026", "189,00"]
+    },
+    {
+      "file": "17_large_screenshot.png",
+      "description": "2400x3200 PNG - the compression regression case",
+      "expectsText": true,
+      "anchors": ["HG-7781-22", "30 September 2026", "942.00"]
+    },
+    {
+      "file": "18_no_text.jpg",
+      "description": "Flat colour, no text at all - must be ready-with-no-text, not failed",
+      "expectsText": false,
+      "anchors": []
+    }
+  ]
+}
