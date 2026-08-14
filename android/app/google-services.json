@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "243957618962",
+    "project_id": "action-app-7084b",
+    "storage_bucket": "action-app-7084b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243957618962:android:249544b79f1ff09fe7fbcb",
+        "android_client_info": {
+          "package_name": "com.solvex.actionapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO9EATbzn9PLT6n7JtkAKdcubgMl0i6U8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

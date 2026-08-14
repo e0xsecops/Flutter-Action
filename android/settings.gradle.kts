@@ -20,6 +20,13 @@ pluginManagement {
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     id("com.android.application") version "9.1.0" apply false
+    // START: FlutterFire Configuration
+    // The FlutterFire CLI writes google-services 4.3.15 here, which predates
+    // AGP 9. Both plugins are pinned to current releases instead. Re-running
+    // `flutterfire configure` may reset the google-services line; re-apply.
+    id("com.google.gms.google-services") version("4.5.0") apply false
+    id("com.google.firebase.crashlytics") version("3.0.7") apply false
+    // END: FlutterFire Configuration
     id("org.jetbrains.kotlin.android") version "2.4.0" apply false
 }
 
