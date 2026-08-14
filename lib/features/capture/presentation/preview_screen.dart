@@ -1,0 +1,155 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../app/router.dart';
+import '../../../design/tokens/colors.dart';
+import '../../../design/tokens/dimens.dart';
+import '../application/capture_controller.dart';
+import '../domain/source_item.dart';
+
+class PreviewArgs {
+  const PreviewArgs({required this.path, required this.type});
+
+  final String path;
+  final SourceType type;
+}
+
+/// Confirm-or-retake before anything is kept.
+///
+/// Nothing has been written to storage at this point: the file is still in the
+/// OS temp directory. Backing out here leaves no trace, which is the behaviour
+/// the privacy screen will promise.
+class PreviewScreen extends ConsumerStatefulWidget {
+  const PreviewScreen({required this.args, super.key});
+
+  final PreviewArgs args;
+
+  @override
+  ConsumerState<PreviewScreen> createState() => _PreviewScreenState();
+}
+
+class _PreviewScreenState extends ConsumerState<PreviewScreen> {
+  late String _path = widget.args.path;
+  bool _busy = false;
+
+  Future<void> _retake() async {
+    final picker = ref.read(capturePickerProvider);
+    final file = widget.args.type == SourceType.photo
+        ? await picker.fromCamera()
+        : await picker.fromGallery();
+    if (file == null || !mounted) return;
+    setState(() => _path = file.path);
+  }
+
+  Future<void> _keep() async {
+    setState(() => _busy = true);
+    try {
+      await ref
+          .read(sourcesProvider.notifier)
+          .addImage(_path, widget.args.type);
+      if (!mounted) return;
+      context.go(Routes.home);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Saved. Reading it comes next.')),
+      );
+    } on Object {
+      if (!mounted) return;
+      setState(() => _busy = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Couldn't save that. Try again.")),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Check the capture'),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: _busy ? null : () => context.pop(),
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: Space.page),
+              decoration: BoxDecoration(
+                color: colors.surfaceSunken,
+                borderRadius: Radii.rLg,
+                border: Border.all(color: colors.border, width: Strokes.hairline),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Image.file(
+                File(_path),
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => Center(
+                  child: Text(
+                    "That image couldn't be opened.",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              Space.page,
+              Space.xl,
+              Space.page,
+              Space.md,
+            ),
+            child: Text(
+              'Make sure the text is readable and nothing important is cut off.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Space.page,
+                0,
+                Space.page,
+                Space.lg,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: _busy ? null : _retake,
+                      child: const Text('Retake'),
+                    ),
+                  ),
+                  const SizedBox(width: Space.md),
+                  Expanded(
+                    flex: 2,
+                    child: FilledButton(
+                      onPressed: _busy ? null : _keep,
+                      child: _busy
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Continue'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

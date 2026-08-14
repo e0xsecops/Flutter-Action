@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// Busy state. Extraction takes long enough to need a label explaining what is
-/// happening, otherwise a bare spinner reads as a hang.
+import '../../design/tokens/dimens.dart';
+
+/// Busy state. Always labelled: a bare spinner reads as a hang, and the work
+/// this app does is slow enough that the user deserves to know what it is
+/// doing. The staged processing language arrives with the AI pipeline.
 class LoadingView extends StatelessWidget {
   const LoadingView({this.message, super.key});
 
@@ -9,22 +12,24 @@ class LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final text = Theme.of(context).textTheme;
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(Space.xxxl),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const CircularProgressIndicator(),
+            const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2.5),
+            ),
             if (message != null) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: Space.xl),
               Text(
                 message!,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+                style: text.bodyMedium,
                 textAlign: TextAlign.center,
               ),
             ],
