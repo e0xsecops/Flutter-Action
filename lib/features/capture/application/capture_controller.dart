@@ -71,10 +71,44 @@ final capturePickerProvider = Provider<CapturePicker>(
 
 /// The list of captured sources, and the only sanctioned way to mutate it.
 class SourcesNotifier extends AsyncNotifier<List<SourceItem>> {
+  /// Recognition is started with [unawaited] and outlives the widget that
+  /// triggered it, so a result can arrive after this notifier is gone.
+  bool _disposed = false;
+
   @override
   Future<List<SourceItem>> build() async {
+    _disposed = false;
+    ref.onDispose(() => _disposed = true);
+
     final store = await ref.watch(sourceStoreProvider.future);
     return store.all();
+  }
+
+  /// Picks up captures that were stored but never finished being read.
+  ///
+  /// Recognition is fired off with [unawaited], so a capture whose process is
+  /// killed mid-read — backgrounded, low memory, swiped away — leaves a record
+  /// sitting in [SourceProcessingState.pending] or `processing` that nothing
+  /// would ever look at again. Found on a real device: day-3 records showed
+  /// "Reading the text…" indefinitely, and because that state offers neither
+  /// retry nor manual entry, the capture was unreachable. Limbo is worse than
+  /// failure, which at least has a way out.
+  ///
+  /// Called by the inbox on first frame rather than from [build], so loading
+  /// the list stays a pure read and the resume happens at a point the app
+  /// chooses. Self-limiting: [runOcr] records a failure for anything it cannot
+  /// read, so a genuinely unreadable capture is attempted once and then leaves
+  /// the user the manual path, instead of being retried on every launch.
+  Future<void> resumeUnfinished() async {
+    final store = await ref.read(sourceStoreProvider.future);
+    final unfinished = (await store.all())
+        .where((i) => !i.isProcessed && i.hasImage)
+        .toList();
+
+    for (final item in unfinished) {
+      if (_disposed) return;
+      await runOcr(item.id);
+    }
   }
 
   Future<SourceItem> addPastedText(String text) async {
@@ -147,7 +181,7 @@ class SourcesNotifier extends AsyncNotifier<List<SourceItem>> {
     }
 
     await store.add(item);
-    state = AsyncValue.data(await store.all());
+    await _publish(store);
 
     if (item.state != SourceProcessingState.failed) {
       unawaited(runOcr(item.id));
@@ -217,17 +251,26 @@ class SourcesNotifier extends AsyncNotifier<List<SourceItem>> {
     if (item?.imagePath != null) await files.delete(item!.imagePath!);
 
     await store.delete(id);
-    state = AsyncValue.data(await store.all());
+    await _publish(store);
   }
 
   Future<void> _add(SourceItem item) async {
     final store = await ref.read(sourceStoreProvider.future);
     await store.add(item);
-    state = AsyncValue.data(await store.all());
+    await _publish(store);
   }
 
   Future<void> _replace(SourceStore store, SourceItem item) async {
     await store.update(item);
+    await _publish(store);
+  }
+
+  /// The store is written first and unconditionally; only the in-memory
+  /// publish is skipped once disposed. A recognition result that lands after
+  /// the notifier is gone must still reach disk, or the next launch would
+  /// resume work that had in fact already finished.
+  Future<void> _publish(SourceStore store) async {
+    if (_disposed) return;
     state = AsyncValue.data(await store.all());
   }
 }

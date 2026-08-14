@@ -87,6 +87,11 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
               decoration: BoxDecoration(
                 color: colors.surfaceSunken,
                 borderRadius: Radii.rLg,
+              ),
+              // Over the image: a white page would otherwise run to the panel
+              // edge with nothing marking where the capture stops.
+              foregroundDecoration: BoxDecoration(
+                borderRadius: Radii.rLg,
                 border: Border.all(color: colors.border, width: Strokes.hairline),
               ),
               clipBehavior: Clip.antiAlias,

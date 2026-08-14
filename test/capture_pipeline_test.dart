@@ -155,6 +155,82 @@ void main() {
     expect((await store.byId('text-only'))!.state, SourceProcessingState.ready);
   });
 
+  group('resuming interrupted captures', () {
+    test('a capture left mid-read is picked up when the list loads', () async {
+      // Found on a real device: records stored before recognition finished sat
+      // in `pending` forever, showing "Reading the text…" with no retry and no
+      // manual entry reachable.
+      final store = FakeSourceStore([
+        imageItem('1').copyWith(state: SourceProcessingState.pending),
+      ]);
+      final c = container(
+        store: store,
+        ocr: const FakeOcrService(transcripts: {'/fake/a.jpg': 'Renewal 780.00'}),
+      );
+
+      await c.read(sourcesProvider.notifier).resumeUnfinished();
+
+      final updated = await store.byId('1');
+      expect(updated!.state, SourceProcessingState.ready);
+      expect(updated.analysisText, 'Renewal 780.00');
+    });
+
+    test('a capture stranded in processing is resumed too', () async {
+      final store = FakeSourceStore([
+        imageItem('1').copyWith(state: SourceProcessingState.processing),
+      ]);
+      final c = container(
+        store: store,
+        ocr: const FakeOcrService(transcripts: {'/fake/a.jpg': 'Recovered'}),
+      );
+
+      await c.read(sourcesProvider.notifier).resumeUnfinished();
+
+      expect((await store.byId('1'))!.state, SourceProcessingState.ready);
+    });
+
+    test('an unreadable capture settles on failed instead of retrying forever',
+        () async {
+      // Self-limiting by design: one attempt, then the manual path.
+      final store = FakeSourceStore([
+        imageItem('1').copyWith(state: SourceProcessingState.pending),
+      ]);
+      final c = container(
+        store: store,
+        ocr: const FakeOcrService(failOnPaths: {'/fake/a.jpg'}),
+      );
+
+      await c.read(sourcesProvider.notifier).resumeUnfinished();
+
+      final updated = await store.byId('1');
+      expect(updated!.state, SourceProcessingState.failed);
+      expect(updated.failureReason, isNotNull);
+    });
+
+    test('already-processed captures are left alone', () async {
+      final store = FakeSourceStore([
+        imageItem('1').copyWith(state: SourceProcessingState.ready),
+        SourceItem(
+          id: '2',
+          type: SourceType.pastedText,
+          capturedAt: DateTime.now(),
+          pastedText: 'typed',
+          state: SourceProcessingState.ready,
+        ),
+      ]);
+      final c = container(
+        store: store,
+        // Would overwrite the text if it were wrongly re-run.
+        ocr: const FakeOcrService(fallback: 'SHOULD NOT RUN'),
+      );
+
+      await c.read(sourcesProvider.notifier).resumeUnfinished();
+
+      expect((await store.byId('1'))!.ocr, isNull);
+      expect((await store.byId('2'))!.pastedText, 'typed');
+    });
+  });
+
   test('deleting a capture removes its bytes as well as its record', () async {
     final files = FakeSourceFileStore();
     final store = FakeSourceStore([imageItem('1', path: '/fake/sources/1.jpg')]);

@@ -200,6 +200,58 @@ void main() {
       );
     });
 
+    test('EXIF orientation is baked into the pixels', () {
+      // A phone camera stores the sensor buffer sideways and records the
+      // rotation in EXIF. ML Kit reads the buffer it is handed, not the
+      // metadata, so unless the rotation is applied to the pixels a portrait
+      // photo reaches recognition on its side and reads almost nothing.
+      //
+      // Orientation 6 means "rotate 90 clockwise to display", so 400x200 of
+      // stored pixels must come back as 200x400.
+      final sideways = _photoLikeImage(400, 200);
+      sideways.exif.imageIfd.orientation = 6;
+
+      final result = normalizeImageSync(
+        NormalizeRequest(bytes: img.encodeJpg(sideways, quality: 90)),
+      );
+
+      expect(result.width, 200);
+      expect(result.height, 400);
+
+      // The reported dimensions are not enough. The bytes that get written to
+      // disk and handed to the recogniser must themselves be upright, with no
+      // orientation tag left telling a viewer to rotate them again.
+      final storedTag = img.decodeJpgExif(result.bytes)?.imageIfd.orientation;
+      expect(storedTag, anyOf(isNull, 1),
+          reason: 'the stored file still claims it needs rotating');
+      expect(result.bytes, isNot(equals(img.encodeJpg(sideways, quality: 90))),
+          reason: 'the sideways original must not be passed through');
+    });
+
+    test('rotation is applied even when it costs bytes', () {
+      // Correctness outranks size. The "never grow a capture" guard must not
+      // swallow a rotation, or an upside-down page would be kept as-is.
+      final sideways = _photoLikeImage(600, 300);
+      sideways.exif.imageIfd.orientation = 8; // 90 anticlockwise
+      final source = img.encodeJpg(sideways, quality: 95);
+
+      final result = normalizeImageSync(NormalizeRequest(bytes: source));
+
+      expect(result.width, 300);
+      expect(result.height, 600);
+    });
+
+    test('an orientation of 1 is left alone rather than re-encoded', () {
+      final upright = img.Image(width: 500, height: 400);
+      img.fill(upright, color: img.ColorRgb8(210, 210, 210));
+      upright.exif.imageIfd.orientation = 1;
+      final source = img.encodeJpg(upright, quality: 90);
+
+      final result = normalizeImageSync(NormalizeRequest(bytes: source));
+
+      expect(result.bytes, equals(source), reason: 'nothing needed doing');
+    });
+
     test('is deterministic - the same input gives byte-identical output', () {
       final source = _png(width: 500, height: 400);
       final a = normalizeImageSync(NormalizeRequest(bytes: source));

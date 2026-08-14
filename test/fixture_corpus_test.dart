@@ -4,6 +4,7 @@ import 'package:action_app/features/capture/data/image_format.dart';
 import 'package:action_app/features/capture/data/image_normalizer.dart';
 import 'package:action_app/features/diagnostics/fixture_evaluation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image/image.dart' as img;
 
 /// Deterministic half of the fixture harness.
 ///
@@ -146,6 +147,24 @@ void main() {
         reason: 'a PNG screenshot must get smaller, not pass through',
       );
       expect(result.wasResized, isTrue, reason: '2400x3200 exceeds the cap');
+    });
+
+    test('the EXIF-rotated fixture comes back upright', () {
+      // Stored 1754x1240 with orientation 6. If the tag were ignored the
+      // dimensions would come back unswapped and ML Kit would be reading a
+      // sideways page.
+      final bytes =
+          File('${fixturesDir.path}/19_exif_rotated.jpg').readAsBytesSync();
+
+      final result = normalizeImageSync(NormalizeRequest(bytes: bytes));
+
+      expect(result.width, 1240);
+      expect(result.height, 1754);
+      expect(
+        img.decodeJpgExif(result.bytes)?.imageIfd.orientation,
+        anyOf(isNull, 1),
+        reason: 'the stored bytes must be upright, not merely described as it',
+      );
     });
 
     test('no fixture exceeds the long-edge cap after normalisation', () {

@@ -40,7 +40,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _recoverLostCapture());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _recoverLostCapture();
+      // Captures the previous run stored but never finished reading. Without
+      // this they sit on the inbox saying "Reading the text…" forever.
+      ref.read(sourcesProvider.notifier).resumeUnfinished();
+    });
   }
 
   /// Android can kill this app while the camera activity is in the foreground,
@@ -305,6 +310,14 @@ class _Thumbnail extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.surfaceSunken,
         borderRadius: Radii.rSm,
+      ),
+      // In front of the image, not behind it. Documents are overwhelmingly
+      // white, so without an edge the thumbnail reads as a blank white block
+      // against a dark card and as nothing at all against a light one. A
+      // border in `decoration` would be painted under the image and lost.
+      foregroundDecoration: BoxDecoration(
+        borderRadius: Radii.rSm,
+        border: Border.all(color: colors.border, width: Strokes.hairline),
       ),
       clipBehavior: Clip.antiAlias,
       child: item.hasImage

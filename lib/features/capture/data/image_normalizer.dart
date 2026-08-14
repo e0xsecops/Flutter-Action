@@ -122,9 +122,24 @@ NormalizedImage normalizeImageSync(NormalizeRequest request) {
   // EXIF orientation must be applied to the pixels. ML Kit reads the buffer we
   // hand it, not the metadata, so a photo taken in landscape would otherwise be
   // fed to OCR sideways and recognise almost nothing.
-  final orientation = decoded.exif.imageIfd.orientation;
-  final needsRotate = orientation != null && orientation != 1;
-  final upright = needsRotate ? img.bakeOrientation(decoded) : decoded;
+  // The subtlety, found by testing rather than by reading the docs: this
+  // decoder applies the orientation itself and clears the tag, so `decoded` is
+  // already upright and its exif no longer mentions rotation. What the decoder
+  // does *not* do is rewrite the bytes we were handed — those are still
+  // sideways, still carrying the tag. So the tag must be read from the
+  // original bytes, or the passthrough below ships a sideways file described
+  // by upright dimensions: the day-3 defect again, in a different field.
+  final storedOrientation = detected == DetectedImageFormat.jpeg
+      ? img.decodeJpgExif(request.bytes)?.imageIfd.orientation
+      : null;
+  final needsRotate = storedOrientation != null && storedOrientation != 1;
+
+  // Belt and braces for a codec that leaves the tag in place rather than
+  // applying it, so correctness does not depend on which decoder ran.
+  final residual = decoded.exif.imageIfd.orientation;
+  final upright = (residual != null && residual != 1)
+      ? img.bakeOrientation(decoded)
+      : decoded;
 
   final longestEdge =
       upright.width > upright.height ? upright.width : upright.height;

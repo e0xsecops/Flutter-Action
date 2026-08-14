@@ -155,6 +155,12 @@ class _ImagePanel extends StatelessWidget {
             decoration: BoxDecoration(
               color: colors.surfaceSunken,
               borderRadius: Radii.rLg,
+            ),
+            // Drawn over the image for the same reason as the inbox thumbnail:
+            // a white page reaching the panel edge would otherwise bleed into
+            // the background with no boundary.
+            foregroundDecoration: BoxDecoration(
+              borderRadius: Radii.rLg,
               border: Border.all(color: colors.border, width: Strokes.hairline),
             ),
             clipBehavior: Clip.antiAlias,

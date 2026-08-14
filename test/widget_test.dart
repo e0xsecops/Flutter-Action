@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:action_app/app/app.dart';
 import 'package:action_app/features/capture/application/capture_controller.dart';
+import 'package:action_app/features/capture/data/ocr_service.dart';
 import 'package:action_app/features/capture/data/source_store.dart';
 import 'package:action_app/features/capture/domain/ocr_result.dart';
 import 'package:action_app/features/capture/domain/source_item.dart';
@@ -9,9 +12,27 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'support/fake_stores.dart';
 
-Widget _app(SourceStore store) {
+/// Recognition that never returns, so the processing state can be observed.
+///
+/// Interrupted captures are resumed when the list loads, which means a record
+/// left in `processing` does not stay there — the only way to hold the UI in
+/// that state is to hold the recogniser.
+class _NeverCompletesOcrService implements OcrService {
+  @override
+  Future<OcrOutcome> recognize(String imagePath) => Completer<OcrOutcome>().future;
+
+  @override
+  Future<void> dispose() async {}
+}
+
+Widget _app(SourceStore store, {OcrService? ocr}) {
   return ProviderScope(
-    overrides: [sourceStoreProvider.overrideWith((ref) async => store)],
+    overrides: [
+      sourceStoreProvider.overrideWith((ref) async => store),
+      // Without this the widget tests reach for the real ML Kit recogniser,
+      // which needs a platform channel and a device.
+      ocrServiceProvider.overrideWithValue(ocr ?? const FakeOcrService()),
+    ],
     child: const ActionApp(),
   );
 }
@@ -59,11 +80,36 @@ void main() {
             state: SourceProcessingState.processing,
           ),
         ]),
+        ocr: _NeverCompletesOcrService(),
       ),
     );
     await tester.pump();
 
     expect(find.text('Reading the text…'), findsOneWidget);
+  });
+
+  testWidgets('a capture interrupted mid-read does not stay stuck on the inbox',
+      (tester) async {
+    // The device found this: records left in `pending` showed "Reading the
+    // text…" forever, with no retry and no manual entry reachable from there.
+    await tester.pumpWidget(
+      _app(
+        FakeSourceStore([
+          SourceItem(
+            id: '1',
+            type: SourceType.photo,
+            capturedAt: DateTime.now(),
+            imagePath: '/fake/a.jpg',
+            state: SourceProcessingState.pending,
+          ),
+        ]),
+        ocr: const FakeOcrService(fallback: 'Renewal due 30 September'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Reading the text…'), findsNothing);
+    expect(find.textContaining('30 September'), findsOneWidget);
   });
 
   testWidgets('a failed capture surfaces the reason on the inbox row',

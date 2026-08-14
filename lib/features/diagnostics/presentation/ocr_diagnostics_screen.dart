@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -33,12 +34,14 @@ class _OcrDiagnosticsScreenState extends ConsumerState<OcrDiagnosticsScreen> {
   bool _running = false;
   String? _error;
   String _progress = '';
+  String? _reportPath;
 
   Future<void> _run() async {
     setState(() {
       _running = true;
       _error = null;
       _summary = null;
+      _reportPath = null;
     });
 
     try {
@@ -60,6 +63,7 @@ class _OcrDiagnosticsScreenState extends ConsumerState<OcrDiagnosticsScreen> {
       final ocr = ref.read(ocrServiceProvider);
       final normalizer = ref.read(imageNormalizerProvider);
       final reports = <FixtureReport>[];
+      var engine = 'unknown';
 
       for (final fixture in fixtures) {
         setState(() => _progress = fixture.file);
@@ -110,8 +114,10 @@ class _OcrDiagnosticsScreenState extends ConsumerState<OcrDiagnosticsScreen> {
               textLength: outcome.normalizedText.length,
               lineCount: outcome.lineCount,
               score: scoreAnchors(outcome.normalizedText, fixture.anchors),
+              recognizedText: outcome.normalizedText,
             ),
           );
+          engine = outcome.engine;
         } on Object catch (error) {
           reports.add(
             FixtureReport(
@@ -127,7 +133,24 @@ class _OcrDiagnosticsScreenState extends ConsumerState<OcrDiagnosticsScreen> {
         }
       }
 
-      if (mounted) setState(() => _summary = CorpusSummary(reports));
+      final summary = CorpusSummary(reports, engine: engine);
+
+      // Written to a file as well as rendered, because eighteen fixtures times
+      // ten measurements is not something to read off a phone screen and
+      // retype. The file is what gets compared against the next run.
+      final reportFile =
+          File('${docs.path}${Platform.pathSeparator}ocr_report.json');
+      await reportFile.writeAsString(
+        const JsonEncoder.withIndent('  ').convert(summary.toJson()),
+        flush: true,
+      );
+
+      if (mounted) {
+        setState(() {
+          _summary = summary;
+          _reportPath = reportFile.path;
+        });
+      }
     } on Object catch (error) {
       if (mounted) setState(() => _error = error.toString());
     } finally {
@@ -162,6 +185,10 @@ class _OcrDiagnosticsScreenState extends ConsumerState<OcrDiagnosticsScreen> {
           if (summary != null) ...[
             const SizedBox(height: Space.xl),
             _SummaryPanel(summary: summary),
+            if (_reportPath != null) ...[
+              const SizedBox(height: Space.sm),
+              Text('report → ${_reportPath!}', style: text.labelSmall),
+            ],
             const SizedBox(height: Space.lg),
             for (final report in summary.reports) _ReportRow(report: report),
           ],
@@ -199,10 +226,14 @@ class _SummaryPanel extends StatelessWidget {
           Text('Corpus summary', style: text.titleSmall),
           const SizedBox(height: Space.sm),
           Text(
+            'engine ${summary.engine}\n'
             'fixtures ${summary.total} · failures ${summary.failures}\n'
             'text expectation met ${summary.textExpectationMet}/${summary.total}\n'
-            'mean anchor recall ${(summary.meanRecall * 100).toStringAsFixed(1)}%\n'
-            'median OCR ${summary.medianOcrMs} ms\n'
+            'median anchor recall ${(summary.medianRecall * 100).toStringAsFixed(1)}% '
+            '(regression signal, not accuracy)\n'
+            'OCR median ${summary.medianOcrMs} ms · '
+            'p95 ${summary.p95OcrMs} ms · max ${summary.slowestOcrMs} ms\n'
+            'normalise median ${summary.medianNormalizeMs} ms\n'
             'bytes ${(summary.totalOriginalBytes / 1024).round()} KB → '
             '${(summary.totalProcessedBytes / 1024).round()} KB '
             '(${shrink.toStringAsFixed(0)}% smaller)',
