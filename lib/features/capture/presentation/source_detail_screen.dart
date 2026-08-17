@@ -5,9 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/router.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../../shared/widgets/error_view.dart';
+import '../../extraction/application/action_review_state.dart'
+    show sourceReadyForExtraction;
 import '../application/capture_controller.dart';
 import '../domain/source_item.dart';
 
@@ -46,6 +49,12 @@ class SourceDetailScreen extends ConsumerWidget {
       body: item == null
           ? const ErrorView(message: 'That capture is no longer available.')
           : _Body(item: item),
+      // The bridge into review: the one production entry point to
+      // extraction. Only offered once the capture actually has text to
+      // interpret — the review flow's manual path covers everything else.
+      bottomNavigationBar: item != null && sourceReadyForExtraction(item)
+          ? _ReviewBar(id: id)
+          : null,
     );
   }
 
@@ -73,6 +82,36 @@ class SourceDetailScreen extends ConsumerWidget {
     if (confirmed != true || !context.mounted) return;
     await ref.read(sourcesProvider.notifier).delete(id);
     if (context.mounted) context.pop();
+  }
+}
+
+class _ReviewBar extends StatelessWidget {
+  const _ReviewBar({required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        border: Border(
+          top: BorderSide(color: colors.border, width: Strokes.hairline),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+              Space.page, Space.md, Space.page, Space.md),
+          child: FilledButton(
+            onPressed: () => context.push(Routes.sourceReview(id)),
+            child: const Text('Create an action from this'),
+          ),
+        ),
+      ),
+    );
   }
 }
 

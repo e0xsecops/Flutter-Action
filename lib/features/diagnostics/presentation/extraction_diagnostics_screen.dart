@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../app/router.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../extraction/application/extraction_providers.dart';
@@ -270,6 +271,15 @@ class _CaseRow extends StatelessWidget {
 
     final result = attempt is ExtractionCompleted ? attempt.result : null;
 
+    // Tapping a completed row opens the PRODUCTION review screen with this
+    // result injected — the deterministic way to exercise the real review UI
+    // against every fixture state without a live call. Debug builds only, by
+    // virtue of this whole screen being debug-only.
+    void openReview() {
+      if (result == null) return;
+      context.push(Routes.sourceReview(outcome.id), extra: result);
+    }
+
     final marker = switch (attempt) {
       ExtractionFailed() => colors.danger,
       ExtractionCompleted(:final result) => switch (result.reviewState) {
@@ -287,7 +297,10 @@ class _CaseRow extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: Space.md),
-      child: Row(
+      child: InkWell(
+        borderRadius: Radii.rSm,
+        onTap: result == null ? null : openReview,
+        child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -373,6 +386,7 @@ class _CaseRow extends StatelessWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }
