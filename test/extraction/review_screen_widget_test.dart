@@ -1,5 +1,10 @@
 import 'package:action_app/design/app_theme.dart';
+import 'package:action_app/features/actions/application/action_providers.dart';
+import 'package:action_app/features/actions/data/action_cloud_mirror.dart';
+import 'package:action_app/features/actions/data/actions_database.dart';
+import 'package:action_app/features/actions/data/auth_identity_service.dart';
 import 'package:action_app/features/capture/application/capture_controller.dart';
+import 'package:drift/native.dart';
 import 'package:action_app/features/capture/data/ocr_service.dart';
 import 'package:action_app/features/capture/data/source_store.dart';
 import 'package:action_app/features/capture/domain/source_item.dart';
@@ -28,6 +33,16 @@ class _RecordingAnalytics extends ReviewAnalytics {
   }
 }
 
+class _NoIdentity implements AuthIdentityService {
+  const _NoIdentity();
+
+  @override
+  String? get lastFailureClass => 'auth_unavailable';
+
+  @override
+  Future<String?> currentOrSignInUid() async => null;
+}
+
 class _MemStore implements SourceStore {
   final _items = <String, SourceItem>{};
 
@@ -50,6 +65,14 @@ class _MemStore implements SourceStore {
 
 void main() {
   late _RecordingAnalytics analytics;
+
+  // Confirming persists for real now, into an in-memory database. Opened and
+  // closed at file scope: a database a test opened cannot be closed from
+  // inside the widget-test body, whose fake-async zone owns the pending work.
+  late ActionsDatabase db;
+
+  setUp(() => db = ActionsDatabase(NativeDatabase.memory()));
+  tearDown(() => db.close());
 
   Future<GoRouter> pumpReview(
     WidgetTester tester,
@@ -79,6 +102,10 @@ void main() {
           reviewAnalyticsProvider.overrideWithValue(analytics),
           sourceStoreProvider.overrideWith((ref) async => _MemStore()),
           ocrServiceProvider.overrideWithValue(const FakeOcrService()),
+          actionsDatabaseProvider.overrideWithValue(db),
+          authIdentityServiceProvider.overrideWithValue(const _NoIdentity()),
+          actionCloudMirrorProvider
+              .overrideWithValue(const NoopActionCloudMirror()),
         ],
         child: MaterialApp.router(
           theme: AppTheme.light(),

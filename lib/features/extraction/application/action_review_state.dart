@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import '../../../features/capture/domain/source_item.dart';
 import '../data/extraction_validator.dart' show parseStrictIso8601;
 import '../domain/action_draft.dart';
@@ -434,7 +436,10 @@ final class ActionReviewState {
 
   /// The single gate to a [ConfirmedActionDraft]. Throws [StateError] when
   /// [canConfirm] is false — callers must disable the CTA, not catch this.
-  ConfirmedActionDraft confirm({DateTime? confirmedAt}) {
+  ///
+  /// [id] is the future Action's stable identity; generated here (before
+  /// any persistence) unless a test pins it.
+  ConfirmedActionDraft confirm({DateTime? confirmedAt, String? id}) {
     if (!canConfirm) {
       throw StateError(
         'confirm() while blocked: ${blockers.map((b) => b.message).join(' ')}',
@@ -442,6 +447,7 @@ final class ActionReviewState {
     }
     final draftFields = effectiveFields;
     return ConfirmedActionDraft(
+      id: id ?? const Uuid().v4(),
       sourceId: sourceId,
       title: title.trim(),
       summary: draft?.summary,

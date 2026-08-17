@@ -54,6 +54,7 @@ final class ConfirmedStep {
 /// without the storage layer seeing it created here.
 final class ConfirmedActionDraft {
   const ConfirmedActionDraft({
+    required this.id,
     required this.sourceId,
     required this.title,
     required this.category,
@@ -69,6 +70,12 @@ final class ConfirmedActionDraft {
     this.extractionEngine,
     this.extractionProducedAt,
   });
+
+  /// The durable Action's identity, minted when the draft is produced —
+  /// BEFORE any persistence. Storage inserts idempotently on this id, which
+  /// is what makes a double-tapped confirm button, or a retried save,
+  /// yield exactly one Action.
+  final String id;
 
   final String sourceId;
 

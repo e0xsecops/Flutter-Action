@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -11,24 +12,32 @@ import '../../../app/router.dart';
 import '../../../design/components/section_header.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../design/tokens/typography.dart';
 import '../../../shared/widgets/empty_view.dart';
 import '../../../shared/widgets/error_view.dart';
 import '../../../shared/widgets/loading_view.dart';
+import '../../actions/application/action_grouping.dart';
+import '../../actions/application/action_providers.dart';
+import '../../actions/domain/action_item.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../capture/domain/source_item.dart';
 import '../../capture/presentation/capture_sheet.dart';
 import '../../capture/presentation/preview_screen.dart';
+import '../../extraction/application/review_analytics.dart';
+import '../../extraction/domain/extraction_schema.dart';
 
-/// The Action Inbox.
+/// Home: the user's confirmed Actions, then their unreviewed captures.
 ///
-/// Captures that have not been interpreted yet sit under "Needs attention",
-/// because an unread capture is precisely something the user still has to deal
-/// with. Once extraction lands they keep that place until they are reviewed, so
-/// this is the real section rather than a placeholder.
+/// Actions are the product object now — read from the durable local store,
+/// never from anything in memory, grouped into NEEDS ATTENTION / UPCOMING /
+/// COMPLETED by the deterministic rules in [groupActionsForHome]. Captures
+/// keep their own section below: a capture is still something to deal with,
+/// but it is raw material rather than a commitment.
 ///
 /// Empty sections are hidden rather than rendered as rows of nothing — three
 /// permanently empty headings is what makes a productivity app feel like a
-/// spreadsheet.
+/// spreadsheet. A database error is its own state: it must never read as
+/// "your Actions disappeared", and it never triggers a silent re-create.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -45,6 +54,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       // Captures the previous run stored but never finished reading. Without
       // this they sit on the inbox saying "Reading the text…" forever.
       ref.read(sourcesProvider.notifier).resumeUnfinished();
+      // One bounded pass over any Actions still owing the cloud mirror an
+      // upsert. Strictly after first frame, never blocking anything.
+      unawaited(ref.read(actionSyncServiceProvider).flush());
     });
   }
 
@@ -76,35 +88,57 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final sources = ref.watch(sourcesProvider);
+    final actions = ref.watch(actionsStreamProvider);
+
+    final Widget body;
+    if (actions is AsyncError) {
+      // The local database could not be read. This is loud but calm, and it
+      // deliberately does not overlap with "no Actions yet" — data that
+      // cannot be loaded has not vanished.
+      body = ErrorView(
+        message: "Your actions couldn't be loaded. They are still stored on "
+            'this device.',
+        onRetry: () => ref.invalidate(actionsStreamProvider),
+      );
+    } else if (actions is AsyncLoading && sources is AsyncLoading) {
+      body = const LoadingView();
+    } else {
+      body = _Inbox(
+        groups: groupActionsForHome(actions.value ?? const [], DateTime.now()),
+        sourceItems: sources.value ?? const [],
+      );
+    }
 
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: switch (sources) {
-          AsyncLoading() => const LoadingView(),
-          AsyncError(:final error) => ErrorView(
-              message: "Your captures couldn't be loaded.\n$error",
-              onRetry: () => ref.invalidate(sourcesProvider),
-            ),
-          _ => _Inbox(items: sources.value ?? const []),
-        },
-      ),
+      body: SafeArea(bottom: false, child: body),
       bottomNavigationBar: const _AddBar(),
     );
   }
 }
 
 class _Inbox extends StatelessWidget {
-  const _Inbox({required this.items});
+  const _Inbox({required this.groups, required this.sourceItems});
 
-  final List<SourceItem> items;
+  final HomeActionGroups groups;
+  final List<SourceItem> sourceItems;
 
   @override
   Widget build(BuildContext context) {
+    final nothingAtAll = groups.isEmpty && sourceItems.isEmpty;
+
+    SliverList actionList(List<ActionItem> actions) => SliverList.separated(
+          itemCount: actions.length,
+          separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
+          itemBuilder: (context, i) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Space.page),
+            child: _ActionRow(item: actions[i]),
+          ),
+        );
+
     return CustomScrollView(
       slivers: [
         const SliverToBoxAdapter(child: _Greeting()),
-        if (items.isEmpty)
+        if (nothingAtAll)
           const SliverFillRemaining(
             hasScrollBody: false,
             child: EmptyView(
@@ -116,23 +150,202 @@ class _Inbox extends StatelessWidget {
             ),
           )
         else ...[
-          SliverToBoxAdapter(
-            child: SectionHeader(
-              title: 'Needs attention',
-              count: items.length,
+          if (groups.needsAttention.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: SectionHeader(
+                title: 'Needs attention',
+                count: groups.needsAttention.length,
+              ),
             ),
-          ),
-          SliverList.separated(
-            itemCount: items.length,
-            separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
-            itemBuilder: (context, i) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Space.page),
-              child: _SourceRow(item: items[i]),
+            actionList(groups.needsAttention),
+          ],
+          if (groups.upcoming.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: SectionHeader(
+                title: 'Upcoming',
+                count: groups.upcoming.length,
+              ),
             ),
-          ),
+            actionList(groups.upcoming),
+          ],
+          if (groups.completed.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: SectionHeader(
+                title: 'Completed',
+                count: groups.completed.length,
+              ),
+            ),
+            actionList(groups.completed),
+          ],
+          if (sourceItems.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: SectionHeader(
+                title: 'Captures',
+                count: sourceItems.length,
+              ),
+            ),
+            SliverList.separated(
+              itemCount: sourceItems.length,
+              separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
+              itemBuilder: (context, i) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Space.page),
+                child: _SourceRow(item: sourceItems[i]),
+              ),
+            ),
+          ],
           const SliverToBoxAdapter(child: SizedBox(height: Space.xxl)),
         ],
       ],
+    );
+  }
+}
+
+/// The Action Card: urgency spine on the left (warm, solid — the documented
+/// treatment), title, deadline and amount in tabular figures, and a
+/// completion toggle. Read-only beyond completion — Action Detail is Day-9
+/// scope.
+class _ActionRow extends ConsumerWidget {
+  const _ActionRow({required this.item});
+
+  final ActionItem item;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final completed = item.status == ActionStatus.completed;
+
+    final spine = switch (item.urgency) {
+      ActionUrgency.critical => colors.urgencyCritical,
+      ActionUrgency.important => colors.urgencyImportant,
+      ActionUrgency.normal => colors.urgencyNormal,
+      ActionUrgency.low || ActionUrgency.unknown => colors.urgencyLow,
+    };
+
+    return Material(
+      color: colors.surfaceElevated,
+      borderRadius: Radii.rMd,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: Radii.rMd,
+          border: Border.all(color: colors.border, width: Strokes.hairline),
+        ),
+        padding: const EdgeInsets.fromLTRB(0, Space.md, Space.xs, Space.md),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: Strokes.spine,
+              height: 40,
+              margin: const EdgeInsets.only(left: Space.md),
+              decoration: BoxDecoration(
+                color: completed ? colors.border : spine,
+                borderRadius: BorderRadius.circular(Radii.pill),
+              ),
+            ),
+            const SizedBox(width: Space.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title,
+                    style: text.titleSmall?.copyWith(
+                      color:
+                          completed ? colors.textTertiary : colors.textPrimary,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: Space.xxs),
+                  _ActionMetaLine(item: item),
+                ],
+              ),
+            ),
+            IconButton(
+              tooltip: completed ? 'Completed' : 'Mark as done',
+              onPressed: completed
+                  ? null
+                  : () async {
+                      await ref
+                          .read(actionRepositoryProvider)
+                          .complete(item.id, at: DateTime.now());
+                      ref
+                          .read(reviewAnalyticsProvider)
+                          .log(ActionEvents.completed);
+                      unawaited(
+                          ref.read(actionSyncServiceProvider).flush());
+                    },
+              icon: Icon(
+                completed
+                    ? Icons.check_circle_outline_rounded
+                    : Icons.radio_button_unchecked_rounded,
+                color: completed
+                    ? colors.confidenceConfirmed
+                    : colors.textTertiary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionMetaLine extends StatelessWidget {
+  const _ActionMetaLine({required this.item});
+
+  final ActionItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final now = DateTime.now();
+
+    final parts = <InlineSpan>[];
+    final due = item.dueAt;
+    if (item.status == ActionStatus.completed) {
+      parts.add(TextSpan(
+        text: 'Done ${_relativeTime(item.completedAt ?? item.updatedAt)}',
+      ));
+    } else if (due != null) {
+      final startOfToday = DateTime(now.year, now.month, now.day);
+      final overdue = due.wallClock.isBefore(startOfToday);
+      final dueToday = !overdue &&
+          due.wallClock.isBefore(startOfToday.add(const Duration(days: 1)));
+      final label = overdue
+          ? 'Overdue · was due ${DateFormat('d MMM').format(due.wallClock)}'
+          : dueToday
+              ? 'Due today'
+              : 'Due ${DateFormat(due.wallClock.year == now.year ? 'd MMM' : 'd MMM yyyy').format(due.wallClock)}';
+      parts.add(TextSpan(
+        text: label,
+        style: overdue || dueToday
+            ? text.bodySmall?.copyWith(color: colors.urgencyCritical)
+            : null,
+      ));
+    }
+    if (item.amount != null) {
+      if (parts.isNotEmpty) parts.add(const TextSpan(text: '  ·  '));
+      parts.add(TextSpan(text: '${item.amount}'));
+    }
+    if (parts.isEmpty) {
+      // Nothing to summarise. A manually created Action has no category
+      // either, and its label would read "Not sure" — a doubt the app has no
+      // business claiming about something the user typed themselves.
+      parts.add(TextSpan(
+        text: item.origin == ActionOrigin.manual
+            ? 'Created by you'
+            : item.category.label,
+      ));
+    }
+
+    return Text.rich(
+      TextSpan(children: parts),
+      style: text.bodySmall?.copyWith(fontFeatures: AppText.numeric),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

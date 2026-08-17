@@ -1,26 +1,33 @@
 # Resume checkpoint
 
-Written at the end of Day 5, before any Day-6 work. Read this first when
-picking the project back up.
+Updated at the end of Day 8. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 8 complete.** Confirmed Actions are durable on-device in a Drift/SQLite
+  store, with a minimised, owner-only Firestore mirror behind a retrying
+  outbox. Verified live on `emulator-5554`.
+- **Day 7 complete.** Trust-first review and confirmation UX: canonical field
+  resolver, evidence affordances, ambiguity and manual-entry states, and a
+  deterministic `canConfirm`.
+- **Day 6 complete.** Firebase AI Logic adapter behind `ExtractionService`,
+  with App Check and structured JSON responses.
 - **Day 5 complete.** Extraction domain, grounding, validation, escalation and
-  a deterministic fixture service exist. **No remote AI call has been made.**
+  a deterministic fixture service.
 - **Day 4 complete: PASS WITH LIMITATIONS.** Foundation, design system, capture
   pipeline, image normalisation and on-device OCR are done and verified on
   hardware and on the emulator.
-- **Next phase: Day 6** — the Firebase AI Logic adapter behind
-  `ExtractionService`, App Check, prompts in Remote Config, and the
-  confirmation/review UI.
-- **Do not repeat Days 1–5.**
+- **Do not repeat Days 1–8.**
 
-## Read before starting Day 6
+## Read before starting the next day
 
 **`docs/EXTRACTION_CONTRACT.md`** — the locked v1 provider JSON, the evidence
-strategy, every validation and escalation rule, the prompt-injection contract,
-and an explicit list of what the Day-6 adapter must implement. Day 6 should not
-need to re-derive any of it.
+strategy, every validation and escalation rule, and the prompt-injection
+contract. Still current; none of it should need re-deriving.
+
+**`firestore.rules`** — the deployed security posture, and the server-side
+definition of what may leave the device. Change the mirror payload and you must
+change these together, or the write will be rejected.
 
 ## Decisions already locked
 
@@ -35,8 +42,66 @@ need to re-derive any of it.
   documented.
 - **The provider returns evidence *quotes*, never offsets.** All ranges are
   resolved client-side against our own copy of the text.
-- **Extraction stops at `ActionDraft`.** There is deliberately no persisted
-  Action storage yet, so no later feature can quietly skip confirmation.
+- **Extraction stops at `ActionDraft`.** Nothing durable is written until a
+  person confirms, so no later feature can quietly skip confirmation. Day 8
+  added the store that a confirmation writes into — it did not move that line.
+- **The local database is the canonical store; the cloud is a mirror.** Local
+  success never depends on Firebase, and a cloud failure never rolls back,
+  deletes or edits a local Action.
+
+## What Day 8 established
+
+**The Drift store is canonical.** `actions.sqlite` in app-private storage,
+`schemaVersion = 1`, tables `actions` / `action_steps` / `action_facts` /
+`sync_outbox`, with an explicit `MigrationStrategy` — no destructive recreate,
+ever. Three representation decisions are load-bearing:
+
+- **Instants** (`createdAt`, `updatedAt`, `completedAt`, `archivedAt`) are
+  epoch-microsecond UTC integers.
+- **Deadlines** are zone-free wall-clock ISO text. A bill due "30 August" is
+  due on the 30th in any timezone; storing it as an instant would move it.
+  `ActionDue.isDateOnly` is derived from midnight, not stored separately.
+- **Money** is minor units + an ISO-4217 code. Never a float.
+
+**Creation is atomic and idempotent.** The Action id is minted when the draft
+is produced, before any persistence, so a retry reuses it. `create` inserts
+with `insertOrIgnore` and reports whether the row was new, and the outbox row
+is written in the *same transaction* as the Action. Double-tapping confirm
+yields exactly one Action, verified on device.
+
+**Identity is anonymous, and that is a real limitation.** Sign-in is
+`signInAnonymously`, obtained lazily and never blocking startup or Action
+creation. The uid lives only on that device and in that install: **clearing app
+data or reinstalling loses the identity, and with it the ability to reach the
+previously mirrored documents.** There is no account, no recovery, and no
+device-to-device continuity. Anything that promises the user their data follows
+them needs real auth first.
+
+**The mirror is one-way and minimal.** `users/{uid}/actions/{actionId}`, where
+the document id *is* the local Action id, written with `set()` so a retry
+updates rather than duplicates. The payload is exactly sixteen fields:
+`schemaVersion, id, title, status, urgency, category, due, dueIsDateOnly,
+amountMinorUnits, currency, recommendedNextStep, origin, createdAt, updatedAt,
+completedAt, archivedAt`. Deliberately absent: `sourceId`, `summary`,
+`whyThisMatters`, steps, facts, evidence quotes, OCR text, provider output,
+image paths, App Check tokens, diagnostics. **Nothing is read back — there is
+no two-way sync**, so the cloud can never overwrite local truth.
+
+**The deployed rules enforce that contract server-side**, not just by client
+convention: owner-only (`request.auth.uid == uid`), a `hasOnly` field
+allowlist, closed enums, `schemaVersion == 1`, `d.id == actionId`, no client
+delete, and a deny-everything catch-all. A payload carrying OCR text or an
+evidence quote is *rejected by the server*. `firestore.rules` in the repo is
+the source of truth; deploy with
+`firebase deploy --only firestore:rules --project action-app-7084b`.
+
+**Offline and failure behaviour.** Actions are created, listed, completed and
+survive process death with no network at all. Failures are classified and
+retried by a bounded single-pass outbox flush — one row per Action, backoff
+`min(2^attempts, 60)` minutes, triggered post-frame on Home and after
+confirm/complete. No timers, no background service, no full sync engine: a
+restart with an empty outbox performs no writes at all. A new local change
+resets that Action's backoff so a fresh edit is not stuck behind an old one.
 
 ## What Day 5 established
 

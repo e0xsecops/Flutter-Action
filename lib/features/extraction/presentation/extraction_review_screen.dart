@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+
+import '../../actions/application/action_providers.dart';
+import '../../actions/application/confirmed_draft_mapper.dart';
 
 import '../../../design/components/app_sheet.dart';
 import '../../../design/components/section_header.dart';
@@ -62,6 +67,11 @@ class _ExtractionReviewScreenState
   ExtractionAttempt _attempt = const ExtractionIdle();
   ActionReviewState? _review;
   ConfirmedActionDraft? _confirmed;
+
+  /// Produced once per review; retries of a failed save reuse it so the
+  /// Action id stays stable and persistence stays idempotent.
+  ConfirmedActionDraft? _pendingDraft;
+  bool _saving = false;
   int _stage = 0;
 
   static final _dateFormat = DateFormat('d MMM yyyy');
@@ -699,8 +709,8 @@ class _ExtractionReviewScreenState
                 const SizedBox(height: Space.xs),
               ],
               FilledButton(
-                onPressed: () => _onConfirmPressed(review),
-                child: Text(label),
+                onPressed: _saving ? null : () => _onConfirmPressed(review),
+                child: Text(_saving ? 'Saving…' : label),
               ),
             ],
           ),
@@ -709,7 +719,8 @@ class _ExtractionReviewScreenState
     );
   }
 
-  void _onConfirmPressed(ActionReviewState review) {
+  Future<void> _onConfirmPressed(ActionReviewState review) async {
+    if (_saving) return;
     if (!review.canConfirm) {
       // The button never confirms around an open question — it restates the
       // first one instead.
@@ -718,9 +729,40 @@ class _ExtractionReviewScreenState
       );
       return;
     }
-    final confirmed = review.confirm();
+
+    final confirmed = _pendingDraft ??= review.confirm();
+    setState(() => _saving = true);
+
+    // The Action exists when — and only when — this local transaction
+    // succeeds. No cloud call participates; the mirror runs strictly after,
+    // and its failure can never reach back here.
+    try {
+      await ref
+          .read(actionRepositoryProvider)
+          .create(actionItemFromDraft(confirmed));
+    } on Object {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      _log(ActionEvents.localPersistenceFailed);
+      // Review state and edits are untouched; the same draft (same id) is
+      // retried on the next tap. No AI re-run, no lost source.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Could not save this action. Nothing was lost — try again.'),
+        ),
+      );
+      return;
+    }
+
+    if (!mounted) return;
     _log(ReviewEvents.confirmed);
-    setState(() => _confirmed = confirmed);
+    _log(ActionEvents.created);
+    setState(() {
+      _confirmed = confirmed;
+      _saving = false;
+    });
+    unawaited(ref.read(actionSyncServiceProvider).flush());
   }
 
   // ------------------------------------------------------------ edit flows --
@@ -1517,8 +1559,7 @@ class _SuccessView extends StatelessWidget {
             ),
             const SizedBox(height: Space.xs),
             Text(
-              'Saving actions arrives with storage — this confirmation lives '
-              'in this session.',
+              'Saved on this device.',
               style: text.labelSmall?.copyWith(color: colors.textTertiary),
               textAlign: TextAlign.center,
             ),
