@@ -6,6 +6,24 @@
          guarantees it. -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- Reminders are local alarms. Android drops scheduled alarms across a
+         reboot, so the notification plugin re-arms them from its own boot
+         receiver below; without this permission that receiver never runs and
+         every pending reminder is silently lost. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <!-- Android 13+ runtime permission. Declared here, but requested only at
+         the moment the user creates their first reminder — never at launch. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <!-- Deliberately NOT declared: SCHEDULE_EXACT_ALARM and USE_EXACT_ALARM.
+         A reminder about a bill does not need second-perfect delivery, and
+         those permissions are audited by app stores and (for
+         SCHEDULE_EXACT_ALARM) revocable by the user at any time. Reminders are
+         scheduled with AndroidScheduleMode.inexactAllowWhileIdle, which needs
+         neither, at the cost of delivery that Android may shift by a few
+         minutes under battery/idle policy. -->
+
     <application
         android:label="Action"
         android:name="${applicationName}"
@@ -32,6 +50,23 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Shows a scheduled reminder when its alarm fires. -->
+        <receiver
+            android:exported="false"
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <!-- Re-arms scheduled reminders after a reboot or an app update, which
+             Android otherwise discards. MY_PACKAGE_REPLACED covers the update
+             case; the QUICKBOOT actions cover OEM fast-boot variants. -->
+        <receiver
+            android:exported="false"
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

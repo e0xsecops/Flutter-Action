@@ -1,9 +1,12 @@
 # Resume checkpoint
 
-Updated at the end of Day 9. Read this first when picking the project back up.
+Updated at the end of Day 10. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 10 complete.** Local reminders: durable intent, a replaceable
+  notification seam, crash-safe scheduling and a reconciler. Real delivery,
+  permission denial/recovery and reboot resilience verified on `emulator-5554`.
 - **Day 9 complete.** Action Detail (`/action/:id`) and the durable, editable,
   reorderable Action Chain. Verified live on `emulator-5554`.
 - **Day 8 complete.** Confirmed Actions are durable on-device in a Drift/SQLite
@@ -19,7 +22,7 @@ Updated at the end of Day 9. Read this first when picking the project back up.
 - **Day 4 complete: PASS WITH LIMITATIONS.** Foundation, design system, capture
   pipeline, image normalisation and on-device OCR are done and verified on
   hardware and on the emulator.
-- **Do not repeat Days 1–9.**
+- **Do not repeat Days 1–10.**
 
 ## Read before starting the next day
 
@@ -50,6 +53,67 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 10 established
+
+**Reminders are local, and only ever what the user asked for.** Nothing is
+scheduled automatically. Deadline-derived times are *offers*, and because a
+date-only deadline names no hour, the suggested 9am is shown on the chip and
+spelled out ("You will be reminded on Tuesday 18 August at 3:00 PM") before
+the button is pressed. Maximum five per Action.
+
+**Scheduling is deliberately non-exact.** `AndroidScheduleMode
+.inexactAllowWhileIdle`, and neither `SCHEDULE_EXACT_ALARM` nor
+`USE_EXACT_ALARM` is declared. A bill reminder does not need second-perfect
+delivery, and those permissions are store-audited (and, for
+SCHEDULE_EXACT_ALARM, user-revocable). **Delivery can therefore be shifted by
+Android's battery and idle policy** — the alarm Android registered for a
+near-term reminder carried `window=+5m`, and a week-out one `window=+1h`.
+
+**Permission is asked for exactly once, at the moment of intent** — when the
+user taps "Set reminder" for the first time, never at launch or onboarding.
+A refusal is not an error: the reminder is kept and shown as "Saved, but
+notifications are off". It is never described as working. When permission is
+later granted, the reconciler schedules it on the next launch.
+
+**Two systems, no shared transaction.** Drift holds intent; Android holds the
+alarm. The order is persist → permission → arm, so every crash point leaves a
+recoverable row rather than a lie. `ReminderState` names exactly where a
+reminder is (`pendingSchedule`, `scheduled`, `needsPermission`,
+`scheduleFailed`, `cancelPending`) and there is deliberately **no `delivered`
+state** — Android never tells us a notification was seen, and a scheduled time
+passing is not evidence.
+
+**Identity.** `platform_notification_id` is `INTEGER PRIMARY KEY
+AUTOINCREMENT` so it is stable, unique, and never recycled from a deleted
+reminder onto a new one; the domain `id` is a separate UUID. Rescheduling
+keeps both, so Android *replaces* an alarm rather than gaining a second.
+
+**The reconciler** runs once after startup — not on a timer, no WorkManager.
+It arms intent that never reached Android, restores alarms that vanished,
+finishes cancellations the user made but Android never heard, cleans up
+reminders whose Action is gone, and never re-arms a moment that has passed.
+
+**Timezone.** A reminder is an absolute instant plus the IANA zone it was
+chosen in (`Asia/Dhaka`, not `+06:00` — an offset cannot express when the
+offset changes). Changing device timezone does **not** move an agreed
+reminder, and editing an Action's deadline does not move its reminders either.
+
+**Reboot resilience is the plugin's boot receiver**, verified: after a full
+reboot and without opening the app, the alarm was registered again by
+`ScheduledNotificationBootReceiver` (declared in our manifest, needing
+`RECEIVE_BOOT_COMPLETED`). The app's reconciler is the second line of defence,
+not the first.
+
+**Privacy.** Notification title is the constant "Action reminder"; the body is
+the Action title and nothing else; `visibility` is `private` so a secure lock
+screen conceals it. The payload carries **only** the Action id, for routing.
+No amount, deadline, reference, source text or uid — verified against the
+delivered notification.
+
+**Nothing about reminders reaches the cloud.** No Firestore collection, no
+rules change, no Firebase Messaging, no push token. Database v3 is local only;
+`actionSchemaVersion` stays 1.
 
 ## What Day 9 established
 

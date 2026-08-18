@@ -4,7 +4,9 @@ import 'package:action_app/features/actions/data/action_cloud_mirror.dart';
 import 'package:action_app/features/actions/data/actions_database.dart';
 import 'package:action_app/features/actions/data/auth_identity_service.dart';
 import 'package:action_app/features/actions/data/drift_action_repository.dart';
+import 'package:action_app/features/actions/data/drift_reminder_repository.dart';
 import 'package:action_app/features/actions/domain/action_item.dart';
+import 'package:action_app/features/actions/domain/action_reminder.dart';
 import 'package:action_app/features/actions/presentation/action_detail_screen.dart';
 import 'package:action_app/features/capture/application/capture_controller.dart';
 import 'package:action_app/features/capture/data/source_store.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import 'support/actions_test_support.dart';
+import 'support/fake_notification_scheduler.dart';
 
 /// The Action Detail screen, driven against a real database.
 ///
@@ -55,6 +58,7 @@ class _MemSourceStore implements SourceStore {
 
 late ActionsDatabase _db;
 late DriftActionRepository _repo;
+late FakeNotificationScheduler _scheduler;
 
 /// See `test/widget_test.dart`: the detail screen subscribes to a drift query
 /// stream, and drift schedules a zero-duration timer when that subscription
@@ -105,6 +109,8 @@ Future<void> pumpDetail(
         actionCloudMirrorProvider.overrideWithValue(const NoopActionCloudMirror()),
         sourceStoreProvider.overrideWith((ref) async => _MemSourceStore(sources)),
         appClockProvider.overrideWithValue(() => testNow),
+        // No widget test ever reaches an Android notification API.
+        notificationSchedulerProvider.overrideWithValue(_scheduler),
       ],
       child: MaterialApp.router(
         theme: AppTheme.light(),
@@ -140,8 +146,12 @@ void main() {
   setUp(() {
     _db = memoryDatabase();
     _repo = DriftActionRepository(_db);
+    _scheduler = FakeNotificationScheduler();
   });
-  tearDown(() => _db.close());
+  tearDown(() {
+    _scheduler.dispose();
+    return _db.close();
+  });
 
   Future<void> seed(ActionItem action) => _repo.create(action);
 
@@ -725,6 +735,256 @@ void main() {
     expect(find.text('The original capture is no longer available.'),
         findsOneWidget);
     expect(find.text('View source'), findsNothing);
+  });
+
+  // -------------------------------------------------------- reminders --
+
+  /// Opens the sheet, accepts what it offers, then waits out the confirmation
+  /// SnackBar — which otherwise sits over the bottom bar and swallows the
+  /// next tap.
+  Future<void> addReminder(WidgetTester tester, {String? preset}) async {
+    await tester.tap(find.text('Add reminder'));
+    await tester.pumpAndSettle();
+    if (preset != null) {
+      await tester.tap(find.text(preset));
+      await tester.pumpAndSettle();
+    }
+    await tester.tap(find.widgetWithText(FilledButton, 'Set reminder'));
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pumpAndSettle();
+  }
+
+  detailTest('an Action with no reminders says so plainly', (tester) async {
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1');
+
+    expect(find.text('REMINDERS'), findsOneWidget);
+    expect(find.text('No reminders yet.'), findsOneWidget);
+    expect(find.text('Add reminder'), findsOneWidget);
+  });
+
+  detailTest('a deadline turns into offers that show their real clock time',
+      (tester) async {
+    await seed(sampleAction(
+      'a1',
+      dueAt: ActionDue(DateTime(2026, 8, 30)),
+    ));
+    await pumpDetail(tester, id: 'a1');
+
+    await tester.tap(find.text('Add reminder'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('1 week before'), findsOneWidget);
+    expect(find.text('1 day before'), findsOneWidget);
+    expect(find.text('On the day'), findsOneWidget);
+    // A date-only deadline has no time of day, so the suggested 9am must be
+    // visible before anything is created.
+    expect(find.textContaining('9:00 AM'), findsWidgets);
+    expect(find.textContaining('You will be reminded on'), findsOneWidget);
+  });
+
+  detailTest('setting a reminder schedules it and says so honestly',
+      (tester) async {
+    await seed(sampleAction('a1', title: 'Pay the bill'));
+    await pumpDetail(tester, id: 'a1');
+
+    // Inline rather than via the helper, so the confirmation is still on
+    // screen to assert.
+    await tester.tap(find.text('Add reminder'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Set reminder'));
+    await tester.pumpAndSettle();
+
+    expect(_scheduler.scheduled, hasLength(1));
+    expect(_scheduler.scheduleLog.single.title, 'Pay the bill');
+    expect(_scheduler.scheduleLog.single.actionId, 'a1');
+    expect(find.textContaining('Reminder set'), findsOneWidget);
+  });
+
+  detailTest('a scheduled reminder is listed with its time', (tester) async {
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1');
+    await addReminder(tester);
+
+    expect(find.text('No reminders yet.'), findsNothing);
+    expect(find.byIcon(Icons.notifications_active_outlined), findsOneWidget);
+  });
+
+  detailTest('several reminders can coexist on one Action', (tester) async {
+    await seed(sampleAction('a1', dueAt: ActionDue(DateTime(2026, 8, 30))));
+    await pumpDetail(tester, id: 'a1');
+
+    await addReminder(tester, preset: '1 week before');
+    await addReminder(tester, preset: '1 day before');
+
+    expect(_scheduler.scheduled, hasLength(2));
+    expect(find.byIcon(Icons.notifications_active_outlined), findsNWidgets(2));
+  });
+
+  detailTest('refusing notification permission never claims a reminder is on',
+      (tester) async {
+    _scheduler
+      ..allowed = false
+      ..grantOnRequest = false;
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1');
+
+    await addReminder(tester);
+
+    expect(_scheduler.scheduleLog, isEmpty,
+        reason: 'nothing may be armed without permission');
+    // Kept, and labelled for exactly what it is — never as active.
+    expect(find.text('Saved, but notifications are off'), findsOneWidget);
+    expect(find.byIcon(Icons.notifications_off_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.notifications_active_outlined), findsNothing);
+  });
+
+  detailTest('permission is never requested just for opening the screen',
+      (tester) async {
+    _scheduler.allowed = false;
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1');
+
+    expect(_scheduler.permissionRequests, 0,
+        reason: 'asking before the user wants anything is how apps get '
+            'notifications turned off forever');
+  });
+
+  detailTest('a platform refusal is shown, not hidden', (tester) async {
+    _scheduler.failScheduleWith = 'platform_error';
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1');
+
+    await addReminder(tester);
+
+    expect(find.text("Couldn't be scheduled"), findsOneWidget);
+  });
+
+  detailTest('a reminder can be moved to a different time', (tester) async {
+    await seed(sampleAction('a1', dueAt: ActionDue(DateTime(2026, 8, 30))));
+    await pumpDetail(tester, id: 'a1');
+    await addReminder(tester, preset: '1 day before');
+    final firstId = _scheduler.scheduled.keys.single;
+
+    await tester.tap(find.byTooltip('Change reminder'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('On the day'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Set reminder'));
+    await tester.pumpAndSettle();
+
+    expect(_scheduler.scheduled, hasLength(1),
+        reason: 'rescheduling replaces the alarm rather than adding one');
+    expect(_scheduler.scheduled.keys.single, firstId,
+        reason: 'and it keeps the same platform id');
+  });
+
+  detailTest('removing a reminder cancels the alarm too', (tester) async {
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1');
+    await addReminder(tester);
+    final id = _scheduler.scheduled.keys.single;
+
+    await tester.tap(find.byTooltip('Remove reminder'));
+    await tester.pumpAndSettle();
+
+    expect(_scheduler.cancelLog, contains(id));
+    expect(_scheduler.scheduled, isEmpty);
+    expect(find.text('No reminders yet.'), findsOneWidget);
+  });
+
+  detailTest('the limit is explained rather than silently enforced',
+      (tester) async {
+    await seed(sampleAction('a1'));
+    // Seeded straight into the store: this test is about what a full Action
+    // looks like, not about driving the sheet five times.
+    final store = DriftReminderRepository(_db);
+    for (var i = 1; i <= maxRemindersPerAction; i++) {
+      await store.createIntent(
+        actionId: 'a1',
+        scheduledAt: testNow.add(Duration(days: i)),
+        timeZoneId: 'Asia/Dhaka',
+        now: testNow,
+      );
+    }
+    await pumpDetail(tester, id: 'a1');
+
+    expect(find.textContaining('the most reminders one action can have'),
+        findsOneWidget);
+    expect(find.text('Add reminder'), findsNothing,
+        reason: 'offering a sixth only to refuse it would be worse');
+  });
+
+  detailTest('completing an Action withdraws its future reminders',
+      (tester) async {
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1');
+    await addReminder(tester);
+    expect(_scheduler.scheduled, hasLength(1));
+
+    await tester.tap(find.text('Mark action complete'));
+    await tester.pumpAndSettle();
+
+    expect(_scheduler.scheduled, isEmpty,
+        reason: 'a finished obligation should stop nudging');
+    expect(find.text('No reminders yet.'), findsOneWidget);
+  });
+
+  detailTest('reopening does not bring cancelled reminders back',
+      (tester) async {
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1');
+    await addReminder(tester);
+    await tester.tap(find.text('Mark action complete'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Reopen action'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('No reminders yet.'), findsOneWidget);
+    expect(_scheduler.scheduled, isEmpty);
+  });
+
+  detailTest('a completed Action does not invite new reminders',
+      (tester) async {
+    await seed(sampleAction(
+      'a1',
+      status: ActionStatus.completed,
+      completedAt: testNow,
+    ));
+    await pumpDetail(tester, id: 'a1');
+
+    expect(find.text('REMINDERS'), findsOneWidget);
+    expect(find.text('Add reminder'), findsNothing);
+  });
+
+  detailTest('changing the deadline leaves existing reminders where they are',
+      (tester) async {
+    await seed(sampleAction('a1', dueAt: ActionDue(DateTime(2026, 8, 30))));
+    await pumpDetail(tester, id: 'a1');
+    await addReminder(tester, preset: '1 day before');
+    final agreed = _scheduler.scheduled.values.single.scheduledAt;
+
+    await tester.tap(find.text('30 Aug'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '2026-12-01');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Use this date'));
+    await tester.pumpAndSettle();
+
+    expect(_scheduler.scheduled.values.single.scheduledAt, agreed,
+        reason: 'a reminder is a time the user agreed to; moving the deadline '
+            'must not silently move it');
+  });
+
+  detailTest('reminders render in dark theme', (tester) async {
+    await seed(sampleAction('a1'));
+    await pumpDetail(tester, id: 'a1', themeMode: ThemeMode.dark);
+    await addReminder(tester);
+
+    expect(tester.takeException(), isNull);
+    expect(find.byIcon(Icons.notifications_active_outlined), findsOneWidget);
   });
 
   // ------------------------------------------------------------ shell --

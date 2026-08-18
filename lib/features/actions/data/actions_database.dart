@@ -104,6 +104,45 @@ class ActionFactsTable extends Table {
   Set<Column> get primaryKey => {actionId, factKey};
 }
 
+/// Reminders the user asked for, and what we know about the OS alarm behind
+/// each one.
+///
+/// Two identities on purpose. [platformNotificationId] is an INTEGER PRIMARY
+/// KEY AUTOINCREMENT because Android addresses notifications by int and
+/// AUTOINCREMENT never reuses a value — a recycled id could cancel or replace
+/// a stale notification belonging to a reminder the user already deleted.
+/// [id] is the domain identity used everywhere else, so the two concerns
+/// never get confused.
+///
+/// A reminder is an **absolute instant** plus the IANA zone it was chosen in.
+/// The instant is what Android is told; the zone is kept so the choice can be
+/// explained and re-derived later. Changing device timezone does not move an
+/// already-agreed reminder.
+@DataClassName('ActionReminderRow')
+class ActionRemindersTable extends Table {
+  @override
+  String get tableName => 'action_reminders';
+
+  IntColumn get platformNotificationId => integer().autoIncrement()();
+
+  TextColumn get id => text().unique()();
+  TextColumn get actionId => text()();
+
+  /// The absolute moment, epoch microseconds UTC.
+  IntColumn get scheduledAtMicros => integer()();
+
+  /// IANA zone id in force when the user chose the time (e.g. 'Asia/Dhaka').
+  TextColumn get timeZoneId => text()();
+
+  TextColumn get state => text()();
+
+  IntColumn get createdAtMicros => integer()();
+  IntColumn get updatedAtMicros => integer()();
+
+  /// A short machine word, never message text and never content.
+  TextColumn get lastFailureClass => text().nullable()();
+}
+
 /// The sync outbox: which Actions still owe the cloud mirror an upsert.
 ///
 /// One row per Action (the only Day-8 operation is upsert, and a newer local
@@ -128,7 +167,13 @@ class SyncOutboxTable extends Table {
 }
 
 @DriftDatabase(
-  tables: [ActionsTable, ActionStepsTable, ActionFactsTable, SyncOutboxTable],
+  tables: [
+    ActionsTable,
+    ActionStepsTable,
+    ActionFactsTable,
+    SyncOutboxTable,
+    ActionRemindersTable,
+  ],
 )
 class ActionsDatabase extends _$ActionsDatabase {
   ActionsDatabase(super.e, {DateTime Function()? clock})
@@ -139,14 +184,14 @@ class ActionsDatabase extends _$ActionsDatabase {
   final DateTime Function() _clock;
 
   /// v2 (Day 9) gave `action_steps` a stable primary key plus completion and
-  /// timestamp columns.
+  /// timestamp columns. v3 (Day 10) added `action_reminders`.
   ///
   /// This is the *database* version and is deliberately independent of
-  /// [actionSchemaVersion], which describes the mirrored Action payload and
-  /// stays at 1: steps are local-only, so nothing the cloud sees changed, and
-  /// the deployed Firestore rules pin `schemaVersion == 1`.
+  /// `actionSchemaVersion`, which describes the mirrored Action payload and
+  /// stays at 1: steps and reminders are local-only, so nothing the cloud
+  /// sees changed, and the deployed Firestore rules pin `schemaVersion == 1`.
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -192,6 +237,11 @@ class ActionsDatabase extends _$ActionsDatabase {
                 },
               ),
             );
+          }
+          if (from < 3) {
+            // Purely additive: a new table, and not one existing row is read,
+            // rewritten or dropped to get it.
+            await m.createTable(actionRemindersTable);
           }
         },
         beforeOpen: (details) async {

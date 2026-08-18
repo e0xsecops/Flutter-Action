@@ -244,7 +244,8 @@ void main() {
     test('fresh database initialises at the current schema version', () async {
       await repo.create(sampleAction('a1'));
       final row = await db.customSelect('PRAGMA user_version').getSingle();
-      expect(row.data.values.single, 2, reason: 'Day 9 added the chain columns');
+      expect(row.data.values.single, 3,
+          reason: 'Day 9 added the chain columns, Day 10 the reminder table');
     });
 
     test('the mirrored Action schema version is NOT the database version',

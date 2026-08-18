@@ -108,9 +108,27 @@ void main() {
     expect(steps.first.description, 'the important part');
     expect(steps.map((s) => s.order), [0, 1], reason: 'order is preserved');
 
+    // A Day-8 database jumps straight to the current version, running every
+    // intermediate step on the way.
     final version =
         await db.customSelect('PRAGMA user_version').getSingle();
-    expect(version.data.values.single, 2);
+    expect(version.data.values.single, 3);
+  });
+
+  test('a v1 database also gains the later tables on the way through',
+      () async {
+    await writeV1();
+    final db = ActionsDatabase(NativeDatabase(file), clock: () => testNow);
+    addTearDown(db.close);
+
+    // v1 -> v2 -> v3 in one open: the reminder table must exist afterwards.
+    final tables = await db
+        .customSelect("SELECT name FROM sqlite_master WHERE type = 'table'")
+        .get();
+    expect(
+      tables.map((r) => r.data['name']),
+      contains('action_reminders'),
+    );
   });
 
   test('migrated steps gain stable, distinct identities', () async {

@@ -2565,6 +2565,601 @@ class SyncOutboxTableCompanion extends UpdateCompanion<SyncOutboxRow> {
   }
 }
 
+class $ActionRemindersTableTable extends ActionRemindersTable
+    with TableInfo<$ActionRemindersTableTable, ActionReminderRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActionRemindersTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _platformNotificationIdMeta =
+      const VerificationMeta('platformNotificationId');
+  @override
+  late final GeneratedColumn<int> platformNotificationId = GeneratedColumn<int>(
+    'platform_notification_id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _actionIdMeta = const VerificationMeta(
+    'actionId',
+  );
+  @override
+  late final GeneratedColumn<String> actionId = GeneratedColumn<String>(
+    'action_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _scheduledAtMicrosMeta = const VerificationMeta(
+    'scheduledAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> scheduledAtMicros = GeneratedColumn<int>(
+    'scheduled_at_micros',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _timeZoneIdMeta = const VerificationMeta(
+    'timeZoneId',
+  );
+  @override
+  late final GeneratedColumn<String> timeZoneId = GeneratedColumn<String>(
+    'time_zone_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _stateMeta = const VerificationMeta('state');
+  @override
+  late final GeneratedColumn<String> state = GeneratedColumn<String>(
+    'state',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMicrosMeta = const VerificationMeta(
+    'createdAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> createdAtMicros = GeneratedColumn<int>(
+    'created_at_micros',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMicrosMeta = const VerificationMeta(
+    'updatedAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAtMicros = GeneratedColumn<int>(
+    'updated_at_micros',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastFailureClassMeta = const VerificationMeta(
+    'lastFailureClass',
+  );
+  @override
+  late final GeneratedColumn<String> lastFailureClass = GeneratedColumn<String>(
+    'last_failure_class',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    platformNotificationId,
+    id,
+    actionId,
+    scheduledAtMicros,
+    timeZoneId,
+    state,
+    createdAtMicros,
+    updatedAtMicros,
+    lastFailureClass,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'action_reminders';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ActionReminderRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('platform_notification_id')) {
+      context.handle(
+        _platformNotificationIdMeta,
+        platformNotificationId.isAcceptableOrUnknown(
+          data['platform_notification_id']!,
+          _platformNotificationIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('action_id')) {
+      context.handle(
+        _actionIdMeta,
+        actionId.isAcceptableOrUnknown(data['action_id']!, _actionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actionIdMeta);
+    }
+    if (data.containsKey('scheduled_at_micros')) {
+      context.handle(
+        _scheduledAtMicrosMeta,
+        scheduledAtMicros.isAcceptableOrUnknown(
+          data['scheduled_at_micros']!,
+          _scheduledAtMicrosMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_scheduledAtMicrosMeta);
+    }
+    if (data.containsKey('time_zone_id')) {
+      context.handle(
+        _timeZoneIdMeta,
+        timeZoneId.isAcceptableOrUnknown(
+          data['time_zone_id']!,
+          _timeZoneIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_timeZoneIdMeta);
+    }
+    if (data.containsKey('state')) {
+      context.handle(
+        _stateMeta,
+        state.isAcceptableOrUnknown(data['state']!, _stateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_stateMeta);
+    }
+    if (data.containsKey('created_at_micros')) {
+      context.handle(
+        _createdAtMicrosMeta,
+        createdAtMicros.isAcceptableOrUnknown(
+          data['created_at_micros']!,
+          _createdAtMicrosMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMicrosMeta);
+    }
+    if (data.containsKey('updated_at_micros')) {
+      context.handle(
+        _updatedAtMicrosMeta,
+        updatedAtMicros.isAcceptableOrUnknown(
+          data['updated_at_micros']!,
+          _updatedAtMicrosMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMicrosMeta);
+    }
+    if (data.containsKey('last_failure_class')) {
+      context.handle(
+        _lastFailureClassMeta,
+        lastFailureClass.isAcceptableOrUnknown(
+          data['last_failure_class']!,
+          _lastFailureClassMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {platformNotificationId};
+  @override
+  ActionReminderRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActionReminderRow(
+      platformNotificationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}platform_notification_id'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      actionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}action_id'],
+      )!,
+      scheduledAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}scheduled_at_micros'],
+      )!,
+      timeZoneId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}time_zone_id'],
+      )!,
+      state: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}state'],
+      )!,
+      createdAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at_micros'],
+      )!,
+      updatedAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at_micros'],
+      )!,
+      lastFailureClass: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_failure_class'],
+      ),
+    );
+  }
+
+  @override
+  $ActionRemindersTableTable createAlias(String alias) {
+    return $ActionRemindersTableTable(attachedDatabase, alias);
+  }
+}
+
+class ActionReminderRow extends DataClass
+    implements Insertable<ActionReminderRow> {
+  final int platformNotificationId;
+  final String id;
+  final String actionId;
+
+  /// The absolute moment, epoch microseconds UTC.
+  final int scheduledAtMicros;
+
+  /// IANA zone id in force when the user chose the time (e.g. 'Asia/Dhaka').
+  final String timeZoneId;
+  final String state;
+  final int createdAtMicros;
+  final int updatedAtMicros;
+
+  /// A short machine word, never message text and never content.
+  final String? lastFailureClass;
+  const ActionReminderRow({
+    required this.platformNotificationId,
+    required this.id,
+    required this.actionId,
+    required this.scheduledAtMicros,
+    required this.timeZoneId,
+    required this.state,
+    required this.createdAtMicros,
+    required this.updatedAtMicros,
+    this.lastFailureClass,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['platform_notification_id'] = Variable<int>(platformNotificationId);
+    map['id'] = Variable<String>(id);
+    map['action_id'] = Variable<String>(actionId);
+    map['scheduled_at_micros'] = Variable<int>(scheduledAtMicros);
+    map['time_zone_id'] = Variable<String>(timeZoneId);
+    map['state'] = Variable<String>(state);
+    map['created_at_micros'] = Variable<int>(createdAtMicros);
+    map['updated_at_micros'] = Variable<int>(updatedAtMicros);
+    if (!nullToAbsent || lastFailureClass != null) {
+      map['last_failure_class'] = Variable<String>(lastFailureClass);
+    }
+    return map;
+  }
+
+  ActionRemindersTableCompanion toCompanion(bool nullToAbsent) {
+    return ActionRemindersTableCompanion(
+      platformNotificationId: Value(platformNotificationId),
+      id: Value(id),
+      actionId: Value(actionId),
+      scheduledAtMicros: Value(scheduledAtMicros),
+      timeZoneId: Value(timeZoneId),
+      state: Value(state),
+      createdAtMicros: Value(createdAtMicros),
+      updatedAtMicros: Value(updatedAtMicros),
+      lastFailureClass: lastFailureClass == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastFailureClass),
+    );
+  }
+
+  factory ActionReminderRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ActionReminderRow(
+      platformNotificationId: serializer.fromJson<int>(
+        json['platformNotificationId'],
+      ),
+      id: serializer.fromJson<String>(json['id']),
+      actionId: serializer.fromJson<String>(json['actionId']),
+      scheduledAtMicros: serializer.fromJson<int>(json['scheduledAtMicros']),
+      timeZoneId: serializer.fromJson<String>(json['timeZoneId']),
+      state: serializer.fromJson<String>(json['state']),
+      createdAtMicros: serializer.fromJson<int>(json['createdAtMicros']),
+      updatedAtMicros: serializer.fromJson<int>(json['updatedAtMicros']),
+      lastFailureClass: serializer.fromJson<String?>(json['lastFailureClass']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'platformNotificationId': serializer.toJson<int>(platformNotificationId),
+      'id': serializer.toJson<String>(id),
+      'actionId': serializer.toJson<String>(actionId),
+      'scheduledAtMicros': serializer.toJson<int>(scheduledAtMicros),
+      'timeZoneId': serializer.toJson<String>(timeZoneId),
+      'state': serializer.toJson<String>(state),
+      'createdAtMicros': serializer.toJson<int>(createdAtMicros),
+      'updatedAtMicros': serializer.toJson<int>(updatedAtMicros),
+      'lastFailureClass': serializer.toJson<String?>(lastFailureClass),
+    };
+  }
+
+  ActionReminderRow copyWith({
+    int? platformNotificationId,
+    String? id,
+    String? actionId,
+    int? scheduledAtMicros,
+    String? timeZoneId,
+    String? state,
+    int? createdAtMicros,
+    int? updatedAtMicros,
+    Value<String?> lastFailureClass = const Value.absent(),
+  }) => ActionReminderRow(
+    platformNotificationId:
+        platformNotificationId ?? this.platformNotificationId,
+    id: id ?? this.id,
+    actionId: actionId ?? this.actionId,
+    scheduledAtMicros: scheduledAtMicros ?? this.scheduledAtMicros,
+    timeZoneId: timeZoneId ?? this.timeZoneId,
+    state: state ?? this.state,
+    createdAtMicros: createdAtMicros ?? this.createdAtMicros,
+    updatedAtMicros: updatedAtMicros ?? this.updatedAtMicros,
+    lastFailureClass: lastFailureClass.present
+        ? lastFailureClass.value
+        : this.lastFailureClass,
+  );
+  ActionReminderRow copyWithCompanion(ActionRemindersTableCompanion data) {
+    return ActionReminderRow(
+      platformNotificationId: data.platformNotificationId.present
+          ? data.platformNotificationId.value
+          : this.platformNotificationId,
+      id: data.id.present ? data.id.value : this.id,
+      actionId: data.actionId.present ? data.actionId.value : this.actionId,
+      scheduledAtMicros: data.scheduledAtMicros.present
+          ? data.scheduledAtMicros.value
+          : this.scheduledAtMicros,
+      timeZoneId: data.timeZoneId.present
+          ? data.timeZoneId.value
+          : this.timeZoneId,
+      state: data.state.present ? data.state.value : this.state,
+      createdAtMicros: data.createdAtMicros.present
+          ? data.createdAtMicros.value
+          : this.createdAtMicros,
+      updatedAtMicros: data.updatedAtMicros.present
+          ? data.updatedAtMicros.value
+          : this.updatedAtMicros,
+      lastFailureClass: data.lastFailureClass.present
+          ? data.lastFailureClass.value
+          : this.lastFailureClass,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActionReminderRow(')
+          ..write('platformNotificationId: $platformNotificationId, ')
+          ..write('id: $id, ')
+          ..write('actionId: $actionId, ')
+          ..write('scheduledAtMicros: $scheduledAtMicros, ')
+          ..write('timeZoneId: $timeZoneId, ')
+          ..write('state: $state, ')
+          ..write('createdAtMicros: $createdAtMicros, ')
+          ..write('updatedAtMicros: $updatedAtMicros, ')
+          ..write('lastFailureClass: $lastFailureClass')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    platformNotificationId,
+    id,
+    actionId,
+    scheduledAtMicros,
+    timeZoneId,
+    state,
+    createdAtMicros,
+    updatedAtMicros,
+    lastFailureClass,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ActionReminderRow &&
+          other.platformNotificationId == this.platformNotificationId &&
+          other.id == this.id &&
+          other.actionId == this.actionId &&
+          other.scheduledAtMicros == this.scheduledAtMicros &&
+          other.timeZoneId == this.timeZoneId &&
+          other.state == this.state &&
+          other.createdAtMicros == this.createdAtMicros &&
+          other.updatedAtMicros == this.updatedAtMicros &&
+          other.lastFailureClass == this.lastFailureClass);
+}
+
+class ActionRemindersTableCompanion extends UpdateCompanion<ActionReminderRow> {
+  final Value<int> platformNotificationId;
+  final Value<String> id;
+  final Value<String> actionId;
+  final Value<int> scheduledAtMicros;
+  final Value<String> timeZoneId;
+  final Value<String> state;
+  final Value<int> createdAtMicros;
+  final Value<int> updatedAtMicros;
+  final Value<String?> lastFailureClass;
+  const ActionRemindersTableCompanion({
+    this.platformNotificationId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.actionId = const Value.absent(),
+    this.scheduledAtMicros = const Value.absent(),
+    this.timeZoneId = const Value.absent(),
+    this.state = const Value.absent(),
+    this.createdAtMicros = const Value.absent(),
+    this.updatedAtMicros = const Value.absent(),
+    this.lastFailureClass = const Value.absent(),
+  });
+  ActionRemindersTableCompanion.insert({
+    this.platformNotificationId = const Value.absent(),
+    required String id,
+    required String actionId,
+    required int scheduledAtMicros,
+    required String timeZoneId,
+    required String state,
+    required int createdAtMicros,
+    required int updatedAtMicros,
+    this.lastFailureClass = const Value.absent(),
+  }) : id = Value(id),
+       actionId = Value(actionId),
+       scheduledAtMicros = Value(scheduledAtMicros),
+       timeZoneId = Value(timeZoneId),
+       state = Value(state),
+       createdAtMicros = Value(createdAtMicros),
+       updatedAtMicros = Value(updatedAtMicros);
+  static Insertable<ActionReminderRow> custom({
+    Expression<int>? platformNotificationId,
+    Expression<String>? id,
+    Expression<String>? actionId,
+    Expression<int>? scheduledAtMicros,
+    Expression<String>? timeZoneId,
+    Expression<String>? state,
+    Expression<int>? createdAtMicros,
+    Expression<int>? updatedAtMicros,
+    Expression<String>? lastFailureClass,
+  }) {
+    return RawValuesInsertable({
+      if (platformNotificationId != null)
+        'platform_notification_id': platformNotificationId,
+      if (id != null) 'id': id,
+      if (actionId != null) 'action_id': actionId,
+      if (scheduledAtMicros != null) 'scheduled_at_micros': scheduledAtMicros,
+      if (timeZoneId != null) 'time_zone_id': timeZoneId,
+      if (state != null) 'state': state,
+      if (createdAtMicros != null) 'created_at_micros': createdAtMicros,
+      if (updatedAtMicros != null) 'updated_at_micros': updatedAtMicros,
+      if (lastFailureClass != null) 'last_failure_class': lastFailureClass,
+    });
+  }
+
+  ActionRemindersTableCompanion copyWith({
+    Value<int>? platformNotificationId,
+    Value<String>? id,
+    Value<String>? actionId,
+    Value<int>? scheduledAtMicros,
+    Value<String>? timeZoneId,
+    Value<String>? state,
+    Value<int>? createdAtMicros,
+    Value<int>? updatedAtMicros,
+    Value<String?>? lastFailureClass,
+  }) {
+    return ActionRemindersTableCompanion(
+      platformNotificationId:
+          platformNotificationId ?? this.platformNotificationId,
+      id: id ?? this.id,
+      actionId: actionId ?? this.actionId,
+      scheduledAtMicros: scheduledAtMicros ?? this.scheduledAtMicros,
+      timeZoneId: timeZoneId ?? this.timeZoneId,
+      state: state ?? this.state,
+      createdAtMicros: createdAtMicros ?? this.createdAtMicros,
+      updatedAtMicros: updatedAtMicros ?? this.updatedAtMicros,
+      lastFailureClass: lastFailureClass ?? this.lastFailureClass,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (platformNotificationId.present) {
+      map['platform_notification_id'] = Variable<int>(
+        platformNotificationId.value,
+      );
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (actionId.present) {
+      map['action_id'] = Variable<String>(actionId.value);
+    }
+    if (scheduledAtMicros.present) {
+      map['scheduled_at_micros'] = Variable<int>(scheduledAtMicros.value);
+    }
+    if (timeZoneId.present) {
+      map['time_zone_id'] = Variable<String>(timeZoneId.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(state.value);
+    }
+    if (createdAtMicros.present) {
+      map['created_at_micros'] = Variable<int>(createdAtMicros.value);
+    }
+    if (updatedAtMicros.present) {
+      map['updated_at_micros'] = Variable<int>(updatedAtMicros.value);
+    }
+    if (lastFailureClass.present) {
+      map['last_failure_class'] = Variable<String>(lastFailureClass.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActionRemindersTableCompanion(')
+          ..write('platformNotificationId: $platformNotificationId, ')
+          ..write('id: $id, ')
+          ..write('actionId: $actionId, ')
+          ..write('scheduledAtMicros: $scheduledAtMicros, ')
+          ..write('timeZoneId: $timeZoneId, ')
+          ..write('state: $state, ')
+          ..write('createdAtMicros: $createdAtMicros, ')
+          ..write('updatedAtMicros: $updatedAtMicros, ')
+          ..write('lastFailureClass: $lastFailureClass')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$ActionsDatabase extends GeneratedDatabase {
   _$ActionsDatabase(QueryExecutor e) : super(e);
   $ActionsDatabaseManager get managers => $ActionsDatabaseManager(this);
@@ -2578,6 +3173,8 @@ abstract class _$ActionsDatabase extends GeneratedDatabase {
   late final $SyncOutboxTableTable syncOutboxTable = $SyncOutboxTableTable(
     this,
   );
+  late final $ActionRemindersTableTable actionRemindersTable =
+      $ActionRemindersTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2587,6 +3184,7 @@ abstract class _$ActionsDatabase extends GeneratedDatabase {
     actionStepsTable,
     actionFactsTable,
     syncOutboxTable,
+    actionRemindersTable,
   ];
 }
 
@@ -3836,6 +4434,304 @@ typedef $$SyncOutboxTableTableProcessedTableManager =
       SyncOutboxRow,
       PrefetchHooks Function()
     >;
+typedef $$ActionRemindersTableTableCreateCompanionBuilder =
+    ActionRemindersTableCompanion Function({
+      Value<int> platformNotificationId,
+      required String id,
+      required String actionId,
+      required int scheduledAtMicros,
+      required String timeZoneId,
+      required String state,
+      required int createdAtMicros,
+      required int updatedAtMicros,
+      Value<String?> lastFailureClass,
+    });
+typedef $$ActionRemindersTableTableUpdateCompanionBuilder =
+    ActionRemindersTableCompanion Function({
+      Value<int> platformNotificationId,
+      Value<String> id,
+      Value<String> actionId,
+      Value<int> scheduledAtMicros,
+      Value<String> timeZoneId,
+      Value<String> state,
+      Value<int> createdAtMicros,
+      Value<int> updatedAtMicros,
+      Value<String?> lastFailureClass,
+    });
+
+class $$ActionRemindersTableTableFilterComposer
+    extends Composer<_$ActionsDatabase, $ActionRemindersTableTable> {
+  $$ActionRemindersTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get platformNotificationId => $composableBuilder(
+    column: $table.platformNotificationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actionId => $composableBuilder(
+    column: $table.actionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get scheduledAtMicros => $composableBuilder(
+    column: $table.scheduledAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get timeZoneId => $composableBuilder(
+    column: $table.timeZoneId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastFailureClass => $composableBuilder(
+    column: $table.lastFailureClass,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ActionRemindersTableTableOrderingComposer
+    extends Composer<_$ActionsDatabase, $ActionRemindersTableTable> {
+  $$ActionRemindersTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get platformNotificationId => $composableBuilder(
+    column: $table.platformNotificationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actionId => $composableBuilder(
+    column: $table.actionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get scheduledAtMicros => $composableBuilder(
+    column: $table.scheduledAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get timeZoneId => $composableBuilder(
+    column: $table.timeZoneId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastFailureClass => $composableBuilder(
+    column: $table.lastFailureClass,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ActionRemindersTableTableAnnotationComposer
+    extends Composer<_$ActionsDatabase, $ActionRemindersTableTable> {
+  $$ActionRemindersTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get platformNotificationId => $composableBuilder(
+    column: $table.platformNotificationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get actionId =>
+      $composableBuilder(column: $table.actionId, builder: (column) => column);
+
+  GeneratedColumn<int> get scheduledAtMicros => $composableBuilder(
+    column: $table.scheduledAtMicros,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get timeZoneId => $composableBuilder(
+    column: $table.timeZoneId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
+
+  GeneratedColumn<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastFailureClass => $composableBuilder(
+    column: $table.lastFailureClass,
+    builder: (column) => column,
+  );
+}
+
+class $$ActionRemindersTableTableTableManager
+    extends
+        RootTableManager<
+          _$ActionsDatabase,
+          $ActionRemindersTableTable,
+          ActionReminderRow,
+          $$ActionRemindersTableTableFilterComposer,
+          $$ActionRemindersTableTableOrderingComposer,
+          $$ActionRemindersTableTableAnnotationComposer,
+          $$ActionRemindersTableTableCreateCompanionBuilder,
+          $$ActionRemindersTableTableUpdateCompanionBuilder,
+          (
+            ActionReminderRow,
+            BaseReferences<
+              _$ActionsDatabase,
+              $ActionRemindersTableTable,
+              ActionReminderRow
+            >,
+          ),
+          ActionReminderRow,
+          PrefetchHooks Function()
+        > {
+  $$ActionRemindersTableTableTableManager(
+    _$ActionsDatabase db,
+    $ActionRemindersTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ActionRemindersTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ActionRemindersTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ActionRemindersTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> platformNotificationId = const Value.absent(),
+                Value<String> id = const Value.absent(),
+                Value<String> actionId = const Value.absent(),
+                Value<int> scheduledAtMicros = const Value.absent(),
+                Value<String> timeZoneId = const Value.absent(),
+                Value<String> state = const Value.absent(),
+                Value<int> createdAtMicros = const Value.absent(),
+                Value<int> updatedAtMicros = const Value.absent(),
+                Value<String?> lastFailureClass = const Value.absent(),
+              }) => ActionRemindersTableCompanion(
+                platformNotificationId: platformNotificationId,
+                id: id,
+                actionId: actionId,
+                scheduledAtMicros: scheduledAtMicros,
+                timeZoneId: timeZoneId,
+                state: state,
+                createdAtMicros: createdAtMicros,
+                updatedAtMicros: updatedAtMicros,
+                lastFailureClass: lastFailureClass,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> platformNotificationId = const Value.absent(),
+                required String id,
+                required String actionId,
+                required int scheduledAtMicros,
+                required String timeZoneId,
+                required String state,
+                required int createdAtMicros,
+                required int updatedAtMicros,
+                Value<String?> lastFailureClass = const Value.absent(),
+              }) => ActionRemindersTableCompanion.insert(
+                platformNotificationId: platformNotificationId,
+                id: id,
+                actionId: actionId,
+                scheduledAtMicros: scheduledAtMicros,
+                timeZoneId: timeZoneId,
+                state: state,
+                createdAtMicros: createdAtMicros,
+                updatedAtMicros: updatedAtMicros,
+                lastFailureClass: lastFailureClass,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ActionRemindersTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$ActionsDatabase,
+      $ActionRemindersTableTable,
+      ActionReminderRow,
+      $$ActionRemindersTableTableFilterComposer,
+      $$ActionRemindersTableTableOrderingComposer,
+      $$ActionRemindersTableTableAnnotationComposer,
+      $$ActionRemindersTableTableCreateCompanionBuilder,
+      $$ActionRemindersTableTableUpdateCompanionBuilder,
+      (
+        ActionReminderRow,
+        BaseReferences<
+          _$ActionsDatabase,
+          $ActionRemindersTableTable,
+          ActionReminderRow
+        >,
+      ),
+      ActionReminderRow,
+      PrefetchHooks Function()
+    >;
 
 class $ActionsDatabaseManager {
   final _$ActionsDatabase _db;
@@ -3848,4 +4744,6 @@ class $ActionsDatabaseManager {
       $$ActionFactsTableTableTableManager(_db, _db.actionFactsTable);
   $$SyncOutboxTableTableTableManager get syncOutboxTable =>
       $$SyncOutboxTableTableTableManager(_db, _db.syncOutboxTable);
+  $$ActionRemindersTableTableTableManager get actionRemindersTable =>
+      $$ActionRemindersTableTableTableManager(_db, _db.actionRemindersTable);
 }

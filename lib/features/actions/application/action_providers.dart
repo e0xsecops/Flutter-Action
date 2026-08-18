@@ -5,9 +5,16 @@ import '../data/action_cloud_mirror.dart';
 import '../data/actions_database.dart';
 import '../data/auth_identity_service.dart';
 import '../data/drift_action_repository.dart';
+import '../data/drift_reminder_repository.dart';
+import '../data/flutter_local_notification_scheduler.dart';
+import '../data/notification_scheduler.dart';
 import '../domain/action_item.dart';
+import '../domain/action_reminder.dart';
+import '../domain/action_reminder_repository.dart';
 import '../domain/action_repository.dart';
 import 'action_sync_service.dart';
+import 'reminder_reconciler.dart';
+import 'reminder_service.dart';
 
 /// Semantic Action lifecycle events. Names only — a title, an amount or a
 /// deadline must never ride along.
@@ -18,6 +25,14 @@ abstract final class ActionEvents {
   static const localPersistenceFailed = 'action_local_persistence_failed';
   static const cloudMirrorSucceeded = 'action_cloud_mirror_succeeded';
   static const cloudMirrorFailed = 'action_cloud_mirror_failed';
+
+  // Day 10 reminders. Names only — never a time, a title or a payload.
+  static const reminderCreated = 'reminder_created';
+  static const reminderUpdated = 'reminder_updated';
+  static const reminderCancelled = 'reminder_cancelled';
+  static const reminderPermissionDenied = 'reminder_permission_denied';
+  static const reminderScheduleFailed = 'reminder_schedule_failed';
+  static const reminderNotificationOpened = 'reminder_notification_opened';
 
   // Day 9. Still names only: what happened, never what it was about.
   static const detailOpened = 'action_detail_opened';
@@ -93,4 +108,57 @@ final actionStepRepositoryProvider = Provider<ActionStepRepository>(
 final actionDetailProvider =
     StreamProvider.family<ActionItem?, String>((ref, id) {
   return ref.watch(actionRepositoryProvider).watchById(id);
+});
+
+// ------------------------------------------------------------- reminders --
+
+/// The device's IANA zone, resolved once at startup and cached so the rest of
+/// the app can read it synchronously.
+///
+/// `UTC` until resolved: a wrong-but-valid zone id is recoverable, whereas
+/// blocking startup on a platform channel to learn it is not worth it.
+class DeviceTimeZone {
+  String _id = 'UTC';
+
+  String get id => _id;
+
+  Future<void> refresh() async {
+    _id = await deviceTimeZoneId();
+  }
+}
+
+final deviceTimeZoneProvider = Provider<DeviceTimeZone>((_) => DeviceTimeZone());
+
+/// The platform seam. Tests override this with a fake, so no widget or unit
+/// test ever reaches an Android notification API.
+final notificationSchedulerProvider = Provider<NotificationScheduler>((ref) {
+  return FlutterLocalNotificationScheduler();
+});
+
+final actionReminderRepositoryProvider = Provider<ActionReminderRepository>(
+  (ref) => DriftReminderRepository(ref.watch(actionsDatabaseProvider)),
+);
+
+final reminderServiceProvider = Provider<ReminderService>((ref) {
+  return ReminderService(
+    reminders: ref.watch(actionReminderRepositoryProvider),
+    scheduler: ref.watch(notificationSchedulerProvider),
+    clock: ref.watch(appClockProvider),
+    timeZoneId: () => ref.read(deviceTimeZoneProvider).id,
+  );
+});
+
+final reminderReconcilerProvider = Provider<ReminderReconciler>((ref) {
+  return ReminderReconciler(
+    reminders: ref.watch(actionReminderRepositoryProvider),
+    actions: ref.watch(actionRepositoryProvider),
+    scheduler: ref.watch(notificationSchedulerProvider),
+    clock: ref.watch(appClockProvider),
+  );
+});
+
+/// Reminders shown on one Action's detail screen, soonest first.
+final remindersForActionProvider =
+    StreamProvider.family<List<ActionReminder>, String>((ref, actionId) {
+  return ref.watch(actionReminderRepositoryProvider).watchForAction(actionId);
 });

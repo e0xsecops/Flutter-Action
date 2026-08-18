@@ -19,9 +19,12 @@ import '../../extraction/application/canonical_fields.dart';
 import '../../extraction/application/review_analytics.dart';
 import '../../extraction/domain/extraction_schema.dart';
 import '../application/action_chain.dart';
+import '../application/reminder_service.dart';
 import '../application/action_providers.dart';
 import '../domain/action_item.dart';
+import '../domain/action_reminder.dart';
 import 'action_edit_sheets.dart';
+import 'reminder_sheet.dart';
 
 /// Everything about one Action, and the place the work actually happens.
 ///
@@ -198,6 +201,77 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     if (ok) _log(ActionEvents.stepReordered);
   }
 
+  // --------------------------------------------------------- reminder ops --
+
+  Future<void> _addReminder(ActionItem action) async {
+    final when = await showReminderSheet(
+      context,
+      action: action,
+      now: ref.read(appClockProvider)(),
+    );
+    if (when == null || !mounted) return;
+
+    final outcome = await ref.read(reminderServiceProvider).create(
+          actionId: action.id,
+          actionTitle: action.title,
+          scheduledAt: when,
+        );
+    if (mounted) _reportReminder(outcome);
+  }
+
+  Future<void> _editReminder(ActionItem action, ActionReminder reminder) async {
+    final when = await showReminderSheet(
+      context,
+      action: action,
+      now: ref.read(appClockProvider)(),
+      initial: reminder.scheduledAt.toLocal(),
+    );
+    if (when == null || !mounted) return;
+
+    final outcome = await ref.read(reminderServiceProvider).reschedule(
+          reminderId: reminder.id,
+          actionTitle: action.title,
+          scheduledAt: when,
+        );
+    if (mounted) _reportReminder(outcome, updated: true);
+  }
+
+  Future<void> _removeReminder(ActionReminder reminder) async {
+    await ref.read(reminderServiceProvider).cancel(reminder.id);
+    _log(ActionEvents.reminderCancelled);
+  }
+
+  /// Says exactly what happened. "Saved" and "you will be alerted" are
+  /// different promises, and the difference is the user's to know.
+  void _reportReminder(ReminderOutcome outcome, {bool updated = false}) {
+    final message = switch (outcome) {
+      ReminderScheduled() =>
+        updated ? 'Reminder updated.' : "Reminder set. We'll nudge you.",
+      ReminderNeedsPermission() =>
+        'Notifications are off, so this reminder is saved but cannot alert '
+            'you yet.',
+      ReminderFailed() =>
+        "This reminder is saved, but Android wouldn't schedule it.",
+      ReminderLimitReached() =>
+        'That action already has the maximum number of reminders.',
+      ReminderTimeInPast() => 'That time has already passed.',
+    };
+    switch (outcome) {
+      case ReminderScheduled():
+        _log(updated
+            ? ActionEvents.reminderUpdated
+            : ActionEvents.reminderCreated);
+      case ReminderNeedsPermission():
+        _log(ActionEvents.reminderPermissionDenied);
+      case ReminderFailed():
+        _log(ActionEvents.reminderScheduleFailed);
+      case _:
+        break;
+    }
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
   // ----------------------------------------------------------- action ops --
 
   Future<void> _completeAction(ActionItem action) async {
@@ -205,6 +279,9 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
         () => ref.read(actionRepositoryProvider).complete(action.id, at: _now));
     if (!ok) return;
     _log(ActionEvents.completed);
+    // Finishing something means its future nudges are no longer wanted. Past
+    // ones are history and are left alone; nothing is recreated on reopen.
+    await ref.read(reminderServiceProvider).cancelFutureFor(action.id);
     _syncLater();
   }
 
@@ -242,6 +319,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
         () => ref.read(actionRepositoryProvider).archive(action.id, at: _now));
     if (!ok) return;
     _log(ActionEvents.archived);
+    await ref.read(reminderServiceProvider).cancelFutureFor(action.id);
     _syncLater();
     if (mounted) _leave(context);
   }
@@ -382,6 +460,9 @@ class _Loaded extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: _AddStepButton(onAdd: () => state._addStep(action)),
                 ),
+              SliverToBoxAdapter(
+                child: _Reminders(action: action, state: state),
+              ),
               SliverToBoxAdapter(child: _WhyThisMatters(action: action)),
               SliverToBoxAdapter(child: _Provenance(action: action)),
               const SliverToBoxAdapter(child: SizedBox(height: Space.xxxl)),
@@ -915,6 +996,156 @@ class _AddStepButton extends StatelessWidget {
           icon: const Icon(Icons.add, size: 18),
           label: const Text('Add a step'),
         ),
+      ),
+    );
+  }
+}
+
+/// When the user asked to be reminded, and whether that is actually working.
+///
+/// Every row says which of those two it is. A reminder blocked on permission
+/// or refused by the platform is never displayed as if it were armed.
+class _Reminders extends ConsumerWidget {
+  const _Reminders({required this.action, required this.state});
+
+  final ActionItem action;
+  final _ActionDetailScreenState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final async = ref.watch(remindersForActionProvider(action.id));
+    // A reminder list that has not loaded yet is shown as empty rather than as
+    // a spinner: the section is secondary, and flicker here would be worse
+    // than a beat of nothing.
+    final reminders = switch (async) {
+      AsyncData(:final value) => value,
+      _ => const <ActionReminder>[],
+    };
+    final atLimit = reminders.length >= maxRemindersPerAction;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Space.page, Space.xxxl, Space.page, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'REMINDERS',
+            style: text.labelSmall?.copyWith(
+              color: colors.textTertiary,
+              letterSpacing: 1.0,
+            ),
+          ),
+          const SizedBox(height: Space.sm),
+          if (reminders.isEmpty)
+            Text(
+              'No reminders yet.',
+              style: text.bodyMedium?.copyWith(color: colors.textTertiary),
+            )
+          else
+            for (final reminder in reminders)
+              _ReminderRow(
+                reminder: reminder,
+                onEdit: () => state._editReminder(action, reminder),
+                onRemove: () => state._removeReminder(reminder),
+              ),
+          const SizedBox(height: Space.xs),
+          if (atLimit)
+            Text(
+              'That is the most reminders one action can have. Remove one to '
+              'add another.',
+              style: text.bodySmall?.copyWith(color: colors.textTertiary),
+            )
+          else if (action.status == ActionStatus.active)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: () => state._addReminder(action),
+                icon: const Icon(Icons.alarm_add_outlined, size: 18),
+                label: const Text('Add reminder'),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReminderRow extends StatelessWidget {
+  const _ReminderRow({
+    required this.reminder,
+    required this.onEdit,
+    required this.onRemove,
+  });
+
+  final ActionReminder reminder;
+  final VoidCallback onEdit;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final local = reminder.scheduledAt.toLocal();
+
+    // The honest one-line status. Only `scheduled` is allowed to read as
+    // working, and even that promises delivery "around" the time.
+    final (String note, Color noteColor) = switch (reminder.state) {
+      ReminderState.scheduled => ('', colors.textTertiary),
+      ReminderState.pendingSchedule => ('Not set up yet', colors.textTertiary),
+      ReminderState.needsPermission => (
+          'Saved, but notifications are off',
+          colors.urgencyImportant,
+        ),
+      ReminderState.scheduleFailed => (
+          "Couldn't be scheduled",
+          colors.danger,
+        ),
+      ReminderState.cancelPending => ('Removing…', colors.textTertiary),
+    };
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Space.sm),
+      child: Row(
+        children: [
+          Icon(
+            reminder.isActive
+                ? Icons.notifications_active_outlined
+                : Icons.notifications_off_outlined,
+            size: 20,
+            color: reminder.isActive ? colors.brand : colors.textTertiary,
+          ),
+          const SizedBox(width: Space.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  DateFormat('EEE d MMM, h:mm a').format(local),
+                  style: text.bodyMedium?.copyWith(
+                    fontFeatures: AppText.numeric,
+                  ),
+                ),
+                if (note.isNotEmpty)
+                  Text(
+                    note,
+                    style: text.bodySmall?.copyWith(color: noteColor),
+                  ),
+              ],
+            ),
+          ),
+          IconButton(
+            tooltip: 'Change reminder',
+            onPressed: onEdit,
+            icon: Icon(Icons.edit_outlined, size: 18, color: colors.textTertiary),
+          ),
+          IconButton(
+            tooltip: 'Remove reminder',
+            onPressed: onRemove,
+            icon: Icon(Icons.close, size: 18, color: colors.textTertiary),
+          ),
+        ],
       ),
     );
   }
