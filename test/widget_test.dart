@@ -6,7 +6,10 @@ import 'package:action_app/features/actions/data/action_cloud_mirror.dart';
 import 'package:action_app/features/actions/data/actions_database.dart';
 import 'package:action_app/features/actions/data/auth_identity_service.dart';
 import 'package:action_app/features/actions/data/drift_action_repository.dart';
+import 'package:action_app/features/actions/data/drift_reminder_repository.dart';
 import 'package:action_app/features/actions/domain/action_item.dart';
+import 'package:action_app/features/actions/domain/action_reminder.dart';
+import 'package:action_app/features/extraction/domain/extraction_schema.dart';
 import 'package:action_app/features/capture/application/capture_controller.dart';
 import 'package:action_app/features/capture/data/ocr_service.dart';
 import 'package:action_app/features/capture/data/source_store.dart';
@@ -17,6 +20,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'actions/support/actions_test_support.dart';
+import 'actions/support/fake_notification_scheduler.dart';
 import 'support/fake_stores.dart';
 
 class _NoIdentity implements AuthIdentityService {
@@ -46,6 +51,11 @@ class _NeverCompletesOcrService implements OcrService {
 /// in-memory database per test, opened and closed at file scope. See
 /// [appTest] for why the tree has to come down before this is closed.
 late ActionsDatabase _db;
+late FakeNotificationScheduler _scheduler;
+
+/// Home's fixed "now": Tue 18 Aug 2026, midday, local — deadlines are
+/// wall-clock values, so the clock has to be one too.
+final homeNow = DateTime(2026, 8, 18, 12);
 
 Widget _app(SourceStore store, {OcrService? ocr}) {
   return ProviderScope(
@@ -59,6 +69,9 @@ Widget _app(SourceStore store, {OcrService? ocr}) {
       authIdentityServiceProvider.overrideWithValue(const _NoIdentity()),
       actionCloudMirrorProvider
           .overrideWithValue(const NoopActionCloudMirror()),
+      // A fixed clock, so triage never depends on when the suite runs.
+      appClockProvider.overrideWithValue(() => homeNow),
+      notificationSchedulerProvider.overrideWithValue(_scheduler),
     ],
     child: const ActionApp(),
   );
@@ -93,8 +106,14 @@ SourceItem _ready(String text) => SourceItem(
     );
 
 void main() {
-  setUp(() => _db = ActionsDatabase(NativeDatabase.memory()));
-  tearDown(() => _db.close());
+  setUp(() {
+    _db = ActionsDatabase(NativeDatabase.memory());
+    _scheduler = FakeNotificationScheduler();
+  });
+  tearDown(() {
+    _scheduler.dispose();
+    return _db.close();
+  });
 
   appTest('empty inbox explains what to do instead of showing a blank list',
       (tester) async {
@@ -147,6 +166,241 @@ void main() {
     expect(find.text('Call the bank'), findsOneWidget);
     expect(find.text('Created by you'), findsOneWidget);
     expect(find.text('Not sure'), findsNothing);
+  });
+
+  // ------------------------------------------------------------- triage --
+
+  Future<void> seedAction(
+    String id, {
+    required String title,
+    DateTime? due,
+    ActionUrgency urgency = ActionUrgency.normal,
+    ActionStatus status = ActionStatus.active,
+    List<ActionStepItem> steps = const [],
+    DateTime? completedAt,
+  }) =>
+      DriftActionRepository(_db).create(sampleAction(
+        id,
+        title: title,
+        status: status,
+        urgency: urgency,
+        dueAt: due == null ? null : ActionDue(due),
+        steps: steps,
+        completedAt: completedAt,
+        createdAt: DateTime(2026, 8, 1),
+      ));
+
+  /// The order titles appear in, top to bottom.
+  List<String> renderedOrder(WidgetTester tester, List<String> titles) {
+    final positions = <String, double>{};
+    for (final title in titles) {
+      final finder = find.text(title);
+      if (finder.evaluate().isNotEmpty) {
+        positions[title] = tester.getTopLeft(finder.first).dy;
+      }
+    }
+    final sorted = positions.keys.toList()
+      ..sort((a, b) => positions[a]!.compareTo(positions[b]!));
+    return sorted;
+  }
+
+  appTest('Home ranks by pressure, not by when things were added',
+      (tester) async {
+    await seedAction('later', title: 'Renew the passport',
+        due: DateTime(2026, 9, 30));
+    await seedAction('today', title: 'Pay the water bill',
+        due: DateTime(2026, 8, 18));
+    await seedAction('overdue', title: 'Return the router',
+        due: DateTime(2026, 8, 14));
+
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(
+      renderedOrder(tester,
+          ['Return the router', 'Pay the water bill', 'Renew the passport']),
+      ['Return the router', 'Pay the water bill', 'Renew the passport'],
+    );
+  });
+
+  appTest('a card says why it is where it is, once', (tester) async {
+    await seedAction('a1', title: 'Return the router',
+        due: DateTime(2026, 8, 14));
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('OVERDUE · 4 DAYS'), findsOneWidget);
+    // The device found this: the badge and the meta line both wanted to
+    // announce the deadline, and saying it twice is reason spam.
+    expect(find.textContaining('was due'), findsNothing);
+  });
+
+  appTest('a badge that says nothing about dates leaves the deadline visible',
+      (tester) async {
+    await seedAction('a1', title: 'Call the solicitor',
+        due: DateTime(2026, 9, 30), urgency: ActionUrgency.critical);
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    // "Critical" says nothing about when, so the date still earns its place.
+    expect(find.text('Due 30 Sep'), findsOneWidget);
+  });
+
+  appTest('due today says due today, and is not called overdue',
+      (tester) async {
+    await seedAction('a1', title: 'Pay the water bill',
+        due: DateTime(2026, 8, 18));
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('DUE TODAY'), findsOneWidget);
+    expect(find.textContaining('OVERDUE'), findsNothing);
+  });
+
+  appTest('tapping the reason explains it in a sentence', (tester) async {
+    await seedAction('a1', title: 'Pay the water bill',
+        due: DateTime(2026, 8, 18));
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('DUE TODAY'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('This needs attention because it is due today.'),
+        findsOneWidget);
+  });
+
+  appTest('a critical Action with no deadline is surfaced and explained',
+      (tester) async {
+    await seedAction('a1', title: 'Call the solicitor',
+        urgency: ActionUrgency.critical);
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Needs attention'.toUpperCase()), findsOneWidget);
+    expect(find.text('CRITICAL'), findsOneWidget);
+  });
+
+  appTest('an ordinary Action with no deadline stays quiet', (tester) async {
+    await seedAction('a1', title: 'Tidy the loft');
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Upcoming'.toUpperCase()), findsOneWidget);
+    expect(find.text('Needs attention'.toUpperCase()), findsNothing);
+    // No badge: a label on every card is a label on none of them.
+    expect(find.text('CRITICAL'), findsNothing);
+  });
+
+  appTest('an Action whose steps are all done asks to be finished',
+      (tester) async {
+    await seedAction('a1', title: 'Renew the passport', steps: [
+      sampleStep('s1', isCompleted: true),
+      sampleStep('s2', order: 1, isCompleted: true),
+    ]);
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('ALL STEPS DONE'), findsOneWidget);
+    expect(find.text('Needs attention'.toUpperCase()), findsOneWidget);
+  });
+
+  appTest('a reminder the user set for soon lifts an Action', (tester) async {
+    await seedAction('a1', title: 'Call the bank');
+    final reminders = DriftReminderRepository(_db);
+    final made = await reminders.createIntent(
+      actionId: 'a1',
+      scheduledAt: homeNow.add(const Duration(hours: 3)),
+      timeZoneId: 'Asia/Dhaka',
+      now: homeNow,
+    );
+    await reminders.markState(made!.id,
+        state: ReminderState.scheduled, now: homeNow);
+
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('REMINDER SOON'), findsOneWidget);
+    expect(find.text('Needs attention'.toUpperCase()), findsOneWidget);
+  });
+
+  appTest('a reminder blocked on permission lifts nothing', (tester) async {
+    await seedAction('a1', title: 'Call the bank');
+    final reminders = DriftReminderRepository(_db);
+    final made = await reminders.createIntent(
+      actionId: 'a1',
+      scheduledAt: homeNow.add(const Duration(hours: 3)),
+      timeZoneId: 'Asia/Dhaka',
+      now: homeNow,
+    );
+    await reminders.markState(made!.id,
+        state: ReminderState.needsPermission, now: homeNow);
+
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('REMINDER SOON'), findsNothing);
+    expect(find.text('Needs attention'.toUpperCase()), findsNothing);
+  });
+
+  appTest('completing an Action moves it out of the active sections',
+      (tester) async {
+    await seedAction('a1', title: 'Pay the water bill',
+        due: DateTime(2026, 8, 18));
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+    expect(find.text('DUE TODAY'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Mark as done'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Completed'.toUpperCase()), findsOneWidget);
+    expect(find.text('Needs attention'.toUpperCase()), findsNothing);
+    // A finished obligation is never described as late.
+    expect(find.text('DUE TODAY'), findsNothing);
+  });
+
+  appTest('an archived Action stays off Home even when overdue',
+      (tester) async {
+    await seedAction('a1', title: 'Return the router',
+        due: DateTime(2026, 8, 1), status: ActionStatus.archived);
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Return the router'), findsNothing);
+    expect(find.text('Nothing needs your attention'), findsOneWidget);
+  });
+
+  appTest('a big amount does not jump the queue', (tester) async {
+    // Money must never rank obligations; the deadline decides.
+    await DriftActionRepository(_db).create(sampleAction('costly',
+        title: 'Pay the big invoice',
+        amount: gbp('10000.00'),
+        dueAt: ActionDue(DateTime(2026, 9, 30)),
+        createdAt: DateTime(2026, 8, 1)));
+    await seedAction('soon', title: 'Pay the small one',
+        due: DateTime(2026, 8, 18));
+
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(
+      renderedOrder(tester, ['Pay the small one', 'Pay the big invoice']),
+      ['Pay the small one', 'Pay the big invoice'],
+    );
+  });
+
+  appTest('triage renders in dark theme', (tester) async {
+    await seedAction('a1', title: 'Return the router',
+        due: DateTime(2026, 8, 14));
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+
+    await tester.pumpWidget(_app(FakeSourceStore()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('OVERDUE · 4 DAYS'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   appTest('captures appear under Captures with their provenance',

@@ -13,6 +13,7 @@ import '../domain/action_reminder.dart';
 import '../domain/action_reminder_repository.dart';
 import '../domain/action_repository.dart';
 import 'action_sync_service.dart';
+import 'action_triage.dart';
 import 'reminder_reconciler.dart';
 import 'reminder_service.dart';
 
@@ -161,4 +162,37 @@ final reminderReconcilerProvider = Provider<ReminderReconciler>((ref) {
 final remindersForActionProvider =
     StreamProvider.family<List<ActionReminder>, String>((ref, actionId) {
   return ref.watch(actionReminderRepositoryProvider).watchForAction(actionId);
+});
+
+// ----------------------------------------------------------------- triage --
+
+/// The soonest armed reminder per Action — one query for the whole of Home.
+final nextScheduledRemindersProvider =
+    StreamProvider<Map<String, ActionReminder>>((ref) {
+  return ref.watch(actionReminderRepositoryProvider).watchNextScheduled();
+});
+
+/// Home, triaged: three ordered lists plus the reason behind every card.
+///
+/// Composed from two local streams and computed in memory. Nothing here
+/// touches the network, Firebase or a model, and no card asks the database a
+/// question of its own.
+final triagedHomeProvider = Provider<AsyncValue<TriagedHome>>((ref) {
+  final actions = ref.watch(actionsStreamProvider);
+  final reminders = ref.watch(nextScheduledRemindersProvider);
+  final now = ref.watch(appClockProvider)();
+
+  return actions.whenData(
+    (items) => triageHome(
+      items,
+      now: now,
+      // Reminders are a refinement, not a prerequisite: if that stream has
+      // not arrived yet, Home still triages on deadlines and urgency rather
+      // than waiting.
+      nextReminders: switch (reminders) {
+        AsyncData(:final value) => value,
+        _ => const {},
+      },
+    ),
+  );
 });

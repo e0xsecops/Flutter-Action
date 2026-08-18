@@ -59,6 +59,13 @@ abstract interface class ActionReminderRepository {
   /// cancels never delivered, and failures worth retrying.
   Future<List<ActionReminder>> needingReconciliation();
 
+  /// The soonest still-scheduled reminder for every Action that has one,
+  /// keyed by Action id.
+  ///
+  /// One query for the whole of Home. Triage needs a reminder signal per
+  /// card, and asking per card would be a query per row on every rebuild.
+  Stream<Map<String, ActionReminder>> watchNextScheduled();
+
   /// Marks every future reminder of an Action for cancellation — used when
   /// the Action is completed or archived. Past reminders are left alone;
   /// they are history, not pending work.

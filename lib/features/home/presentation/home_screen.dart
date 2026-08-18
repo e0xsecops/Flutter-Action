@@ -16,7 +16,8 @@ import '../../../design/tokens/typography.dart';
 import '../../../shared/widgets/empty_view.dart';
 import '../../../shared/widgets/error_view.dart';
 import '../../../shared/widgets/loading_view.dart';
-import '../../actions/application/action_grouping.dart';
+import '../../actions/application/action_triage.dart';
+import '../../actions/application/triage_labels.dart';
 import '../../actions/application/action_providers.dart';
 import '../../actions/domain/action_item.dart';
 import '../../capture/application/capture_controller.dart';
@@ -30,7 +31,7 @@ import '../../extraction/domain/extraction_schema.dart';
 ///
 /// Actions are the product object now — read from the durable local store,
 /// never from anything in memory, grouped into NEEDS ATTENTION / UPCOMING /
-/// COMPLETED by the deterministic rules in [groupActionsForHome]. Captures
+/// COMPLETED by the deterministic, explainable rules in [triageHome]. Captures
 /// keep their own section below: a capture is still something to deal with,
 /// but it is raw material rather than a commitment.
 ///
@@ -89,6 +90,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final sources = ref.watch(sourcesProvider);
     final actions = ref.watch(actionsStreamProvider);
+    final triaged = ref.watch(triagedHomeProvider);
 
     final Widget body;
     if (actions is AsyncError) {
@@ -104,7 +106,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body = const LoadingView();
     } else {
       body = _Inbox(
-        groups: groupActionsForHome(actions.value ?? const [], DateTime.now()),
+        // Ranking is decided by the triage engine, not here: a widget is the
+        // wrong place to argue about what deserves attention.
+        home: switch (triaged) {
+          AsyncData(:final value) => value,
+          _ => const TriagedHome(
+              needsAttention: [],
+              upcoming: [],
+              completed: [],
+              decisions: {},
+            ),
+        },
+        now: ref.watch(appClockProvider)(),
         sourceItems: sources.value ?? const [],
       );
     }
@@ -117,21 +130,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 class _Inbox extends StatelessWidget {
-  const _Inbox({required this.groups, required this.sourceItems});
+  const _Inbox({
+    required this.home,
+    required this.now,
+    required this.sourceItems,
+  });
 
-  final HomeActionGroups groups;
+  final TriagedHome home;
+  final DateTime now;
   final List<SourceItem> sourceItems;
 
   @override
   Widget build(BuildContext context) {
-    final nothingAtAll = groups.isEmpty && sourceItems.isEmpty;
+    final nothingAtAll = home.isEmpty && sourceItems.isEmpty;
 
     SliverList actionList(List<ActionItem> actions) => SliverList.separated(
           itemCount: actions.length,
           separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
           itemBuilder: (context, i) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: Space.page),
-            child: _ActionRow(item: actions[i]),
+            child: _ActionRow(
+              item: actions[i],
+              decision: home.decisionFor(actions[i].id),
+              now: now,
+            ),
           ),
         );
 
@@ -150,32 +172,32 @@ class _Inbox extends StatelessWidget {
             ),
           )
         else ...[
-          if (groups.needsAttention.isNotEmpty) ...[
+          if (home.needsAttention.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: SectionHeader(
                 title: 'Needs attention',
-                count: groups.needsAttention.length,
+                count: home.needsAttention.length,
               ),
             ),
-            actionList(groups.needsAttention),
+            actionList(home.needsAttention),
           ],
-          if (groups.upcoming.isNotEmpty) ...[
+          if (home.upcoming.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: SectionHeader(
                 title: 'Upcoming',
-                count: groups.upcoming.length,
+                count: home.upcoming.length,
               ),
             ),
-            actionList(groups.upcoming),
+            actionList(home.upcoming),
           ],
-          if (groups.completed.isNotEmpty) ...[
+          if (home.completed.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: SectionHeader(
                 title: 'Completed',
-                count: groups.completed.length,
+                count: home.completed.length,
               ),
             ),
-            actionList(groups.completed),
+            actionList(home.completed),
           ],
           if (sourceItems.isNotEmpty) ...[
             SliverToBoxAdapter(
@@ -203,10 +225,86 @@ class _Inbox extends StatelessWidget {
 /// The Action Card: urgency spine on the left (warm, solid — the documented
 /// treatment), title, deadline and amount in tabular figures, and a
 /// completion toggle, and the way into the Action itself.
+///
+/// The triage badge is the card's one piece of explanation: why this card is
+/// where it is, readable at a glance. Quiet Actions get no badge at all —
+/// a label on every row is a label on none of them.
 class _ActionRow extends ConsumerWidget {
-  const _ActionRow({required this.item});
+  const _ActionRow({
+    required this.item,
+    required this.decision,
+    required this.now,
+  });
 
   final ActionItem item;
+  final ActionTriageDecision? decision;
+  final DateTime now;
+
+  /// Whether the triage badge already says where the deadline stands.
+  ///
+  /// "Critical" and "All steps done" say nothing about a date, so those cards
+  /// still want "Due 23 Aug" on the meta line.
+  bool get _badgeStatesDue => switch (decision?.primaryReason) {
+        TriageReason.overdue ||
+        TriageReason.dueToday ||
+        TriageReason.dueTomorrow =>
+          true,
+        _ => false,
+      };
+
+  /// The one-line reason, or nothing.
+  ///
+  /// Tapping it explains in a full sentence — the same sentence a screen
+  /// reader hears, because a colour is not an explanation.
+  Widget? _triageBadge(BuildContext context) {
+    final d = decision;
+    if (d == null) return null;
+    final label = TriageLabels.badge(d, item, now);
+    if (label == null) return null;
+
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    // Emphasis in proportion: overdue is important, not an emergency, so it
+    // gets a warm word rather than a red slab.
+    final tone = switch (d.primaryReason) {
+      TriageReason.overdue => colors.urgencyCritical,
+      TriageReason.dueToday ||
+      TriageReason.criticalDueSoon ||
+      TriageReason.criticalNoDeadline =>
+        colors.urgencyImportant,
+      _ => colors.textSecondary,
+    };
+
+    return Padding(
+      padding: const EdgeInsets.only(top: Space.xs),
+      child: Semantics(
+        label: TriageLabels.semanticLabel(d, item, now),
+        button: true,
+        child: InkWell(
+          onTap: () => _explain(context, d),
+          borderRadius: Radii.rSm,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: Space.xxs),
+            child: Text(
+              label,
+              style: text.labelSmall?.copyWith(
+                color: tone,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _explain(BuildContext context, ActionTriageDecision decision) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(TriageLabels.explanation(decision, item, now)),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -262,7 +360,11 @@ class _ActionRow extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: Space.xxs),
-                  _ActionMetaLine(item: item),
+                  // The badge owns the deadline story when it has one, so the
+                  // meta line does not repeat it. "Overdue · was due 14 Aug"
+                  // above "OVERDUE · 4 DAYS" is the same fact twice.
+                  _ActionMetaLine(item: item, suppressDue: _badgeStatesDue),
+                  ?_triageBadge(context),
                 ],
               ),
             ),
@@ -298,9 +400,13 @@ class _ActionRow extends ConsumerWidget {
 }
 
 class _ActionMetaLine extends StatelessWidget {
-  const _ActionMetaLine({required this.item});
+  const _ActionMetaLine({required this.item, this.suppressDue = false});
 
   final ActionItem item;
+
+  /// True when the triage badge already states the deadline relation, so
+  /// repeating it here would be the same fact twice.
+  final bool suppressDue;
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +420,7 @@ class _ActionMetaLine extends StatelessWidget {
       parts.add(TextSpan(
         text: 'Done ${_relativeTime(item.completedAt ?? item.updatedAt)}',
       ));
-    } else if (due != null) {
+    } else if (due != null && !suppressDue) {
       final startOfToday = DateTime(now.year, now.month, now.day);
       final overdue = due.wallClock.isBefore(startOfToday);
       final dueToday = !overdue &&

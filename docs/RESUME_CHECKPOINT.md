@@ -1,9 +1,11 @@
 # Resume checkpoint
 
-Updated at the end of Day 10. Read this first when picking the project back up.
+Updated at the end of Day 11. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 11 complete.** Explainable triage: Home ranks by pressure, and every
+  card can say why it sits where it does. Deterministic, local, no score.
 - **Day 10 complete.** Local reminders: durable intent, a replaceable
   notification seam, crash-safe scheduling and a reconciler. Real delivery,
   permission denial/recovery and reboot resilience verified on `emulator-5554`.
@@ -22,7 +24,7 @@ Updated at the end of Day 10. Read this first when picking the project back up.
 - **Day 4 complete: PASS WITH LIMITATIONS.** Foundation, design system, capture
   pipeline, image normalisation and on-device OCR are done and verified on
   hardware and on the emulator.
-- **Do not repeat Days 1–10.**
+- **Do not repeat Days 1–11.**
 
 ## Read before starting the next day
 
@@ -53,6 +55,64 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 11 established
+
+**Home ranks by pressure, and says why.** Triage is a lexicographic
+precedence list, not a weighted score — every position is justifiable in a
+sentence, and moving an Action up always has a nameable cause. There is no
+number anywhere, because a rank the user cannot argue with is a rank they
+cannot trust.
+
+**The precedence, in order** (`_precedence` in `action_triage.dart`):
+overdue → due today → critical and due within three days → every step done →
+due tomorrow → a self-set reminder within a day → due within three days →
+critical with no deadline → due within seven days → marked important → has a
+deadline further out → nothing pressing.
+
+**Needs Attention is deliberately narrow**: overdue, due today, critical *and*
+close, all steps done, a scheduled reminder within 24h, critical with no
+deadline. Notably **not** "due tomorrow" on its own and **not** "important" on
+its own — if fifteen things all look urgent the section has stopped meaning
+anything.
+
+**Money never ranks anything.** A £10,000 bill and a £20 one with the same
+deadline get the same rank, by test. Ranking obligations by size is a product
+decision this app does not make.
+
+**Date semantics.** Date-only deadlines are compared as *local calendar
+dates* — "due 18 August" is due all of the 18th and becomes overdue only once
+that day is over. Timestamp deadlines are compared as instants and are overdue
+the moment they pass. Day counting is done over UTC dates so a daylight-saving
+jump cannot round it wrong.
+
+**Signals that are allowed, and their limits.** A reminder counts only if it
+is genuinely `scheduled`, in the future, and within 24 hours — one blocked on
+permission or refused by the platform will not alert anyone and must not
+pretend to. A chain counts only when *every* step is done (one tap from
+finished); percentage progress is not a signal, and nine-of-ten ranks exactly
+like one-of-ten.
+
+**Never claims a consequence.** Triage may say a thing is late. It may not say
+that being late is expensive, illegal or dangerous — there is a test asserting
+no explanation contains such words.
+
+**Tie-breaking is total**: rank → soonest deadline (dated before undated) →
+urgency → oldest created (waiting longest) → id. Two equivalent Actions can
+never swap places between frames.
+
+**Completed and archived.** A completed Action is never described as overdue;
+its date stopped mattering when it was dealt with. Archived Actions leave Home
+entirely, including when overdue — archiving is the user saying "stop showing
+me this".
+
+**Efficiency.** Home composes two local streams (actions, plus one query for
+the soonest armed reminder per Action) and triages in memory. No card asks the
+database a question of its own, and nothing here touches the network.
+
+**Superseded:** `action_grouping.dart` and its five tests were removed. Triage
+covers the same three bands and adds the explanation; keeping both would have
+left two competing ranking rules in the codebase.
 
 ## What Day 10 established
 

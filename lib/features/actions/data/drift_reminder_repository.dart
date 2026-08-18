@@ -129,6 +129,25 @@ class DriftReminderRepository implements ActionReminderRepository {
   }
 
   @override
+  Stream<Map<String, ActionReminder>> watchNextScheduled() {
+    // Only genuinely armed reminders. One blocked on permission or refused by
+    // the platform will not alert anyone, so it must not influence triage.
+    final query = _db.select(_db.actionRemindersTable)
+      ..where((t) => t.state.equals(ReminderState.scheduled.name))
+      ..orderBy([(t) => OrderingTerm.asc(t.scheduledAtMicros)]);
+
+    return query.watch().map((rows) {
+      final soonest = <String, ActionReminder>{};
+      for (final row in rows) {
+        // Ordered ascending, so the first sighting of an Action is its
+        // soonest reminder.
+        soonest.putIfAbsent(row.actionId, () => _fromRow(row));
+      }
+      return soonest;
+    });
+  }
+
+  @override
   Future<List<ActionReminder>> needingReconciliation() async {
     final rows = await (_db.select(_db.actionRemindersTable)
           ..where((t) => t.state.isIn([
