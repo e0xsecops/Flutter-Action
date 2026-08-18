@@ -1,9 +1,13 @@
 # Resume checkpoint
 
-Updated at the end of Day 11. Read this first when picking the project back up.
+Updated at the end of Day 13. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 13 complete.** First-run onboarding: four screens, a durable local
+  completion flag, and a router guard that a deep link cannot slip past.
+- **Day 12 complete.** Private local search over Actions and captures, with
+  filters. No FTS5, no index, no query ever persisted or uploaded.
 - **Day 11 complete.** Explainable triage: Home ranks by pressure, and every
   card can say why it sits where it does. Deterministic, local, no score.
 - **Day 10 complete.** Local reminders: durable intent, a replaceable
@@ -55,6 +59,76 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 13 established
+
+**First-run routing is a guard, not a one-time decision.** `routerProvider`
+sets `initialLocation` from the onboarding flag *and* installs a `redirect`
+that bounces any location to `/onboarding` while the flag is unset, and
+bounces `/onboarding` to Home once it is set. A one-time decision would have
+let a reminder deep link (`/action/:id`) open a cold-started fresh install
+straight into Action Detail, skipping the privacy screen entirely. Both
+directions are tested.
+
+**The flag is read synchronously.** `PreferenceStore` deliberately has
+synchronous getters and asynchronous setters, mirroring `SharedPreferences`
+once loaded. `main()` awaits `SharedPreferencesStore.open()` before
+`runApp` and injects it, so the router can decide the very first route
+without a splash flicker or a frame of the wrong screen. If the platform
+channel fails, `open()` falls back to an in-memory store: the app still
+starts, and onboarding simply reappears next launch — the safe direction to
+fail in.
+
+**Every key the app persists is listed in `PreferenceKeys`**, so "what does
+this app remember about me?" is answerable by reading one list. That list is
+what Day 14's data-deletion has to clear.
+
+**Skipping and finishing are the same commitment.** Skip appears from screen
+two (offering it on screen one is offering to leave before anything has been
+said) and disappears again on screen four, where the primary button already
+ends the flow. Either path writes the same flag; a skipper is never nagged.
+
+**Permissions are not onboarding pages.** Onboarding requests nothing —
+tested by asserting `permissionRequests == 0` after walking the whole flow.
+Camera is asked for when the user picks Camera; notifications when they
+create their first reminder.
+
+**Onboarding is inert.** Tests assert it does not modify Actions, does not
+modify Sources, never calls `ExtractionService`, and never writes to the
+cloud mirror. It is a thing you read, not a thing that does anything.
+
+**The privacy screen's copy was written against the code, not from
+memory.** Every claim was checked against `cloudPayloadFor`, `SourceStore`,
+the reminder scheduler and the search service first. It says content is sent
+to the AI service when you ask Action to read something; it names exactly
+what the mirror carries (title, dates, amount, suggested step) and what it
+does not (captures, steps, reminders); and it says plainly that the mirror is
+not a backup and cannot restore to a new device. Three tests pin this down by
+asserting the *absence* of "everything stays on", "never leaves", "Cloud
+backup" and "syncs across".
+
+**Accessibility.** The four illustrations are wordless geometry built from
+the app's own tokens, so they can be dropped whole — which they are, both on
+a short viewport and at a large text scale, where the picture would otherwise
+cost about four lines of the copy it only decorates. Progress is announced as
+"Step 2 of 4", not just drawn. Short pages centre in the viewport; the long
+privacy page scrolls.
+
+### Day-13 known limitations
+
+- **Resetting onboarding for QA is an adb operation**, not a UI control:
+  stop the app, delete `shared_prefs/FlutterSharedPreferences.xml`, relaunch.
+  `OnboardingController.reset()` exists and is tested, but is deliberately not
+  wired to any production affordance. **Wait for the process to actually
+  exit before deleting the file** — a still-exiting process flushes its
+  cached preference map back to disk and silently restores the flag. This
+  cost a QA cycle; it is a harness race, not a product bug.
+- Onboarding always restarts from screen one; an interrupted run does not
+  resume where it left off. That is intended — four screens is short enough
+  that resuming mid-thought would be stranger than starting over.
+- There is no way to see the onboarding screens again from inside the app.
+  The privacy content is re-stated on Day 14's privacy page, which is where
+  someone would look for it.
 
 ## What Day 11 established
 

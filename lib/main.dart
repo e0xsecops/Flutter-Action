@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app.dart';
+import 'core/preferences/shared_preferences_store.dart';
 import 'firebase_options.dart';
 
 /// Lets a debug build report to Crashlytics when we need to prove the pipeline
@@ -35,7 +36,18 @@ Future<void> main() async {
     return true;
   };
 
-  runApp(const ProviderScope(child: ActionApp()));
+  // Loaded before the first frame so the router can decide synchronously
+  // whether this is a first run. It is a single small file read; making the
+  // app wait for it costs less than showing the wrong screen and correcting
+  // it a frame later.
+  final preferences = await SharedPreferencesStore.open();
+
+  runApp(
+    ProviderScope(
+      overrides: [preferenceStoreProvider.overrideWithValue(preferences)],
+      child: const ActionApp(),
+    ),
+  );
 }
 
 /// Attests that requests come from a genuine build of this app.

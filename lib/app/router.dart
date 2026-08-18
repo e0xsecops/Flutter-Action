@@ -11,6 +11,8 @@ import '../features/capture/presentation/source_detail_screen.dart';
 import '../features/extraction/domain/extraction_result.dart';
 import '../features/extraction/presentation/extraction_review_screen.dart';
 import '../features/home/presentation/home_screen.dart';
+import '../features/onboarding/application/onboarding_controller.dart';
+import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/search/presentation/search_screen.dart';
 
 /// Route paths in one place so navigation is never stringly-typed.
@@ -20,6 +22,7 @@ import '../features/search/presentation/search_screen.dart';
 /// need it rather than as dead entries.
 abstract final class Routes {
   static const home = '/';
+  static const onboarding = '/onboarding';
   static const capturePreview = '/capture/preview';
   static const captureText = '/capture/text';
   static const sourcePattern = '/source/:id';
@@ -37,9 +40,29 @@ abstract final class Routes {
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
+  // Read, not watch: rebuilding the router would rebuild the whole navigator
+  // and throw away the stack. Onboarding completion is instead consulted on
+  // every navigation by the redirect below, which is enough — the flag only
+  // ever moves once, and the screen that moves it navigates explicitly.
   return GoRouter(
-    initialLocation: Routes.home,
+    initialLocation: ref.read(onboardingControllerProvider)
+        ? Routes.home
+        : Routes.onboarding,
+    // A guard rather than a one-time decision, so onboarding cannot be
+    // skipped by a deep link into `/action/:id` on a fresh install, and
+    // cannot be re-entered by one afterwards.
+    redirect: (context, state) {
+      final completed = ref.read(onboardingControllerProvider);
+      final atOnboarding = state.matchedLocation == Routes.onboarding;
+      if (!completed && !atOnboarding) return Routes.onboarding;
+      if (completed && atOnboarding) return Routes.home;
+      return null;
+    },
     routes: [
+      GoRoute(
+        path: Routes.onboarding,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       GoRoute(
         path: Routes.home,
         builder: (context, state) => const HomeScreen(),

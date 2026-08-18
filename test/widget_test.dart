@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:action_app/app/app.dart';
+import 'package:action_app/core/preferences/shared_preferences_store.dart';
 import 'package:action_app/features/actions/application/action_providers.dart';
 import 'package:action_app/features/actions/data/action_cloud_mirror.dart';
 import 'package:action_app/features/actions/data/actions_database.dart';
@@ -23,6 +24,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'actions/support/actions_test_support.dart';
 import 'actions/support/fake_notification_scheduler.dart';
 import 'support/fake_stores.dart';
+import 'support/preferences.dart';
 
 class _NoIdentity implements AuthIdentityService {
   const _NoIdentity();
@@ -72,6 +74,9 @@ Widget _app(SourceStore store, {OcrService? ocr}) {
       // A fixed clock, so triage never depends on when the suite runs.
       appClockProvider.overrideWithValue(() => homeNow),
       notificationSchedulerProvider.overrideWithValue(_scheduler),
+      // These tests are about the app *after* first run. Without this the
+      // Day-13 router guard correctly sends every one of them to onboarding.
+      preferenceStoreProvider.overrideWithValue(onboardedPreferences()),
     ],
     child: const ActionApp(),
   );
