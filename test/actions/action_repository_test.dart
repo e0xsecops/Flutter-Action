@@ -31,9 +31,9 @@ void main() {
         'a1',
         dueAt: due,
         amount: gbp('96.40'),
-        steps: const [
-          ActionStepItem(title: 'Pay it', order: 0),
-          ActionStepItem(title: 'File the receipt', order: 1),
+        steps: [
+          sampleStep('s1', title: 'Pay it', order: 0),
+          sampleStep('s2', title: 'File the receipt', order: 1),
         ],
         facts: const [
           ActionFactItem(
@@ -241,12 +241,20 @@ void main() {
       expect(bad.origin, ActionOrigin.manual);
     });
 
-    test('fresh database initialises at schema version 1', () async {
+    test('fresh database initialises at the current schema version', () async {
       await repo.create(sampleAction('a1'));
-      final row = await db
-          .customSelect('PRAGMA user_version')
-          .getSingle();
-      expect(row.data.values.single, 1);
+      final row = await db.customSelect('PRAGMA user_version').getSingle();
+      expect(row.data.values.single, 2, reason: 'Day 9 added the chain columns');
+    });
+
+    test('the mirrored Action schema version is NOT the database version',
+        () async {
+      // The deployed Firestore rules pin `schemaVersion == 1`. Day 9 changed
+      // only local tables, so bumping the record version would start failing
+      // every mirror write for no reason.
+      await repo.create(sampleAction('a1'));
+      expect(actionSchemaVersion, 1);
+      expect((await repo.getById('a1'))!.schemaVersion, 1);
     });
   });
 

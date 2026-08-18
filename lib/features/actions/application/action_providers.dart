@@ -18,7 +18,22 @@ abstract final class ActionEvents {
   static const localPersistenceFailed = 'action_local_persistence_failed';
   static const cloudMirrorSucceeded = 'action_cloud_mirror_succeeded';
   static const cloudMirrorFailed = 'action_cloud_mirror_failed';
+
+  // Day 9. Still names only: what happened, never what it was about.
+  static const detailOpened = 'action_detail_opened';
+  static const edited = 'action_edited';
+  static const reopened = 'action_reopened';
+  static const stepAdded = 'action_step_added';
+  static const stepCompleted = 'action_step_completed';
+  static const stepReopened = 'action_step_reopened';
+  static const stepEdited = 'action_step_edited';
+  static const stepDeleted = 'action_step_deleted';
+  static const stepReordered = 'action_step_reordered';
 }
+
+/// The app's clock, injected so that "when did this happen" is testable and
+/// never reaches for `DateTime.now()` deep inside a widget.
+final appClockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
 
 /// One database for the whole app. Opening is lazy (first query), so app
 /// startup never waits on SQLite; open failures surface through the watch
@@ -65,3 +80,17 @@ final actionSyncServiceProvider = Provider<ActionSyncService>(
 final actionsStreamProvider = StreamProvider<List<ActionItem>>(
   (ref) => ref.watch(actionRepositoryProvider).watchAll(),
 );
+
+/// Chain writes. A separate provider from [actionRepositoryProvider] because
+/// it is a separate contract: nothing reachable through here mirrors to the
+/// cloud.
+final actionStepRepositoryProvider = Provider<ActionStepRepository>(
+  (ref) => ref.watch(_driftRepositoryProvider),
+);
+
+/// One Action for the detail screen, re-emitted on every durable change to it
+/// or its chain. `null` means no such Action — a real answer, not an error.
+final actionDetailProvider =
+    StreamProvider.family<ActionItem?, String>((ref, id) {
+  return ref.watch(actionRepositoryProvider).watchById(id);
+});

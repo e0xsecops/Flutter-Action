@@ -13,12 +13,36 @@ ActionsDatabase memoryDatabase() => ActionsDatabase(NativeDatabase.memory());
 MoneyValue gbp(String amount) =>
     (MoneyValue.parse(amount, 'GBP') as MoneyParsed).value;
 
+/// A chain step with an explicit id, so tests never depend on mint order.
+ActionStepItem sampleStep(
+  String id, {
+  String? title,
+  int order = 0,
+  String? description,
+  bool isCompleted = false,
+  DateTime? completedAt,
+  DateTime? createdAt,
+}) {
+  final born = createdAt ?? testNow;
+  return ActionStepItem(
+    id: id,
+    title: title ?? 'Step $id',
+    order: order,
+    description: description,
+    isCompleted: isCompleted,
+    completedAt: completedAt,
+    createdAt: born,
+    updatedAt: born,
+  );
+}
+
 ActionItem sampleAction(
   String id, {
   String? title,
   String? sourceId = 'src-1',
   ActionStatus status = ActionStatus.active,
   ActionUrgency urgency = ActionUrgency.normal,
+  ActionCategory category = ActionCategory.payment,
   ActionDue? dueAt,
   MoneyValue? amount,
   DateTime? createdAt,
@@ -34,7 +58,7 @@ ActionItem sampleAction(
     title: title ?? 'Action $id',
     status: status,
     urgency: urgency,
-    category: ActionCategory.payment,
+    category: category,
     dueAt: dueAt,
     amount: amount,
     origin: origin,

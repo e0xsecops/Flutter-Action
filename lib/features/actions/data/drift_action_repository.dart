@@ -11,7 +11,8 @@ import 'actions_database.dart';
 /// Every mutation runs in one transaction that also records the mirror
 /// intent, so "the Action exists locally" and "the cloud owes an upsert" can
 /// never disagree. The mirror itself runs elsewhere and strictly later.
-class DriftActionRepository implements ActionRepository, ActionSyncOutbox {
+class DriftActionRepository
+    implements ActionRepository, ActionStepRepository, ActionSyncOutbox {
   DriftActionRepository(this._db);
 
   final ActionsDatabase _db;
@@ -33,12 +34,43 @@ class DriftActionRepository implements ActionRepository, ActionSyncOutbox {
     return query.watch().asyncMap(_hydrate);
   }
 
+  @override
+  Stream<ActionItem?> watchById(String id) {
+    // A detail screen must also react when only the CHAIN changed, and steps
+    // live in their own table — watching a query over `actions` alone would
+    // never fire for them. So the tables this stream depends on are declared
+    // explicitly, and the projection carries a chain fingerprint so the
+    // emission is distinguishable even if the Action row itself is untouched.
+    return _db
+        .customSelect(
+          'SELECT a.id AS id, '
+          '(SELECT COUNT(*) FROM action_steps s WHERE s.action_id = a.id) '
+          'AS step_count, '
+          '(SELECT COALESCE(MAX(s.updated_at_micros), 0) FROM action_steps s '
+          'WHERE s.action_id = a.id) AS steps_touched_at '
+          'FROM actions a WHERE a.id = ?',
+          variables: [Variable<String>(id)],
+          readsFrom: {
+            _db.actionsTable,
+            _db.actionStepsTable,
+            _db.actionFactsTable,
+          },
+        )
+        .watch()
+        .asyncMap((rows) => rows.isEmpty ? null : getById(id));
+  }
+
   Future<List<ActionItem>> _hydrate(List<ActionRow> rows) async {
     if (rows.isEmpty) return const [];
     final ids = [for (final r in rows) r.id];
     final steps = await (_db.select(_db.actionStepsTable)
           ..where((t) => t.actionId.isIn(ids))
-          ..orderBy([(t) => OrderingTerm.asc(t.orderIndex)]))
+          // Ties break on id so the chain has a total order even if two rows
+          // somehow share a position.
+          ..orderBy([
+            (t) => OrderingTerm.asc(t.orderIndex),
+            (t) => OrderingTerm.asc(t.id),
+          ]))
         .get();
     final facts = await (_db.select(_db.actionFactsTable)
           ..where((t) => t.actionId.isIn(ids)))
@@ -119,6 +151,14 @@ class DriftActionRepository implements ActionRepository, ActionSyncOutbox {
       _setStatus(id, ActionStatus.archived, at,
           (c, micros) => c.copyWith(archivedAtMicros: Value(micros)));
 
+  @override
+  Future<void> reopen(String id, {required DateTime at}) =>
+      // Clearing the stamp, not writing a new one: an Action that is active
+      // again has no completion time. The chain is untouched — the steps that
+      // were done stay done.
+      _setStatus(id, ActionStatus.active, at,
+          (c, _) => c.copyWith(completedAtMicros: const Value(null)));
+
   Future<void> _setStatus(
     String id,
     ActionStatus status,
@@ -136,6 +176,109 @@ class DriftActionRepository implements ActionRepository, ActionSyncOutbox {
           .write(stamp(base, micros));
       if (changed == 0) return;
       await _enqueueUpsert(id, at);
+    });
+  }
+
+  // --------------------------------------------------------- action chain --
+  //
+  // Every method below is deliberately outbox-free. Steps are local-only: the
+  // Day-8 mirror payload does not carry them, and the deployed rules reject a
+  // document that does. Enqueuing here would either upload nothing new or
+  // start failing every write — so nothing here calls _enqueueUpsert.
+
+  @override
+  Future<void> addStep(String actionId, ActionStepItem step) {
+    return _db.transaction(() async {
+      final highest = _db.actionStepsTable.orderIndex.max();
+      final row = await (_db.selectOnly(_db.actionStepsTable)
+            ..addColumns([highest])
+            ..where(_db.actionStepsTable.actionId.equals(actionId)))
+          .getSingle();
+      final next = (row.read(highest) ?? -1) + 1;
+      await _db
+          .into(_db.actionStepsTable)
+          .insert(_stepToRow(actionId, step.copyWith(order: next)));
+    });
+  }
+
+  @override
+  Future<void> updateStep(ActionStepItem step, {required DateTime at}) async {
+    await (_db.update(_db.actionStepsTable)
+          ..where((t) => t.id.equals(step.id)))
+        .write(
+      ActionStepsTableCompanion(
+        title: Value(step.title),
+        description: Value(step.description),
+        updatedAtMicros: Value(at.toUtc().microsecondsSinceEpoch),
+      ),
+    );
+  }
+
+  @override
+  Future<void> setStepCompleted(
+    String stepId, {
+    required bool isCompleted,
+    required DateTime at,
+  }) async {
+    final micros = at.toUtc().microsecondsSinceEpoch;
+    await (_db.update(_db.actionStepsTable)..where((t) => t.id.equals(stepId)))
+        .write(
+      ActionStepsTableCompanion(
+        isCompleted: Value(isCompleted),
+        completedAtMicros: Value(isCompleted ? micros : null),
+        updatedAtMicros: Value(micros),
+      ),
+    );
+  }
+
+  @override
+  Future<void> deleteStep(String stepId, {required DateTime at}) async {
+    // Positions are left with a gap rather than re-densified: ordering reads
+    // tolerate gaps, and rewriting untouched rows would churn their
+    // updatedAt for no user-visible reason.
+    await (_db.delete(_db.actionStepsTable)..where((t) => t.id.equals(stepId)))
+        .go();
+  }
+
+  @override
+  Future<void> reorderSteps(
+    String actionId,
+    List<String> orderedStepIds, {
+    required DateTime at,
+  }) {
+    return _db.transaction(() async {
+      final rows = await (_db.select(_db.actionStepsTable)
+            ..where((t) => t.actionId.equals(actionId))
+            ..orderBy([
+              (t) => OrderingTerm.asc(t.orderIndex),
+              (t) => OrderingTerm.asc(t.id),
+            ]))
+          .get();
+      final byId = {for (final r in rows) r.id: r};
+
+      // The requested order first — ignoring ids that are not this Action's
+      // and any repeat — then everything the caller left out, keeping its
+      // existing relative order. A partial or stale list reorders what it
+      // names and drops nothing.
+      final ordered = <String>[];
+      final placed = <String>{};
+      for (final id in orderedStepIds) {
+        if (byId.containsKey(id) && placed.add(id)) ordered.add(id);
+      }
+      for (final row in rows) {
+        if (placed.add(row.id)) ordered.add(row.id);
+      }
+
+      final micros = at.toUtc().microsecondsSinceEpoch;
+      for (var i = 0; i < ordered.length; i++) {
+        if (byId[ordered[i]]!.orderIndex == i) continue;
+        await (_db.update(_db.actionStepsTable)
+              ..where((t) => t.id.equals(ordered[i])))
+            .write(ActionStepsTableCompanion(
+          orderIndex: Value(i),
+          updatedAtMicros: Value(micros),
+        ));
+      }
     });
   }
 
@@ -284,18 +427,32 @@ class DriftActionRepository implements ActionRepository, ActionSyncOutbox {
 
   static ActionStepRow _stepToRow(String actionId, ActionStepItem step) =>
       ActionStepRow(
+        id: step.id,
         actionId: actionId,
         orderIndex: step.order,
         title: step.title,
         description: step.description,
         dueAtWall: step.dueAt?.toStorage(),
+        isCompleted: step.isCompleted,
+        completedAtMicros: step.completedAt?.toUtc().microsecondsSinceEpoch,
+        createdAtMicros: step.createdAt.toUtc().microsecondsSinceEpoch,
+        updatedAtMicros: step.updatedAt.toUtc().microsecondsSinceEpoch,
       );
 
   static ActionStepItem _stepFromRow(ActionStepRow row) => ActionStepItem(
+        id: row.id,
         title: row.title,
         order: row.orderIndex,
         description: row.description,
         dueAt: ActionDue.fromStorage(row.dueAtWall),
+        isCompleted: row.isCompleted,
+        // A completion stamp only means anything while the step is complete;
+        // a stale one on a reopened step would be a false timeline.
+        completedAt: row.isCompleted && row.completedAtMicros != null
+            ? _instantFromMicros(row.completedAtMicros!)
+            : null,
+        createdAt: _instantFromMicros(row.createdAtMicros),
+        updatedAt: _instantFromMicros(row.updatedAtMicros),
       );
 
   static ActionFactRow _factToRow(String actionId, ActionFactItem fact) =>

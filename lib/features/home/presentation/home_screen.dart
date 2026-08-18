@@ -202,8 +202,7 @@ class _Inbox extends StatelessWidget {
 
 /// The Action Card: urgency spine on the left (warm, solid — the documented
 /// treatment), title, deadline and amount in tabular figures, and a
-/// completion toggle. Read-only beyond completion — Action Detail is Day-9
-/// scope.
+/// completion toggle, and the way into the Action itself.
 class _ActionRow extends ConsumerWidget {
   const _ActionRow({required this.item});
 
@@ -225,7 +224,12 @@ class _ActionRow extends ConsumerWidget {
     return Material(
       color: colors.surfaceElevated,
       borderRadius: Radii.rMd,
-      child: Container(
+      child: InkWell(
+        // The card opens the Action; the completion toggle keeps its own hit
+        // target inside it, so finishing something never costs a navigation.
+        onTap: () => context.push(Routes.action(item.id)),
+        borderRadius: Radii.rMd,
+        child: Container(
         decoration: BoxDecoration(
           borderRadius: Radii.rMd,
           border: Border.all(color: colors.border, width: Strokes.hairline),
@@ -286,6 +290,7 @@ class _ActionRow extends ConsumerWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

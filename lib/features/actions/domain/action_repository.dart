@@ -13,6 +13,11 @@ abstract interface class ActionRepository {
 
   Future<ActionItem?> getById(String id);
 
+  /// One Action and its chain, re-emitted on every durable change. Emits null
+  /// when the id does not exist (or stops existing), so a detail screen can
+  /// show a real not-found state instead of hanging on an empty stream.
+  Stream<ActionItem?> watchById(String id);
+
   /// Persists a new Action atomically (with its steps, facts, and a pending
   /// mirror-outbox entry). Returns false — changing nothing — when an Action
   /// with this id already exists, which is what makes a double-tapped
@@ -24,7 +29,50 @@ abstract interface class ActionRepository {
 
   Future<void> complete(String id, {required DateTime at});
 
+  /// Back to active, clearing the completion stamp. Step history is left
+  /// exactly as it was: reopening an Action is not a claim that the work
+  /// already done was undone.
+  Future<void> reopen(String id, {required DateTime at});
+
   Future<void> archive(String id, {required DateTime at});
+}
+
+/// The Action Chain store.
+///
+/// Deliberately a separate interface from [ActionRepository], because these
+/// operations have a different contract: **steps are local-only**. None of
+/// them enqueues a cloud-mirror upsert, because the Day-8 mirror payload does
+/// not carry steps and the deployed Firestore rules reject any document that
+/// does. Splitting the interface makes that boundary something you have to
+/// cross deliberately rather than something you can forget.
+abstract interface class ActionStepRepository {
+  /// Appends a step to the end of the chain. The step's id is its identity;
+  /// its order is assigned from the current chain length.
+  Future<void> addStep(String actionId, ActionStepItem step);
+
+  /// Applies a step's user-editable content (title, description). Missing id
+  /// is a no-op.
+  Future<void> updateStep(ActionStepItem step, {required DateTime at});
+
+  /// Checks or unchecks a step. Completing stamps [at]; reopening clears the
+  /// stamp rather than leaving a time that no longer means anything.
+  Future<void> setStepCompleted(
+    String stepId, {
+    required bool isCompleted,
+    required DateTime at,
+  });
+
+  Future<void> deleteStep(String stepId, {required DateTime at});
+
+  /// Rewrites the whole chain's positions to match [orderedStepIds], densely
+  /// from zero, in one transaction. Ids not belonging to [actionId] are
+  /// ignored; ids omitted from the list keep their relative order after the
+  /// listed ones, so a partial list can never silently drop a step.
+  Future<void> reorderSteps(
+    String actionId,
+    List<String> orderedStepIds, {
+    required DateTime at,
+  });
 }
 
 /// One pending cloud-mirror intent.

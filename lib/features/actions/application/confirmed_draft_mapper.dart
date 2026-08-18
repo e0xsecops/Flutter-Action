@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import '../../extraction/domain/confirmed_action_draft.dart';
 import '../domain/action_item.dart';
 
@@ -8,8 +10,13 @@ import '../domain/action_item.dart';
 /// stored as absence, its money object is stored exactly, and the only
 /// provenance kept is origin plus when the review happened. Confidence
 /// machinery does not survive the crossing by design.
-ActionItem actionItemFromDraft(ConfirmedActionDraft draft, {DateTime? now}) {
+ActionItem actionItemFromDraft(
+  ConfirmedActionDraft draft, {
+  DateTime? now,
+  String Function()? newStepId,
+}) {
   final createdAt = (now ?? DateTime.now()).toUtc();
+  final mintId = newStepId ?? const Uuid().v4;
   return ActionItem(
     id: draft.id,
     sourceId: draft.sourceId.isEmpty ? null : draft.sourceId,
@@ -30,10 +37,16 @@ ActionItem actionItemFromDraft(ConfirmedActionDraft draft, {DateTime? now}) {
     steps: [
       for (final step in draft.steps)
         ActionStepItem(
+          // Minted here, at the same moment the Action gets its identity:
+          // from now on this step keeps that id through every rename and
+          // reorder.
+          id: mintId(),
           title: step.title,
           order: step.order,
           description: step.description,
           dueAt: step.dueAt == null ? null : ActionDue(step.dueAt!),
+          createdAt: createdAt,
+          updatedAt: createdAt,
         ),
     ],
     facts: [

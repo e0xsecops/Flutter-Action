@@ -172,7 +172,7 @@ void main() {
         () {
       final payload = cloudPayloadFor(sampleAction(
         'a1',
-        steps: const [ActionStepItem(title: 'Secret step', order: 0)],
+        steps: [sampleStep('s1', title: 'Secret step')],
         facts: const [
           ActionFactItem(
             key: 'reference',

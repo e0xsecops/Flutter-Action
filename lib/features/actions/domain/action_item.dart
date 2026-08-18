@@ -79,20 +79,70 @@ final class ActionDue {
   String toString() => toStorage();
 }
 
-/// One step the user kept when confirming, persisted with its Action.
+/// One step of an Action Chain: a unit of work the person can actually do,
+/// check off, rename, reorder or drop.
+///
+/// [id] is the identity, not [order]. Position is something a step *has*,
+/// never something it *is* — otherwise reordering would move completions
+/// between steps and renaming the third item would be indistinguishable from
+/// swapping the third and fourth.
 final class ActionStepItem {
   const ActionStepItem({
+    required this.id,
     required this.title,
     required this.order,
+    required this.createdAt,
+    required this.updatedAt,
     this.description,
     this.dueAt,
+    this.isCompleted = false,
+    this.completedAt,
   });
 
+  final String id;
   final String title;
   final String? description;
   final ActionDue? dueAt;
+
+  /// Dense rank within its Action. Duplicates and gaps are tolerated on read
+  /// (ties break by id, so ordering is still total) and normalised on write.
   final int order;
+
+  final bool isCompleted;
+
+  /// When it was checked off. Always null while [isCompleted] is false —
+  /// reopening clears it rather than keeping a stale completion time.
+  final DateTime? completedAt;
+
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  ActionStepItem copyWith({
+    String? title,
+    int? order,
+    DateTime? updatedAt,
+    bool? isCompleted,
+    Object? description = _unset,
+    Object? completedAt = _unset,
+  }) =>
+      ActionStepItem(
+        id: id,
+        title: title ?? this.title,
+        order: order ?? this.order,
+        description: description == _unset
+            ? this.description
+            : description as String?,
+        dueAt: dueAt,
+        isCompleted: isCompleted ?? this.isCompleted,
+        completedAt:
+            completedAt == _unset ? this.completedAt : completedAt as DateTime?,
+        createdAt: createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }
+
+/// Sentinel so `copyWith` can tell "leave it alone" from "set it to null".
+const Object _unset = Object();
 
 /// One reviewed fact carried along for reference (an account number, an
 /// organisation). Values here passed the validator AND a person; whether the
@@ -173,6 +223,50 @@ final class ActionItem {
   final List<ActionFactItem> facts;
 
   bool get isActive => status == ActionStatus.active;
+
+  /// Applies a user's edits to the fields they are allowed to change.
+  ///
+  /// Only user-facing metadata is reachable: schema version, source linkage,
+  /// review provenance and anything the sync layer owns are not editable and
+  /// are carried through untouched. Clearing is explicit — passing null means
+  /// "leave it", `clearX: true` means "there is no longer one" — because a
+  /// removed deadline and an unchanged deadline are different intentions.
+  ActionItem withEdits({
+    required DateTime updatedAt,
+    String? title,
+    ActionUrgency? urgency,
+    ActionDue? dueAt,
+    bool clearDue = false,
+    MoneyValue? amount,
+    bool clearAmount = false,
+    String? recommendedNextStep,
+    bool clearNextStep = false,
+    List<ActionStepItem>? steps,
+  }) =>
+      ActionItem(
+        id: id,
+        schemaVersion: schemaVersion,
+        sourceId: sourceId,
+        title: title ?? this.title,
+        summary: summary,
+        status: status,
+        urgency: urgency ?? this.urgency,
+        category: category,
+        dueAt: clearDue ? null : (dueAt ?? this.dueAt),
+        amount: clearAmount ? null : (amount ?? this.amount),
+        recommendedNextStep: clearNextStep
+            ? null
+            : (recommendedNextStep ?? this.recommendedNextStep),
+        whyThisMatters: whyThisMatters,
+        origin: origin,
+        reviewedAt: reviewedAt,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        completedAt: completedAt,
+        archivedAt: archivedAt,
+        steps: steps ?? this.steps,
+        facts: facts,
+      );
 
   ActionItem copyWith({
     ActionStatus? status,

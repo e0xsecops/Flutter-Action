@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/actions/presentation/action_detail_screen.dart';
 import '../features/diagnostics/presentation/extraction_diagnostics_screen.dart';
 import '../features/diagnostics/presentation/ocr_diagnostics_screen.dart';
 import '../features/capture/presentation/paste_text_screen.dart';
@@ -22,6 +23,7 @@ abstract final class Routes {
   static const captureText = '/capture/text';
   static const sourcePattern = '/source/:id';
   static const sourceReviewPattern = '/source/:id/review';
+  static const actionPattern = '/action/:id';
 
   /// Debug builds only — see the route table.
   static const diagnostics = '/diagnostics';
@@ -29,6 +31,7 @@ abstract final class Routes {
 
   static String source(String id) => '/source/$id';
   static String sourceReview(String id) => '/source/$id/review';
+  static String action(String id) => '/action/$id';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -58,6 +61,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.sourcePattern,
         builder: (context, state) =>
             SourceDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        // Deep-linkable by design: the id in the path is the durable local
+        // Action id, so a link to one still resolves after a restart. An id
+        // that no longer exists gets a real not-found state from the screen
+        // rather than a silent bounce to Home.
+        path: Routes.actionPattern,
+        builder: (context, state) =>
+            ActionDetailScreen(id: state.pathParameters['id']!),
       ),
       GoRoute(
         path: Routes.sourceReviewPattern,

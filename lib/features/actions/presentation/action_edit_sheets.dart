@@ -1,0 +1,442 @@
+import 'package:flutter/material.dart';
+
+import '../../../design/components/app_sheet.dart';
+import '../../../design/tokens/colors.dart';
+import '../../../design/tokens/dimens.dart';
+import '../../extraction/data/extraction_validator.dart' show parseStrictIso8601;
+import '../../extraction/domain/extraction_schema.dart';
+import '../../extraction/domain/money_value.dart';
+import '../domain/action_item.dart';
+
+/// Edit surfaces for a durable Action.
+///
+/// Each sheet owns one decision, validates with the *same* parsers the
+/// extraction trust boundary uses, and returns only a value it has already
+/// proved. Nothing here writes to the database — the caller persists, so a
+/// storage failure can be reported honestly instead of being swallowed
+/// behind a dismissed sheet.
+///
+/// Internal machinery (schema version, source id, sync state, the uid,
+/// anything the outbox knows) is deliberately unreachable from these screens.
+
+/// A sheet's outcome. `null` from `showModalBottomSheet` means dismissed —
+/// distinct from [EditCleared], which is a deliberate "there is no value".
+sealed class EditOutcome<T> {
+  const EditOutcome();
+}
+
+final class EditSaved<T> extends EditOutcome<T> {
+  const EditSaved(this.value);
+  final T value;
+}
+
+final class EditCleared<T> extends EditOutcome<T> {
+  const EditCleared();
+}
+
+// ------------------------------------------------------------------ title --
+
+Future<String?> showTitleSheet(BuildContext context, String current) {
+  return showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    builder: (sheetContext) => Padding(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
+      child: AppSheet(
+        title: 'Title',
+        child: _TextEditor(
+          initial: current,
+          hint: 'What needs to happen?',
+          maxLength: 200,
+          saveLabel: 'Save',
+        ),
+      ),
+    ),
+  );
+}
+
+/// The suggested next move. Clearable: an Action is allowed to have no
+/// suggestion, and an empty string is not the same thing as one.
+Future<EditOutcome<String>?> showNextStepSheet(
+  BuildContext context,
+  String? current,
+) {
+  return showModalBottomSheet<EditOutcome<String>>(
+    context: context,
+    isScrollControlled: true,
+    builder: (sheetContext) => Padding(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
+      child: AppSheet(
+        title: 'Recommended next step',
+        subtitle: 'A short sentence about the next useful move.',
+        child: _TextEditor(
+          initial: current ?? '',
+          hint: 'What is the next useful move?',
+          maxLength: 240,
+          saveLabel: 'Save',
+          clearLabel: current == null ? null : 'Remove the suggestion',
+        ),
+      ),
+    ),
+  );
+}
+
+// --------------------------------------------------------------- deadline --
+
+/// Deadlines are edited in the semantic type they already have: a date-only
+/// deadline stays date-only. Nothing here converts a confirmed date into an
+/// instant, which is the failure the storage format exists to prevent.
+Future<EditOutcome<DateTime>?> showDeadlineSheet(
+  BuildContext context,
+  ActionDue? current,
+) {
+  return showModalBottomSheet<EditOutcome<DateTime>>(
+    context: context,
+    isScrollControlled: true,
+    builder: (sheetContext) => Padding(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
+      child: AppSheet(
+        title: 'Deadline',
+        child: _DeadlineEditor(current: current),
+      ),
+    ),
+  );
+}
+
+// ----------------------------------------------------------------- amount --
+
+Future<EditOutcome<MoneyValue>?> showAmountSheet(
+  BuildContext context,
+  MoneyValue? current,
+) {
+  return showModalBottomSheet<EditOutcome<MoneyValue>>(
+    context: context,
+    isScrollControlled: true,
+    builder: (sheetContext) => Padding(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
+      child: AppSheet(
+        title: 'Amount',
+        child: _AmountEditor(current: current),
+      ),
+    ),
+  );
+}
+
+// ---------------------------------------------------------------- urgency --
+
+Future<ActionUrgency?> showUrgencySheet(
+  BuildContext context,
+  ActionUrgency current,
+) {
+  return showModalBottomSheet<ActionUrgency>(
+    context: context,
+    builder: (sheetContext) => AppSheet(
+      title: 'How urgent is this?',
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final value in ActionUrgency.values)
+            ListTile(
+              title: Text(value.label),
+              trailing: value == current
+                  ? Icon(Icons.check, color: sheetContext.colors.brand)
+                  : null,
+              onTap: () => Navigator.of(sheetContext).pop(value),
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+// ------------------------------------------------------------------ steps --
+
+/// Add or rename one chain step. Returns the trimmed title.
+Future<String?> showStepSheet(
+  BuildContext context, {
+  String? current,
+}) {
+  return showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    builder: (sheetContext) => Padding(
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
+      child: AppSheet(
+        title: current == null ? 'Add a step' : 'Edit step',
+        child: _TextEditor(
+          initial: current ?? '',
+          hint: 'One concrete thing to do',
+          maxLength: 200,
+          saveLabel: current == null ? 'Add step' : 'Save',
+        ),
+      ),
+    ),
+  );
+}
+
+// ------------------------------------------------------------- internals --
+
+/// Single-field text editor. Save stays disabled until the trimmed value is
+/// non-empty, so a whitespace-only title can never be committed.
+class _TextEditor extends StatefulWidget {
+  const _TextEditor({
+    required this.initial,
+    required this.hint,
+    required this.maxLength,
+    required this.saveLabel,
+    this.clearLabel,
+  });
+
+  final String initial;
+  final String hint;
+  final int maxLength;
+  final String saveLabel;
+  final String? clearLabel;
+
+  @override
+  State<_TextEditor> createState() => _TextEditorState();
+}
+
+class _TextEditorState extends State<_TextEditor> {
+  late final _controller = TextEditingController(text: widget.initial);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  bool get _valid => _controller.text.trim().isNotEmpty;
+
+  void _save() {
+    final value = _controller.text.trim();
+    if (value.isEmpty) return;
+    // Callers that asked for a plain String get one; the clearable variant
+    // wraps it so "saved" and "cleared" stay distinguishable.
+    Navigator.of(context).pop<Object>(
+      widget.clearLabel == null ? value : EditSaved<String>(value),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Space.page, 0, Space.page, Space.lg),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            controller: _controller,
+            autofocus: true,
+            maxLength: widget.maxLength,
+            maxLines: null,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(hintText: widget.hint),
+            onChanged: (_) => setState(() {}),
+            onSubmitted: (_) => _save(),
+          ),
+          const SizedBox(height: Space.sm),
+          FilledButton(
+            onPressed: _valid ? _save : null,
+            child: Text(widget.saveLabel),
+          ),
+          if (widget.clearLabel != null) ...[
+            const SizedBox(height: Space.xs),
+            TextButton(
+              onPressed: () => Navigator.of(context)
+                  .pop<Object>(const EditCleared<String>()),
+              child: Text(widget.clearLabel!),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _DeadlineEditor extends StatefulWidget {
+  const _DeadlineEditor({required this.current});
+
+  final ActionDue? current;
+
+  @override
+  State<_DeadlineEditor> createState() => _DeadlineEditorState();
+}
+
+class _DeadlineEditorState extends State<_DeadlineEditor> {
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.current == null
+        ? ''
+        : _dateOnlyText(widget.current!.wallClock),
+  );
+  String? _error;
+
+  static String _dateOnlyText(DateTime d) =>
+      '${d.year.toString().padLeft(4, '0')}-'
+      '${d.month.toString().padLeft(2, '0')}-'
+      '${d.day.toString().padLeft(2, '0')}';
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    final text = _controller.text.trim();
+    // The same strict parser the validator uses: 2026-02-30 is rejected, not
+    // rolled forward into March.
+    final parsed = parseStrictIso8601(text);
+    if (parsed == null) {
+      setState(() => _error = 'That is not a real date. Use 2026-08-30.');
+      return;
+    }
+    // A deadline that was a plain date stays a plain date: the time
+    // components are exactly what the user typed, never a zone conversion.
+    Navigator.of(context).pop(EditSaved<DateTime>(parsed));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Space.page, 0, Space.page, Space.lg),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            controller: _controller,
+            autofocus: true,
+            keyboardType: TextInputType.datetime,
+            decoration: const InputDecoration(hintText: 'YYYY-MM-DD'),
+            onChanged: (_) {
+              if (_error != null) setState(() => _error = null);
+            },
+            onSubmitted: (_) => _save(),
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: Space.xs),
+            Text(
+              _error!,
+              style: text.bodySmall?.copyWith(color: colors.danger),
+            ),
+          ],
+          const SizedBox(height: Space.sm),
+          FilledButton(onPressed: _save, child: const Text('Use this date')),
+          if (widget.current != null) ...[
+            const SizedBox(height: Space.xs),
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context).pop(const EditCleared<DateTime>()),
+              child: const Text('Remove the deadline'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _AmountEditor extends StatefulWidget {
+  const _AmountEditor({required this.current});
+
+  final MoneyValue? current;
+
+  @override
+  State<_AmountEditor> createState() => _AmountEditorState();
+}
+
+class _AmountEditorState extends State<_AmountEditor> {
+  late final TextEditingController _amount =
+      TextEditingController(text: widget.current?.plainAmount ?? '');
+  late String _currency = widget.current?.currencyCode ?? 'GBP';
+  String? _error;
+
+  @override
+  void dispose() {
+    _amount.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    // MoneyValue.parse is the strict parser: exact minor units, a supported
+    // ISO-4217 code, never a float and never an inferred currency.
+    switch (MoneyValue.parse(_amount.text.trim(), _currency)) {
+      case MoneyParsed(:final value):
+        Navigator.of(context).pop(EditSaved<MoneyValue>(value));
+      case MoneyRejected(:final error):
+        setState(() => _error = error.reason);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Space.page, 0, Space.page, Space.lg),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _amount,
+                  autofocus: true,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(hintText: '96.40'),
+                  onChanged: (_) {
+                    if (_error != null) setState(() => _error = null);
+                  },
+                  onSubmitted: (_) => _save(),
+                ),
+              ),
+              const SizedBox(width: Space.md),
+              DropdownMenu<String>(
+                initialSelection: _currency,
+                width: 116,
+                requestFocusOnTap: false,
+                onSelected: (value) {
+                  if (value != null) setState(() => _currency = value);
+                },
+                dropdownMenuEntries: [
+                  for (final code in supportedCurrencies)
+                    DropdownMenuEntry(value: code, label: code),
+                ],
+              ),
+            ],
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: Space.xs),
+            Text(
+              _error!,
+              style: text.bodySmall?.copyWith(color: colors.danger),
+            ),
+          ],
+          const SizedBox(height: Space.sm),
+          FilledButton(onPressed: _save, child: const Text('Save amount')),
+          if (widget.current != null) ...[
+            const SizedBox(height: Space.xs),
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context).pop(const EditCleared<MoneyValue>()),
+              child: const Text('Remove the amount'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}

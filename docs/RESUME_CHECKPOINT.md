@@ -1,9 +1,11 @@
 # Resume checkpoint
 
-Updated at the end of Day 8. Read this first when picking the project back up.
+Updated at the end of Day 9. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 9 complete.** Action Detail (`/action/:id`) and the durable, editable,
+  reorderable Action Chain. Verified live on `emulator-5554`.
 - **Day 8 complete.** Confirmed Actions are durable on-device in a Drift/SQLite
   store, with a minimised, owner-only Firestore mirror behind a retrying
   outbox. Verified live on `emulator-5554`.
@@ -17,7 +19,7 @@ Updated at the end of Day 8. Read this first when picking the project back up.
 - **Day 4 complete: PASS WITH LIMITATIONS.** Foundation, design system, capture
   pipeline, image normalisation and on-device OCR are done and verified on
   hardware and on the emulator.
-- **Do not repeat Days 1–8.**
+- **Do not repeat Days 1–9.**
 
 ## Read before starting the next day
 
@@ -48,6 +50,50 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 9 established
+
+**Action Detail is the place work happens.** `/action/:id` is deep-linkable —
+the path id is the durable local Action id — reads only SQLite, and never
+waits on auth, the network or a model. An id that no longer resolves gets a
+real not-found state instead of a silent bounce to Home.
+
+**The chain has identities, not positions.** `action_steps` was rebuilt in a
+non-destructive `TableMigration` (database v1 → v2): a stable `id` primary key
+plus `isCompleted`, `completedAt`, `createdAt`, `updatedAt`. Legacy rows keep
+their data, take a derived id (`actionId:orderIndex`, so re-running is
+idempotent), start incomplete, and are dated from the Action they were
+confirmed with. **The database version is not the payload version**:
+`actionSchemaVersion` stays 1 because the deployed Firestore rules pin
+`schemaVersion == 1`, and steps never leave the device.
+
+**Next-best-action is a rule, not a score.** First outstanding step by order
+(ties broken on id, so it is total); a chain supersedes the reviewed
+suggestion rather than competing with it; a fully-checked chain *offers* to
+finish the Action; a completed or archived Action proposes nothing. No model
+call, no hidden weighting.
+
+**Completing every step does not complete the Action.** The page asks. Equally,
+reopening an Action clears its completion stamp but leaves step history alone
+— neither direction rewrites the other's record.
+
+**Steps are local-only, and the type system says so.** `ActionStepRepository`
+is a separate interface from `ActionRepository` precisely because nothing
+reachable through it may enqueue a cloud upsert. Mirrored metadata edits
+(title, deadline, amount, urgency, recommended step, complete, reopen,
+archive) still do. Both halves are tested, and verified on device.
+
+**Ordering is dense integers, rewritten as a block.** Reorder tolerates gaps,
+duplicate positions, unknown ids, ids from another Action, and partial lists
+(anything omitted keeps its relative place behind what was named). Positions
+are per Action, and a completion always travels with its own step.
+
+**One defect worth remembering:** a row dragged in a `SliverReorderableList`
+is lifted into an **Overlay**, outside the Scaffold's `Material` — and these
+rows contain ink. Without an explicit `proxyDecorator` the drag *throws*
+instead of moving anything, and no amount of menu-based reorder testing
+reveals it. `ReorderableListView` hides this with a default decorator;
+`SliverReorderableList` does not.
 
 ## What Day 8 established
 

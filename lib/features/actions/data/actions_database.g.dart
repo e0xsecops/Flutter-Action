@@ -1117,6 +1117,15 @@ class $ActionStepsTableTable extends ActionStepsTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ActionStepsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _actionIdMeta = const VerificationMeta(
     'actionId',
   );
@@ -1170,13 +1179,66 @@ class $ActionStepsTableTable extends ActionStepsTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _isCompletedMeta = const VerificationMeta(
+    'isCompleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isCompleted = GeneratedColumn<bool>(
+    'is_completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _completedAtMicrosMeta = const VerificationMeta(
+    'completedAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> completedAtMicros = GeneratedColumn<int>(
+    'completed_at_micros',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMicrosMeta = const VerificationMeta(
+    'createdAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> createdAtMicros = GeneratedColumn<int>(
+    'created_at_micros',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMicrosMeta = const VerificationMeta(
+    'updatedAtMicros',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAtMicros = GeneratedColumn<int>(
+    'updated_at_micros',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
+    id,
     actionId,
     orderIndex,
     title,
     description,
     dueAtWall,
+    isCompleted,
+    completedAtMicros,
+    createdAtMicros,
+    updatedAtMicros,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1190,6 +1252,11 @@ class $ActionStepsTableTable extends ActionStepsTable
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     if (data.containsKey('action_id')) {
       context.handle(
         _actionIdMeta,
@@ -1229,15 +1296,59 @@ class $ActionStepsTableTable extends ActionStepsTable
         dueAtWall.isAcceptableOrUnknown(data['due_at_wall']!, _dueAtWallMeta),
       );
     }
+    if (data.containsKey('is_completed')) {
+      context.handle(
+        _isCompletedMeta,
+        isCompleted.isAcceptableOrUnknown(
+          data['is_completed']!,
+          _isCompletedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('completed_at_micros')) {
+      context.handle(
+        _completedAtMicrosMeta,
+        completedAtMicros.isAcceptableOrUnknown(
+          data['completed_at_micros']!,
+          _completedAtMicrosMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at_micros')) {
+      context.handle(
+        _createdAtMicrosMeta,
+        createdAtMicros.isAcceptableOrUnknown(
+          data['created_at_micros']!,
+          _createdAtMicrosMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMicrosMeta);
+    }
+    if (data.containsKey('updated_at_micros')) {
+      context.handle(
+        _updatedAtMicrosMeta,
+        updatedAtMicros.isAcceptableOrUnknown(
+          data['updated_at_micros']!,
+          _updatedAtMicrosMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMicrosMeta);
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {actionId, orderIndex};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   ActionStepRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ActionStepRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
       actionId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}action_id'],
@@ -1258,6 +1369,22 @@ class $ActionStepsTableTable extends ActionStepsTable
         DriftSqlType.string,
         data['${effectivePrefix}due_at_wall'],
       ),
+      isCompleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_completed'],
+      )!,
+      completedAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}completed_at_micros'],
+      ),
+      createdAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at_micros'],
+      )!,
+      updatedAtMicros: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at_micros'],
+      )!,
     );
   }
 
@@ -1268,21 +1395,36 @@ class $ActionStepsTableTable extends ActionStepsTable
 }
 
 class ActionStepRow extends DataClass implements Insertable<ActionStepRow> {
+  final String id;
   final String actionId;
+
+  /// Dense rank within the Action, rewritten as a block on reorder. Integer
+  /// on purpose: fractional positions drift toward precision loss after
+  /// enough moves, and a dense rewrite of a handful of rows is cheap.
   final int orderIndex;
   final String title;
   final String? description;
   final String? dueAtWall;
+  final bool isCompleted;
+  final int? completedAtMicros;
+  final int createdAtMicros;
+  final int updatedAtMicros;
   const ActionStepRow({
+    required this.id,
     required this.actionId,
     required this.orderIndex,
     required this.title,
     this.description,
     this.dueAtWall,
+    required this.isCompleted,
+    this.completedAtMicros,
+    required this.createdAtMicros,
+    required this.updatedAtMicros,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
     map['action_id'] = Variable<String>(actionId);
     map['order_index'] = Variable<int>(orderIndex);
     map['title'] = Variable<String>(title);
@@ -1292,11 +1434,18 @@ class ActionStepRow extends DataClass implements Insertable<ActionStepRow> {
     if (!nullToAbsent || dueAtWall != null) {
       map['due_at_wall'] = Variable<String>(dueAtWall);
     }
+    map['is_completed'] = Variable<bool>(isCompleted);
+    if (!nullToAbsent || completedAtMicros != null) {
+      map['completed_at_micros'] = Variable<int>(completedAtMicros);
+    }
+    map['created_at_micros'] = Variable<int>(createdAtMicros);
+    map['updated_at_micros'] = Variable<int>(updatedAtMicros);
     return map;
   }
 
   ActionStepsTableCompanion toCompanion(bool nullToAbsent) {
     return ActionStepsTableCompanion(
+      id: Value(id),
       actionId: Value(actionId),
       orderIndex: Value(orderIndex),
       title: Value(title),
@@ -1306,6 +1455,12 @@ class ActionStepRow extends DataClass implements Insertable<ActionStepRow> {
       dueAtWall: dueAtWall == null && nullToAbsent
           ? const Value.absent()
           : Value(dueAtWall),
+      isCompleted: Value(isCompleted),
+      completedAtMicros: completedAtMicros == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completedAtMicros),
+      createdAtMicros: Value(createdAtMicros),
+      updatedAtMicros: Value(updatedAtMicros),
     );
   }
 
@@ -1315,40 +1470,63 @@ class ActionStepRow extends DataClass implements Insertable<ActionStepRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ActionStepRow(
+      id: serializer.fromJson<String>(json['id']),
       actionId: serializer.fromJson<String>(json['actionId']),
       orderIndex: serializer.fromJson<int>(json['orderIndex']),
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String?>(json['description']),
       dueAtWall: serializer.fromJson<String?>(json['dueAtWall']),
+      isCompleted: serializer.fromJson<bool>(json['isCompleted']),
+      completedAtMicros: serializer.fromJson<int?>(json['completedAtMicros']),
+      createdAtMicros: serializer.fromJson<int>(json['createdAtMicros']),
+      updatedAtMicros: serializer.fromJson<int>(json['updatedAtMicros']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
       'actionId': serializer.toJson<String>(actionId),
       'orderIndex': serializer.toJson<int>(orderIndex),
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String?>(description),
       'dueAtWall': serializer.toJson<String?>(dueAtWall),
+      'isCompleted': serializer.toJson<bool>(isCompleted),
+      'completedAtMicros': serializer.toJson<int?>(completedAtMicros),
+      'createdAtMicros': serializer.toJson<int>(createdAtMicros),
+      'updatedAtMicros': serializer.toJson<int>(updatedAtMicros),
     };
   }
 
   ActionStepRow copyWith({
+    String? id,
     String? actionId,
     int? orderIndex,
     String? title,
     Value<String?> description = const Value.absent(),
     Value<String?> dueAtWall = const Value.absent(),
+    bool? isCompleted,
+    Value<int?> completedAtMicros = const Value.absent(),
+    int? createdAtMicros,
+    int? updatedAtMicros,
   }) => ActionStepRow(
+    id: id ?? this.id,
     actionId: actionId ?? this.actionId,
     orderIndex: orderIndex ?? this.orderIndex,
     title: title ?? this.title,
     description: description.present ? description.value : this.description,
     dueAtWall: dueAtWall.present ? dueAtWall.value : this.dueAtWall,
+    isCompleted: isCompleted ?? this.isCompleted,
+    completedAtMicros: completedAtMicros.present
+        ? completedAtMicros.value
+        : this.completedAtMicros,
+    createdAtMicros: createdAtMicros ?? this.createdAtMicros,
+    updatedAtMicros: updatedAtMicros ?? this.updatedAtMicros,
   );
   ActionStepRow copyWithCompanion(ActionStepsTableCompanion data) {
     return ActionStepRow(
+      id: data.id.present ? data.id.value : this.id,
       actionId: data.actionId.present ? data.actionId.value : this.actionId,
       orderIndex: data.orderIndex.present
           ? data.orderIndex.value
@@ -1358,92 +1536,162 @@ class ActionStepRow extends DataClass implements Insertable<ActionStepRow> {
           ? data.description.value
           : this.description,
       dueAtWall: data.dueAtWall.present ? data.dueAtWall.value : this.dueAtWall,
+      isCompleted: data.isCompleted.present
+          ? data.isCompleted.value
+          : this.isCompleted,
+      completedAtMicros: data.completedAtMicros.present
+          ? data.completedAtMicros.value
+          : this.completedAtMicros,
+      createdAtMicros: data.createdAtMicros.present
+          ? data.createdAtMicros.value
+          : this.createdAtMicros,
+      updatedAtMicros: data.updatedAtMicros.present
+          ? data.updatedAtMicros.value
+          : this.updatedAtMicros,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('ActionStepRow(')
+          ..write('id: $id, ')
           ..write('actionId: $actionId, ')
           ..write('orderIndex: $orderIndex, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
-          ..write('dueAtWall: $dueAtWall')
+          ..write('dueAtWall: $dueAtWall, ')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('completedAtMicros: $completedAtMicros, ')
+          ..write('createdAtMicros: $createdAtMicros, ')
+          ..write('updatedAtMicros: $updatedAtMicros')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(actionId, orderIndex, title, description, dueAtWall);
+  int get hashCode => Object.hash(
+    id,
+    actionId,
+    orderIndex,
+    title,
+    description,
+    dueAtWall,
+    isCompleted,
+    completedAtMicros,
+    createdAtMicros,
+    updatedAtMicros,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ActionStepRow &&
+          other.id == this.id &&
           other.actionId == this.actionId &&
           other.orderIndex == this.orderIndex &&
           other.title == this.title &&
           other.description == this.description &&
-          other.dueAtWall == this.dueAtWall);
+          other.dueAtWall == this.dueAtWall &&
+          other.isCompleted == this.isCompleted &&
+          other.completedAtMicros == this.completedAtMicros &&
+          other.createdAtMicros == this.createdAtMicros &&
+          other.updatedAtMicros == this.updatedAtMicros);
 }
 
 class ActionStepsTableCompanion extends UpdateCompanion<ActionStepRow> {
+  final Value<String> id;
   final Value<String> actionId;
   final Value<int> orderIndex;
   final Value<String> title;
   final Value<String?> description;
   final Value<String?> dueAtWall;
+  final Value<bool> isCompleted;
+  final Value<int?> completedAtMicros;
+  final Value<int> createdAtMicros;
+  final Value<int> updatedAtMicros;
   final Value<int> rowid;
   const ActionStepsTableCompanion({
+    this.id = const Value.absent(),
     this.actionId = const Value.absent(),
     this.orderIndex = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
     this.dueAtWall = const Value.absent(),
+    this.isCompleted = const Value.absent(),
+    this.completedAtMicros = const Value.absent(),
+    this.createdAtMicros = const Value.absent(),
+    this.updatedAtMicros = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ActionStepsTableCompanion.insert({
+    required String id,
     required String actionId,
     required int orderIndex,
     required String title,
     this.description = const Value.absent(),
     this.dueAtWall = const Value.absent(),
+    this.isCompleted = const Value.absent(),
+    this.completedAtMicros = const Value.absent(),
+    required int createdAtMicros,
+    required int updatedAtMicros,
     this.rowid = const Value.absent(),
-  }) : actionId = Value(actionId),
+  }) : id = Value(id),
+       actionId = Value(actionId),
        orderIndex = Value(orderIndex),
-       title = Value(title);
+       title = Value(title),
+       createdAtMicros = Value(createdAtMicros),
+       updatedAtMicros = Value(updatedAtMicros);
   static Insertable<ActionStepRow> custom({
+    Expression<String>? id,
     Expression<String>? actionId,
     Expression<int>? orderIndex,
     Expression<String>? title,
     Expression<String>? description,
     Expression<String>? dueAtWall,
+    Expression<bool>? isCompleted,
+    Expression<int>? completedAtMicros,
+    Expression<int>? createdAtMicros,
+    Expression<int>? updatedAtMicros,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (actionId != null) 'action_id': actionId,
       if (orderIndex != null) 'order_index': orderIndex,
       if (title != null) 'title': title,
       if (description != null) 'description': description,
       if (dueAtWall != null) 'due_at_wall': dueAtWall,
+      if (isCompleted != null) 'is_completed': isCompleted,
+      if (completedAtMicros != null) 'completed_at_micros': completedAtMicros,
+      if (createdAtMicros != null) 'created_at_micros': createdAtMicros,
+      if (updatedAtMicros != null) 'updated_at_micros': updatedAtMicros,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   ActionStepsTableCompanion copyWith({
+    Value<String>? id,
     Value<String>? actionId,
     Value<int>? orderIndex,
     Value<String>? title,
     Value<String?>? description,
     Value<String?>? dueAtWall,
+    Value<bool>? isCompleted,
+    Value<int?>? completedAtMicros,
+    Value<int>? createdAtMicros,
+    Value<int>? updatedAtMicros,
     Value<int>? rowid,
   }) {
     return ActionStepsTableCompanion(
+      id: id ?? this.id,
       actionId: actionId ?? this.actionId,
       orderIndex: orderIndex ?? this.orderIndex,
       title: title ?? this.title,
       description: description ?? this.description,
       dueAtWall: dueAtWall ?? this.dueAtWall,
+      isCompleted: isCompleted ?? this.isCompleted,
+      completedAtMicros: completedAtMicros ?? this.completedAtMicros,
+      createdAtMicros: createdAtMicros ?? this.createdAtMicros,
+      updatedAtMicros: updatedAtMicros ?? this.updatedAtMicros,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1451,6 +1699,9 @@ class ActionStepsTableCompanion extends UpdateCompanion<ActionStepRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
     if (actionId.present) {
       map['action_id'] = Variable<String>(actionId.value);
     }
@@ -1466,6 +1717,18 @@ class ActionStepsTableCompanion extends UpdateCompanion<ActionStepRow> {
     if (dueAtWall.present) {
       map['due_at_wall'] = Variable<String>(dueAtWall.value);
     }
+    if (isCompleted.present) {
+      map['is_completed'] = Variable<bool>(isCompleted.value);
+    }
+    if (completedAtMicros.present) {
+      map['completed_at_micros'] = Variable<int>(completedAtMicros.value);
+    }
+    if (createdAtMicros.present) {
+      map['created_at_micros'] = Variable<int>(createdAtMicros.value);
+    }
+    if (updatedAtMicros.present) {
+      map['updated_at_micros'] = Variable<int>(updatedAtMicros.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1475,11 +1738,16 @@ class ActionStepsTableCompanion extends UpdateCompanion<ActionStepRow> {
   @override
   String toString() {
     return (StringBuffer('ActionStepsTableCompanion(')
+          ..write('id: $id, ')
           ..write('actionId: $actionId, ')
           ..write('orderIndex: $orderIndex, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('dueAtWall: $dueAtWall, ')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('completedAtMicros: $completedAtMicros, ')
+          ..write('createdAtMicros: $createdAtMicros, ')
+          ..write('updatedAtMicros: $updatedAtMicros, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2810,20 +3078,30 @@ typedef $$ActionsTableTableProcessedTableManager =
     >;
 typedef $$ActionStepsTableTableCreateCompanionBuilder =
     ActionStepsTableCompanion Function({
+      required String id,
       required String actionId,
       required int orderIndex,
       required String title,
       Value<String?> description,
       Value<String?> dueAtWall,
+      Value<bool> isCompleted,
+      Value<int?> completedAtMicros,
+      required int createdAtMicros,
+      required int updatedAtMicros,
       Value<int> rowid,
     });
 typedef $$ActionStepsTableTableUpdateCompanionBuilder =
     ActionStepsTableCompanion Function({
+      Value<String> id,
       Value<String> actionId,
       Value<int> orderIndex,
       Value<String> title,
       Value<String?> description,
       Value<String?> dueAtWall,
+      Value<bool> isCompleted,
+      Value<int?> completedAtMicros,
+      Value<int> createdAtMicros,
+      Value<int> updatedAtMicros,
       Value<int> rowid,
     });
 
@@ -2836,6 +3114,11 @@ class $$ActionStepsTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get actionId => $composableBuilder(
     column: $table.actionId,
     builder: (column) => ColumnFilters(column),
@@ -2860,6 +3143,26 @@ class $$ActionStepsTableTableFilterComposer
     column: $table.dueAtWall,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get completedAtMicros => $composableBuilder(
+    column: $table.completedAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$ActionStepsTableTableOrderingComposer
@@ -2871,6 +3174,11 @@ class $$ActionStepsTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get actionId => $composableBuilder(
     column: $table.actionId,
     builder: (column) => ColumnOrderings(column),
@@ -2895,6 +3203,26 @@ class $$ActionStepsTableTableOrderingComposer
     column: $table.dueAtWall,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get completedAtMicros => $composableBuilder(
+    column: $table.completedAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ActionStepsTableTableAnnotationComposer
@@ -2906,6 +3234,9 @@ class $$ActionStepsTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
   GeneratedColumn<String> get actionId =>
       $composableBuilder(column: $table.actionId, builder: (column) => column);
 
@@ -2924,6 +3255,26 @@ class $$ActionStepsTableTableAnnotationComposer
 
   GeneratedColumn<String> get dueAtWall =>
       $composableBuilder(column: $table.dueAtWall, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCompleted => $composableBuilder(
+    column: $table.isCompleted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get completedAtMicros => $composableBuilder(
+    column: $table.completedAtMicros,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get createdAtMicros => $composableBuilder(
+    column: $table.createdAtMicros,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get updatedAtMicros => $composableBuilder(
+    column: $table.updatedAtMicros,
+    builder: (column) => column,
+  );
 }
 
 class $$ActionStepsTableTableTableManager
@@ -2963,34 +3314,54 @@ class $$ActionStepsTableTableTableManager
               $$ActionStepsTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<String> id = const Value.absent(),
                 Value<String> actionId = const Value.absent(),
                 Value<int> orderIndex = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<String?> dueAtWall = const Value.absent(),
+                Value<bool> isCompleted = const Value.absent(),
+                Value<int?> completedAtMicros = const Value.absent(),
+                Value<int> createdAtMicros = const Value.absent(),
+                Value<int> updatedAtMicros = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ActionStepsTableCompanion(
+                id: id,
                 actionId: actionId,
                 orderIndex: orderIndex,
                 title: title,
                 description: description,
                 dueAtWall: dueAtWall,
+                isCompleted: isCompleted,
+                completedAtMicros: completedAtMicros,
+                createdAtMicros: createdAtMicros,
+                updatedAtMicros: updatedAtMicros,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
+                required String id,
                 required String actionId,
                 required int orderIndex,
                 required String title,
                 Value<String?> description = const Value.absent(),
                 Value<String?> dueAtWall = const Value.absent(),
+                Value<bool> isCompleted = const Value.absent(),
+                Value<int?> completedAtMicros = const Value.absent(),
+                required int createdAtMicros,
+                required int updatedAtMicros,
                 Value<int> rowid = const Value.absent(),
               }) => ActionStepsTableCompanion.insert(
+                id: id,
                 actionId: actionId,
                 orderIndex: orderIndex,
                 title: title,
                 description: description,
                 dueAtWall: dueAtWall,
+                isCompleted: isCompleted,
+                completedAtMicros: completedAtMicros,
+                createdAtMicros: createdAtMicros,
+                updatedAtMicros: updatedAtMicros,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

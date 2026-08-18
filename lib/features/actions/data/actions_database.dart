@@ -55,19 +55,38 @@ class ActionsTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+/// The Action Chain: the ordered steps a person works through.
+///
+/// Day 8 stored steps as immutable confirmation output, keyed by
+/// `(actionId, orderIndex)`. Day 9 makes them editable, checkable and
+/// reorderable, and a position cannot be an identity for any of that: moving
+/// a step would change which row "is" that step, and a completion would
+/// follow the slot rather than the work. So the primary key is a stable
+/// [id] minted at creation, and `orderIndex` becomes ordinary data.
 @DataClassName('ActionStepRow')
 class ActionStepsTable extends Table {
   @override
   String get tableName => 'action_steps';
 
+  TextColumn get id => text()();
   TextColumn get actionId => text()();
+
+  /// Dense rank within the Action, rewritten as a block on reorder. Integer
+  /// on purpose: fractional positions drift toward precision loss after
+  /// enough moves, and a dense rewrite of a handful of rows is cheap.
   IntColumn get orderIndex => integer()();
+
   TextColumn get title => text()();
   TextColumn get description => text().nullable()();
   TextColumn get dueAtWall => text().nullable()();
 
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  IntColumn get completedAtMicros => integer().nullable()();
+  IntColumn get createdAtMicros => integer()();
+  IntColumn get updatedAtMicros => integer()();
+
   @override
-  Set<Column> get primaryKey => {actionId, orderIndex};
+  Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('ActionFactRow')
@@ -112,20 +131,68 @@ class SyncOutboxTable extends Table {
   tables: [ActionsTable, ActionStepsTable, ActionFactsTable, SyncOutboxTable],
 )
 class ActionsDatabase extends _$ActionsDatabase {
-  ActionsDatabase(super.e);
+  ActionsDatabase(super.e, {DateTime Function()? clock})
+      : _clock = clock ?? DateTime.now;
 
+  /// Only the migration needs a clock, and only to stamp rows that predate
+  /// the columns that record their own timestamps.
+  final DateTime Function() _clock;
+
+  /// v2 (Day 9) gave `action_steps` a stable primary key plus completion and
+  /// timestamp columns.
+  ///
+  /// This is the *database* version and is deliberately independent of
+  /// [actionSchemaVersion], which describes the mirrored Action payload and
+  /// stays at 1: steps are local-only, so nothing the cloud sees changed, and
+  /// the deployed Firestore rules pin `schemaVersion == 1`.
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (m) => m.createAll(),
         onUpgrade: (m, from, to) async {
-          // v1 is the only schema today. When v2 arrives, its steps belong
-          // here as explicit, additive migrations. Destructive recreation is
-          // not an acceptable fallback for a table of user commitments —
-          // an unknown future version fails loudly instead (see the
-          // database-open error path in the providers).
+          if (from < 2) {
+            // Rebuild action_steps in place, carrying every existing row
+            // across. Destructive recreation is not an acceptable fallback
+            // for a table of user commitments, so the old rows are
+            // transformed, never dropped:
+            //
+            //  * `id` is derived from the composite key the row already had,
+            //    so the value is stable and a re-run is idempotent.
+            //  * steps confirmed before Day 9 were never checkable, so none
+            //    of them is complete.
+            //  * a step has no creation time of its own in v1; the Action it
+            //    was confirmed with does, and that is the truthful answer.
+            // `alterTable` takes no bound variables, so the fallback instant
+            // is inlined — an integer this code computed itself, never input.
+            final fallback = _clock().toUtc().microsecondsSinceEpoch;
+            final bornWithItsAction = CustomExpression<int>(
+              'COALESCE((SELECT created_at_micros FROM actions '
+              'WHERE actions.id = action_steps.action_id), $fallback)',
+            );
+            await m.alterTable(
+              TableMigration(
+                actionStepsTable,
+                newColumns: [
+                  actionStepsTable.id,
+                  actionStepsTable.isCompleted,
+                  actionStepsTable.completedAtMicros,
+                  actionStepsTable.createdAtMicros,
+                  actionStepsTable.updatedAtMicros,
+                ],
+                columnTransformer: {
+                  actionStepsTable.id: const CustomExpression<String>(
+                    "action_steps.action_id || ':' || action_steps.order_index",
+                  ),
+                  actionStepsTable.isCompleted: const Constant(false),
+                  actionStepsTable.completedAtMicros: const Constant(null),
+                  actionStepsTable.createdAtMicros: bornWithItsAction,
+                  actionStepsTable.updatedAtMicros: bornWithItsAction,
+                },
+              ),
+            );
+          }
         },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
