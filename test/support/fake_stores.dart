@@ -13,8 +13,15 @@ class FakeSourceStore implements SourceStore {
 
   List<SourceItem> get items => List.unmodifiable(_items);
 
+  /// Makes reads fail, so a subsystem outage can be exercised without
+  /// breaking a real store.
+  bool failOnAll = false;
+
   @override
-  Future<List<SourceItem>> all() async => List.unmodifiable(_items);
+  Future<List<SourceItem>> all() async {
+    if (failOnAll) throw StateError('source store unavailable');
+    return List.unmodifiable(_items);
+  }
 
   @override
   Future<SourceItem?> byId(String id) async =>

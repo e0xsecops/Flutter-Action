@@ -498,6 +498,11 @@ class _Greeting extends StatelessWidget {
               ],
             ),
           ),
+          IconButton(
+            tooltip: 'Search',
+            icon: const Icon(Icons.search),
+            onPressed: () => context.push(Routes.search),
+          ),
           // Debug builds only; the route itself is not registered in release.
           if (kDebugMode)
             IconButton(

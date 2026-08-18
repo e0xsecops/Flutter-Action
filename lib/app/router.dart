@@ -11,6 +11,7 @@ import '../features/capture/presentation/source_detail_screen.dart';
 import '../features/extraction/domain/extraction_result.dart';
 import '../features/extraction/presentation/extraction_review_screen.dart';
 import '../features/home/presentation/home_screen.dart';
+import '../features/search/presentation/search_screen.dart';
 
 /// Route paths in one place so navigation is never stringly-typed.
 ///
@@ -24,6 +25,7 @@ abstract final class Routes {
   static const sourcePattern = '/source/:id';
   static const sourceReviewPattern = '/source/:id/review';
   static const actionPattern = '/action/:id';
+  static const search = '/search';
 
   /// Debug builds only — see the route table.
   static const diagnostics = '/diagnostics';
@@ -61,6 +63,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.sourcePattern,
         builder: (context, state) =>
             SourceDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: Routes.search,
+        builder: (context, state) => const SearchScreen(),
       ),
       GoRoute(
         // Deep-linkable by design: the id in the path is the durable local
