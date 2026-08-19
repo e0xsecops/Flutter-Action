@@ -1,9 +1,12 @@
 # Resume checkpoint
 
-Updated at the end of Day 14. Read this first when picking the project back up.
+Updated at the end of Day 15. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 15 complete.** Product-wide refinement: accessibility naming, reduced
+  motion, readable width, button hierarchy, and two real defects found and
+  fixed (a section-header overflow at large text, a vague failure message).
 - **Day 14 complete.** Settings, an honest privacy data map, and a privacy
   deletion that can prove what it did and retries what it could not finish.
   Firestore rules now allow owner-only delete, with a 17-case emulator matrix.
@@ -62,6 +65,67 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 15 established
+
+Day 15 changed no behaviour that was not a defect. The audit came first, and
+it mostly found a codebase already holding its line: no inline `TextStyle`
+anywhere in `lib/features`, no hardcoded radii, one magic `EdgeInsets`, no
+emoji, no raw enum labels in production UI, no "Nothing here yet" and no fake
+metrics. What it did find:
+
+**A real overflow.** `SectionHeader` put an unconstrained title and a count
+pill in one `Row`. At 200% text on a 420dp screen that overflows by 11px —
+"NEEDS ATTENTION" plus the pill does not fit. The title is now `Flexible` so
+it wraps to two lines and the count stays visible. Truncating a section name
+would have been worse than two lines. Caught by a test, confirmed fixed on
+device.
+
+**Two equally loud primary buttons on Action Detail.** "Mark step done" and
+"Mark action complete" were both filled. The filled one now belongs to the
+recommended next step — the move the product is actually suggesting — and
+finishing the whole Action is an `OutlinedButton`: still one tap, no longer
+shouting over the step. A test asserts exactly one `FilledButton` on that
+screen.
+
+**A vague failure message.** `ProviderFailureKind.unknown` said "Something
+went wrong reaching the service." A test now walks every value and rejects
+"something went wrong", "oops", and bare status codes, and requires each to
+be a full sentence.
+
+**Controls now name what they act on.** Home's completion button was three
+identical "Mark as done" buttons to a screen reader; it is now `Mark "Pay the
+water bill" as done`. The step checkbox carries its own label and `checked`
+state rather than inheriting the row's, so focusing it directly says
+something.
+
+**Reduced motion is honoured.** The one decorative animation in the product
+(the onboarding progress segments) collapses to `Duration.zero` when
+`MediaQuery.disableAnimationsOf` is set; paging still changes screen, it just
+stops sliding.
+
+**Paragraphs stop at `Breakpoints.readableContent` (560).** Settings, Privacy,
+Help and Onboarding centre within it. Card lists are deliberately untouched:
+this is not a tablet redesign.
+
+### Day-15 known limitations
+
+- Home, Search and Action Detail are still phone-first: they fill the width
+  on a tablet rather than adopting a wider layout. That is a Day-16+ decision,
+  not a polish one.
+- Review (the Day-7 confirmation screen) was audited and left alone. It is the
+  most complex surface in the product and the day's brief was explicit about
+  not rewriting stable architecture for visual perfection.
+- The visual QA was screenshot comparison by eye, not golden tests. Golden
+  files would pin rendering to one Flutter version and one host font stack,
+  which is a maintenance cost this project has not chosen to take on.
+
+## Next roadmap day
+
+**Day 16 — performance.** Day 15 only checked that polish caused no
+regression: cold start, Home scrolling, search typing and sheet opening all
+still feel immediate on `emulator-5554`, and logcat is clean of overflow and
+jank errors. Deep performance work is Day 16's, not Day 15's.
 
 ## What Day 14 established
 

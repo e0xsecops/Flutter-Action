@@ -369,7 +369,12 @@ class _ActionRow extends ConsumerWidget {
               ),
             ),
             IconButton(
-              tooltip: completed ? 'Completed' : 'Mark as done',
+              // Named, because a screen reader announcing "Mark as done"
+              // three times in a list says nothing about which of the three
+              // is about to be marked.
+              tooltip: completed
+                  ? 'Completed: ${item.title}'
+                  : 'Mark "${item.title}" as done',
               onPressed: completed
                   ? null
                   : () async {

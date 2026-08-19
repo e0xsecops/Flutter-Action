@@ -19,6 +19,17 @@ abstract final class Space {
   static const page = 20.0;
 }
 
+/// Width limits.
+///
+/// The phone is the design target, but a paragraph does not become more
+/// readable by getting wider — past roughly this many pixels the eye loses
+/// the start of the next line. Text-heavy screens centre within it instead of
+/// stretching. Card lists are left alone: they are already bounded by their
+/// own rhythm, and this is not a tablet redesign.
+abstract final class Breakpoints {
+  static const readableContent = 560.0;
+}
+
 /// Controlled radii. Not everything is rounded, and nothing is a pill unless it
 /// is genuinely a chip or a badge.
 abstract final class Radii {

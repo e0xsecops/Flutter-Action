@@ -356,7 +356,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('DUE TODAY'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('Mark as done'));
+    // The control names the Action it acts on, so a screen reader moving
+    // down a list of them says something different each time.
+    await tester.tap(find.byTooltip('Mark "Pay the water bill" as done'));
     await tester.pumpAndSettle();
 
     expect(find.text('Completed'.toUpperCase()), findsOneWidget);

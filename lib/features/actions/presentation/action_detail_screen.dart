@@ -909,21 +909,30 @@ class _StepRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // A generous target: the checkbox is the main verb on this screen.
-            InkWell(
-              onTap: onToggle,
-              borderRadius: BorderRadius.circular(Radii.pill),
-              child: Padding(
-                padding: const EdgeInsets.all(Space.sm),
-                child: Icon(
-                  step.isCompleted
-                      ? Icons.check_circle
-                      : Icons.circle_outlined,
-                  size: 24,
-                  color: step.isCompleted
-                      ? colors.success
-                      : isNext
-                          ? colors.brand
-                          : colors.borderStrong,
+            // It carries its own name so it does not announce as an unlabelled
+            // button when focused directly — "button" is not an instruction.
+            Semantics(
+              button: true,
+              checked: step.isCompleted,
+              label: step.isCompleted
+                  ? 'Mark "${step.title}" as not done'
+                  : 'Mark "${step.title}" as done',
+              child: InkWell(
+                onTap: onToggle,
+                borderRadius: BorderRadius.circular(Radii.pill),
+                child: Padding(
+                  padding: const EdgeInsets.all(Space.sm),
+                  child: Icon(
+                    step.isCompleted
+                        ? Icons.check_circle
+                        : Icons.circle_outlined,
+                    size: 24,
+                    color: step.isCompleted
+                        ? colors.success
+                        : isNext
+                            ? colors.brand
+                            : colors.borderStrong,
+                  ),
                 ),
               ),
             ),
@@ -1335,7 +1344,12 @@ class _BottomBar extends StatelessWidget {
                 onPressed: () => state._reopenAction(action),
                 child: const Text('Reopen action'),
               )
-            : FilledButton(
+            // Outlined, not filled. The filled button on this screen belongs
+            // to the recommended next step: that is the move the product is
+            // actually suggesting, and two equally loud blue buttons make the
+            // user decide which one the app meant. Finishing the whole Action
+            // stays one tap away, it just stops shouting over the step.
+            : OutlinedButton(
                 onPressed: () => state._completeAction(action),
                 child: const Text('Mark action complete'),
               ),

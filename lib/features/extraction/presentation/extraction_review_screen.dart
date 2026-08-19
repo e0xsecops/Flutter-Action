@@ -1409,7 +1409,7 @@ class _ProcessingView extends StatelessWidget {
                             )
                           : index == stage
                               ? const Padding(
-                                  padding: EdgeInsets.all(2),
+                                  padding: EdgeInsets.all(Space.xxs),
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                   ),

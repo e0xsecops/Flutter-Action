@@ -167,7 +167,11 @@ class _Progress extends StatelessWidget {
           children: [
             for (var i = 0; i < total; i++)
               AnimatedContainer(
-                duration: Motion.base,
+                // The only decorative animation in the product, so it is also
+                // the only one that has to remember to stop.
+                duration: MediaQuery.disableAnimationsOf(context)
+                    ? Duration.zero
+                    : Motion.base,
                 curve: Motion.standard,
                 margin: const EdgeInsets.only(right: Space.xs),
                 height: 4,
@@ -212,42 +216,51 @@ class _PageView extends StatelessWidget {
 
         return SingleChildScrollView(
           padding: padding,
-          child: ConstrainedBox(
-            // Short pages sit centred in the viewport instead of clinging to
-            // the top with a third of the screen empty beneath them; the long
-            // privacy page overflows this minimum and simply scrolls.
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight - padding.vertical,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (showArt) ...[
-                  SizedBox(
-                    height: 172,
-                    child: Center(child: ExcludeSemantics(child: page.art)),
-                  ),
-                  const SizedBox(height: Space.xxxl),
-                ],
-                Semantics(
-                  header: true,
-                  child: Text(page.title, style: text.headlineMedium),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: Breakpoints.readableContent,
+              ),
+              child: ConstrainedBox(
+                // Short pages sit centred in the viewport instead of clinging to
+                // the top with a third of the screen empty beneath them; the long
+                // privacy page overflows this minimum and simply scrolls.
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - padding.vertical,
                 ),
-                const SizedBox(height: Space.md),
-                Text(
-                  page.body,
-                  style: text.bodyLarge?.copyWith(color: colors.textSecondary),
-                ),
-                if (page.points.isNotEmpty) ...[
-                  const SizedBox(height: Space.xl),
-                  for (final point in page.points)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: Space.md),
-                      child: _Point(text: point),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (showArt) ...[
+                      SizedBox(
+                        height: 172,
+                        child: Center(child: ExcludeSemantics(child: page.art)),
+                      ),
+                      const SizedBox(height: Space.xxxl),
+                    ],
+                    Semantics(
+                      header: true,
+                      child: Text(page.title, style: text.headlineMedium),
                     ),
-                ],
-              ],
+                    const SizedBox(height: Space.md),
+                    Text(
+                      page.body,
+                      style: text.bodyLarge?.copyWith(
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                    if (page.points.isNotEmpty) ...[
+                      const SizedBox(height: Space.xl),
+                      for (final point in page.points)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: Space.md),
+                          child: _Point(text: point),
+                        ),
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
         );

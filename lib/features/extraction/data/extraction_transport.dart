@@ -59,7 +59,9 @@ enum ProviderFailureKind {
   unauthorized('This app is not authorised to use the service right now.'),
   serviceUnavailable('The service is temporarily unavailable. Try again later.'),
   blocked('The service declined to process this document.'),
-  unknown('Something went wrong reaching the service.');
+  // "Something went wrong" tells a person nothing they did not already
+  // know. Even when the cause is genuinely unknown, what to do next is not.
+  unknown('Action could not read this document. Trying again may work.');
 
   const ProviderFailureKind(this.userMessage);
 

@@ -18,11 +18,21 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: CustomScrollView(
-        slivers: [
-          ...slivers,
-          const SliverToBoxAdapter(child: SizedBox(height: Space.xxxl)),
-        ],
+      // Privacy and Help are paragraphs. On anything wider than a phone they
+      // would otherwise run edge to edge, which is where long lines stop
+      // being readable.
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: Breakpoints.readableContent,
+          ),
+          child: CustomScrollView(
+            slivers: [
+              ...slivers,
+              const SliverToBoxAdapter(child: SizedBox(height: Space.xxxl)),
+            ],
+          ),
+        ),
       ),
     );
   }

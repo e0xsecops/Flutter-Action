@@ -29,11 +29,16 @@ class SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(Space.page, Space.xxl, Space.page, Space.md),
       child: Row(
         children: [
-          Text(
-            title.toUpperCase(),
-            style: text.labelSmall?.copyWith(
-              color: colors.textTertiary,
-              letterSpacing: 1.0,
+          // Flexible, so a long title at a large text size wraps instead of
+          // pushing the count off the edge. Truncating a section name would
+          // be worse than letting it take two lines.
+          Flexible(
+            child: Text(
+              title.toUpperCase(),
+              style: text.labelSmall?.copyWith(
+                color: colors.textTertiary,
+                letterSpacing: 1.0,
+              ),
             ),
           ),
           if (count != null && count! > 0) ...[
