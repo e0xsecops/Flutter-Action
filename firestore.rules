@@ -15,9 +15,13 @@ service cloud.firestore {
     match /users/{uid}/actions/{actionId} {
       allow read: if isOwner(uid);
       allow create, update: if isOwner(uid) && isValidActionMirror(actionId);
-      // No client-side delete in Day 8: the mirror only upserts, so a delete
-      // request is by definition not this app.
-      allow delete: if false;
+      // Day 14 opens exactly one door: the owner may delete their own mirror
+      // documents, because "delete all my data" has to be able to mean it.
+      // Nothing else changes — no listing, no cross-user access, and no
+      // validation is relaxed on create or update. A delete needs only
+      // ownership, since there is no payload to check when the outcome is
+      // that the document stops existing.
+      allow delete: if isOwner(uid);
     }
 
     // Everything else: unreachable. (Firestore denies by default; this makes

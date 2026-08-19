@@ -14,6 +14,9 @@ import '../features/home/presentation/home_screen.dart';
 import '../features/onboarding/application/onboarding_controller.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/search/presentation/search_screen.dart';
+import '../features/settings/presentation/help_screen.dart';
+import '../features/settings/presentation/privacy_screen.dart';
+import '../features/settings/presentation/settings_screen.dart';
 
 /// Route paths in one place so navigation is never stringly-typed.
 ///
@@ -29,6 +32,9 @@ abstract final class Routes {
   static const sourceReviewPattern = '/source/:id/review';
   static const actionPattern = '/action/:id';
   static const search = '/search';
+  static const settings = '/settings';
+  static const settingsPrivacy = '/settings/privacy';
+  static const settingsHelp = '/settings/help';
 
   /// Debug builds only — see the route table.
   static const diagnostics = '/diagnostics';
@@ -90,6 +96,22 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.search,
         builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: Routes.settings,
+        builder: (context, state) => const SettingsScreen(),
+        routes: [
+          // Nested, so the back stack reads Settings -> Privacy rather than
+          // dropping the user onto Home from a sub-page.
+          GoRoute(
+            path: 'privacy',
+            builder: (context, state) => const PrivacyScreen(),
+          ),
+          GoRoute(
+            path: 'help',
+            builder: (context, state) => const HelpScreen(),
+          ),
+        ],
       ),
       GoRoute(
         // Deep-linkable by design: the id in the path is the durable local

@@ -503,6 +503,11 @@ class _Greeting extends StatelessWidget {
             icon: const Icon(Icons.search),
             onPressed: () => context.push(Routes.search),
           ),
+          IconButton(
+            tooltip: 'Settings',
+            icon: const Icon(Icons.tune_rounded),
+            onPressed: () => context.push(Routes.settings),
+          ),
           // Debug builds only; the route itself is not registered in release.
           if (kDebugMode)
             IconButton(

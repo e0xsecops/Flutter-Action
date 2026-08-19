@@ -193,6 +193,22 @@ class ActionsDatabase extends _$ActionsDatabase {
   @override
   int get schemaVersion => 3;
 
+  /// Removes every row this app owns, in one transaction.
+  ///
+  /// Only ever reached from a deliberate, confirmed privacy deletion. The
+  /// outbox goes with everything else and, being in the same transaction, can
+  /// never survive to re-upload an Action that no longer exists locally.
+  ///
+  /// Note the order: children before parents, so the delete stays valid if
+  /// foreign keys are ever enforced on these tables.
+  Future<void> deleteAllLocalData() => transaction(() async {
+        await delete(actionRemindersTable).go();
+        await delete(syncOutboxTable).go();
+        await delete(actionStepsTable).go();
+        await delete(actionFactsTable).go();
+        await delete(actionsTable).go();
+      });
+
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (m) => m.createAll(),

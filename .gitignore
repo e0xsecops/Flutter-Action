@@ -46,3 +46,7 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Firestore rules test harness
+firestore_tests/node_modules/
+firestore_tests/package-lock.json

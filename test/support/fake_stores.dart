@@ -17,6 +17,10 @@ class FakeSourceStore implements SourceStore {
   /// breaking a real store.
   bool failOnAll = false;
 
+  /// Makes [clear] fail, so a deletion that gets past the database but not
+  /// past the captures can be exercised.
+  bool failOnClear = false;
+
   @override
   Future<List<SourceItem>> all() async {
     if (failOnAll) throw StateError('source store unavailable');
@@ -44,7 +48,10 @@ class FakeSourceStore implements SourceStore {
       _items = _items.where((i) => i.id != id).toList();
 
   @override
-  Future<void> clear() async => _items = [];
+  Future<void> clear() async {
+    if (failOnClear) throw StateError('source store unavailable');
+    _items = [];
+  }
 }
 
 /// Records what would have been written without touching the filesystem.

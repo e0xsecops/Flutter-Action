@@ -57,5 +57,15 @@ abstract final class PreferenceKeys {
   /// The user's appearance choice: system, light or dark.
   static const themeMode = 'theme_mode_v1';
 
-  static const all = <String>[onboardingCompleted, themeMode];
+  /// Cloud mirror documents a privacy deletion has not managed to remove yet.
+  ///
+  /// Deliberately **not** cleared by "delete all my data": it is the record of
+  /// deletion still owed, and destroying it would strand exactly the documents
+  /// the user asked to be rid of. It holds an anonymous uid and Action ids —
+  /// no titles, amounts or dates.
+  static const pendingCloudDeletion = 'pending_cloud_deletion_v1';
+
+  /// Everything a "delete my data" wipe clears. [pendingCloudDeletion] is
+  /// absent on purpose; see above.
+  static const clearedOnDelete = <String>[onboardingCompleted, themeMode];
 }

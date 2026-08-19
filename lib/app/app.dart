@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../design/app_theme.dart';
 import '../features/actions/application/action_providers.dart';
 import '../features/extraction/application/review_analytics.dart';
+import '../features/settings/application/settings_providers.dart';
 import 'router.dart';
 
 class ActionApp extends ConsumerStatefulWidget {
@@ -53,6 +54,12 @@ class _ActionAppState extends ConsumerState<ActionApp> {
     // Make what the user asked for and what Android holds agree again. Once,
     // bounded, and never on a timer.
     unawaited(ref.read(reminderReconcilerProvider).reconcile());
+
+    // If a previous privacy deletion could not reach the cloud, finish it.
+    // Does nothing when nothing is owed, and never blocks the inbox.
+    unawaited(
+      ref.read(privacyDeletionServiceProvider).retryPendingCloudDeletion(),
+    );
   }
 
   void _openAction(String actionId) {
@@ -77,9 +84,10 @@ class _ActionAppState extends ConsumerState<ActionApp> {
       title: 'Action',
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      // Both themes are first-class, so the system decides. A manual override
-      // lands with the settings screen on day 14.
-      themeMode: ThemeMode.system,
+      // Both themes are first-class. The system decides unless the user has
+      // said otherwise in Settings; the preference is read synchronously, so
+      // the first frame is already the right colour.
+      themeMode: ref.watch(themeModeControllerProvider),
       routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
     );

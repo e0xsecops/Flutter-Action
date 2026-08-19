@@ -1,9 +1,12 @@
 # Resume checkpoint
 
-Updated at the end of Day 13. Read this first when picking the project back up.
+Updated at the end of Day 14. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 14 complete.** Settings, an honest privacy data map, and a privacy
+  deletion that can prove what it did and retries what it could not finish.
+  Firestore rules now allow owner-only delete, with a 17-case emulator matrix.
 - **Day 13 complete.** First-run onboarding: four screens, a durable local
   completion flag, and a router guard that a deep link cannot slip past.
 - **Day 12 complete.** Private local search over Actions and captures, with
@@ -59,6 +62,82 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 14 established
+
+**The deletion ordering is the design.** `PrivacyDeletionService` records the
+intent *before* destroying anything, because the cloud document ids live only
+in the local database it is about to drop; cancels alarms before dropping the
+rows they point at; deletes Actions and the outbox in one transaction so a
+pending mirror upsert can never re-create a document that is about to be
+deleted; and only then deletes remotely, clearing the intent last. Every
+point it can die at leaves a state that is either correct or recoverable.
+
+**It never claims a deletion it did not perform.** Three outcomes:
+`DeletionComplete` (both places), `DeletionPartial` (device wiped, with
+cloud copies and/or captures still outstanding — reported precisely, and each
+leftover named), and `DeletionFailed` (the local wipe failed). The partial
+case exists because a test found the earlier design saying "nothing has been
+changed" after it had already dropped every Action — captures failing must
+not mask a database wipe that worked.
+
+**What is owed survives a restart.** `PreferenceKeys.pendingCloudDeletion`
+holds an anonymous uid and a set of Action ids — no titles, amounts or dates,
+asserted by test — and is deliberately **not** cleared by "delete all my
+data": clearing it would strand exactly the documents the user asked to be
+rid of. `ActionApp._startUp` retries it once per launch, after the reminder
+reconciler and never blocking the inbox.
+
+**Firestore rules changed by exactly one line**: `allow delete: if
+isOwner(uid)` replaces `if false`. Nothing else moved — no listing, no
+relaxed validation, catch-all still deny-all. `firestore_tests/` is a
+17-case matrix run against the emulator (`firebase emulators:exec --only
+firestore --project action-rules-test "npm test"` from that directory) that
+proves owner-delete works and that cross-user, unauthenticated and
+out-of-collection deletes all fail. Deployed to `action-app-7084b`.
+
+**`ActionCloudPrivacyService` is a separate interface from
+`ActionCloudMirror` on purpose.** The mirror's most valuable property is that
+it never reads remote state back. A `delete` sitting next to `upsert` is one
+refactor away from a `fetch` sitting next to both. This interface can only
+destroy things.
+
+**Appearance is read synchronously**, like the onboarding flag, so the first
+frame is already the right colour. Verified on device: with the system in
+light mode and Dark chosen, the app is dark, and stays dark across a restart.
+
+**Settings asks the system for nothing on open.** Notification state is a
+query; requesting is a button, and "Open settings" goes through a
+15-line `MethodChannel` in `MainActivity` rather than a dependency. The same
+channel reports the real `versionName`/`versionCode`, so About cannot drift
+from a hand-maintained constant.
+
+**Privacy copy is a const, not a widget tree.** `privacyDataMap` and
+`helpEntries` are public so tests can assert over *all* the copy; a lazily
+built list only renders what fits on screen, and a copy-regression test that
+can only see the top of the page is not a copy-regression test.
+
+**Deliberately not built:** "clear completed Actions". It needs its own
+cloud-consistency, reminder-cancellation and source-ownership rules, and the
+day's brief was explicit that one correct wipe beats several unreliable
+partial ones. "Clear captures" *is* offered, because it is purely local and
+Day 9 already renders a missing source as a plain absence.
+
+### Day-14 known limitations
+
+- **Full deletion resets onboarding.** That is the documented choice: the
+  flag is one of only two things `PreferenceKeys` persists, and leaving it
+  behind while saying "all your data is deleted" would be a small lie. The
+  device genuinely returns to a first-run state.
+- Cloud deletion needs an anonymous uid. If identity cannot be resolved at
+  all, the ids are kept and nothing is claimed — the retry resolves the uid
+  later.
+- There is no cloud *listing*: deletion works from the ids the device knows
+  about. A mirror document whose Action was already deleted locally before
+  Day 14 is unreachable by this flow.
+- **Reading a binary file with `adb shell run-as ... cat > local` corrupts
+  it on Windows** (CRLF translation; a 49152-byte database came back 49176).
+  Use `adb exec-out`, or re-seed with SQL. This cost the Day-14 QA corpus.
 
 ## What Day 13 established
 
