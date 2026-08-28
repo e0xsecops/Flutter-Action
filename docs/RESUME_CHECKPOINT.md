@@ -1,9 +1,14 @@
 # Resume checkpoint
 
-Updated at the end of Day 19. Read this first when picking the project back up.
+Updated at the end of Day 20. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 20 complete.** Release package finished and **not published**:
+  validated signed AAB (81.9 MB) and APK (98.7 MB), a README replacing the
+  Flutter stub, Play and store-asset specifications, a Firebase setup note,
+  and repository/dependency hygiene. A privacy policy URL and a support
+  contact do not exist and were not invented; both block publication.
 - **Day 19 complete.** Release candidate. Three real blockers fixed (iOS
   bundle id was still `com.example.*`, iOS carried Flutter's template icon,
   and Firebase Analytics had pulled in three advertising permissions), plus a
@@ -83,6 +88,104 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 20 established
+
+The release package, finished. **Nothing has been published.** No store
+account was touched, no build uploaded, no declaration accepted, no release
+created.
+
+### Artifacts
+
+| Artifact | Size |
+| --- | --- |
+| `build/app/outputs/bundle/release/app-release.aab` | **81.9 MB** (Play upload) |
+| `build/app/outputs/flutter-apk/app-release.apk` | **98.7 MB** (universal, QA) |
+| Per-ABI APKs | 31–39 MB — what a device installs |
+
+Validated from the built APK rather than from configuration:
+
+```
+package: com.solvex.actionapp  versionCode=1  versionName=1.0.0
+minSdk 24   targetSdk 36   label 'Action'
+native-code: arm64-v8a  armeabi-v7a  x86_64
+signed: v2 scheme, 1 signer
+```
+
+64-bit present, target above Play's current floor, signed with the existing
+keystore read from an untracked `key.properties`. No credential was displayed
+or altered.
+
+⚠️ `versionCode 1` assumes nothing has ever been uploaded. That cannot be
+checked from this machine, so it is flagged in the Play checklist rather than
+assumed.
+
+### Documentation
+
+Six documents, plus a README that replaced the Flutter template stub:
+
+| Document | What it carries |
+| --- | --- |
+| `README.md` | What Action is, the two rules (trust first, local first), architecture, how to run it, and the limitations stated plainly |
+| `docs/PLAY_RELEASE_CHECKLIST.md` | Every Play submission step as an unticked box, with the load-bearing Data Safety answers pre-derived |
+| `docs/STORE_ASSETS.md` | Screenshot shot-list with captions, feature graphic brief, and rules for whoever produces them |
+| `docs/FIREBASE_SETUP.md` | The console steps this repo cannot perform, including that the App Check debug token is a secret that never gets written down |
+| `docs/DATA_SAFETY.md` | (Day 19) Code-derived data inventory |
+| `docs/SECURITY_REVIEW.md` | (Day 19) Permissions, exports, secrets, boundaries |
+| `docs/RELEASE_IOS_CHECKLIST.md` | (Day 19) Honest that iOS has never been compiled |
+| `docs/RELEASE_NOTES.md` | (Day 19) Draft listing copy and the claims that must not be made |
+
+Two things these deliberately do **not** contain: a privacy policy URL, and a
+support contact. Neither exists in this repository, both are required for
+publication, and inventing either would be exactly the kind of fabrication
+the product is built to avoid. Both are flagged as blocking, human-supplied
+inputs.
+
+### Repository hygiene
+
+No scratch files, temporary databases, QA screenshots, performance dumps or
+probe tests are tracked — the Day-16/17 probes and seeders were deleted when
+they had served their purpose, and only the permanent guards remain
+(`test/perf/`, `test/analytics/`). `.vscode/` is untracked and stays that
+way.
+
+**Dependency audit:** every declared package is imported somewhere except
+`cupertino_icons`, which arrives with the Flutter template and which nothing
+in this app uses — Action uses Material icons on both platforms because the
+icon set is part of its own visual language rather than the host's. Removed.
+No other package was touched: a release week is the wrong time for version
+bumps.
+
+### Final verification
+
+- **798 tests**, `flutter analyze` clean
+- Release APK and AAB both build
+- Firestore rules unchanged, `schemaVersion == 1` still pinned, DB still v3
+- Secret scan clean: no private keys, keystores or service accounts tracked
+- **Long-run session on `emulator-5554`:** 18 cycles of search → settings →
+  privacy → back. PSS 94.3 MB → 106.1 (6 cycles) → 107.5 (12) → 109.3 (18).
+  The rise is front-loaded and then flattens to ~1.5 MB per six cycles, which
+  is the shape of caches warming rather than an unbounded leak. Eighteen
+  cycles in one session is not proof of no leak, and is not claimed as one
+- Logcat across the session: zero `FATAL EXCEPTION`, `AndroidRuntime`,
+  `E/flutter`, `OutOfMemory`, `RenderFlex`, `SQLite`, `no-app`
+
+### Day-20 known limitations
+
+- **Not published, by design.** Publishing, submitting, accepting store
+  agreements and answering Data Safety in the console all require explicit
+  approval and none was given.
+- **A privacy policy URL and a support contact do not exist.** Both block
+  publication. Neither was invented.
+- **`versionCode 1` is unverified** against store history, which cannot be
+  read from here.
+- **iOS remains unbuilt.** Configuration is corrected and the checklist is
+  written; nothing further may be claimed.
+- **The Play Integrity path is unexercised.** App Check uses the debug
+  provider on the emulator and Play Integrity in release, and no Play-signed
+  build has run on a real device. This is the most likely production
+  surprise and is called out in the Play checklist.
+- Store screenshots and the feature graphic are **specified, not produced**.
 
 ## What Day 19 established
 
@@ -767,17 +870,25 @@ this is not a tablet redesign.
 
 ## Next roadmap day
 
-**Day 20 — release package.** Final artifacts, Play technical checklist,
-store listing drafts, repository hygiene, dependency and licence review, and
-the final documentation set. **Nothing is published**: no store submission,
-no release created, no legal declaration accepted, without explicit approval.
+**Nothing is scheduled.** Days 1–20 are complete. The app is a validated,
+signed release candidate that has deliberately not been submitted anywhere.
 
-Read before starting:
+Before anything can be published, a human must supply:
 
-- `docs/DATA_SAFETY.md` — fill any privacy form from this, not from memory
-- `docs/SECURITY_REVIEW.md`
-- `docs/RELEASE_IOS_CHECKLIST.md` — iOS is unbuilt and untested
-- `docs/RELEASE_NOTES.md` — draft copy, and the claims that must not be made
+1. **A privacy policy, written and hosted.** `docs/DATA_SAFETY.md` is the
+   factual basis for it; it is not itself a policy and is not hosted.
+2. **A support contact.** Not present anywhere in this repository.
+3. **Confirmation of store history**, so `versionCode 1` is either right or
+   bumped.
+
+Then work through `docs/PLAY_RELEASE_CHECKLIST.md`, answering Data Safety
+from `docs/DATA_SAFETY.md` rather than from memory.
+
+The largest unexercised risk is App Check: release builds use Play Integrity,
+which the emulator can never satisfy, so that path has never run on a real
+device. Verify it from an internal-testing build before any public release.
+
+For iOS, `docs/RELEASE_IOS_CHECKLIST.md` — it has never been compiled.
 
 ## What Day 14 established
 
