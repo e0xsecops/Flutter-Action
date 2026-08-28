@@ -1,9 +1,14 @@
 # Resume checkpoint
 
-Updated at the end of Day 18. Read this first when picking the project back up.
+Updated at the end of Day 19. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 19 complete.** Release candidate. Three real blockers fixed (iOS
+  bundle id was still `com.example.*`, iOS carried Flutter's template icon,
+  and Firebase Analytics had pulled in three advertising permissions), plus a
+  security review, a code-derived data safety inventory, an honest iOS
+  checklist and draft release notes. Signed AAB 81.9 MB, APK 98.7 MB.
 - **Day 18 complete.** Privacy-safe product analytics: a closed event
   catalogue, parameters allowlisted by key and pinned by value, and a device
   check proving a typed search query never reaches Firebase.
@@ -78,6 +83,114 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 19 established
+
+Release candidate. Feature freeze: only real defects, security and privacy
+issues, and release blockers.
+
+### Blockers found and fixed
+
+Three, all of which would have stopped or damaged a store submission.
+
+**iOS bundle identifier was still `com.example.actionApp`.** The Flutter
+template default, which App Store Connect rejects outright. Now
+`com.solvex.actionapp`, matching Android, along with the test target.
+
+**iOS carried Flutter's template app icon**, which is also rejected.
+Generated from the same source as Android with alpha removed as the store
+requires.
+
+**Firebase Analytics had pulled in three advertising permissions** —
+`com.google.android.gms.permission.AD_ID`,
+`ACCESS_ADSERVICES_ATTRIBUTION`, `ACCESS_ADSERVICES_AD_ID` — found by dumping
+the built APK rather than by reading the source, since none of them appear in
+this project's manifest. Action does no advertising, attribution or
+audiences, so leaving them would have obliged a Play Data Safety declaration
+that the app collects an advertising identifier, which is not true. Removed
+via `tools:node="remove"` with
+`google_analytics_adid_collection_enabled=false` so the binary and the
+declaration agree, then verified on device that analytics still works
+(`app_opened` fired on all three cold starts).
+
+Also fixed: iOS display name was "Action App" against Android's "Action".
+
+### Audit results
+
+| Area | Result |
+| --- | --- |
+| Version | `1.0.0+1` — genuine first release, not invented history |
+| Application id | `com.solvex.actionapp` in the Gradle namespace, applicationId, and now iOS |
+| Display name | "Action" on both platforms |
+| Icon | Adaptive Android icon and generated iOS set, both from `assets/icon` |
+| Splash | Native, light and dark, no artificial delay |
+| Permissions | Nine, each justified in `docs/SECURITY_REVIEW.md`. No exact alarm, camera, storage, location, contacts, SMS or microphone |
+| Exported components | Five, four of them library-standard. Documented, with the reasoning for leaving Firebase Auth's alone during a freeze |
+| Cleartext traffic | Not declared; off by default at this targetSdk. No custom trust manager or certificate bypass anywhere |
+| Secrets | No private keys, keystores or service accounts tracked. `key.properties` untracked. The Firebase client API key is embedded by design and protected by rules plus App Check |
+| Firestore | Owner-scoped, payload-validated, catch-all deny — unchanged |
+| Trust regression | 224 extraction and fixture tests pass: prompt injection, fabricated claims, ambiguous and multiple dates, malformed JSON, no-action, missing deadline |
+
+Photo capture needs no `CAMERA` permission because `image_picker` goes
+through system intents — worth stating because "the app takes photos" makes
+the permission look missing rather than deliberately unnecessary.
+
+### Artifacts
+
+| Artifact | Size |
+| --- | --- |
+| `build/app/outputs/bundle/release/app-release.aab` | **81.9 MB** |
+| `build/app/outputs/flutter-apk/app-release.apk` | **98.7 MB** |
+| Per-ABI APKs (what a device actually installs) | 31–39 MB |
+
+Both signed with the existing release keystore, read from an untracked
+`key.properties`. No credentials were displayed or changed.
+
+### Documents produced
+
+- **`docs/DATA_SAFETY.md`** — what the app does with data, derived from the
+  code, each row naming the file that implements it. The evidence a Play Data
+  Safety or App Store privacy form should be filled in *from*. It is not a
+  submission and nothing has been submitted.
+- **`docs/SECURITY_REVIEW.md`** — permissions, exported components, network,
+  secrets, Firestore, App Check, data boundaries, and what is knowingly
+  accepted.
+- **`docs/RELEASE_IOS_CHECKLIST.md`** — honest about iOS never having been
+  compiled. Records what was fixed from Windows and what genuinely requires a
+  Mac, including that **there is no iOS Firebase app and no iOS App Check
+  provider wired**.
+- **`docs/RELEASE_NOTES.md`** — draft listing copy and a limitations section
+  that says Android-only, no account, approximate reminders, Latin-script OCR.
+
+### Device QA
+
+Release build on `emulator-5554`. Cold start 1228/1293/1327 ms fresh-install,
+1446 ms after force-stop. Landscape and portrait both free of `RenderFlex`
+overflow. Process death and relaunch clean. Logcat across the session: zero
+`FATAL EXCEPTION`, `AndroidRuntime`, `E/flutter`, `OutOfMemory`, `no-app`.
+
+**798 tests**, `flutter analyze` clean.
+
+### Day-19 known limitations
+
+- **iOS is not built, not run, not tested.** The configuration is corrected
+  and the checklist is written; nothing more may be claimed.
+- **The empty-state message is clipped by the floating Add bar in landscape
+  on a phone.** The bar reserves its height and portrait clears comfortably;
+  landscape has roughly 800 px for a greeting plus centred content and the
+  last line still falls under the bar. Doubling the reservation was tried and
+  changed nothing, so the cause is available height, not padding. Left alone
+  deliberately: it is the empty state, seen once before anything is added,
+  and the thing covering the text is the only action available. A
+  landscape-specific layout is not a freeze-week change.
+- **Firebase Auth's `GenericIdpActivity`, `RecaptchaActivity` and
+  `RevocationBoundService` remain exported.** Unused by this app, which only
+  signs in anonymously, but intrinsic to the SDK, and Firebase may route
+  anonymous sign-in through reCAPTCHA under anti-abuse. Stripping them during
+  a freeze risks breaking auth for a theoretical gain.
+- **No user-facing analytics toggle** (carried from Day 18).
+- **Play Data Safety, content rating and store listing are drafts.** Nothing
+  has been submitted and no store account has been touched.
 
 ## What Day 18 established
 
@@ -654,21 +767,17 @@ this is not a tablet redesign.
 
 ## Next roadmap day
 
-**Day 19 — release candidate.** Feature freeze: only bugs, crashes, security
-and privacy issues, severe usability problems and release blockers. Version
-and application id audit, manifest and exported-component audit, secret scan,
-AI/OCR trust regression, accessibility, the final glass polish pass, and
-signed APK/AAB artifacts.
+**Day 20 — release package.** Final artifacts, Play technical checklist,
+store listing drafts, repository hygiene, dependency and licence review, and
+the final documentation set. **Nothing is published**: no store submission,
+no release created, no legal declaration accepted, without explicit approval.
 
-Still owed:
+Read before starting:
 
-1. No user-facing analytics toggle (Day 18 declined to ship one it could not
-   honour; see the Day-18 limitations).
-2. Tablet layout caps and centres; there is deliberately no split view.
-3. Glass is on sheets, the Home Add bar and the Search controls. Onboarding's
-   hero and the Settings header are candidates for the Day-19 polish pass.
-4. Anonymous identity is still device-install-local; no sign-in exists, so a
-   reinstall's mirror documents belong to an unreachable uid.
+- `docs/DATA_SAFETY.md` — fill any privacy form from this, not from memory
+- `docs/SECURITY_REVIEW.md`
+- `docs/RELEASE_IOS_CHECKLIST.md` — iOS is unbuilt and untested
+- `docs/RELEASE_NOTES.md` — draft copy, and the claims that must not be made
 
 ## What Day 14 established
 

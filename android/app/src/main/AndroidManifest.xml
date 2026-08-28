@@ -17,6 +17,21 @@
          the moment the user creates their first reminder — never at launch. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
+    <!-- Firebase Analytics brings these in by default so an app can attribute
+         installs and build ad audiences. Action does neither: Day 18's
+         analytics is a closed catalogue of content-free counts, there is no
+         advertising, no attribution and no audience anywhere in the product.
+         Left in place they would oblige a Play Data Safety declaration that
+         this app collects an advertising identifier, which would simply not
+         be true. Removed here and switched off in the SDK below, so the
+         declaration and the binary agree. -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION"
+        tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID"
+        tools:node="remove" />
+
     <!-- Deliberately NOT declared: SCHEDULE_EXACT_ALARM and USE_EXACT_ALARM.
          A reminder about a bill does not need second-perfect delivery, and
          those permissions are audited by app stores and (for
@@ -68,6 +83,13 @@
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
+        <!-- The other half of removing the AD_ID permission above: without
+             this the SDK would still try to read an advertising id it no
+             longer has permission for. Analytics events are unaffected. -->
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false" />
+
         <!-- Firebase ships a ContentProvider that initialises the default
              FirebaseApp during process creation, before Android has even
              constructed the Activity and long before Dart runs. It is a

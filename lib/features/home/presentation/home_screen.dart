@@ -171,12 +171,27 @@ class _Inbox extends StatelessWidget {
         if (nothingAtAll)
           const SliverFillRemaining(
             hasScrollBody: false,
-            child: EmptyView(
-              icon: Icons.inbox_outlined,
-              title: 'Nothing needs your attention',
-              message:
-                  'Add a photo, a screenshot, or some text. Action works out '
-                  'what it is and what you need to do about it.',
+            // The Add bar floats over the body, so the empty state reserves
+            // its height. In portrait this clears the message comfortably.
+            //
+            // In landscape on a phone it does not: there is roughly 800 px
+            // of body for a greeting plus this content, and the last line of
+            // the message still sits under the bar. Doubling the reservation
+            // was tried and changed nothing, so the cause is the sheer lack
+            // of height rather than the padding. Left as it is deliberately —
+            // this is the empty state, seen once before anything is added,
+            // with the only available action being the button doing the
+            // covering. Recorded in the Day-19 limitations rather than
+            // solved with a landscape-specific layout during a freeze.
+            child: Padding(
+              padding: EdgeInsets.only(bottom: _addBarClearance),
+              child: EmptyView(
+                icon: Icons.inbox_outlined,
+                title: 'Nothing needs your attention',
+                message:
+                    'Add a photo, a screenshot, or some text. Action works out '
+                    'what it is and what you need to do about it.',
+              ),
             ),
           )
         else ...[
