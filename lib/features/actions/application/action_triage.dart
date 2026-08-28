@@ -288,11 +288,19 @@ class ActionTriageEngine {
     return at.difference(nowUtc) <= reminderHorizon ? reminder : null;
   }
 
-  static int _rankOf(TriageReason reason) {
-    final index = _precedence.indexOf(reason);
-    return index < 0 ? _precedence.length : index;
-  }
+  static int _rankOf(TriageReason reason) =>
+      _rankByReason[reason] ?? _precedence.length;
 }
+
+/// [_precedence] as a lookup, built once.
+///
+/// The list is the readable statement of the rules and stays the source of
+/// truth; this is the same information indexed. Rank is asked for several
+/// times per Action while sorting a screenful, and a linear scan of the
+/// precedence list for each of those is a nested search inside a sort.
+final Map<TriageReason, int> _rankByReason = {
+  for (var i = 0; i < _precedence.length; i++) _precedence[i]: i,
+};
 
 /// Home's three lists plus the reasoning behind each card.
 final class TriagedHome {

@@ -39,11 +39,15 @@ class ActionSearchService {
     if (query.isEmpty) return const SearchResultSet();
 
     final needle = query.trimmed;
+    // Folded once for the whole query rather than once per field of every
+    // Action and every capture. The comparison is unchanged; what goes away
+    // is thousands of identical foldings of the same handful of characters.
+    final foldedNeedle = SearchNormalizer.fold(needle);
 
     List<ActionSearchResult> actionResults = const [];
     var actionsFailed = false;
     try {
-      actionResults = await _searchActions(query, needle, now);
+      actionResults = await _searchActions(query, needle, foldedNeedle, now);
     } on Object {
       actionsFailed = true;
     }
@@ -54,7 +58,7 @@ class ActionSearchService {
     // worth putting their text on screen.
     if (needle.isNotEmpty && query.searchesSources) {
       try {
-        sourceResults = await _searchSources(query, needle);
+        sourceResults = await _searchSources(query, needle, foldedNeedle);
       } on Object {
         sourcesFailed = true;
       }
@@ -73,6 +77,7 @@ class ActionSearchService {
   Future<List<ActionSearchResult>> _searchActions(
     SearchQuery query,
     String needle,
+    String foldedNeedle,
     DateTime now,
   ) async {
     final all = await _actions.watchAll().first;
@@ -91,7 +96,7 @@ class ActionSearchService {
                 snippet: action.title,
               ),
             ]
-          : _matchAction(action, needle);
+          : _matchAction(action, needle, foldedNeedle);
 
       if (matches.isEmpty) continue;
 
@@ -108,22 +113,29 @@ class ActionSearchService {
     return results;
   }
 
-  List<SearchMatch> _matchAction(ActionItem action, String needle) {
+  List<SearchMatch> _matchAction(
+    ActionItem action,
+    String needle,
+    String foldedNeedle,
+  ) {
     final matches = <SearchMatch>[];
 
-    // Title, from most specific to least.
-    if (SearchNormalizer.equals(action.title, needle)) {
+    // Title, from most specific to least. Folded once and then tested three
+    // ways, rather than folded once per test.
+    final foldedTitle = SearchNormalizer.fold(action.title);
+    if (foldedTitle == foldedNeedle) {
       matches.add(_titleMatch(action, MatchField.titleExact, needle));
-    } else if (SearchNormalizer.startsWith(action.title, needle)) {
+    } else if (foldedTitle.startsWith(foldedNeedle)) {
       matches.add(_titleMatch(action, MatchField.titlePrefix, needle));
-    } else if (SearchNormalizer.contains(action.title, needle)) {
+    } else if (foldedTitle.contains(foldedNeedle)) {
       matches.add(_titleMatch(action, MatchField.titleContains, needle));
     }
 
     for (final fact in action.facts) {
+      final foldedValue = SearchNormalizer.fold(fact.value);
       // An exact fact match is how a reference number is found, so it ranks
       // above a loose mention of the same digits elsewhere.
-      if (SearchNormalizer.equals(fact.value, needle)) {
+      if (foldedValue == foldedNeedle) {
         matches.add(SearchMatch(
           field: MatchField.factExact,
           label: fact.label,
@@ -131,8 +143,8 @@ class ActionSearchService {
           highlightStart: 0,
           highlightEnd: fact.value.length,
         ));
-      } else if (SearchNormalizer.contains(fact.value, needle) ||
-          SearchNormalizer.contains(fact.label, needle)) {
+      } else if (foldedValue.contains(foldedNeedle) ||
+          SearchNormalizer.fold(fact.label).contains(foldedNeedle)) {
         final (snippet, start, end) =
             SearchNormalizer.snippetAround(fact.value, needle);
         matches.add(SearchMatch(
@@ -146,7 +158,7 @@ class ActionSearchService {
     }
 
     final next = action.recommendedNextStep;
-    if (next != null && SearchNormalizer.contains(next, needle)) {
+    if (next != null && SearchNormalizer.fold(next).contains(foldedNeedle)) {
       final (snippet, start, end) =
           SearchNormalizer.snippetAround(next, needle);
       matches.add(SearchMatch(
@@ -159,7 +171,7 @@ class ActionSearchService {
     }
 
     for (final step in action.steps) {
-      if (SearchNormalizer.contains(step.title, needle)) {
+      if (SearchNormalizer.fold(step.title).contains(foldedNeedle)) {
         final (snippet, start, end) =
             SearchNormalizer.snippetAround(step.title, needle);
         matches.add(SearchMatch(
@@ -174,7 +186,8 @@ class ActionSearchService {
     }
 
     final summary = action.summary;
-    if (summary != null && SearchNormalizer.contains(summary, needle)) {
+    if (summary != null &&
+        SearchNormalizer.fold(summary).contains(foldedNeedle)) {
       final (snippet, start, end) =
           SearchNormalizer.snippetAround(summary, needle);
       matches.add(SearchMatch(
@@ -205,6 +218,7 @@ class ActionSearchService {
   Future<List<SourceSearchResult>> _searchSources(
     SearchQuery query,
     String needle,
+    String foldedNeedle,
   ) async {
     final store = await _sources();
     final all = await store.all();
@@ -228,10 +242,17 @@ class ActionSearchService {
       // untouched, exactly as captured.
       final body = source.ocr?.normalizedText ?? source.pastedText;
       if (body == null || body.isEmpty) continue;
-      if (!SearchNormalizer.contains(body, needle)) continue;
+      // An OCR body is the largest text search touches, and collapsing it is
+      // the expensive part. Done once here and handed to the snippet, which
+      // would otherwise repeat the same pass over the same characters.
+      final collapsedBody = SearchNormalizer.collapse(body);
+      if (!collapsedBody.toLowerCase().contains(foldedNeedle)) continue;
 
-      final (snippet, start, end) =
-          SearchNormalizer.snippetAround(body, needle);
+      final (snippet, start, end) = SearchNormalizer.snippetAround(
+        collapsedBody,
+        needle,
+        isCollapsed: true,
+      );
       results.add(SourceSearchResult(
         source: source,
         match: SearchMatch(

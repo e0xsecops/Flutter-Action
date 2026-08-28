@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/firebase/firebase_gate.dart';
 import '../../../core/result.dart';
 import '../data/extraction_model_config.dart';
 import '../data/extraction_service.dart';
@@ -21,6 +22,7 @@ final extractionModelSourceProvider = Provider<ExtractionModelSource>(
 final extractionTransportProvider = Provider<ExtractionTransport>(
   (ref) => FirebaseAiTransport(
     modelSource: ref.watch(extractionModelSourceProvider),
+    gate: ref.watch(firebaseGateProvider),
   ),
 );
 

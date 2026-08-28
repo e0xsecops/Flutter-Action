@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:firebase_ai/firebase_ai.dart';
 
+import '../../../core/firebase/firebase_gate.dart';
+
 import 'extraction_model_config.dart';
 import 'extraction_transport.dart';
 import 'firebase_ai_schema.dart';
@@ -18,6 +20,7 @@ class FirebaseAiTransport implements ExtractionTransport {
   const FirebaseAiTransport({
     this.modelSource = const LocalExtractionModelSource(),
     this.firebaseAi,
+    this.gate,
   });
 
   final ExtractionModelSource modelSource;
@@ -28,6 +31,12 @@ class FirebaseAiTransport implements ExtractionTransport {
   /// point where providers are constructed.
   final FirebaseAI? firebaseAi;
 
+  /// Since Day 16 Firebase comes up after the first frame, and App Check is
+  /// activated inside that same bring-up. Waiting here is what keeps the
+  /// Day-6 guarantee intact: a generate call never runs against an
+  /// unattested client just because the user was quick.
+  final FirebaseGate? gate;
+
   /// The Gemini Developer API backend. App Check and Auth tokens are attached
   /// by the SDK itself — as of firebase_ai 3.x passing them explicitly is
   /// deprecated because the wiring is automatic.
@@ -35,6 +44,17 @@ class FirebaseAiTransport implements ExtractionTransport {
 
   @override
   Future<ProviderResponse> generate(ExtractionRequest request) async {
+    final open = await gate?.ready ?? true;
+    if (!open) {
+      // Firebase never came up, so there is nothing to attest to and nothing
+      // to call. Reported in the same shape as any other outage, which the
+      // review screen already knows how to show.
+      throw const ProviderTransportException(
+        ProviderFailureKind.serviceUnavailable,
+        detail: 'firebase_unavailable',
+      );
+    }
+
     final config = modelSource.current;
 
     final model = _ai.generativeModel(

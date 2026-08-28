@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/firebase/firebase_gate.dart';
 import '../data/action_cloud_mirror.dart';
 import '../data/actions_database.dart';
 import '../data/auth_identity_service.dart';
@@ -75,11 +78,11 @@ final actionSyncOutboxProvider = Provider<ActionSyncOutbox>(
 );
 
 final authIdentityServiceProvider = Provider<AuthIdentityService>(
-  (ref) => FirebaseAuthIdentityService(),
+  (ref) => FirebaseAuthIdentityService(gate: ref.watch(firebaseGateProvider)),
 );
 
 final actionCloudMirrorProvider = Provider<ActionCloudMirror>(
-  (ref) => FirestoreActionCloudMirror(),
+  (ref) => FirestoreActionCloudMirror(gate: ref.watch(firebaseGateProvider)),
 );
 
 final actionSyncServiceProvider = Provider<ActionSyncService>(
@@ -172,6 +175,48 @@ final nextScheduledRemindersProvider =
   return ref.watch(actionReminderRepositoryProvider).watchNextScheduled();
 });
 
+/// The current local calendar date, re-emitted when it changes.
+///
+/// Day 11 left a gap and named it: Home held across midnight kept describing
+/// yesterday, because triage reads the clock when it recomputes and nothing
+/// asked it to. A date-only deadline is a whole local day, so at midnight an
+/// Action genuinely becomes overdue with no user action and no data change —
+/// the one moment ordering changes by itself.
+///
+/// Closed with a single timer, armed for the next local midnight and re-armed
+/// when it fires. Not a tick, not a poll, and nothing per-second: one pending
+/// timer exists at a time, it wakes nothing, and it is cancelled on dispose.
+/// A timer that fires late — because the device slept through midnight — is
+/// harmless, because the new day is read from the clock at that moment rather
+/// than assumed from when the timer was set.
+class LocalDay extends Notifier<DateTime> {
+  Timer? _timer;
+
+  @override
+  DateTime build() {
+    ref.onDispose(() => _timer?.cancel());
+    final now = ref.watch(appClockProvider)();
+    _armFor(now);
+    return DateTime(now.year, now.month, now.day);
+  }
+
+  void _armFor(DateTime now) {
+    _timer?.cancel();
+    // A minute past the boundary, so a timer that fires a hair early still
+    // lands on the day it was meant to announce.
+    final nextMidnight = DateTime(now.year, now.month, now.day + 1);
+    final delay = nextMidnight.difference(now) + const Duration(minutes: 1);
+    _timer = Timer(delay, () {
+      final at = ref.read(appClockProvider)();
+      state = DateTime(at.year, at.month, at.day);
+      _armFor(at);
+    });
+  }
+}
+
+final localDayProvider =
+    NotifierProvider<LocalDay, DateTime>(LocalDay.new);
+
 /// Home, triaged: three ordered lists plus the reason behind every card.
 ///
 /// Composed from two local streams and computed in memory. Nothing here
@@ -180,6 +225,9 @@ final nextScheduledRemindersProvider =
 final triagedHomeProvider = Provider<AsyncValue<TriagedHome>>((ref) {
   final actions = ref.watch(actionsStreamProvider);
   final reminders = ref.watch(nextScheduledRemindersProvider);
+  // Watched, not read: this is what makes the local day boundary recompute
+  // the order. The value itself is unused — the clock below is the truth.
+  ref.watch(localDayProvider);
   final now = ref.watch(appClockProvider)();
 
   return actions.whenData(

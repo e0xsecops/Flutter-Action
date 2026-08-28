@@ -1,9 +1,14 @@
 # Resume checkpoint
 
-Updated at the end of Day 15. Read this first when picking the project back up.
+Updated at the end of Day 16. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 16 complete.** Performance and resilience. Firebase initialisation left
+  the pre-first-frame path behind a `FirebaseGate`; search lost its redundant
+  re-folding (29 ms to 20 ms at 500 Actions); the Day-11 midnight staleness is
+  closed; and `flutter build apk --release`, which could not complete at all,
+  now produces a signed 98.7 MB universal APK.
 - **Day 15 complete.** Product-wide refinement: accessibility naming, reduced
   motion, readable width, button hierarchy, and two real defects found and
   fixed (a section-header overflow at large text, a vague failure message).
@@ -66,6 +71,231 @@ change these together, or the write will be rejected.
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
 
+## What Day 16 established
+
+Performance and resilience. No new product features, and no visible change to
+triage order, search ranking, reminder semantics or deletion behaviour.
+
+Everything below was **measured first**. Where a number is quoted the method is
+named, because a benchmark without one is an opinion.
+
+### Startup: Firebase left the critical path
+
+Measured on `emulator-5554` (API 36) in **profile** mode, with temporary marks
+in `main()` and `am start -W`, three or more cold runs each.
+
+Before — every phase serialized ahead of the first frame:
+
+| phase | run 1 | run 2 | run 3 |
+| --- | --- | --- | --- |
+| binding | 3 ms | 3 ms | 2 ms |
+| `Firebase.initializeApp` | **388 ms** | **413 ms** | **567 ms** |
+| App Check activate | 28 ms | 12 ms | 15 ms |
+| Crashlytics flag | 12 ms | 13 ms | 18 ms |
+| preferences | 10 ms | 5 ms | 4 ms |
+| **first frame** | **451 ms** | **451 ms** | **611 ms** |
+
+So 85–93% of the pre-frame window was Firebase, and the inbox needs none of
+it. After the change, first frame across seven cold runs: 26, 344, 350, 388,
+401, 436, 454 ms (**median ≈ 388 ms**), with Firebase completing at 616–811 ms
+— comfortably *after* the UI is up, which is the point. Android's own
+`TotalTime` moved from a median of ~1586 ms to ~1503 ms; warm launch is
+101/153/112 ms.
+
+Be honest about the size of that win. The remaining ~350 ms is native engine
+start, Flutter plugin registration and Firebase's own auto-init
+`ContentProvider` — all before Dart gets a turn, and none of it reorderable
+from `main()`. What Day 16 removed is the *serialized Dart wait*: half a
+second of platform-channel work that used to sit between process start and a
+usable inbox, and that would grow on a slower device or a cold cache.
+
+One measurement worth recording because it contradicts the obvious fix:
+starting the preference read *concurrently* with Firebase made things worse,
+not better. Both are platform-channel calls, and native Firebase init
+monopolised the platform thread — a 5 ms preference read became 325 ms and
+took the first frame with it. They are now sequenced, preferences first.
+
+### `FirebaseGate`
+
+Moving initialisation off the startup path means "Firebase is still coming up"
+became a reachable state, so it was given a name rather than left as a race.
+`lib/core/firebase/firebase_gate.dart` holds one `Future<bool>`, and the four
+seams that actually touch Firebase await it before their first call:
+
+- `FirebaseAuthIdentityService` — reports `firebase_unavailable`, the same
+  shape as any other auth outage, so the outbox backs off instead of throwing
+- `FirestoreActionCloudMirror` — raises `CloudMirrorException('unavailable')`,
+  so the row is retried and not lost
+- `FirestoreActionCloudPrivacyService` — returns everything as still-owed, so a
+  pending deletion is kept for next launch
+- `FirebaseAiTransport` — App Check is activated *inside* the bring-up and
+  before the gate opens, so the Day-6 guarantee holds: an extraction never runs
+  against an unattested client just because the user was quick
+
+The gate never throws and never times out. It defaults to **open**, so every
+test and every cloud-free build behaves exactly as before.
+
+Error reporting improved as a side effect. `FlutterError.onError` and
+`PlatformDispatcher.onError` are now installed *before* anything can fail —
+previously they were wired after Firebase, so an error during initialisation
+had nowhere to go at all. Each handler defers until the gate answers, then
+records; if Firebase never arrives the error is at least presented.
+
+### What was measured and deliberately left alone
+
+| area | measurement | verdict |
+| --- | --- | --- |
+| triage | 0.02 ms @10, 0.90 ms @500, 1.20 ms @1000 | linear/N-log-N; no change needed |
+| `watchAll` hydration | 1.9 ms @50, 5.0 ms @200, 10.9 ms @500 | three queries total, not per card |
+| `getById` | 0.14 ms, flat from 50 to 500 Actions | no index justified |
+| `action_steps` FK scan | 0.31 ms @400 rows, 0.20 ms @1000 rows | does not grow; no index justified |
+| Action Detail, 100-step chain | 0.37 ms `getById`, 0.63 ms `watchById` | fine |
+| `JsonFileSourceStore.all()` | 0.55 ms @10, 1.38 ms @100 | no Drift migration justified |
+| outbox | one bounded pass, `limit: 10`, re-entrancy guarded | already correct |
+| image normalisation | `compute()`, background isolate | untouched |
+
+**The database stays at version 3.** Section 19 of the brief asked whether
+indexes were warranted; the evidence says no. The one lookup without an index —
+`action_steps.action_id` — does not get slower as the table grows, because
+SQLite scans a table that is small in absolute terms. Adding an index would
+have cost a migration and a write penalty to fix a problem that was not
+measured to exist. `actionSchemaVersion` remains 1 and `firestore.rules` is
+untouched.
+
+### Search: the one real hotspot
+
+Search was measured at 500 Actions plus 100 captures and found to be doing
+genuinely redundant work — not the wrong algorithm, the same work repeatedly.
+The needle was re-folded (trim, a whitespace regex, lower-case) once per
+haystack rather than once per query; an Action title was folded up to three
+times to answer three questions about it; and a capture's OCR body was passed
+through the same regular expression twice, once to test for a match and again
+to build the snippet.
+
+`SearchNormalizer.fold` was split into `collapse` (the expensive regex, case
+preserved) and a lower-casing step, so the collapsed body can be reused for
+the snippet. The needle is folded once per query.
+
+| query | before | after |
+| --- | --- | --- |
+| "north", 50 Actions + 100 captures | 14.3 ms | **8.1 ms** |
+| "north", 500 Actions + 100 captures | 29.2 ms | **19.8 ms** |
+| "north", 1000 Actions + 100 captures | 47.2 ms | **35.7 ms** |
+| captures only, 100 | 13.4 ms | **6.9 ms** |
+| captures only, 200 | 26.0 ms | **13.9 ms** |
+| rapid typing, 5 queries @500 | 145.0 ms | **97.9 ms** |
+
+Ranking, filters, snippet bounds and the privacy boundary are unchanged: no
+query is persisted, no index is built, nothing is uploaded. **FTS5 was not
+introduced**, and the Day-12 decision stands — the measurements show linear
+search is comfortably responsive at ten times the corpus the app has.
+
+What remains is the `watchAll().first` re-read per query (~11 ms of the 20 ms
+at 500 Actions). It was left alone deliberately: it is what keeps results
+fresh, and 20 ms behind a 180 ms debounce is not a problem worth trading
+correctness for.
+
+### Midnight, closed
+
+Day 11 documented that Home held open across midnight kept describing
+yesterday. `LocalDay` (in `action_providers.dart`) closes it with **one**
+non-periodic timer armed for the next local midnight, re-armed when it fires
+and cancelled on dispose. No tick, no poll, nothing per-second, and a timer
+that fires late — because the device slept — reads the clock at that moment
+rather than assuming. Pinned by a `fake_async` test that asserts the timer
+count is exactly one, that it re-arms, and that it does not outlive the
+provider.
+
+### Other narrow fixes
+
+- **`ReminderReconciler` no longer re-reads the same Action once per
+  reminder.** An Action can hold several; the pass now remembers what it has
+  already loaded. Bounded, still one pass, still no permission prompt.
+- **`_rankOf` is a map rather than a linear scan** of the precedence list. The
+  list stays the readable statement of the rules; the map is the same
+  information indexed, so a sort no longer nests a search inside itself.
+
+### The release build was broken, and is fixed
+
+`flutter build apk --release` **could not produce an APK at all** before Day 16
+— R8 failed on missing classes. ML Kit's text-recognition entry point names
+all five script bundles it can construct and this app ships only Latin, so the
+four absent ones are references R8 refuses to shrink past.
+`android/app/proguard-rules.pro` states that the absence is expected
+(`-dontwarn`, not `-keep` — keeping would be a lie about what is in the APK).
+
+| artifact | size |
+| --- | --- |
+| universal release APK | **98.7 MB** |
+| arm64-v8a | 37.3 MB |
+| armeabi-v7a | 31.1 MB |
+| x86_64 | 39.2 MB |
+
+No accidental bloat: per ABI it is Flutter (8–12 MB), the app (9–10 MB), ML
+Kit's OCR pipeline (6.5–11 MB) and SQLite (1.6 MB). Nothing absurd arrived
+with Days 10–15. The universal APK is large only because it carries three
+ABIs; a real install takes one.
+
+### Device QA
+
+Release build on `emulator-5554`, seeded via `adb root` with a synthetic
+database — **501 Actions, 1120 steps, 40 reminder intents, 501 pending outbox
+rows** — generated by `ScaleFixtures`, never shipped.
+
+- Home renders 133 in Needs Attention with correct triage reasons; scrolling
+  ~27 flings through the whole list is smooth
+- Search: "invoice" returns 75 of 500, "permit" returns 84, typed one character
+  at a time, with highlighting and correct ranking
+- Action Detail with a 120-step chain opens immediately, reports "30 of 120
+  done", scrolls to step 119, and completes a step correctly
+- Reminders: all 40 intents reconciled to `needsPermission` — the correct
+  answer for a fresh install with no notification permission, reached without
+  raising a prompt
+- Offline (airplane mode): cold start 701/774/745 ms — **faster than online**,
+  which is what the gate is supposed to produce — and Home, Search and Detail
+  all fully usable
+- Force-stop and relaunch: 614 ms, database opens normally, order deterministic
+- Memory across 12 full navigate/search/detail/scroll cycles: 106.8 MB, then
+  65.5 MB, then 65.2 MB PSS. Flat between cycle 6 and 12, so no monotonic
+  growth. One session is not proof of no leak, but nothing suggests one.
+- Dark and light both correct at 500 Actions
+- Logcat: **zero** `FATAL EXCEPTION`, `AndroidRuntime`, `E/flutter`,
+  `OutOfMemory`, `SQLiteException`, `Skipped N frames`, `core/no-app`
+
+### Regression guards
+
+`test/perf/day16_performance_test.dart` — 14 tests. Deliberately **catastrophe
+detectors, not benchmarks**: thresholds sit 30–40x above measured cost so a
+contended CI machine passes, while the shape checks (triage growth from 250 to
+1000, capture reads per query, one timer) fail on the wrong *algorithm*
+regardless of machine speed. `test/support/scale_fixtures.dart` generates the
+corpora programmatically — no fixture files, no personal content.
+
+### Day-16 known limitations
+
+- The remaining ~350 ms to first frame is native: engine start, plugin
+  registration, and Firebase's auto-init `ContentProvider`. Disabling that
+  provider in the manifest to control init timing is a known technique and a
+  real Day-17 candidate, but it is an Android manifest change with genuine
+  risk and there is no evidence yet that it helps.
+- `watchById` declares `readsFrom` on `actions`, `action_steps` and
+  `action_facts`, so a write to *any* Action re-emits for an open detail
+  screen. Measured at 0.14–0.63 ms per emission and only while a detail screen
+  is open. Narrowing it would need a fingerprint covering every column, and
+  getting that wrong would silently suppress a real step update — not a trade
+  worth making for sub-millisecond work.
+- Search still re-reads all Actions per query (~11 ms at 500). Kept for
+  freshness.
+- Frame timings are qualitative. `dumpsys gfxinfo` does not track Flutter's
+  surface, so jank was assessed from logcat (`Skipped frames`, `Davey`) and
+  observation, not a frame histogram.
+- Emulator startup variance is high (cold `TotalTime` ranged 980–1956 ms on
+  the same build), so medians are quoted over ranges and no single run is
+  treated as a benchmark.
+- The Day-14 privacy limitation is unchanged and still owed: a cloud mirror
+  document whose local Action was already lost before Day 14 is not
+  discoverable, because nothing lists remotely. Day-17 hardening.
+
 ## What Day 15 established
 
 Day 15 changed no behaviour that was not a defect. The audit came first, and
@@ -122,10 +352,17 @@ this is not a tablet redesign.
 
 ## Next roadmap day
 
-**Day 16 — performance.** Day 15 only checked that polish caused no
-regression: cold start, Home scrolling, search typing and sheet opening all
-still feel immediate on `emulator-5554`, and logcat is clean of overflow and
-jank errors. Deep performance work is Day 16's, not Day 15's.
+**Day 17 — hardening.** Carried forward explicitly:
+
+1. The Day-14 privacy gap: a cloud mirror document whose local Action was lost
+   before Day 14 cannot be found or deleted, because the app never lists
+   remotely. Still owed.
+2. Firebase's auto-init `ContentProvider` is the largest remaining piece of
+   pre-frame work Dart cannot reorder. Disabling it in the manifest and
+   initialising explicitly is the candidate — with measurement first, and only
+   if it actually helps.
+3. Tablet layout: Home, Search and Detail still fill the width rather than
+   adopting a wider layout (carried from Day 15).
 
 ## What Day 14 established
 

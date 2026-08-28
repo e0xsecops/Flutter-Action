@@ -5,13 +5,21 @@
 /// presentation. Digits, punctuation inside an identifier, and the difference
 /// between `58.20` and `5820` are facts, and none of them is touched.
 abstract final class SearchNormalizer {
+  /// Whitespace-collapsed and trimmed, with case left alone.
+  ///
+  /// Split out from [fold] because it is the half that costs something — a
+  /// regular expression over the whole string — and the half whose result is
+  /// reusable for display. Matching wants it lowered; a snippet shown to the
+  /// user wants it exactly as captured.
+  static String collapse(String value) =>
+      value.trim().replaceAll(_whitespace, ' ');
+
   /// Case-folded, whitespace-collapsed, trimmed — and nothing else.
   ///
   /// `toLowerCase` is Unicode-aware in Dart and leaves scripts without case
   /// (Bengali, Arabic, CJK) exactly as they were, which is why it is safe to
   /// apply unconditionally.
-  static String fold(String value) =>
-      value.trim().replaceAll(_whitespace, ' ').toLowerCase();
+  static String fold(String value) => collapse(value).toLowerCase();
 
   static final _whitespace = RegExp(r'\s+');
 
@@ -50,12 +58,17 @@ abstract final class SearchNormalizer {
   /// body onto the screen.
   ///
   /// Returns the snippet and where the match sits inside it.
+  /// Set [isCollapsed] when [text] has already been through [collapse] — a
+  /// caller that folded a large body to test for a match has already paid for
+  /// the regular expression, and paying twice is the difference between one
+  /// pass over an OCR body and two.
   static (String snippet, int? start, int? end) snippetAround(
     String text,
     String needle, {
     int window = 90,
+    bool isCollapsed = false,
   }) {
-    final collapsed = text.replaceAll(_whitespace, ' ').trim();
+    final collapsed = isCollapsed ? text : collapse(text);
     final at = indexIn(collapsed, needle);
     if (at < 0) {
       // Found by folded comparison but not locatable exactly: show the head of

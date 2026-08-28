@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../core/firebase/firebase_gate.dart';
+
 import '../domain/action_item.dart';
 
 /// What one mirrored Action looks like in the cloud — and the complete list
@@ -69,13 +71,18 @@ class NoopActionCloudMirror implements ActionCloudMirror {
 }
 
 class FirestoreActionCloudMirror implements ActionCloudMirror {
-  FirestoreActionCloudMirror({this._firestore});
+  FirestoreActionCloudMirror({this._firestore, FirebaseGate? gate})
+      : _gate = gate ?? FirebaseGate.open();
 
   final FirebaseFirestore? _firestore;
   FirebaseFirestore get _instance => _firestore ?? FirebaseFirestore.instance;
+  final FirebaseGate _gate;
 
   @override
   Future<void> upsert(String uid, ActionItem item) async {
+    // Reported as an ordinary transport failure, so the outbox retries with
+    // its normal backoff instead of losing the row.
+    if (!await _gate.ready) throw const CloudMirrorException('unavailable');
     try {
       // set() on a caller-chosen document id: the retry of an upsert lands
       // on the same document. Firestore auto-ids would mint duplicates.

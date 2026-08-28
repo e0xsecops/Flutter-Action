@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../core/firebase/firebase_gate.dart';
+
 /// Removing mirrored Actions from the cloud. Deletion only.
 ///
 /// Deliberately a separate interface from [ActionCloudMirror] rather than
@@ -27,10 +29,12 @@ class NoopActionCloudPrivacyService implements ActionCloudPrivacyService {
 }
 
 class FirestoreActionCloudPrivacyService implements ActionCloudPrivacyService {
-  FirestoreActionCloudPrivacyService({this._firestore});
+  FirestoreActionCloudPrivacyService({this._firestore, FirebaseGate? gate})
+      : _gate = gate ?? FirebaseGate.open();
 
   final FirebaseFirestore? _firestore;
   FirebaseFirestore get _instance => _firestore ?? FirebaseFirestore.instance;
+  final FirebaseGate _gate;
 
   /// Firestore caps a write batch at 500 operations.
   static const _batchLimit = 500;
@@ -41,6 +45,9 @@ class FirestoreActionCloudPrivacyService implements ActionCloudPrivacyService {
     Set<String> actionIds,
   ) async {
     if (actionIds.isEmpty) return const {};
+    // Nothing deleted rather than nothing owed: the caller keeps the pending
+    // record and tries again next launch, which is the honest answer.
+    if (!await _gate.ready) return actionIds;
 
     final collection =
         _instance.collection('users').doc(uid).collection('actions');

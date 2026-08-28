@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/firebase/firebase_gate.dart';
 import '../../../core/preferences/preference_store.dart';
 import '../../../core/preferences/shared_preferences_store.dart';
 import '../../actions/application/action_providers.dart';
@@ -40,7 +41,9 @@ final themeModeControllerProvider =
     NotifierProvider<ThemeModeController, ThemeMode>(ThemeModeController.new);
 
 final actionCloudPrivacyServiceProvider = Provider<ActionCloudPrivacyService>(
-  (ref) => FirestoreActionCloudPrivacyService(),
+  (ref) => FirestoreActionCloudPrivacyService(
+    gate: ref.watch(firebaseGateProvider),
+  ),
 );
 
 final privacyDeletionServiceProvider = Provider<PrivacyDeletionService>((ref) {

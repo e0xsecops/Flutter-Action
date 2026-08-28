@@ -1,4 +1,5 @@
 import '../data/notification_scheduler.dart';
+import '../domain/action_item.dart';
 import '../domain/action_reminder.dart';
 import '../domain/action_reminder_repository.dart';
 import '../domain/action_repository.dart';
@@ -114,9 +115,18 @@ class ReminderReconciler {
     final platformIds =
         allowed ? await _scheduler.pendingNotificationIds() : const <int>{};
 
+    // An Action can hold several reminders, and the pass used to re-read it
+    // once per reminder. Remembered for the length of the pass instead: the
+    // pass is short and bounded, and re-reading the same row three times to
+    // learn the same title is work with nothing to show for it.
+    final seenActions = <String, ActionItem?>{};
+
     for (final reminder in remaining) {
       // An Action that no longer exists cannot be reminded about.
-      final action = await _actions.getById(reminder.actionId);
+      final action = seenActions.containsKey(reminder.actionId)
+          ? seenActions[reminder.actionId]
+          : seenActions[reminder.actionId] =
+              await _actions.getById(reminder.actionId);
       if (action == null) {
         try {
           await _scheduler.cancel(reminder.platformNotificationId);

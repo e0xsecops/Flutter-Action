@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../core/firebase/firebase_gate.dart';
+
 /// Who owns the cloud mirror path — and nothing more.
 ///
 /// Anonymous auth exists solely so mirrored Actions have a per-user path the
@@ -23,16 +25,27 @@ abstract interface class AuthIdentityService {
 }
 
 class FirebaseAuthIdentityService implements AuthIdentityService {
-  FirebaseAuthIdentityService({this._auth});
+  FirebaseAuthIdentityService({this._auth, FirebaseGate? gate})
+      : _gate = gate ?? FirebaseGate.open();
 
   final FirebaseAuth? _auth;
   FirebaseAuth get _instance => _auth ?? FirebaseAuth.instance;
+
+  /// Since Day 16 Firebase comes up after the first frame, so the first
+  /// sign-in of a launch can arrive before there is an app to sign in to.
+  final FirebaseGate _gate;
 
   @override
   String? lastFailureClass;
 
   @override
   Future<String?> currentOrSignInUid() async {
+    if (!await _gate.ready) {
+      // Firebase never came up. That is the same answer as an outage, and
+      // the outbox already knows what to do with it.
+      lastFailureClass = 'firebase_unavailable';
+      return null;
+    }
     try {
       final existing = _instance.currentUser;
       if (existing != null) {

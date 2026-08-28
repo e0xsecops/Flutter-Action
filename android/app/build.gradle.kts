@@ -73,6 +73,15 @@ android {
             } else {
                 null
             }
+
+            // ML Kit references four text-recognition script bundles this app
+            // does not ship, and R8 treats those missing classes as an error:
+            // before Day 16 a release build could not complete at all. The
+            // rules say the absence is expected. See proguard-rules.pro.
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
