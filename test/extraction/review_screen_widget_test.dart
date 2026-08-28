@@ -1,3 +1,5 @@
+import 'package:action_app/core/analytics/app_analytics.dart';
+import 'package:action_app/core/analytics/firebase_app_analytics.dart';
 import 'package:action_app/design/app_theme.dart';
 import 'package:action_app/features/actions/application/action_providers.dart';
 import 'package:action_app/features/actions/data/action_cloud_mirror.dart';
@@ -8,7 +10,6 @@ import 'package:drift/native.dart';
 import 'package:action_app/features/capture/data/ocr_service.dart';
 import 'package:action_app/features/capture/data/source_store.dart';
 import 'package:action_app/features/capture/domain/source_item.dart';
-import 'package:action_app/features/extraction/application/review_analytics.dart';
 import 'package:action_app/features/extraction/domain/extraction_result.dart';
 import 'package:action_app/features/extraction/presentation/extraction_review_screen.dart';
 import 'package:action_app/features/extraction/presentation/review_widgets.dart';
@@ -24,12 +25,15 @@ import 'support/extraction_test_support.dart';
 /// trust boundary produces, never hand-assembled domain objects. All tests
 /// inject the result via [ExtractionReviewScreen.initialResult], the same
 /// deterministic path the debug fixture harness uses.
-class _RecordingAnalytics extends ReviewAnalytics {
+class _RecordingAnalytics implements AppAnalytics {
   final events = <String>[];
 
   @override
-  Future<void> log(String event) async {
-    events.add(event);
+  Future<void> log(String name, {Map<String, String>? parameters}) async {
+    // Validated here too, so the review screen cannot slip content into
+    // telemetry just because a test replaced the sink.
+    validateAnalytics(name, parameters);
+    events.add(name);
   }
 }
 
@@ -99,7 +103,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          reviewAnalyticsProvider.overrideWithValue(analytics),
+          appAnalyticsProvider.overrideWithValue(analytics),
           sourceStoreProvider.overrideWith((ref) async => _MemStore()),
           ocrServiceProvider.overrideWithValue(const FakeOcrService()),
           actionsDatabaseProvider.overrideWithValue(db),
@@ -198,13 +202,13 @@ void main() {
       expect(find.text('96.40 GBP'), findsOneWidget);
       expect(find.text('High confidence'), findsNWidgets(3));
       expect(find.text('93%'), findsNothing);
-      expect(analytics.events, contains(ReviewEvents.opened));
+      expect(analytics.events, contains(AnalyticsEvents.reviewOpened));
 
       await tester.tap(find.text('Confirm & create action'));
       await tester.pumpAndSettle();
 
       expect(find.text('Action confirmed'), findsOneWidget);
-      expect(analytics.events, contains(ReviewEvents.confirmed));
+      expect(analytics.events, contains(AnalyticsEvents.reviewConfirmed));
     });
 
     testWidgets('evidence expands to the exact quote', (tester) async {
@@ -217,7 +221,7 @@ void main() {
         find.text('“Payment is due by 30 August 2026”'),
         findsOneWidget,
       );
-      expect(analytics.events, contains(ReviewEvents.evidenceViewed));
+      expect(analytics.events, contains(AnalyticsEvents.reviewEvidenceViewed));
     });
   });
 
@@ -361,7 +365,7 @@ void main() {
 
       expect(find.text('1 Sep 2026'), findsOneWidget);
       expect(find.text('Confirmed by you'), findsWidgets);
-      expect(analytics.events, contains(ReviewEvents.fieldEdited));
+      expect(analytics.events, contains(AnalyticsEvents.reviewFieldEdited));
     });
 
     testWidgets('an invalid typed amount is refused with the parser reason',
@@ -438,7 +442,7 @@ void main() {
       await tester.tap(find.text('Enter the details'));
       await tester.pumpAndSettle();
 
-      expect(analytics.events, contains(ReviewEvents.manualFallback));
+      expect(analytics.events, contains(AnalyticsEvents.extractionManualFallback));
       expect(find.text('Create manually'), findsOneWidget);
       expect(find.text('Give this action a title.'), findsOneWidget);
 
@@ -471,7 +475,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Create manually'), findsOneWidget);
-      expect(analytics.events, contains(ReviewEvents.manualFallback));
+      expect(analytics.events, contains(AnalyticsEvents.extractionManualFallback));
     });
   });
 
@@ -526,8 +530,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('base screen'), findsOneWidget);
-      expect(analytics.events, contains(ReviewEvents.cancelled));
-      expect(analytics.events, isNot(contains(ReviewEvents.confirmed)));
+      expect(analytics.events, contains(AnalyticsEvents.reviewCancelled));
+      expect(analytics.events, isNot(contains(AnalyticsEvents.reviewConfirmed)));
     });
   });
 }

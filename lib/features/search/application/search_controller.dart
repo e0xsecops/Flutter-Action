@@ -7,6 +7,8 @@ import '../../capture/application/capture_controller.dart';
 import '../domain/search_query.dart';
 import '../domain/search_result.dart';
 import 'action_search_service.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 /// Everything the search screen renders from.
 final class SearchState {
@@ -112,6 +114,14 @@ class SearchController extends Notifier<SearchState> {
     // A newer query started while this one was running: drop this result.
     if (generation != _generation) return;
     state = state.copyWith(results: results, isSearching: false);
+
+    // That a search found nothing is worth knowing; what was searched for is
+    // not, and never leaves this process.
+    if (results.isEmpty && !results.hasFailure) {
+      unawaited(ref.read(appAnalyticsProvider).log(
+        AnalyticsEvents.searchNoResults,
+      ));
+    }
   }
 
   /// Runs the current query immediately, skipping the debounce. Used by tests

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,6 +11,8 @@ import '../../actions/data/action_cloud_privacy_service.dart';
 import '../../actions/data/cloud_privacy_inventory.dart';
 import '../../capture/application/capture_controller.dart';
 import 'privacy_deletion_service.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 /// The user's appearance choice.
 ///
@@ -23,6 +27,12 @@ class ThemeModeController extends Notifier<ThemeMode> {
 
   Future<void> set(ThemeMode mode) async {
     state = mode;
+    // Which of the three was chosen. `ThemeMode.name` is one of exactly
+    // system/light/dark, which is why it is safe to send verbatim.
+    unawaited(ref.read(appAnalyticsProvider).log(
+      AnalyticsEvents.appearanceChanged,
+      parameters: {AnalyticsParams.themeMode: mode.name},
+    ));
     await ref
         .read(preferenceStoreProvider)
         .setString(PreferenceKeys.themeMode, mode.name);

@@ -26,8 +26,9 @@ import '../../capture/application/capture_controller.dart';
 import '../../capture/domain/source_item.dart';
 import '../../capture/presentation/capture_sheet.dart';
 import '../../capture/presentation/preview_screen.dart';
-import '../../extraction/application/review_analytics.dart';
 import '../../extraction/domain/extraction_schema.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 /// Home: the user's confirmed Actions, then their unreviewed captures.
 ///
@@ -391,8 +392,8 @@ class _ActionRow extends ConsumerWidget {
                           .read(actionRepositoryProvider)
                           .complete(item.id, at: DateTime.now());
                       ref
-                          .read(reviewAnalyticsProvider)
-                          .log(ActionEvents.completed);
+                          .read(appAnalyticsProvider)
+                          .log(AnalyticsEvents.actionCompleted);
                       unawaited(
                           ref.read(actionSyncServiceProvider).flush());
                     },

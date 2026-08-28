@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,8 @@ import '../../../design/tokens/dimens.dart';
 import '../application/capture_controller.dart';
 import '../domain/source_item.dart';
 import 'preview_screen.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 enum CaptureIntent { camera, gallery, pasteText }
 
@@ -26,6 +30,19 @@ Future<void> startCapture(BuildContext context, WidgetRef ref) async {
 
   if (intent == null || !context.mounted) return;
 
+  // Which of the three ways in was used, and nothing else. Never the file,
+  // never its path, never what it turns out to contain.
+  final how = switch (intent) {
+    CaptureIntent.pasteText => 'paste',
+    CaptureIntent.camera => 'camera',
+    CaptureIntent.gallery => 'gallery',
+  };
+  final analytics = ref.read(appAnalyticsProvider);
+  unawaited(analytics.log(
+    AnalyticsEvents.captureStarted,
+    parameters: {AnalyticsParams.captureType: how},
+  ));
+
   switch (intent) {
     case CaptureIntent.pasteText:
       context.push(Routes.captureText);
@@ -36,6 +53,7 @@ Future<void> startCapture(BuildContext context, WidgetRef ref) async {
         ref,
         () => ref.read(capturePickerProvider).fromCamera(),
         SourceType.photo,
+        how,
       );
 
     case CaptureIntent.gallery:
@@ -44,6 +62,7 @@ Future<void> startCapture(BuildContext context, WidgetRef ref) async {
         ref,
         () => ref.read(capturePickerProvider).fromGallery(),
         SourceType.gallery,
+        how,
       );
   }
 }
@@ -53,11 +72,17 @@ Future<void> _pickThenPreview(
   WidgetRef ref,
   Future<XFile?> Function() pick,
   SourceType type,
+  String how,
 ) async {
+  final analytics = ref.read(appAnalyticsProvider);
   XFile? file;
   try {
     file = await pick();
   } on Object {
+    unawaited(analytics.log(
+      AnalyticsEvents.captureFailed,
+      parameters: {AnalyticsParams.captureType: how},
+    ));
     // Most commonly a device with no camera, or a permission the user declined
     // in the system UI. Neither is exceptional enough to interrupt them with a
     // dialog.
@@ -69,8 +94,14 @@ Future<void> _pickThenPreview(
     return;
   }
 
-  // Null means the user backed out of the picker, which is a normal outcome.
+  // Null means the user backed out of the picker, which is a normal outcome
+  // and not a failure worth recording.
   if (file == null || !context.mounted) return;
+
+  unawaited(analytics.log(
+    AnalyticsEvents.captureSucceeded,
+    parameters: {AnalyticsParams.captureType: how},
+  ));
 
   context.push(
     Routes.capturePreview,

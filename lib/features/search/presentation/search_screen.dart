@@ -16,6 +16,8 @@ import '../../extraction/domain/extraction_schema.dart';
 import '../application/search_controller.dart';
 import '../domain/search_query.dart';
 import '../domain/search_result.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 /// Finding things, without asking anyone else.
 ///
@@ -33,6 +35,17 @@ class SearchScreen extends ConsumerStatefulWidget {
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _controller = TextEditingController();
   final _focus = FocusNode();
+
+  /// Only ever emitted once per visit, and never with what was typed.
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(appAnalyticsProvider).log(AnalyticsEvents.searchOpened);
+      }
+    });
+  }
 
   @override
   void dispose() {

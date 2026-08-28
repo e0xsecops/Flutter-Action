@@ -21,7 +21,6 @@ import '../domain/action_draft.dart';
 import '../application/action_review_state.dart';
 import '../application/canonical_fields.dart';
 import '../application/extraction_providers.dart';
-import '../application/review_analytics.dart';
 import '../domain/confirmed_action_draft.dart';
 import '../domain/extracted_field.dart';
 import '../domain/extraction_input.dart';
@@ -30,6 +29,8 @@ import '../domain/extraction_schema.dart';
 import '../domain/escalation.dart';
 import '../domain/money_value.dart';
 import 'review_widgets.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 /// The trust screen: what Action understood, what is uncertain, and exactly
 /// what will exist if the user confirms.
@@ -83,13 +84,25 @@ class _ExtractionReviewScreenState
     if (injected != null) {
       _attempt = ExtractionCompleted(injected);
       _review = reviewStateFor(injected);
-      _log(ReviewEvents.opened);
+      _log(AnalyticsEvents.reviewOpened);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) => _start());
     }
   }
 
-  void _log(String event) => ref.read(reviewAnalyticsProvider).log(event);
+  void _log(String event) => ref.read(appAnalyticsProvider).log(event);
+
+  /// Records the outcome of one extraction attempt, and the outcome only.
+  void _logOutcome(String outcome) {
+    ref.read(appAnalyticsProvider).log(
+      switch (outcome) {
+        'failed' => AnalyticsEvents.extractionFailed,
+        'needs_review' => AnalyticsEvents.extractionNeedsReview,
+        _ => AnalyticsEvents.extractionSucceeded,
+      },
+      parameters: {AnalyticsParams.extractionOutcome: outcome},
+    );
+  }
 
   Future<void> _start() async {
     setState(() {
@@ -138,10 +151,23 @@ class _ExtractionReviewScreenState
     }
 
     setState(() => _stage = 1);
+    _log(AnalyticsEvents.extractionStarted);
     final attempt = await runExtraction(
       ref.read(extractionServiceProvider),
       ExtractionInput.fromSourceItem(item),
     );
+
+    // How the attempt ended, as one of four fixed words. Never the document,
+    // never the draft, never the model's answer.
+    _logOutcome(switch (attempt) {
+      ExtractionFailed() => 'failed',
+      ExtractionCompleted(:final result) =>
+        result.hasDraft ? 'success' : 'needs_review',
+      // runExtraction never returns idle; the case exists so the switch is
+      // total rather than relying on that promise.
+      _ => 'failed',
+    });
+
     if (!mounted) return;
 
     // Validation already ran inside the attempt; giving the final stage a
@@ -157,7 +183,7 @@ class _ExtractionReviewScreenState
       }
     });
     if (attempt is ExtractionCompleted && attempt.result.hasDraft) {
-      _log(ReviewEvents.opened);
+      _log(AnalyticsEvents.reviewOpened);
     }
   }
 
@@ -181,7 +207,7 @@ class _ExtractionReviewScreenState
         message: attempt.message,
         onRetry: _start,
         onManualEntry: () {
-          _log(ReviewEvents.manualFallback);
+          _log(AnalyticsEvents.extractionManualFallback);
           _update(ActionReviewState.manual(sourceId: widget.sourceId));
         },
       );
@@ -191,7 +217,7 @@ class _ExtractionReviewScreenState
         body = _NoActionView(
           item: _sourceItem,
           onAddAnyway: () {
-            _log(ReviewEvents.manualFallback);
+            _log(AnalyticsEvents.extractionManualFallback);
             _update(ActionReviewState.manual(
               sourceId: widget.sourceId,
               original: result,
@@ -214,7 +240,7 @@ class _ExtractionReviewScreenState
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if (_confirmed == null) _log(ReviewEvents.cancelled);
+            if (_confirmed == null) _log(AnalyticsEvents.reviewCancelled);
             context.pop();
           },
         ),
@@ -244,7 +270,7 @@ class _ExtractionReviewScreenState
         const SizedBox(height: Space.xl),
         FilledButton(
           onPressed: () {
-            _log(ReviewEvents.manualFallback);
+            _log(AnalyticsEvents.extractionManualFallback);
             _update(ActionReviewState.manual(
               sourceId: widget.sourceId,
               original: result,
@@ -370,7 +396,7 @@ class _ExtractionReviewScreenState
                       : null,
                   onEdit: () => _editField(review, field),
                   evidence: field.evidence,
-                  onEvidenceViewed: () => _log(ReviewEvents.evidenceViewed),
+                  onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
                 ),
               ],
             ],
@@ -405,7 +431,7 @@ class _ExtractionReviewScreenState
                   if (draft.consequenceEvidence != null)
                     EvidenceTile(
                       evidence: draft.consequenceEvidence!,
-                      onFirstExpand: () => _log(ReviewEvents.evidenceViewed),
+                      onFirstExpand: () => _log(AnalyticsEvents.reviewEvidenceViewed),
                     ),
                 ],
               ],
@@ -519,7 +545,7 @@ class _ExtractionReviewScreenState
           numeric: true,
           onEdit: () => _resolveDue(review),
           evidence: field.evidence,
-          onEvidenceViewed: () => _log(ReviewEvents.evidenceViewed),
+          onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
         );
       case CanonicalStatus.ambiguous:
         return _AmbiguityCard(
@@ -540,7 +566,7 @@ class _ExtractionReviewScreenState
           numeric: true,
           onEdit: () => _resolveDue(review),
           evidence: candidate.evidence,
-          onEvidenceViewed: () => _log(ReviewEvents.evidenceViewed),
+          onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
         );
       case CanonicalStatus.absent:
         return FactRow(
@@ -579,7 +605,7 @@ class _ExtractionReviewScreenState
           numeric: true,
           onEdit: () => _resolveAmount(review),
           evidence: field.evidence,
-          onEvidenceViewed: () => _log(ReviewEvents.evidenceViewed),
+          onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
         );
       case CanonicalStatus.ambiguous:
         return _AmbiguityCard(
@@ -600,7 +626,7 @@ class _ExtractionReviewScreenState
           numeric: true,
           onEdit: () => _resolveAmount(review),
           evidence: candidate.evidence,
-          onEvidenceViewed: () => _log(ReviewEvents.evidenceViewed),
+          onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
         );
       case CanonicalStatus.absent:
         return FactRow(
@@ -656,7 +682,7 @@ class _ExtractionReviewScreenState
                 initial: step.title,
               );
               if (value == null || !mounted) return;
-              _log(ReviewEvents.fieldEdited);
+              _log(AnalyticsEvents.reviewFieldEdited);
               _update(review.editStepTitle(step.id, value));
             },
             icon: const Icon(Icons.edit_outlined, size: 20),
@@ -743,7 +769,7 @@ class _ExtractionReviewScreenState
     } on Object {
       if (!mounted) return;
       setState(() => _saving = false);
-      _log(ActionEvents.localPersistenceFailed);
+      _log(AnalyticsEvents.actionLocalPersistenceFailed);
       // Review state and edits are untouched; the same draft (same id) is
       // retried on the next tap. No AI re-run, no lost source.
       ScaffoldMessenger.of(context).showSnackBar(
@@ -756,8 +782,8 @@ class _ExtractionReviewScreenState
     }
 
     if (!mounted) return;
-    _log(ReviewEvents.confirmed);
-    _log(ActionEvents.created);
+    _log(AnalyticsEvents.reviewConfirmed);
+    _log(AnalyticsEvents.actionCreated);
     setState(() {
       _confirmed = confirmed;
       _saving = false;
@@ -774,7 +800,7 @@ class _ExtractionReviewScreenState
       hint: 'What needs to happen?',
     );
     if (value == null || !mounted) return;
-    _log(ReviewEvents.fieldEdited);
+    _log(AnalyticsEvents.reviewFieldEdited);
     _update(review.withTitle(value));
   }
 
@@ -784,21 +810,21 @@ class _ExtractionReviewScreenState
       initial: field.value ?? '',
     );
     if (value == null || value.trim().isEmpty || !mounted) return;
-    _log(ReviewEvents.fieldEdited);
+    _log(AnalyticsEvents.reviewFieldEdited);
     _update(review.editFieldValue(field.key, value));
   }
 
   Future<void> _addStep(ActionReviewState review) async {
     final value = await _promptText(title: 'New step', hint: 'What to do');
     if (value == null || value.trim().isEmpty || !mounted) return;
-    _log(ReviewEvents.fieldEdited);
+    _log(AnalyticsEvents.reviewFieldEdited);
     _update(review.addManualStep(value));
   }
 
   Future<void> _resolveDue(ActionReviewState review) async {
     final outcome = await _showDueSheet(review);
     if (outcome == null || !mounted) return;
-    _log(ReviewEvents.fieldEdited);
+    _log(AnalyticsEvents.reviewFieldEdited);
     switch (outcome) {
       case _SlotAccepted(:final field):
         _update(review.acceptDueCandidate(field));
@@ -812,7 +838,7 @@ class _ExtractionReviewScreenState
   Future<void> _resolveAmount(ActionReviewState review) async {
     final outcome = await _showAmountSheet(review);
     if (outcome == null || !mounted) return;
-    _log(ReviewEvents.fieldEdited);
+    _log(AnalyticsEvents.reviewFieldEdited);
     switch (outcome) {
       case _SlotAccepted(:final field):
         _update(review.acceptAmountCandidate(field));

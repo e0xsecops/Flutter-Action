@@ -17,7 +17,6 @@ import '../../../shared/widgets/loading_view.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../capture/domain/source_item.dart';
 import '../../extraction/application/canonical_fields.dart';
-import '../../extraction/application/review_analytics.dart';
 import '../../extraction/domain/extraction_schema.dart';
 import '../application/action_chain.dart';
 import '../application/reminder_service.dart';
@@ -26,6 +25,8 @@ import '../domain/action_item.dart';
 import '../domain/action_reminder.dart';
 import 'action_edit_sheets.dart';
 import 'reminder_sheet.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 /// Everything about one Action, and the place the work actually happens.
 ///
@@ -48,13 +49,13 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     super.initState();
     // A name, never the Action it refers to.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) ref.read(reviewAnalyticsProvider).log(ActionEvents.detailOpened);
+      if (mounted) ref.read(appAnalyticsProvider).log(AnalyticsEvents.actionOpened);
     });
   }
 
   DateTime get _now => ref.read(appClockProvider)().toUtc();
 
-  void _log(String event) => ref.read(reviewAnalyticsProvider).log(event);
+  void _log(String event) => ref.read(appAnalyticsProvider).log(event);
 
   /// Mirrored metadata changed, so the cloud owes an upsert. Local truth is
   /// already committed by the time this runs; the flush is best-effort and
@@ -69,7 +70,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
       await work();
       return true;
     } catch (_) {
-      _log(ActionEvents.localPersistenceFailed);
+      _log(AnalyticsEvents.actionLocalPersistenceFailed);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -127,7 +128,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
             updatedAt: now,
           ),
         ));
-    if (ok) _log(ActionEvents.stepAdded);
+    if (ok) _log(AnalyticsEvents.stepAdded);
   }
 
   Future<void> _renameStep(ActionStepItem step) async {
@@ -136,7 +137,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final ok = await _persist(() => ref
         .read(actionStepRepositoryProvider)
         .updateStep(step.copyWith(title: title), at: _now));
-    if (ok) _log(ActionEvents.stepEdited);
+    if (ok) _log(AnalyticsEvents.stepEdited);
   }
 
   Future<void> _toggleStep(ActionItem action, ActionStepItem step) async {
@@ -148,7 +149,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
               at: _now,
             ));
     if (!ok) return;
-    _log(next ? ActionEvents.stepCompleted : ActionEvents.stepReopened);
+    _log(next ? AnalyticsEvents.stepCompleted : AnalyticsEvents.stepReopened);
   }
 
   Future<void> _deleteStep(ActionStepItem step) async {
@@ -172,7 +173,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     if (confirmed != true || !mounted) return;
     final ok = await _persist(() =>
         ref.read(actionStepRepositoryProvider).deleteStep(step.id, at: _now));
-    if (ok) _log(ActionEvents.stepDeleted);
+    if (ok) _log(AnalyticsEvents.stepDeleted);
   }
 
   /// [from] and [to] are already post-removal indices: `onReorderItem` does
@@ -186,7 +187,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final ok = await _persist(() => ref
         .read(actionStepRepositoryProvider)
         .reorderSteps(action.id, ids, at: _now));
-    if (ok) _log(ActionEvents.stepReordered);
+    if (ok) _log(AnalyticsEvents.stepReordered);
   }
 
   Future<void> _move(ActionItem action, ActionStepItem step, int delta) async {
@@ -201,7 +202,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final ok = await _persist(() => ref
         .read(actionStepRepositoryProvider)
         .reorderSteps(action.id, ids, at: _now));
-    if (ok) _log(ActionEvents.stepReordered);
+    if (ok) _log(AnalyticsEvents.stepReordered);
   }
 
   // --------------------------------------------------------- reminder ops --
@@ -241,7 +242,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
 
   Future<void> _removeReminder(ActionReminder reminder) async {
     await ref.read(reminderServiceProvider).cancel(reminder.id);
-    _log(ActionEvents.reminderCancelled);
+    _log(AnalyticsEvents.reminderCancelled);
   }
 
   /// Says exactly what happened. "Saved" and "you will be alerted" are
@@ -262,12 +263,12 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     switch (outcome) {
       case ReminderScheduled():
         _log(updated
-            ? ActionEvents.reminderUpdated
-            : ActionEvents.reminderCreated);
+            ? AnalyticsEvents.reminderUpdated
+            : AnalyticsEvents.reminderCreated);
       case ReminderNeedsPermission():
-        _log(ActionEvents.reminderPermissionDenied);
+        _log(AnalyticsEvents.reminderPermissionDenied);
       case ReminderFailed():
-        _log(ActionEvents.reminderScheduleFailed);
+        _log(AnalyticsEvents.reminderScheduleFailed);
       case _:
         break;
     }
@@ -281,7 +282,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final ok = await _persist(
         () => ref.read(actionRepositoryProvider).complete(action.id, at: _now));
     if (!ok) return;
-    _log(ActionEvents.completed);
+    _log(AnalyticsEvents.actionCompleted);
     // Finishing something means its future nudges are no longer wanted. Past
     // ones are history and are left alone; nothing is recreated on reopen.
     await ref.read(reminderServiceProvider).cancelFutureFor(action.id);
@@ -292,7 +293,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final ok = await _persist(
         () => ref.read(actionRepositoryProvider).reopen(action.id, at: _now));
     if (!ok) return;
-    _log(ActionEvents.reopened);
+    _log(AnalyticsEvents.actionReopened);
     _syncLater();
   }
 
@@ -321,7 +322,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final ok = await _persist(
         () => ref.read(actionRepositoryProvider).archive(action.id, at: _now));
     if (!ok) return;
-    _log(ActionEvents.archived);
+    _log(AnalyticsEvents.actionArchived);
     await ref.read(reminderServiceProvider).cancelFutureFor(action.id);
     _syncLater();
     if (mounted) _leave(context);
@@ -333,7 +334,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final ok = await _persist(
         () => ref.read(actionRepositoryProvider).update(next));
     if (!ok) return;
-    _log(ActionEvents.edited);
+    _log(AnalyticsEvents.actionEdited);
     _syncLater();
   }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +9,8 @@ import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../application/onboarding_controller.dart';
 import 'onboarding_art.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 /// First run: what the product does, and what it does with your information.
 ///
@@ -59,6 +63,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     if (_finishing) return;
     _finishing = true;
     await ref.read(onboardingControllerProvider.notifier).complete();
+    unawaited(
+      ref.read(appAnalyticsProvider).log(AnalyticsEvents.onboardingCompleted),
+    );
     if (!mounted) return;
     context.go(Routes.home);
   }

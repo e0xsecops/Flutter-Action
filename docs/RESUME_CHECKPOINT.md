@@ -1,9 +1,12 @@
 # Resume checkpoint
 
-Updated at the end of Day 17. Read this first when picking the project back up.
+Updated at the end of Day 18. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 18 complete.** Privacy-safe product analytics: a closed event
+  catalogue, parameters allowlisted by key and pinned by value, and a device
+  check proving a typed search query never reaches Firebase.
 - **Day 17 complete.** Hardening. The Day-14 orphaned-mirror privacy gap is
   closed by a deletion-only remote inventory; Firebase's auto-init
   ContentProvider was measured and removed (~540 ms off cold start); the app
@@ -75,6 +78,136 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 18 established
+
+Product analytics that can measure the funnel without ever learning what an
+Action is about.
+
+### The problem this had to solve
+
+Action's subject matter *is* the sensitive material: bills, letters,
+deadlines, amounts, reference numbers, and whatever someone types into search.
+Ordinary analytics practice — log an event, attach some useful context — is
+exactly how that ends up in a dashboard. So the contract is not a policy
+document; it is two mechanisms, and both are tested.
+
+**Names come from a closed catalogue.** `AnalyticsEvents` holds every event
+the app can emit and an `all` set that `validateAnalytics` checks against. A
+name can therefore never be *built* from data: `'action_created_$title'` is
+rejected, not sent.
+
+**Parameters are allowlisted by key and pinned by value.** A key allowlist
+alone would happily carry `capture_type: "Northgate Water invoice.pdf"`, so
+each key also declares the closed set of values it may take —
+`camera|gallery|paste`, `success|needs_review|manual|failed`,
+`system|light|dark`, `yes|no`. Every one of those words is chosen in the
+source file, so no parameter can contain anything a user typed, a document
+said, or a model returned. The single exception is `failure_class`, which
+carries machine words the app itself mints, guarded by a length cap and a
+no-spaces rule so prose cannot hide there.
+
+Violations `assert`, which fires in debug and in `flutter test` and is
+stripped from release. A mistake fails a test rather than shipping; in
+release the bad *parameter* is dropped and the event still counts, because
+losing the event would hide the mistake and sending the parameter would be
+the mistake.
+
+### The seam
+
+`AppAnalytics` is the interface; `FirebaseAppAnalytics` is the only file in
+the app that names `FirebaseAnalytics`. `NoopAppAnalytics` and
+`RecordingAppAnalytics` are the test and cloud-free implementations — and
+both still run the validator, so a test that stubs analytics away does not
+also stub away the rule.
+
+Day 16's gate applies: an event raised before Firebase finishes coming up
+waits rather than throwing, and if Firebase never arrives the event is simply
+lost. Every call is fire-and-forget and every failure is swallowed. Analytics
+that can break the product is worse than no analytics.
+
+The previous `ReviewAnalytics` seam and the two scattered event lists
+(`ReviewEvents`, `ActionEvents`) were folded into the one catalogue, so there
+is now a single place to answer "what can this app measure?".
+
+### The funnel, with no content in it
+
+    capture_started → extraction_succeeded / extraction_manual_fallback
+      → review_confirmed → action_created → action_completed
+
+New events wired this day: `app_opened`, `onboarding_completed`,
+`capture_started/succeeded/failed` (with `capture_type`),
+`extraction_started/succeeded/needs_review/failed` (with
+`extraction_outcome`), `search_opened`, `search_no_results`,
+`privacy_delete_started/completed/partial` (with `deletion_verified`), and
+`appearance_changed` (with `theme_mode`).
+
+Search is the sharpest case and worth stating plainly: **the query is never
+logged**, and neither is the result count or anything about what matched.
+What is recorded is that search was opened and that a search found nothing —
+enough to know whether the feature works, and nothing about what anyone was
+looking for.
+
+Cosmetic interaction is not measured. There is no `glass_opened`, no
+animation telemetry. Analytics here is product behaviour, not design
+surveillance.
+
+### Crash reporting
+
+No `setUserIdentifier`, no `setCustomKey`, no breadcrumb logging anywhere in
+the app — verified by search, not by memory. A stack trace is whatever
+propagated, so the defence has to be upstream: every error this app raises
+itself carries a machine word rather than the thing that caused it.
+`CloudMirrorException('permission_denied')`,
+`NotificationScheduleException`, `ProviderTransportException` with a typed
+kind. Tests pin that, so a future `throw` that interpolates a title fails
+here rather than in a crash report.
+
+### Verified on device
+
+Release build on `emulator-5554`, with Firebase Analytics debug logging
+enabled so the events Firebase actually receives could be read directly.
+Walking onboarding → Home → search → settings produced exactly:
+
+    app_opened, onboarding_completed, search_opened, search_no_results
+
+plus Firebase's own `first_open`, `session_start`, `screen_view`. The search
+that produced `search_no_results` was for the string `zzqq`, and **`zzqq`
+appears zero times in the analytics logs**. The only parameters attached to
+our events are Firebase's automatic ones (`ga_event_origin`,
+`ga_screen_class=MainActivity`, `ga_screen_id`) — and `MainActivity` is
+constant for a Flutter app, so not even the route leaks.
+
+Logcat clean: zero `FATAL EXCEPTION`, `AndroidRuntime`, `E/flutter`,
+`OutOfMemory`, `core/no-app`, `AnalyticsContractViolation`.
+
+### The privacy page now says so
+
+A "Diagnostics" section was added, written to be checkable against the code
+rather than reassuring: anonymous counts of what happened, explicitly not
+contents, explicitly not the anonymous ID or any Action/capture identifier,
+and an honest line about crash reports. Every claim in it corresponds to
+something the contract enforces.
+
+**798 tests** (780 + 18), `flutter analyze` clean.
+
+### Day-18 known limitations
+
+- There is no user-facing analytics toggle. One was not added because a
+  toggle that does not genuinely control collection would be worse than
+  none, and wiring a real one is a product decision with consent
+  implications that no code in this repo settles. The privacy page describes
+  what happens; it does not offer a switch it cannot honour.
+- Firebase's automatic events (`first_open`, `session_start`, `screen_view`,
+  and the `ga_*` parameters) are collected by the SDK, not by this app's
+  seam. They are content-free here — `screen_class` is always
+  `MainActivity` — but they are outside the catalogue's control.
+- The contract is enforced by `assert`, so a release build cannot fail on a
+  violation. That is deliberate: the check runs everywhere a developer or CI
+  will see it, and in release the parameter is dropped rather than sent.
+- Crash *stack traces* are still whatever propagated. The app's own errors
+  are content-free by construction, but a third-party library's exception
+  message is not something this codebase controls.
 
 ## What Day 17 established
 
@@ -521,17 +654,20 @@ this is not a tablet redesign.
 
 ## Next roadmap day
 
-**Day 18 — privacy-safe analytics.** Understand funnel health and reliability
-without turning Action content into telemetry. Nothing that identifies a
-person or reveals what an Action is about may be logged: no title, amount,
-deadline, reference, OCR text, search query, id or uid.
+**Day 19 — release candidate.** Feature freeze: only bugs, crashes, security
+and privacy issues, severe usability problems and release blockers. Version
+and application id audit, manifest and exported-component audit, secret scan,
+AI/OCR trust regression, accessibility, the final glass polish pass, and
+signed APK/AAB artifacts.
 
-Still owed beyond Day 18:
+Still owed:
 
-1. Tablet layout caps and centres; there is deliberately no split view.
-2. Glass is on sheets, the Home Add bar and the Search controls. Onboarding's
+1. No user-facing analytics toggle (Day 18 declined to ship one it could not
+   honour; see the Day-18 limitations).
+2. Tablet layout caps and centres; there is deliberately no split view.
+3. Glass is on sheets, the Home Add bar and the Search controls. Onboarding's
    hero and the Settings header are candidates for the Day-19 polish pass.
-3. Anonymous identity is still device-install-local; no sign-in exists, so a
+4. Anonymous identity is still device-install-local; no sign-in exists, so a
    reinstall's mirror documents belong to an unreachable uid.
 
 ## What Day 14 established

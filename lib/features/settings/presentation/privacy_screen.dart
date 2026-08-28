@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,6 +8,8 @@ import '../../../design/tokens/dimens.dart';
 import '../application/privacy_deletion_service.dart';
 import '../application/settings_providers.dart';
 import 'settings_shell.dart';
+import '../../../core/analytics/app_analytics.dart';
+import '../../../core/analytics/firebase_app_analytics.dart';
 
 /// Where your information lives — and the controls that act on it.
 ///
@@ -119,8 +123,29 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
     if (confirmed != true || !mounted) return;
 
     setState(() => _busy = true);
+    final analytics = ref.read(appAnalyticsProvider);
+    unawaited(analytics.log(AnalyticsEvents.privacyDeleteStarted));
     final outcome =
         await ref.read(privacyDeletionServiceProvider).deleteEverything();
+    // Counts only: whether it finished, and whether the cloud could be
+    // accounted for. Never how many records, never which.
+    unawaited(switch (outcome) {
+      DeletionComplete() => analytics.log(
+          AnalyticsEvents.privacyDeleteCompleted,
+          parameters: {AnalyticsParams.deletionVerified: 'yes'},
+        ),
+      DeletionPartial(:final cloudNotVerified) => analytics.log(
+          AnalyticsEvents.privacyDeletePartial,
+          parameters: {
+            AnalyticsParams.deletionVerified: cloudNotVerified ? 'no' : 'yes',
+          },
+        ),
+      DeletionFailed(:final failureClass) => analytics.log(
+          AnalyticsEvents.privacyDeletePartial,
+          parameters: {AnalyticsParams.failureClass: failureClass},
+        ),
+    });
+
     if (!mounted) return;
     setState(() => _busy = false);
     ref.invalidate(pendingCloudDeletionCountProvider);
@@ -247,6 +272,22 @@ const privacyDataMap = <({String title, List<String> lines})>[
           'and your reminders are not sent.',
       'This is not a backup. There is no way to restore it to a new device, '
           'and losing this installation loses the anonymous ID with it.',
+    ],
+  ),
+  // Day 18. Written to be checkable against the code rather than reassuring:
+  // every claim here corresponds to something the analytics contract
+  // enforces, and the tests fail if it stops being true.
+  (
+    title: 'Diagnostics',
+    lines: [
+      'Action records anonymous counts of what happens in the app — that a '
+          'capture was started, that an extraction worked or did not, that a '
+          'search found nothing, that an Action was completed.',
+      'These are counts, not contents. No title, amount, deadline, reference, '
+          'captured text or search term is ever included, and neither is the '
+          'anonymous ID or any identifier for an Action or capture.',
+      'If the app crashes, the error and where it happened are reported so it '
+          'can be fixed. Action does not attach your data to those reports.',
     ],
   ),
 ];

@@ -5,9 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../design/app_theme.dart';
 import '../features/actions/application/action_providers.dart';
-import '../features/extraction/application/review_analytics.dart';
 import '../features/settings/application/settings_providers.dart';
 import 'router.dart';
+import '../core/analytics/app_analytics.dart';
+import '../core/analytics/firebase_app_analytics.dart';
 
 class ActionApp extends ConsumerStatefulWidget {
   const ActionApp({super.key});
@@ -30,6 +31,11 @@ class _ActionAppState extends ConsumerState<ActionApp> {
 
   Future<void> _startUp() async {
     if (!mounted) return;
+
+    // After the first frame, like everything else here. A launch that is
+    // counted before the inbox appears would be measuring the wrong moment.
+    unawaited(ref.read(appAnalyticsProvider).log(AnalyticsEvents.appOpened));
+
     final scheduler = ref.read(notificationSchedulerProvider);
 
     try {
@@ -64,8 +70,8 @@ class _ActionAppState extends ConsumerState<ActionApp> {
 
   void _openAction(String actionId) {
     if (!mounted) return;
-    ref.read(reviewAnalyticsProvider).log(
-      ActionEvents.reminderNotificationOpened,
+    ref.read(appAnalyticsProvider).log(
+      AnalyticsEvents.reminderOpened,
     );
     // `push`, not `go`: arriving from a notification should still leave a way
     // back to the inbox. A deleted Action lands on the Day-9 not-found state.
