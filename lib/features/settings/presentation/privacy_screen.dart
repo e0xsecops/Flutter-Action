@@ -132,22 +132,46 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
       DeletionPartial(
         :final cloudCopiesRemaining,
         :final capturesRemain,
+        :final cloudNotVerified,
       ) =>
-        _partialMessage(cloudCopiesRemaining, capturesRemain),
+        _partialMessage(
+          cloudCopiesRemaining,
+          capturesRemain,
+          cloudNotVerified,
+        ),
       DeletionFailed() => 'Your data could not be deleted.',
     });
   }
 
-  /// Says which of the two possible leftovers actually applies, rather than
-  /// a single vague "partly deleted" that would leave the user guessing.
-  static String _partialMessage(int cloudRemaining, bool capturesRemain) {
+  /// Says which of the leftovers actually applies, rather than a single vague
+  /// "partly deleted" that would leave the user guessing.
+  ///
+  /// Day 17 added a third case, and it is the subtle one. Everything on this
+  /// device can be gone, every cloud record we could name can be gone, and
+  /// the job can still be unfinished — because we could not reach the cloud
+  /// to *check* whether a copy from an older install is still sitting there.
+  /// Reporting that as "everything has been deleted" would be the exact lie
+  /// this screen exists to avoid.
+  static String _partialMessage(
+    int cloudRemaining,
+    bool capturesRemain,
+    bool cloudNotVerified,
+  ) {
     final leftovers = <String>[
       if (capturesRemain) 'some captures',
       if (cloudRemaining > 0)
         '$cloudRemaining cloud ${cloudRemaining == 1 ? 'record' : 'records'}',
     ];
-    return 'Deleted, apart from ${leftovers.join(' and ')}. '
-        'Action will try again.';
+    if (leftovers.isEmpty) {
+      // Nothing known to be left, but the cloud went unchecked.
+      return 'Everything on this device has been deleted. Action could not '
+          'reach the cloud to confirm nothing is left there, and will check '
+          'again.';
+    }
+    final tail = cloudNotVerified
+        ? ' Action could not finish checking the cloud, and will try again.'
+        : ' Action will try again.';
+    return 'Deleted, apart from ${leftovers.join(' and ')}.$tail';
   }
 
   Future<bool?> _confirm({

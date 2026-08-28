@@ -7,6 +7,8 @@ import '../../../design/tokens/dimens.dart';
 import '../application/reminder_presets.dart';
 import '../domain/action_item.dart';
 
+import 'action_edit_sheets.dart' show popSheetOnce;
+
 /// Choosing when to be reminded.
 ///
 /// Two rules shape this sheet. Nothing is created without an explicit tap, and
@@ -163,7 +165,7 @@ class _ReminderEditorState extends State<_ReminderEditor> {
             const SizedBox(height: Space.lg),
             FilledButton(
               onPressed:
-                  _isPast ? null : () => Navigator.of(context).pop(_chosen),
+                  _isPast ? null : () => popSheetOnce(context, _chosen),
               child: const Text('Set reminder'),
             ),
           ],

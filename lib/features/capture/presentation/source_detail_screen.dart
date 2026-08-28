@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/router.dart';
+import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../../shared/widgets/error_view.dart';
@@ -420,22 +421,21 @@ class _Actions extends ConsumerWidget {
     final saved = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      builder: (sheetContext) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-        ),
+      // Through AppSheet like every other sheet in the app. Day 17 made the
+      // sheet surface glass, and it is AppSheet that paints it — a sheet
+      // built by hand would now come out transparent.
+      builder: (sheetContext) => AppSheet(
+        title: 'Type what it says',
         child: Padding(
-          padding: const EdgeInsets.all(Space.page),
+          padding: EdgeInsets.only(
+            left: Space.page,
+            right: Space.page,
+            bottom: MediaQuery.of(sheetContext).viewInsets.bottom + Space.lg,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: Space.sm),
-              Text(
-                'Type what it says',
-                style: Theme.of(sheetContext).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: Space.lg),
               TextField(
                 controller: controller,
                 autofocus: true,
@@ -451,7 +451,6 @@ class _Actions extends ConsumerWidget {
                     Navigator.of(sheetContext).pop(controller.text),
                 child: const Text('Save'),
               ),
-              const SizedBox(height: Space.sm),
             ],
           ),
         ),

@@ -4,6 +4,7 @@ import 'package:action_app/core/preferences/shared_preferences_store.dart';
 import 'package:action_app/features/actions/application/action_providers.dart';
 import 'package:action_app/features/actions/data/action_cloud_mirror.dart';
 import 'package:action_app/features/actions/data/action_cloud_privacy_service.dart';
+import 'package:action_app/features/actions/data/cloud_privacy_inventory.dart';
 import 'package:action_app/features/actions/data/actions_database.dart';
 import 'package:action_app/features/actions/data/auth_identity_service.dart';
 import 'package:action_app/features/actions/data/drift_action_repository.dart';
@@ -77,6 +78,8 @@ Future<void> pumpApp(
             .overrideWithValue(const NoopActionCloudMirror()),
         actionCloudPrivacyServiceProvider
             .overrideWithValue(const NoopActionCloudPrivacyService()),
+        cloudPrivacyInventoryProvider
+            .overrideWithValue(const NoopCloudPrivacyInventory()),
         notificationSchedulerProvider.overrideWithValue(_scheduler),
         systemSettingsLauncherProvider.overrideWithValue(_launcher),
         appVersionProvider.overrideWith((ref) async => '1.0.0 (1)'),

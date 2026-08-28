@@ -125,12 +125,15 @@ abstract final class AppTheme {
         shape: const RoundedRectangleBorder(borderRadius: Radii.rMd),
       ),
 
-      bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: c.surfaceElevated,
+      bottomSheetTheme: const BottomSheetThemeData(
+        // Transparent because AppSheet paints the surface itself: the glass
+        // needs to see what is behind it, and an opaque route background
+        // would be exactly the thing in the way.
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         modalElevation: 0,
-        shape: const RoundedRectangleBorder(borderRadius: Radii.sheet),
+        shape: RoundedRectangleBorder(borderRadius: Radii.sheet),
         showDragHandle: false,
       ),
 

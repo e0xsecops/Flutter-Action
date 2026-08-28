@@ -51,7 +51,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   /// Finishing and skipping are the same commitment: the user has decided
   /// they are done here. Skipping is not a lesser state to be nagged about
   /// later.
+  /// Guards against a second tap landing while the first is still writing.
+  /// Completing twice is harmless, but navigating twice is not.
+  bool _finishing = false;
+
   Future<void> _finish() async {
+    if (_finishing) return;
+    _finishing = true;
     await ref.read(onboardingControllerProvider.notifier).complete();
     if (!mounted) return;
     context.go(Routes.home);

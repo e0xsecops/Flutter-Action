@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../core/preferences/preference_store.dart';
 import '../../actions/data/action_cloud_privacy_service.dart';
+import '../../actions/data/cloud_privacy_inventory.dart';
 import '../../actions/data/actions_database.dart';
 import '../../actions/data/auth_identity_service.dart';
 import '../../actions/data/notification_scheduler.dart';
@@ -16,7 +17,11 @@ import '../../capture/data/source_store.dart';
 /// the local database that was about to be dropped. Carries an anonymous uid
 /// and Action ids — never a title, amount or date.
 final class PendingCloudDeletion {
-  const PendingCloudDeletion({required this.uid, required this.actionIds});
+  const PendingCloudDeletion({
+    required this.uid,
+    required this.actionIds,
+    this.cloudListed = false,
+  });
 
   /// Null when identity could not be resolved at deletion time; a later
   /// attempt resolves it. The anonymous uid is stable for an install, so a
@@ -24,9 +29,23 @@ final class PendingCloudDeletion {
   final String? uid;
   final Set<String> actionIds;
 
-  bool get isEmpty => actionIds.isEmpty;
+  /// Whether the cloud was successfully *enumerated* during the attempt that
+  /// wrote this record.
+  ///
+  /// Day 17. Without it a retry cannot tell "these are the only documents,
+  /// and one delete failed" from "this is merely what the device happened to
+  /// know". The second case still owes a listing, and the retry performs it.
+  final bool cloudListed;
 
-  String encode() => jsonEncode({'uid': uid, 'ids': actionIds.toList()});
+  /// Nothing owed *and* nothing left to find out. A record with no ids but an
+  /// unverified cloud is not empty — it is an unfinished question.
+  bool get isEmpty => actionIds.isEmpty && cloudListed;
+
+  String encode() => jsonEncode({
+        'uid': uid,
+        'ids': actionIds.toList(),
+        'listed': cloudListed,
+      });
 
   static PendingCloudDeletion? decode(String? raw) {
     if (raw == null || raw.isEmpty) return null;
@@ -38,6 +57,9 @@ final class PendingCloudDeletion {
       return PendingCloudDeletion(
         uid: map['uid'] as String?,
         actionIds: {for (final id in ids) if (id is String) id},
+        // Absent in records written before Day 17: those were made without a
+        // listing, so false is both the compatible and the truthful default.
+        cloudListed: map['listed'] == true,
       );
     } on Object {
       // Unreadable record: treat as nothing owed rather than crashing the
@@ -67,10 +89,22 @@ final class DeletionPartial extends DeletionOutcome {
   const DeletionPartial({
     required this.cloudCopiesRemaining,
     required this.capturesRemain,
+    this.cloudNotVerified = false,
   });
 
   final int cloudCopiesRemaining;
   final bool capturesRemain;
+
+  /// The cloud could not be *listed*, so whether anything remains up there is
+  /// unknown rather than known-zero.
+  ///
+  /// Day 17 added this because the honest answer has three states, not two.
+  /// Deleting every document we could name is not the same as knowing none is
+  /// left: an orphan mirror from a lost install has an id this device never
+  /// had. When the listing fails, the flow has deleted what it could and
+  /// genuinely does not know if that was all — and saying so is the point of
+  /// the whole screen.
+  final bool cloudNotVerified;
 }
 
 /// The local wipe itself failed, so the Actions are still there.
@@ -105,8 +139,9 @@ class PrivacyDeletionService {
     required AuthIdentityService identity,
     required ActionCloudPrivacyService cloud,
     required PreferenceStore preferences,
+    CloudPrivacyInventory inventory = const NoopCloudPrivacyInventory(),
   }) : this._(actions, database, sources, sourceFiles, scheduler, identity,
-            cloud, preferences);
+            cloud, preferences, inventory);
 
   const PrivacyDeletionService._(
     this._actions,
@@ -117,6 +152,7 @@ class PrivacyDeletionService {
     this._identity,
     this._cloud,
     this._preferences,
+    this._inventory,
   );
 
   final ActionRepository _actions;
@@ -127,6 +163,10 @@ class PrivacyDeletionService {
   final AuthIdentityService _identity;
   final ActionCloudPrivacyService _cloud;
   final PreferenceStore _preferences;
+
+  /// Consulted **only** from the two deletion paths below. Nothing else in
+  /// the app holds a reference to it.
+  final CloudPrivacyInventory _inventory;
 
   PendingCloudDeletion? get pending => PendingCloudDeletion.decode(
         _preferences.getString(PreferenceKeys.pendingCloudDeletion),
@@ -150,8 +190,22 @@ class PrivacyDeletionService {
       uid = null;
     }
 
+    // Ask the cloud what it actually holds, before anything is destroyed.
+    // This is the Day-17 orphan fix: the union of "what this device knows
+    // about" and "what is actually up there" is the only set that can honour
+    // the promise the button makes. A null answer means the listing failed,
+    // which is remembered rather than glossed over.
+    final remoteIds = uid == null
+        ? null
+        : await _inventory.listMirroredActionIds(uid);
+    final owedIds = {...actionIds, ...?remoteIds};
+
     // (1) Intent first, while the ids still exist somewhere.
-    await _writePending(PendingCloudDeletion(uid: uid, actionIds: actionIds));
+    await _writePending(PendingCloudDeletion(
+      uid: uid,
+      actionIds: owedIds,
+      cloudListed: remoteIds != null,
+    ));
 
     // (2) No alarm may outlive the Action it belongs to.
     await _cancelEveryScheduledNotification();
@@ -181,12 +235,22 @@ class PrivacyDeletionService {
     }
 
     // (4) Remote last.
-    final cloudRemaining =
-        await _settleCloud(uid: uid, actionIds: actionIds);
-    if (cloudRemaining == 0 && !capturesRemain) return const DeletionComplete();
+    final cloudRemaining = await _settleCloud(
+      uid: uid,
+      actionIds: owedIds,
+      cloudListed: remoteIds != null,
+    );
+    // Completeness needs both: nothing left that we know of, *and* a
+    // successful listing proving there was nothing else. Without the listing
+    // this can only report that it did what it could see to do.
+    final verified = remoteIds != null;
+    if (cloudRemaining == 0 && !capturesRemain && verified) {
+      return const DeletionComplete();
+    }
     return DeletionPartial(
       cloudCopiesRemaining: cloudRemaining,
       capturesRemain: capturesRemain,
+      cloudNotVerified: !verified,
     );
   }
 
@@ -205,7 +269,19 @@ class PrivacyDeletionService {
       }
     }
     if (uid == null) return; // still offline; the record stays for next time
-    await _settleCloud(uid: uid, actionIds: owed.actionIds);
+
+    // A retry is the same explicit deletion flow, finishing. If the original
+    // attempt could not list — it was offline — this is the moment that debt
+    // gets paid, so orphans are picked up now rather than never.
+    Set<String>? remoteIds;
+    if (!owed.cloudListed) {
+      remoteIds = await _inventory.listMirroredActionIds(uid);
+    }
+    await _settleCloud(
+      uid: uid,
+      actionIds: {...owed.actionIds, ...?remoteIds},
+      cloudListed: owed.cloudListed || remoteIds != null,
+    );
   }
 
   /// Deletes what it can remotely and returns how many documents are still
@@ -213,9 +289,21 @@ class PrivacyDeletionService {
   Future<int> _settleCloud({
     required String? uid,
     required Set<String> actionIds,
+    required bool cloudListed,
   }) async {
     if (actionIds.isEmpty) {
-      await _preferences.remove(PreferenceKeys.pendingCloudDeletion);
+      // Nothing owed. The record only clears if the emptiness was *verified*;
+      // an unlisted cloud with no locally known ids is exactly the orphan
+      // case, so the intent is kept and a later launch looks again.
+      if (cloudListed) {
+        await _preferences.remove(PreferenceKeys.pendingCloudDeletion);
+        return 0;
+      }
+      await _writePending(PendingCloudDeletion(
+        uid: uid,
+        actionIds: const {},
+        cloudListed: false,
+      ));
       return 0;
     }
     if (uid == null) {
@@ -225,11 +313,15 @@ class PrivacyDeletionService {
     }
 
     final remaining = await _cloud.deleteMirrored(uid, actionIds);
-    if (remaining.isEmpty) {
+    if (remaining.isEmpty && cloudListed) {
       await _preferences.remove(PreferenceKeys.pendingCloudDeletion);
       return 0;
     }
-    await _writePending(PendingCloudDeletion(uid: uid, actionIds: remaining));
+    await _writePending(PendingCloudDeletion(
+      uid: uid,
+      actionIds: remaining,
+      cloudListed: cloudListed,
+    ));
     return remaining.length;
   }
 

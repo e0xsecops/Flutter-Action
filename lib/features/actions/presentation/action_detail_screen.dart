@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../app/router.dart';
+import '../../../design/components/readable_width.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../../design/tokens/typography.dart';
@@ -86,16 +87,18 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: switch (async) {
-          AsyncLoading() => const LoadingView(),
-          AsyncError() => ErrorView(
-              message: 'This action could not be loaded. It is still stored '
-                  'on this device.',
-            ),
-          AsyncData(:final value) => value == null
-              ? _NotFound(onBack: () => _leave(context))
-              : _Loaded(action: value, state: this),
-        },
+        child: ReadableWidth.list(
+          child: switch (async) {
+            AsyncLoading() => const LoadingView(),
+            AsyncError() => ErrorView(
+                message: 'This action could not be loaded. It is still stored '
+                    'on this device.',
+              ),
+            AsyncData(:final value) => value == null
+                ? _NotFound(onBack: () => _leave(context))
+                : _Loaded(action: value, state: this),
+          },
+        ),
       ),
     );
   }

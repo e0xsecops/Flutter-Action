@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Firebase needs network access. The debug and profile manifests declare
          this separately for the Flutter tool, so without it here release builds
          would be the only variant lacking it. Firebase's own manifests happen to
@@ -67,6 +68,41 @@
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
+        <!-- Firebase ships a ContentProvider that initialises the default
+             FirebaseApp during process creation, before Android has even
+             constructed the Activity and long before Dart runs. It is a
+             convenience for apps that never call initializeApp themselves.
+             This app always has: main() calls Firebase.initializeApp with
+             explicit options, so the provider's only effect here was to do
+             the same work earlier, on the critical path to the first frame.
+
+             Day 16 measured it as the largest remaining pre-frame cost that
+             Dart could not reorder. Day 17 measured removing it, six cold
+             starts each way on the API-36 emulator:
+
+               with the provider:    1809 1916 1924 1948 2006 2067  (~1936 ms)
+               without it:           1283 1319 1391 1398 1483 1497  (~1395 ms)
+
+             ~540 ms, and not one run in the second set was slower than any
+             run in the first. Verified afterwards on device: the default
+             FirebaseApp initialises, Crashlytics starts and fetches its
+             settings, App Check's debug provider activates, anonymous auth
+             succeeds and a pending outbox of Action mirrors drains to zero -
+             which it can only do if auth, App Check and Firestore all work.
+
+             The trade, stated honestly: Crashlytics now starts when Dart asks
+             for it rather than at process creation, so a *native* crash in
+             the first few hundred milliseconds would go unreported. Dart
+             errors are unaffected - main() installs its handlers before
+             anything else can fail, and they defer until FirebaseGate opens.
+
+             If a future Firebase library genuinely requires provider-time
+             initialisation, deleting this block restores the default. -->
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            android:authorities="${applicationId}.firebaseinitprovider"
+            android:exported="false"
+            tools:node="remove" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

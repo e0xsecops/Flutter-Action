@@ -28,6 +28,16 @@ abstract final class Space {
 /// own rhythm, and this is not a tablet redesign.
 abstract final class Breakpoints {
   static const readableContent = 560.0;
+
+  /// Card lists tolerate more width than prose does, because each row is
+  /// short and scanned rather than read line after line. Wider than this and
+  /// a card's title drifts so far from its deadline that the pair stops
+  /// reading as one thing.
+  static const readableList = 720.0;
+
+  /// Above this the window is wide enough that stretching content edge to
+  /// edge stops being a layout and starts being an accident.
+  static const wide = 640.0;
 }
 
 /// Controlled radii. Not everything is rounded, and nothing is a pill unless it

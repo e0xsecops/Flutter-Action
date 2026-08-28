@@ -1,9 +1,14 @@
 # Resume checkpoint
 
-Updated at the end of Day 16. Read this first when picking the project back up.
+Updated at the end of Day 17. Read this first when picking the project back up.
 
 ## Where things stand
 
+- **Day 17 complete.** Hardening. The Day-14 orphaned-mirror privacy gap is
+  closed by a deletion-only remote inventory; Firebase's auto-init
+  ContentProvider was measured and removed (~540 ms off cold start); the app
+  has a liquid/mirror-glass surface of its own; and wide layouts cap and
+  centre instead of stretching.
 - **Day 16 complete.** Performance and resilience. Firebase initialisation left
   the pre-first-frame path behind a `FirebaseGate`; search lost its redundant
   re-folding (29 ms to 20 ms at 500 Actions); the Day-11 midnight staleness is
@@ -70,6 +75,170 @@ change these together, or the write will be rejected.
 - **The local database is the canonical store; the cloud is a mirror.** Local
   success never depends on Firebase, and a cloud failure never rolls back,
   deletes or edits a local Action.
+
+## What Day 17 established
+
+Hardening. The privacy debt Day 14 wrote down is paid, the last large startup
+cost is gone, and the product has a visual language of its own. No new
+features.
+
+### The orphaned cloud mirror, closed
+
+Day 14's limitation, stated plainly at the time: an Action lost locally
+*before* Day 14 — a reinstall, a wiped database, a crash between the mirror
+write and the local commit — leaves a document whose id nothing on the device
+knows. "Delete all my data" could not reach it, because the architecture has
+no remote reads at all.
+
+`CloudPrivacyInventory` (`lib/features/actions/data/`) opens exactly one door
+and no more. It returns **ids and nothing else** — no titles, no payloads, no
+documents — so nothing it hands back can hydrate a screen, restore an Action,
+or reach Home, Search or triage. It runs during an explicit privacy deletion
+or a retry finishing one, never on a timer and never at startup. The deletion
+now works from the *union* of what the device knows and what is actually up
+there.
+
+**No Firestore rules change was needed, and none was made.** The deployed rule
+already grants `allow read` on `users/{uid}/actions/{actionId}`, and `read`
+covers listing; `isOwner(uid)` depends only on the path and the caller's auth,
+never on document contents, which is what makes a whole-collection query
+decidable by the rules engine. The collection sits under the uid, so there is
+no query here that could reach another user's subtree. Catch-all deny is
+untouched.
+
+The honest part is the third outcome. Deleting every record we can name is not
+the same as knowing none is left, so the flow now distinguishes them:
+
+| what happened | what it says |
+| --- | --- |
+| listing worked, nothing left | "Everything has been deleted." |
+| listing worked, something failed | names exactly what is left, retries |
+| **listing failed** | "Everything on this device has been deleted. Action could not reach the cloud to confirm nothing is left there, and will check again." |
+
+`PendingCloudDeletion` gained a `cloudListed` flag so a retry can tell "one
+delete failed" from "we never got to look" — the second still owes a listing,
+and the retry performs it. Records written before today decode as
+`cloudListed: false`, which is both compatible and truthful.
+
+Verified end to end on `emulator-5554` with a 120-Action corpus:
+
+1. **Online delete** → listing succeeds → local rows `0|0|0`, no pending record
+2. **Offline delete** → listing fails → `pending_cloud_deletion_v1` kept with
+   `listed:false`, and completeness is *not* claimed
+3. **Network returns** → relaunch → retry performs the listing → record cleared
+
+### Firebase's ContentProvider: measured, then removed
+
+Day 16 named this the largest remaining pre-frame cost Dart could not reorder,
+and left it alone for want of evidence. Six cold starts each way, profile
+build, API-36 emulator:
+
+| | runs (ms) | median |
+| --- | --- | --- |
+| with `FirebaseInitProvider` | 1809 1916 1924 1948 2006 2067 | **~1936** |
+| without it | 1283 1319 1391 1398 1483 1497 | **~1395** |
+
+~540 ms, and **not one run in the second set was slower than any run in the
+first**. The provider only ever did what `main()` already does explicitly, so
+removing it changes when Firebase comes up, not whether.
+
+Go/no-go was decided on correctness, not the number. Verified on device after
+removal: the default `FirebaseApp` initialises, Crashlytics starts and fetches
+its settings, App Check's debug provider activates, anonymous auth succeeds,
+and a seeded outbox of pending Action mirrors **drained to zero** — which it
+can only do if auth, App Check and Firestore all work.
+
+The trade, stated in the manifest itself: Crashlytics now starts when Dart
+asks rather than at process creation, so a *native* crash in the first few
+hundred milliseconds would go unreported. Dart errors are unaffected — `main()`
+installs its handlers before anything can fail. Deleting the `tools:node`
+block restores the default if a future Firebase library ever needs it.
+
+### Liquid / mirror glass
+
+`GlassSurface` (`lib/design/components/`) is the whole vocabulary: one widget,
+three intensities. It layers a tinted body, a top-edge specular gradient that
+fades by the middle, a hairline that is brighter than the fill, and a soft
+depth shadow. Light glass is mostly white and reads through its highlight;
+dark glass is charcoal with the highlight dropped to 0.055, because a bright
+edge on a dark panel is the difference between glass and sci-fi.
+
+**Where it went, and why only there.** Glass is only honest where something
+passes behind it, and a `BackdropFilter` over a static background is pure cost
+for no picture. So: bottom sheets (every one, via `AppSheet` — the theme's own
+sheet background is transparent now so the widget owns the appearance), the
+Home Add bar (with `extendBody: true`, so cards genuinely scroll under it), and
+the Search field plus filter tray (results run beneath them). Dense Action
+lists stay solid and readable, exactly as Day 15 left them.
+
+The Day-16 performance budget is defended by tests, not intent: blur is
+clipped to each surface's own rounded rect so the read-back is the surface and
+not the screen, sigmas top out at 22, one blur layer per surface, and a test
+asserts a list never sits inside a `BackdropFilter`. Under
+`MediaQuery.highContrast` the blur is dropped **entirely** — not reduced — and
+the border, radius, padding and depth stay, so the layout does not move. That
+is also why nothing in this app uses translucency to communicate: it is depth,
+never meaning.
+
+### Wide layouts
+
+`ReadableWidth` caps and centres rather than stretching: 560 for prose, 720
+for card lists. Applied to Home, Search and Action Detail (onboarding and
+Settings already had it). No second pane, no tablet variant, nothing
+rearranges — below the cap the phone layout is untouched. The glass surfaces
+are capped too, so a tablet does not get a metre-wide control bar.
+
+One bug worth recording, because the test that now guards it is the point: an
+`Align` given bounded-but-loose constraints **fills** them. Wrapping the bottom
+bar in the default therefore grew it to the full screen height and left an
+invisible glass surface swallowing taps meant for the page behind it. Hence
+`shrinkVertically`, and a test that pins both behaviours under exactly the
+constraints a `Scaffold` bottom bar is laid out in.
+
+### Other hardening
+
+- **`FirebaseGate`** — 9 tests covering arrival before/during/after
+  initialisation, 25 concurrent callers sharing one initialisation, late
+  completion, and a closed gate. A sync pass over a closed gate backs off and
+  keeps every row rather than throwing out of an unawaited post-frame call.
+- **Double-tap.** A modal's route stays mounted through its dismissal
+  animation, so a second tap on Save ran the handler again — and the second
+  `pop` closed *the screen underneath*, throwing the user back to the inbox
+  mid-save. `popSheetOnce` checks `ModalRoute.isCurrent`, which flips false the
+  moment the first pop starts. Onboarding's finish got a guard too.
+- **Timezone semantics**, pinned: a date-only deadline is a local calendar day
+  read identically at 00:01 and 23:59; a timestamp is an instant; storage
+  carries no zone so it cannot be re-interpreted into a different day; day
+  counting survives a DST jump in both directions.
+- **RTL sanity** — glass and readable width lay out without overflow under
+  `TextDirection.rtl`.
+
+### Day-17 QA
+
+Release build on `emulator-5554`. Cold start 819/727/840 ms. Home at 120
+Actions with cards blurring correctly through the floating bar; dark mode
+charcoal and intentional; a 1600×2560 tablet viewport capping content and the
+glass bar at a readable width. Logcat across the whole session: **zero**
+`FATAL EXCEPTION`, `AndroidRuntime`, `E/flutter`, `OutOfMemory`,
+`SQLiteException`, `core/no-app`, `RenderFlex`.
+
+**780 tests** (736 + 44), `flutter analyze` clean.
+
+### Day-17 known limitations
+
+- Anonymous identity remains device-install-local. Losing the install loses
+  the id, and with it any mirror document under it — which is also why a
+  reinstall's orphans belong to a *different* uid and are not reachable even
+  by the new inventory. Account recovery is not a Day-17 problem and no
+  sign-in was added.
+- The inventory bills one Firestore document read per mirrored Action during a
+  deletion. Bounded by the corpus and only on an explicit destructive action.
+- Glass is on four surface families. Onboarding's hero and the Settings header
+  were left alone pending the Day-19 polish pass; they are not worse than they
+  were.
+- Wide layouts cap and centre. There is deliberately no split view.
+- Frame timing remains qualitative: `dumpsys gfxinfo` does not track Flutter's
+  surface, so jank was judged from logcat and observation.
 
 ## What Day 16 established
 
@@ -352,17 +521,18 @@ this is not a tablet redesign.
 
 ## Next roadmap day
 
-**Day 17 — hardening.** Carried forward explicitly:
+**Day 18 — privacy-safe analytics.** Understand funnel health and reliability
+without turning Action content into telemetry. Nothing that identifies a
+person or reveals what an Action is about may be logged: no title, amount,
+deadline, reference, OCR text, search query, id or uid.
 
-1. The Day-14 privacy gap: a cloud mirror document whose local Action was lost
-   before Day 14 cannot be found or deleted, because the app never lists
-   remotely. Still owed.
-2. Firebase's auto-init `ContentProvider` is the largest remaining piece of
-   pre-frame work Dart cannot reorder. Disabling it in the manifest and
-   initialising explicitly is the candidate — with measurement first, and only
-   if it actually helps.
-3. Tablet layout: Home, Search and Detail still fill the width rather than
-   adopting a wider layout (carried from Day 15).
+Still owed beyond Day 18:
+
+1. Tablet layout caps and centres; there is deliberately no split view.
+2. Glass is on sheets, the Home Add bar and the Search controls. Onboarding's
+   hero and the Settings header are candidates for the Day-19 polish pass.
+3. Anonymous identity is still device-install-local; no sign-in exists, so a
+   reinstall's mirror documents belong to an unreachable uid.
 
 ## What Day 14 established
 

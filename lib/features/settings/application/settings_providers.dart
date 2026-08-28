@@ -6,6 +6,7 @@ import '../../../core/preferences/preference_store.dart';
 import '../../../core/preferences/shared_preferences_store.dart';
 import '../../actions/application/action_providers.dart';
 import '../../actions/data/action_cloud_privacy_service.dart';
+import '../../actions/data/cloud_privacy_inventory.dart';
 import '../../capture/application/capture_controller.dart';
 import 'privacy_deletion_service.dart';
 
@@ -46,6 +47,13 @@ final actionCloudPrivacyServiceProvider = Provider<ActionCloudPrivacyService>(
   ),
 );
 
+/// Remote enumeration, reachable only from the privacy deletion flow.
+final cloudPrivacyInventoryProvider = Provider<CloudPrivacyInventory>(
+  (ref) => FirestoreCloudPrivacyInventory(
+    gate: ref.watch(firebaseGateProvider),
+  ),
+);
+
 final privacyDeletionServiceProvider = Provider<PrivacyDeletionService>((ref) {
   return PrivacyDeletionService(
     actions: ref.watch(actionRepositoryProvider),
@@ -56,6 +64,7 @@ final privacyDeletionServiceProvider = Provider<PrivacyDeletionService>((ref) {
     identity: ref.watch(authIdentityServiceProvider),
     cloud: ref.watch(actionCloudPrivacyServiceProvider),
     preferences: ref.watch(preferenceStoreProvider),
+    inventory: ref.watch(cloudPrivacyInventoryProvider),
   );
 });
 

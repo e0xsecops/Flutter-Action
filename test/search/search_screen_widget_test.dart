@@ -294,9 +294,6 @@ void main() {
   });
 
   searchTest('archived Actions appear only when asked for', (tester) async {
-    // Wide enough that the whole filter row is on screen: the Archived chip
-    // is deliberately last, being the least expected result.
-    tester.view.physicalSize = const Size(1100, 1400);
     await _repo.create(sampleAction('a1',
         title: 'Old paperwork', status: ActionStatus.archived));
     await pumpSearch(tester);
@@ -305,6 +302,18 @@ void main() {
     await type(tester, 'paperwork');
 
     expect(find.textContaining('No matches for'), findsOneWidget);
+
+    // The Archived chip is deliberately last, being the least expected
+    // result, so it has to be scrolled to. Day 17 capped the control row at a
+    // readable width rather than letting it stretch, so a wider window no
+    // longer brings the chip into view — reaching it is a scroll, exactly as
+    // it is for a person.
+    await tester.dragUntilVisible(
+      find.text('Archived'),
+      find.byType(ListView).first,
+      const Offset(-120, 0),
+    );
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Archived'));
     await tester.pumpAndSettle();

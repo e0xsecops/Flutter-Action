@@ -8,6 +8,21 @@ import '../../extraction/domain/extraction_schema.dart';
 import '../../extraction/domain/money_value.dart';
 import '../domain/action_item.dart';
 
+/// Pops a sheet once, however many times its button is tapped.
+///
+/// A modal's route stays mounted through its dismissal animation, so a second
+/// tap landing in that window runs the same handler again — and the second
+/// `pop` does not close the sheet (it is already going), it closes whatever
+/// was underneath. On the Action Detail screen that means a save quietly
+/// throwing the user back to the inbox. Checking [ModalRoute.isCurrent] costs
+/// nothing and closes the window: it flips false the moment the first pop
+/// starts.
+void popSheetOnce<T>(BuildContext context, T result) {
+  final route = ModalRoute.of(context);
+  if (route == null || !route.isCurrent) return;
+  Navigator.of(context).pop<T>(result);
+}
+
 /// Edit surfaces for a durable Action.
 ///
 /// Each sheet owns one decision, validates with the *same* parsers the
@@ -145,7 +160,7 @@ Future<ActionUrgency?> showUrgencySheet(
               trailing: value == current
                   ? Icon(Icons.check, color: sheetContext.colors.brand)
                   : null,
-              onTap: () => Navigator.of(sheetContext).pop(value),
+              onTap: () => popSheetOnce(sheetContext, value),
             ),
         ],
       ),
@@ -218,7 +233,8 @@ class _TextEditorState extends State<_TextEditor> {
     if (value.isEmpty) return;
     // Callers that asked for a plain String get one; the clearable variant
     // wraps it so "saved" and "cleared" stay distinguishable.
-    Navigator.of(context).pop<Object>(
+    popSheetOnce<Object>(
+      context,
       widget.clearLabel == null ? value : EditSaved<String>(value),
     );
   }
@@ -299,7 +315,7 @@ class _DeadlineEditorState extends State<_DeadlineEditor> {
     }
     // A deadline that was a plain date stays a plain date: the time
     // components are exactly what the user typed, never a zone conversion.
-    Navigator.of(context).pop(EditSaved<DateTime>(parsed));
+    popSheetOnce(context, EditSaved<DateTime>(parsed));
   }
 
   @override
@@ -335,7 +351,7 @@ class _DeadlineEditorState extends State<_DeadlineEditor> {
             const SizedBox(height: Space.xs),
             TextButton(
               onPressed: () =>
-                  Navigator.of(context).pop(const EditCleared<DateTime>()),
+                  popSheetOnce(context, const EditCleared<DateTime>()),
               child: const Text('Remove the deadline'),
             ),
           ],
@@ -371,7 +387,7 @@ class _AmountEditorState extends State<_AmountEditor> {
     // ISO-4217 code, never a float and never an inferred currency.
     switch (MoneyValue.parse(_amount.text.trim(), _currency)) {
       case MoneyParsed(:final value):
-        Navigator.of(context).pop(EditSaved<MoneyValue>(value));
+        popSheetOnce(context, EditSaved<MoneyValue>(value));
       case MoneyRejected(:final error):
         setState(() => _error = error.reason);
     }
@@ -431,7 +447,7 @@ class _AmountEditorState extends State<_AmountEditor> {
             const SizedBox(height: Space.xs),
             TextButton(
               onPressed: () =>
-                  Navigator.of(context).pop(const EditCleared<MoneyValue>()),
+                  popSheetOnce(context, const EditCleared<MoneyValue>()),
               child: const Text('Remove the amount'),
             ),
           ],

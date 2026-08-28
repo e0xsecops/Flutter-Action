@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/router.dart';
+import '../../../design/components/glass_surface.dart';
+import '../../../design/components/readable_width.dart';
 import '../../../design/components/section_header.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
@@ -46,33 +48,57 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        // Results run under the controls rather than stopping below them, so
+        // a row sliding beneath the search field is what makes the field read
+        // as glass. The list carries matching top padding, so nothing is ever
+        // hidden at rest - only while it is being scrolled past.
+        child: Stack(
           children: [
-            _SearchField(
-              controller: _controller,
-              focus: _focus,
-              onChanged: notifier.updateText,
-              onSubmitted: (_) => notifier.searchNow(),
-              onClear: () {
-                _controller.clear();
-                notifier.clear();
-                _focus.requestFocus();
-              },
-              onBack: () => context.canPop()
-                  ? context.pop()
-                  : context.go(Routes.home),
+            Positioned.fill(
+              child: ReadableWidth.list(
+                child: _Results(state: state, topInset: _controlsHeight),
+              ),
             ),
-            _FilterBar(
-              filters: state.query.filters,
-              onChanged: notifier.updateFilters,
+            ReadableWidth.list(
+              child: GlassSurface(
+                borderRadius: Radii.rLg,
+                intensity: GlassIntensity.regular,
+                padding: EdgeInsets.zero,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _SearchField(
+                      controller: _controller,
+                      focus: _focus,
+                      onChanged: notifier.updateText,
+                      onSubmitted: (_) => notifier.searchNow(),
+                      onClear: () {
+                        _controller.clear();
+                        notifier.clear();
+                        _focus.requestFocus();
+                      },
+                      onBack: () => context.canPop()
+                          ? context.pop()
+                          : context.go(Routes.home),
+                    ),
+                    _FilterBar(
+                      filters: state.query.filters,
+                      onChanged: notifier.updateFilters,
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Expanded(child: _Results(state: state)),
           ],
         ),
       ),
     );
   }
 }
+
+/// Height of the floating control block: the field plus the filter row.
+/// Used as the results list's top inset so the first result starts below it.
+const double _controlsHeight = 112;
 
 class _SearchField extends StatelessWidget {
   const _SearchField({
@@ -250,18 +276,24 @@ class _Chip extends StatelessWidget {
 }
 
 class _Results extends StatelessWidget {
-  const _Results({required this.state});
+  const _Results({required this.state, this.topInset = 0});
 
   final SearchState state;
+
+  /// Space reserved for the floating controls above.
+  final double topInset;
 
   @override
   Widget build(BuildContext context) {
     if (state.isIdle) {
-      return const EmptyView(
-        icon: Icons.search,
-        title: 'Search your actions and captures',
-        message: 'Everything is searched on this device. Nothing you type '
-            'here leaves it.',
+      return Padding(
+        padding: EdgeInsets.only(top: topInset),
+        child: const EmptyView(
+          icon: Icons.search,
+          title: 'Search your actions and captures',
+          message: 'Everything is searched on this device. Nothing you type '
+              'here leaves it.',
+        ),
       );
     }
 
@@ -269,17 +301,21 @@ class _Results extends StatelessWidget {
 
     if (results.isEmpty && !results.hasFailure) {
       // Never offered as "ask the AI" — there is nothing to ask.
-      return EmptyView(
-        icon: Icons.search_off,
-        title: 'No matches for "${state.query.trimmed}"',
-        message: state.query.filters.isEmpty
-            ? 'Try fewer words, or a reference number exactly as it appears.'
-            : 'Try fewer words, or clear the filters.',
+      return Padding(
+        padding: EdgeInsets.only(top: topInset),
+        child: EmptyView(
+          icon: Icons.search_off,
+          title: 'No matches for "${state.query.trimmed}"',
+          message: state.query.filters.isEmpty
+              ? 'Try fewer words, or a reference number exactly as it appears.'
+              : 'Try fewer words, or clear the filters.',
+        ),
       );
     }
 
     return CustomScrollView(
       slivers: [
+        SliverToBoxAdapter(child: SizedBox(height: topInset)),
         if (results.hasFailure)
           SliverToBoxAdapter(child: _FailureNotice(results: results)),
         if (results.actions.isNotEmpty) ...[

@@ -1,6 +1,7 @@
 import 'package:action_app/core/preferences/preference_store.dart';
 import 'package:action_app/features/actions/data/action_cloud_privacy_service.dart';
 import 'package:action_app/features/actions/data/actions_database.dart';
+import 'package:action_app/features/actions/data/cloud_privacy_inventory.dart';
 import 'package:action_app/features/actions/data/auth_identity_service.dart';
 import 'package:action_app/features/actions/data/drift_action_repository.dart';
 import 'package:action_app/features/actions/data/drift_reminder_repository.dart';
@@ -60,6 +61,26 @@ class _SpyCloud implements ActionCloudPrivacyService {
   }
 }
 
+/// Stands in for the cloud's list of what it holds.
+///
+/// [failListing] is the offline case, and it is deliberately distinct from an
+/// empty list: one means "nothing is up there", the other means "I could not
+/// find out", and the whole Day-17 honesty argument rests on the difference.
+class _SpyInventory implements CloudPrivacyInventory {
+  _SpyInventory([Set<String>? ids]) : remoteIds = ids ?? <String>{};
+
+  Set<String> remoteIds;
+  bool failListing = false;
+  var listCalls = 0;
+
+  @override
+  Future<Set<String>?> listMirroredActionIds(String uid) async {
+    listCalls++;
+    if (failListing) return null;
+    return {...remoteIds};
+  }
+}
+
 class _BrokenActionRepository implements ActionRepository {
   @override
   Stream<List<ActionItem>> watchAll() =>
@@ -78,6 +99,7 @@ void main() {
   late FakeNotificationScheduler scheduler;
   late _Identity identity;
   late _SpyCloud cloud;
+  late _SpyInventory inventory;
   late InMemoryPreferenceStore prefs;
   late PrivacyDeletionService service;
 
@@ -94,6 +116,7 @@ void main() {
         identity: auth ?? identity,
         cloud: cloud,
         preferences: prefs,
+        inventory: inventory,
       );
 
   setUp(() {
@@ -105,6 +128,7 @@ void main() {
     scheduler = FakeNotificationScheduler();
     identity = _Identity('uid-1');
     cloud = _SpyCloud();
+    inventory = _SpyInventory();
     prefs = InMemoryPreferenceStore({
       PreferenceKeys.onboardingCompleted: true,
       PreferenceKeys.themeMode: 'dark',
@@ -443,6 +467,165 @@ void main() {
 
       expect(scheduler.scheduled, isNotEmpty);
       expect(cloud.calls, isEmpty);
+      expect(service.pending, isNull);
+    });
+  });
+
+
+  /// The Day-14 debt, paid.
+  ///
+  /// A mirror document whose local Action disappeared before it could be
+  /// deleted — a reinstall, a wiped database, a crash between the mirror
+  /// write and the local commit — has an id that nothing on this device
+  /// knows. Day 14 could not reach it, and said so. Day 17 asks the cloud
+  /// what it holds, but *only* here, and only ids.
+  group('orphaned cloud mirrors', () {
+    test('a document the device never knew about is still deleted', () async {
+      await seed(); // a1, a2 locally
+      inventory.remoteIds = {'a1', 'a2', 'orphan-from-old-install'};
+
+      final outcome = await service.deleteEverything();
+
+      expect(outcome, isA<DeletionComplete>());
+      expect(cloud.deleted, {'a1', 'a2', 'orphan-from-old-install'});
+    });
+
+    test('an orphan is deleted even when nothing is left locally', () async {
+      // The worst version of the case: the local database is already empty,
+      // so without listing there would be nothing to ask the cloud about.
+      inventory.remoteIds = {'orphan-a', 'orphan-b'};
+
+      final outcome = await service.deleteEverything();
+
+      expect(outcome, isA<DeletionComplete>());
+      expect(cloud.deleted, {'orphan-a', 'orphan-b'});
+    });
+
+    test('listing happens once, and only inside the deletion', () async {
+      await seed();
+      expect(inventory.listCalls, 0, reason: 'nothing lists before the flow');
+
+      await service.deleteEverything();
+
+      expect(inventory.listCalls, 1);
+    });
+
+    test('the cloud is asked only about this user', () async {
+      await seed();
+      inventory.remoteIds = {'a1'};
+      await service.deleteEverything();
+      expect(cloud.calls, ['uid-1']);
+    });
+
+    test('a listing that fails is never reported as complete', () async {
+      await seed();
+      inventory.failListing = true;
+
+      final outcome = await service.deleteEverything();
+
+      // Every document the device could name went, and the flow still refuses
+      // to claim the job is done — because it could not check for orphans.
+      expect(cloud.deleted, {'a1', 'a2'});
+      final partial = outcome as DeletionPartial;
+      expect(partial.cloudNotVerified, isTrue);
+      expect(partial.cloudCopiesRemaining, 0);
+      expect(partial.capturesRemain, isFalse);
+    });
+
+    test('an unverified cloud keeps the record, even with nothing owed',
+        () async {
+      inventory.failListing = true;
+
+      await service.deleteEverything();
+
+      // Nothing is owed by id, but the question is still open, so the record
+      // survives to make a later launch look again.
+      final owed = service.pending;
+      expect(owed, isNotNull);
+      expect(owed!.isEmpty, isFalse);
+      expect(owed.cloudListed, isFalse);
+    });
+
+    test('a verified empty cloud clears the record', () async {
+      inventory.remoteIds = {};
+
+      final outcome = await service.deleteEverything();
+
+      expect(outcome, isA<DeletionComplete>());
+      expect(service.pending, isNull);
+    });
+
+    test('a retry performs the listing the first attempt could not', () async {
+      await seed();
+      inventory.failListing = true;
+      await service.deleteEverything();
+      expect(service.pending!.cloudListed, isFalse);
+
+      // Network is back: the orphan becomes visible and is removed.
+      inventory.failListing = false;
+      inventory.remoteIds = {'orphan-from-old-install'};
+      await service.retryPendingCloudDeletion();
+
+      expect(cloud.deleted, contains('orphan-from-old-install'));
+      expect(service.pending, isNull);
+    });
+
+    test('a retry does not re-list when the first attempt already did',
+        () async {
+      await seed();
+      inventory.remoteIds = {'a1', 'a2'};
+      cloud.failFor = {'a2'}; // one delete fails, so a retry is owed
+      await service.deleteEverything();
+      expect(inventory.listCalls, 1);
+      expect(service.pending!.cloudListed, isTrue);
+
+      cloud.failFor = {};
+      await service.retryPendingCloudDeletion();
+
+      // The set was already established; asking again would be a remote read
+      // with nothing to learn.
+      expect(inventory.listCalls, 1);
+      expect(service.pending, isNull);
+    });
+
+    test('listing is skipped entirely when there is no identity', () async {
+      await seed();
+      identity.uid = null;
+
+      await service.deleteEverything();
+
+      // No uid means no owner-scoped path to list, and nothing may be claimed.
+      expect(inventory.listCalls, 0);
+      expect(service.pending!.actionIds, {'a1', 'a2'});
+    });
+
+    test('the record remembers that the cloud was listed', () async {
+      await seed();
+      inventory.remoteIds = {'a1', 'a2'};
+      cloud.failFor = {'a1'};
+
+      await service.deleteEverything();
+
+      final stored = PendingCloudDeletion.decode(
+        prefs.getString(PreferenceKeys.pendingCloudDeletion),
+      );
+      expect(stored!.cloudListed, isTrue);
+      expect(stored.actionIds, {'a1'});
+    });
+
+    test('a pre-Day-17 record decodes as not-yet-listed', () {
+      // Records written before this existed carry no flag. Treating the
+      // absence as "listed" would silently inherit the old blind spot.
+      const legacy = '{"uid":"uid-1","ids":["a1"]}';
+      final decoded = PendingCloudDeletion.decode(legacy)!;
+      expect(decoded.cloudListed, isFalse);
+      expect(decoded.actionIds, {'a1'});
+    });
+
+    test('nothing local and a verified empty cloud is a clean no-op', () async {
+      final outcome = await service.deleteEverything();
+      expect(outcome, isA<DeletionComplete>());
+      expect(cloud.calls, isEmpty, reason: 'no ids means no delete call');
       expect(service.pending, isNull);
     });
   });

@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/router.dart';
+import '../../../design/components/glass_surface.dart';
+import '../../../design/components/readable_width.dart';
 import '../../../design/components/section_header.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
@@ -123,7 +125,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     return Scaffold(
-      body: SafeArea(bottom: false, child: body),
+      // The inbox runs the full height and the Add bar floats over it, so
+      // cards pass *behind* the glass rather than stopping above a solid
+      // strip. That is the whole reason the bar is glass: a translucent panel
+      // with nothing moving underneath is just a tinted rectangle.
+      extendBody: true,
+      body: SafeArea(bottom: false, child: ReadableWidth.list(child: body)),
       bottomNavigationBar: const _AddBar(),
     );
   }
@@ -215,7 +222,9 @@ class _Inbox extends StatelessWidget {
               ),
             ),
           ],
-          const SliverToBoxAdapter(child: SizedBox(height: Space.xxl)),
+          // Clears the floating Add bar, so the last card can be scrolled
+          // out from under it and read in full.
+          const SliverToBoxAdapter(child: SizedBox(height: _addBarClearance)),
         ],
       ],
     );
@@ -675,29 +684,24 @@ class _Thumbnail extends StatelessWidget {
   }
 }
 
+/// Enough room below the last card for the floating Add bar plus breathing
+/// space, so nothing important ever sits under it.
+const double _addBarClearance = 104;
+
 class _AddBar extends ConsumerWidget {
   const _AddBar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.colors;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surface,
-        border: Border(
-          top: BorderSide(color: colors.border, width: Strokes.hairline),
-        ),
-      ),
+    return ReadableWidth.list(
+      shrinkVertically: true,
+      child: Padding(
+      padding: const EdgeInsets.fromLTRB(Space.page, 0, Space.page, Space.sm),
       child: SafeArea(
         top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            Space.page,
-            Space.md,
-            Space.page,
-            Space.md,
-          ),
+        child: GlassSurface(
+          borderRadius: Radii.rXl,
+          padding: const EdgeInsets.all(Space.sm),
           child: FilledButton.icon(
             onPressed: () => startCapture(context, ref),
             icon: const Icon(Icons.add_rounded, size: 22),
@@ -705,6 +709,7 @@ class _AddBar extends ConsumerWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }
