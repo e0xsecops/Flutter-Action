@@ -29,7 +29,20 @@ Future<void> startCapture(BuildContext context, WidgetRef ref) async {
   );
 
   if (intent == null || !context.mounted) return;
+  await runCaptureIntent(context, ref, intent);
+}
 
+/// Carries out one capture intent, without the chooser.
+///
+/// Split out of [startCapture] so a shortcut can go straight to the camera or
+/// the paste screen. The sheet is a chooser, not a step: making Today's quick
+/// tiles open it and then require a second tap would be a chooser to choose
+/// something the user already chose.
+Future<void> runCaptureIntent(
+  BuildContext context,
+  WidgetRef ref,
+  CaptureIntent intent,
+) async {
   // Which of the three ways in was used, and nothing else. Never the file,
   // never its path, never what it turns out to contain.
   final how = switch (intent) {

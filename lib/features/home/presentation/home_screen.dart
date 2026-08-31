@@ -48,6 +48,7 @@ import '../../actions/domain/action_item.dart';
 import '../../actions/presentation/action_card.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../capture/domain/source_item.dart';
+import '../../capture/presentation/capture_sheet.dart';
 import '../../capture/presentation/preview_screen.dart';
 import '../../library/presentation/source_card.dart';
 import '../application/action_brief.dart';
@@ -177,6 +178,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             if (brief.isFirstRun)
               const SliverToBoxAdapter(child: CapabilityPreview()),
 
+            // A returning user whose day is quiet gets shortcuts instead of
+            // two-thirds of a blank screen. Not shown alongside the first-run
+            // preview, which already covers the same ground at more length.
+            if (!brief.isFirstRun &&
+                _isSparse(home, brief, awaitingReview.length))
+              const SliverToBoxAdapter(child: QuickStart()),
+
             // Whatever the hero is showing is excluded from the lists below.
             // The hero draws from needsAttention when it can and falls back to
             // upcoming, so the exclusion has to follow it rather than always
@@ -257,6 +265,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
     );
+  }
+
+  /// Whether Today has run out of things to show below the hero.
+  ///
+  /// One item is still sparse: a hero and a single row leaves most of the
+  /// screen empty. Two is where the page starts looking like a list, which is
+  /// the point at which shortcuts would be competing with content rather than
+  /// standing in for it.
+  static bool _isSparse(TriagedHome home, ActionBrief brief, int awaiting) {
+    final below = _without(home.needsAttention, brief.topAction).length +
+        _without(home.upcoming, brief.topAction).length +
+        awaiting;
+    return below <= 1;
   }
 
   /// [items] minus the Action the hero is already showing.
@@ -642,6 +663,171 @@ class _CompletedSummary extends StatelessWidget {
                   Icons.chevron_right_rounded,
                   size: 20,
                   color: colors.textTertiary,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/// Three ways in, for a Today that has run out of things to say.
+///
+/// **Why this exists.** Today is deliberately quiet: it renders only the
+/// sections that have something in them, so a user with one upcoming Action
+/// gets a hero and then two-thirds of a blank screen. That emptiness is
+/// honest and it is also the most common state this app will ever be in —
+/// most days, most people are not behind on anything.
+///
+/// **Why shortcuts rather than an explanation.** The first-run
+/// [CapabilityPreview] already explains what Action does, and repeating it
+/// every quiet day would be a product nagging its user about its own features.
+/// These are not descriptions of capture, they *are* capture: each tile is one
+/// tap from a camera, a picker, or a text field. A blank space filled with
+/// something you would actually press is a different thing from a blank space
+/// filled with copy.
+class QuickStart extends ConsumerWidget {
+  const QuickStart({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Space.page,
+        Space.xxl,
+        Space.page,
+        0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Semantics(
+            header: true,
+            child: Text(
+              'START WITH',
+              style: text.labelSmall?.copyWith(
+                color: colors.textTertiary,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ),
+          const SizedBox(height: Space.md),
+          Row(
+            children: [
+              Expanded(
+                child: _QuickTile(
+                  icon: Icons.photo_camera_rounded,
+                  label: 'Photo',
+                  onTap: () => runCaptureIntent(
+                    context,
+                    ref,
+                    CaptureIntent.camera,
+                  ),
+                ),
+              ),
+              const SizedBox(width: Space.sm),
+              Expanded(
+                child: _QuickTile(
+                  icon: Icons.image_rounded,
+                  label: 'Screenshot',
+                  onTap: () => runCaptureIntent(
+                    context,
+                    ref,
+                    CaptureIntent.gallery,
+                  ),
+                ),
+              ),
+              const SizedBox(width: Space.sm),
+              Expanded(
+                child: _QuickTile(
+                  icon: Icons.notes_rounded,
+                  label: 'Text',
+                  onTap: () => runCaptureIntent(
+                    context,
+                    ref,
+                    CaptureIntent.pasteText,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Space.lg),
+          // Named tools rather than "explore": the two below need no provider
+          // and no key, so this is a promise the app can keep for someone who
+          // has connected nothing.
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton.icon(
+              onPressed: () => context.go(Routes.studio),
+              icon: const Icon(Icons.lightbulb_outline_rounded, size: 18),
+              label: const Text('Check a link, or find keys in some text'),
+              style: TextButton.styleFrom(
+                minimumSize: const Size(0, 40),
+                padding: const EdgeInsets.symmetric(horizontal: Space.sm),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickTile extends StatelessWidget {
+  const _QuickTile({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+
+    // No explicit Semantics wrapper: InkWell already announces the button
+    // role and the label below supplies the name, so adding one produced a
+    // second node with the same words rather than a clearer one.
+    return MergeSemantics(
+      child: Material(
+        color: colors.surfaceElevated,
+        borderRadius: Radii.rMd,
+        child: InkWell(
+          borderRadius: Radii.rMd,
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: Space.lg,
+              horizontal: Space.sm,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: Radii.rMd,
+              border: Border.all(
+                color: colors.border,
+                width: Strokes.hairline,
+              ),
+            ),
+            child: Column(
+              children: [
+                Icon(icon, size: 22, color: colors.brand),
+                const SizedBox(height: Space.sm),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: text.labelMedium?.copyWith(
+                    color: colors.textPrimary,
+                  ),
                 ),
               ],
             ),
