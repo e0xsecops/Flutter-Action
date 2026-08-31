@@ -11,6 +11,9 @@ import '../features/capture/presentation/source_detail_screen.dart';
 import '../features/extraction/domain/extraction_result.dart';
 import '../features/extraction/presentation/extraction_review_screen.dart';
 import '../features/home/presentation/home_screen.dart';
+import '../features/intelligence/presentation/intelligence_settings_screen.dart';
+import '../features/intelligence/presentation/studio_screen.dart';
+import '../features/intelligence/presentation/tool_run_screen.dart';
 import '../features/onboarding/application/onboarding_controller.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/search/presentation/search_screen.dart';
@@ -35,6 +38,10 @@ abstract final class Routes {
   static const settings = '/settings';
   static const settingsPrivacy = '/settings/privacy';
   static const settingsHelp = '/settings/help';
+  static const settingsIntelligence = '/settings/intelligence';
+
+  static const studio = '/studio';
+  static const toolPattern = '/studio/tool/:id';
 
   /// Debug builds only — see the route table.
   static const diagnostics = '/diagnostics';
@@ -43,6 +50,12 @@ abstract final class Routes {
   static String source(String id) => '/source/$id';
   static String sourceReview(String id) => '/source/$id/review';
   static String action(String id) => '/action/$id';
+
+  /// A tool, optionally already pointed at a source. The source travels as a
+  /// query parameter so a link into a tool from Source Detail survives a
+  /// restart the same way an Action deep link does.
+  static String tool(String id, {String? sourceId}) =>
+      sourceId == null ? '/studio/tool/$id' : '/studio/tool/$id?source=$sourceId';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -98,6 +111,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SearchScreen(),
       ),
       GoRoute(
+        path: Routes.studio,
+        builder: (context, state) => const StudioScreen(),
+      ),
+      GoRoute(
+        path: Routes.toolPattern,
+        builder: (context, state) => ToolRunScreen(
+          toolId: state.pathParameters['id']!,
+          sourceId: state.uri.queryParameters['source'],
+        ),
+      ),
+      GoRoute(
         path: Routes.settings,
         builder: (context, state) => const SettingsScreen(),
         routes: [
@@ -110,6 +134,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'help',
             builder: (context, state) => const HelpScreen(),
+          ),
+          GoRoute(
+            path: 'intelligence',
+            builder: (context, state) => const IntelligenceSettingsScreen(),
           ),
         ],
       ),

@@ -74,6 +74,18 @@ class SettingsScreen extends ConsumerWidget {
           ],
         ),
         SettingsSection(
+          title: 'Intelligence',
+          footnote: 'Action works without AI. Connecting your own provider '
+              'adds document analysis, planning and drafting tools.',
+          children: [
+            SettingsRow(
+              label: 'AI provider',
+              description: 'Use your own account and API key.',
+              onTap: () => context.push(Routes.settingsIntelligence),
+            ),
+          ],
+        ),
+        SettingsSection(
           title: 'Privacy & data',
           children: [
             SettingsRow(

@@ -480,6 +480,15 @@ void main() {
       await openSettings(tester);
       expect(tester.takeException(), isNull);
 
+      // At 1.8x the page is taller than the viewport, and Settings is a lazy
+      // sliver list, so the privacy row is not built until it is scrolled to.
+      // Scrolling first keeps this asserting what it always asserted - that
+      // the page survives large text and privacy is still reachable - rather
+      // than depending on the row happening to sit above the fold.
+      await tester.scrollUntilVisible(
+        find.text('Where your information lives'),
+        200,
+      );
       await tester.tap(find.text('Where your information lives'));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
