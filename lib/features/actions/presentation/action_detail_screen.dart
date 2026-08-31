@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../app/router.dart';
+import '../../intelligence/application/intelligence_context.dart';
 import '../../../design/components/readable_width.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
@@ -468,6 +469,7 @@ class _Loaded extends ConsumerWidget {
                 child: _Reminders(action: action, state: state),
               ),
               SliverToBoxAdapter(child: _WhyThisMatters(action: action)),
+              SliverToBoxAdapter(child: _ActionIntelligence(action: action)),
               SliverToBoxAdapter(child: _Provenance(action: action)),
               const SliverToBoxAdapter(child: SizedBox(height: Space.xxxl)),
             ],
@@ -1382,4 +1384,54 @@ String _friendlyDate(DateTime value) {
   final now = DateTime.now();
   return DateFormat(value.year == now.year ? 'd MMM' : 'd MMM yyyy')
       .format(value);
+}
+
+/// Contextual Intelligence entry points for one Action.
+///
+/// Placed below the plan and above provenance: it is something to do *with*
+/// the Action once you have read it, not a headline. Which tools appear is
+/// decided from the Action's own shape - a plan with no steps wants steps, a
+/// half-finished one is where missing details actually bite - never by asking
+/// a model to choose, which would spend the user's money to draw a menu.
+class _ActionIntelligence extends StatelessWidget {
+  const _ActionIntelligence({required this.action});
+
+  final ActionItem action;
+
+  @override
+  Widget build(BuildContext context) {
+    final tools = recommendedForAction(action);
+    if (tools.isEmpty) return const SizedBox.shrink();
+
+    final text = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Space.page,
+        Space.xxl,
+        Space.page,
+        0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Get help with this', style: text.titleSmall),
+          const SizedBox(height: Space.md),
+          Wrap(
+            spacing: Space.sm,
+            runSpacing: Space.sm,
+            children: [
+              for (final tool in tools)
+                ActionChip(
+                  label: Text(tool.title),
+                  onPressed: () => context.push(
+                    Routes.tool(tool.id, actionId: action.id),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

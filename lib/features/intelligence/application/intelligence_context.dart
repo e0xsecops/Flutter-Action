@@ -6,6 +6,7 @@
 /// local database. See `docs/v2/AI_SECURITY_THREAT_MODEL.md` (T4).
 library;
 
+import '../../actions/domain/action_item.dart';
 import '../../capture/domain/source_item.dart';
 import '../domain/ai_request.dart';
 import '../domain/intelligence_tool.dart';
@@ -72,4 +73,116 @@ List<IntelligenceToolDefinition> recommendedFor(SourceItem source) {
         )
       : SourceSignals(characterCount: 0, isImage: source.hasImage);
   return ToolRecommendations.forSource(signals);
+}
+
+/// Renders an Action as text a tool can reason about.
+///
+/// **Only the Action's own fields, never the whole record set.** A tool pointed
+/// at one Action sees that Action: its title, what it is for, what is due, what
+/// it costs, its confirmed facts and its steps. It does not see the user's
+/// other Actions, their sources, or anything the user did not point it at.
+///
+/// Facts are included because they are the part the user already confirmed —
+/// they are the most trustworthy thing Action holds, and a plan built without
+/// them would ignore the reference number the whole task turns on.
+String describeAction(ActionItem action) {
+  final buffer = StringBuffer()..writeln('Title: ${action.title}');
+
+  if (action.summary case final summary? when summary.isNotEmpty) {
+    buffer.writeln('Summary: $summary');
+  }
+  buffer.writeln('Status: ${action.status.name}');
+  buffer.writeln('Urgency: ${action.urgency.name}');
+
+  if (action.dueAt case final due?) {
+    // Date-only stays date-only: inventing a time the user never set would put
+    // a fabricated deadline in front of a model asked to plan around it.
+    final at = due.wallClock;
+    buffer.writeln(
+      'Due: ${at.year}-${at.month.toString().padLeft(2, '0')}-'
+      '${at.day.toString().padLeft(2, '0')}'
+      '${due.isDateOnly ? '' : ' ${at.hour.toString().padLeft(2, '0')}:'
+          '${at.minute.toString().padLeft(2, '0')}'}',
+    );
+  }
+  if (action.amount case final amount?) {
+    buffer.writeln('Amount: $amount');
+  }
+  if (action.recommendedNextStep case final next? when next.isNotEmpty) {
+    buffer.writeln('Recommended next step: $next');
+  }
+  if (action.whyThisMatters case final why? when why.isNotEmpty) {
+    buffer.writeln('Why it matters: $why');
+  }
+
+  if (action.facts.isNotEmpty) {
+    buffer.writeln('Confirmed details:');
+    for (final fact in action.facts) {
+      buffer.writeln('- ${fact.label}: ${fact.value}');
+    }
+  }
+
+  if (action.steps.isNotEmpty) {
+    buffer.writeln('Steps so far:');
+    for (final step in action.steps) {
+      buffer.writeln(
+        '- [${step.isCompleted ? 'x' : ' '}] ${step.title}'
+        '${step.description == null ? '' : ' — ${step.description}'}',
+      );
+    }
+  }
+
+  return buffer.toString().trimRight();
+}
+
+/// Builds the input for a run over one Action.
+IntelligenceRunInput buildActionRunInput({
+  required ActionItem action,
+  String? question,
+  String? mode,
+}) {
+  return IntelligenceRunInput(
+    // Fenced as source material like any other input: an Action's fields came
+    // from a document originally, so text inside them is no more trustworthy
+    // than the document was.
+    parts: [
+      AiSourceTextPart(
+        text: describeAction(action),
+        sourceId: action.id,
+        label: 'Action',
+      ),
+    ],
+    question: question,
+    mode: mode,
+    sourceLabels: {action.id: action.title},
+  );
+}
+
+/// Tools worth offering on an Action, from what the Action already contains.
+///
+/// Deterministic, like the source recommendations: a plan with no steps wants
+/// steps; one that came from correspondence wants a reply.
+List<IntelligenceToolDefinition> recommendedForAction(ActionItem action) {
+  final picks = <IntelligenceToolDefinition>[];
+
+  void add(IntelligenceToolDefinition tool) {
+    if (!picks.contains(tool)) picks.add(tool);
+  }
+
+  for (final tool in ToolRegistry.all) {
+    if (!tool.acceptedInputs.contains(IntelligenceInputKind.action)) continue;
+
+    final wanted = switch (tool.id) {
+      // Nothing to break down yet.
+      'action-plan' || 'smart-checklist' => action.steps.isEmpty,
+      // A half-finished plan is where gaps actually bite.
+      'missing-information' => action.steps.isNotEmpty,
+      'deadline-finder' => action.dueAt == null,
+      'draft-reply' => true,
+      _ => false,
+    };
+    if (wanted) add(tool);
+  }
+
+  return picks.take(3).toList();
 }

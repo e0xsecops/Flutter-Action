@@ -54,8 +54,15 @@ abstract final class Routes {
   /// A tool, optionally already pointed at a source. The source travels as a
   /// query parameter so a link into a tool from Source Detail survives a
   /// restart the same way an Action deep link does.
-  static String tool(String id, {String? sourceId}) =>
-      sourceId == null ? '/studio/tool/$id' : '/studio/tool/$id?source=$sourceId';
+  static String tool(String id, {String? sourceId, String? actionId}) {
+    final query = <String>[
+      if (sourceId != null) 'source=$sourceId',
+      if (actionId != null) 'action=$actionId',
+    ];
+    return query.isEmpty
+        ? '/studio/tool/$id'
+        : '/studio/tool/$id?${query.join('&')}';
+  }
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -119,6 +126,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => ToolRunScreen(
           toolId: state.pathParameters['id']!,
           sourceId: state.uri.queryParameters['source'],
+          actionId: state.uri.queryParameters['action'],
         ),
       ),
       GoRoute(

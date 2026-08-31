@@ -12,7 +12,11 @@ import 'package:action_app/features/capture/application/capture_controller.dart'
 import 'package:action_app/features/capture/data/ocr_service.dart';
 import 'package:action_app/features/capture/domain/ocr_result.dart';
 import 'package:action_app/features/capture/domain/source_item.dart';
+import 'package:action_app/features/actions/domain/action_item.dart';
+import 'package:action_app/features/extraction/domain/extraction_schema.dart';
+import 'package:action_app/features/intelligence/application/intelligence_context.dart';
 import 'package:action_app/features/intelligence/application/intelligence_providers.dart';
+import 'package:action_app/features/intelligence/domain/ai_request.dart';
 import 'package:action_app/features/intelligence/domain/ai_provider_config.dart';
 import 'package:action_app/features/settings/application/settings_providers.dart';
 import 'package:action_app/features/settings/data/system_settings_launcher.dart';
@@ -728,6 +732,83 @@ void main() {
     test('says which tools genuinely stay local', () {
       final all = privacyDataMap.expand((g) => g.lines).join(' ');
       expect(all, contains('Two tools never send anything'));
+    });
+  });
+
+  group('Actions are context too', () {
+    test('an Action renders as its own fields and nothing else', () {
+      final action = sampleAction(
+        'a1',
+        title: 'Renew the car insurance',
+        urgency: ActionUrgency.critical,
+        dueAt: ActionDue(DateTime(2026, 8, 18)),
+        steps: [sampleStep('s1', title: 'Compare the quote', order: 0)],
+        facts: const [
+          ActionFactItem(
+            key: 'reference',
+            label: 'Reference',
+            value: 'MTR-4471-08',
+            editedByUser: false,
+          ),
+        ],
+      );
+
+      final described = describeAction(action);
+
+      expect(described, contains('Renew the car insurance'));
+      // Confirmed facts travel: they are the most trustworthy thing Action
+      // holds, and a plan without the reference ignores what the task hinges on.
+      expect(described, contains('MTR-4471-08'));
+      expect(described, contains('Compare the quote'));
+      expect(described, contains('2026-08-18'));
+    });
+
+    test('a date-only deadline does not gain an invented time', () {
+      final action = sampleAction(
+        'a1',
+        title: 'x',
+        dueAt: ActionDue(DateTime(2026, 8, 18)),
+      );
+      final lines = describeAction(action).split('\n');
+      expect(lines, contains('Due: 2026-08-18'));
+      expect(describeAction(action), isNot(contains('00:00')));
+    });
+
+    test('a plan with no steps is offered steps', () {
+      final action = sampleAction('a1', title: 'x');
+      expect(
+        recommendedForAction(action).map((t) => t.id),
+        contains('action-plan'),
+      );
+    });
+
+    test('a plan that already has steps is offered gaps instead', () {
+      final action = sampleAction(
+        'a1',
+        title: 'x',
+        steps: [sampleStep('s1', title: 'Done something', order: 0)],
+      );
+      final ids = recommendedForAction(action).map((t) => t.id);
+      expect(ids, contains('missing-information'));
+      expect(ids, isNot(contains('action-plan')));
+    });
+
+    test('never offers more than three', () {
+      final action = sampleAction('a1', title: 'x');
+      expect(recommendedForAction(action).length, lessThanOrEqualTo(3));
+    });
+
+    test('the Action context carries only that Action', () {
+      final action = sampleAction('a1', title: 'The one I picked');
+      final input = buildActionRunInput(action: action);
+
+      expect(input.parts, hasLength(1));
+      expect(input.parts.single, isA<AiSourceTextPart>());
+      // Fenced like any other source: an Action's fields came from a document,
+      // so text inside them is no more trustworthy than that document was.
+      final part = input.parts.single as AiSourceTextPart;
+      expect(part.sourceId, 'a1');
+      expect(part.text, contains('The one I picked'));
     });
   });
 }

@@ -16,6 +16,8 @@ import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../../shared/widgets/empty_view.dart';
 import '../../capture/application/capture_controller.dart';
+import '../../actions/application/action_providers.dart';
+import '../../actions/domain/action_item.dart';
 import '../../capture/domain/source_item.dart';
 import '../application/intelligence_context.dart';
 import '../application/intelligence_providers.dart';
@@ -30,12 +32,24 @@ import 'connect_provider_sheet.dart';
 import 'intelligence_result_view.dart';
 
 class ToolRunScreen extends ConsumerStatefulWidget {
-  const ToolRunScreen({super.key, required this.toolId, this.sourceId});
+  const ToolRunScreen({
+    super.key,
+    required this.toolId,
+    this.sourceId,
+    this.actionId,
+  });
 
   final String toolId;
 
   /// Pre-selects a source when arriving from Source Detail.
   final String? sourceId;
+
+  /// Fixes the context to one Action when arriving from Action Detail.
+  ///
+  /// Unlike [sourceId] this is not a pre-selection the user can change: they
+  /// asked about this Action, so the picker is replaced by a statement of what
+  /// is being worked on.
+  final String? actionId;
 
   @override
   ConsumerState<ToolRunScreen> createState() => _ToolRunScreenState();
@@ -70,7 +84,30 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
 
   IntelligenceToolDefinition? get _tool => ToolRegistry.byId(widget.toolId);
 
+  /// The Action this run is about, when one was named.
+  ActionItem? get _action {
+    final id = widget.actionId;
+    if (id == null) return null;
+    final actions = ref.read(actionsStreamProvider).value;
+    if (actions == null) return null;
+    for (final action in actions) {
+      if (action.id == id) return action;
+    }
+    return null;
+  }
+
   IntelligenceRunInput _buildInput(List<SourceItem> allSources) {
+    final action = _action;
+    if (action != null) {
+      return buildActionRunInput(
+        action: action,
+        question: _questionController.text.trim().isEmpty
+            ? null
+            : _questionController.text.trim(),
+        mode: _mode,
+      );
+    }
+
     final chosen =
         allSources.where((s) => _selectedSourceIds.contains(s.id)).toList();
     return buildRunInput(
@@ -237,7 +274,10 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
                   if (mounted) setState(() {});
                 })
               else ...[
-                _sourcePicker(tool, usable),
+                if (_action case final action?)
+                  _FixedContext(label: action.title)
+                else
+                  _sourcePicker(tool, usable),
                 if (tool.requiresQuestion) _questionField(),
                 if (tool.acceptedInputs
                     .contains(IntelligenceInputKind.freeText))
@@ -594,6 +634,45 @@ class _ResultActions extends StatelessWidget {
           label: const Text('Run again'),
         ),
       ],
+    );
+  }
+}
+
+/// What this run is about, when the user arrived from an Action.
+///
+/// A statement rather than a picker: they tapped a tool on a specific Action,
+/// so offering them a list to choose from would be asking a question they have
+/// already answered.
+class _FixedContext extends StatelessWidget {
+  const _FixedContext({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Space.lg),
+      child: GlassSurface(
+        intensity: GlassIntensity.subtle,
+        padding: const EdgeInsets.all(Space.md),
+        child: Row(
+          children: [
+            Icon(Icons.link, size: 18, color: context.colors.textSecondary),
+            const SizedBox(width: Space.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Working on', style: text.bodySmall),
+                  Text(label, style: text.titleSmall),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
