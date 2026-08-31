@@ -155,15 +155,19 @@ void main() {
       expect(find.text('Appearance'), findsOneWidget);
     });
 
-    settingsTest('it is four small groups, not a wall of switches',
+    settingsTest('it is five small groups, not a wall of switches',
         (tester) async {
       await pumpApp(tester, onboardedPreferences());
       await openSettings(tester);
 
-      expect(find.text('PREFERENCES'), findsOneWidget);
+      // V2 split the old "Privacy & data" row in two: the controls that
+      // actually protect something now live behind Security, and the
+      // explanation of where data goes stays where it was.
+      expect(find.text('PERSONALISE'), findsOneWidget);
+      expect(find.text('INTELLIGENCE'), findsOneWidget);
+      expect(find.text('PRIVACY & SECURITY'), findsOneWidget);
       expect(find.text('REMINDERS'), findsOneWidget);
-      expect(find.text('PRIVACY & DATA'), findsOneWidget);
-      expect(find.text('HELP'), findsOneWidget);
+      expect(find.text('ACTION'), findsOneWidget);
       // No developer configuration is on show.
       expect(find.textContaining('Firestore'), findsNothing);
       expect(find.textContaining('schemaVersion'), findsNothing);

@@ -214,7 +214,16 @@ class AppLockedController extends Notifier<bool> {
   bool _authenticating = false;
 
   @override
-  bool build() => ref.watch(protectionSettingsProvider).appLockEnabled;
+  bool build() {
+    // `read`, deliberately, not `watch`.
+    //
+    // Watching re-runs this whenever the setting changes, which meant the
+    // instant a user switched App Lock *on* the app locked itself and demanded
+    // the credential they had just supplied to turn it on. The question this
+    // provider answers is "was Action locked when it started", and that is
+    // asked once.
+    return ref.read(protectionSettingsProvider).appLockEnabled;
+  }
 
   void noteLeftForeground({DateTime? at}) {
     if (_authenticating) return;

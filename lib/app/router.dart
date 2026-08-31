@@ -21,6 +21,7 @@ import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/search/presentation/search_screen.dart';
 import '../features/settings/presentation/help_screen.dart';
 import '../features/settings/presentation/privacy_screen.dart';
+import '../features/settings/presentation/security_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import 'action_shell.dart';
 
@@ -40,6 +41,7 @@ abstract final class Routes {
   static const sourceReviewPattern = '/source/:id/review';
   static const actionPattern = '/action/:id';
   static const settings = '/settings';
+  static const settingsSecurity = '/settings/security';
   static const settingsPrivacy = '/settings/privacy';
   static const settingsHelp = '/settings/help';
   static const settingsIntelligence = '/settings/intelligence';
@@ -206,6 +208,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           // Nested, so the back stack reads Settings -> Privacy rather than
           // dropping the user onto Home from a sub-page.
+          GoRoute(
+            path: 'security',
+            builder: (context, state) => const SecurityScreen(),
+          ),
           GoRoute(
             path: 'privacy',
             builder: (context, state) => const PrivacyScreen(),

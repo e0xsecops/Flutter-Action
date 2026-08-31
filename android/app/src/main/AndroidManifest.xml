@@ -50,7 +50,25 @@
     <application
         android:label="Action"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules">
+        <!-- Backup is off, deliberately, and this is a correctness fix rather
+             than a preference. The privacy screen tells the user there is no
+             way to restore Action to a new device and that losing this
+             installation loses the anonymous ID with it. Android's Auto Backup
+             defaults to on, so without these three attributes the database,
+             the capture files and the preferences would be copied to the
+             user's Google account and that statement would be false.
+
+             allowBackup/fullBackupContent cover cloud backup on every version;
+             data_extraction_rules.xml covers Android 12+ device-to-device
+             transfer, which the flags alone do not. See
+             docs/v2/STORAGE_SECURITY_AUDIT.md.
+
+             If a real backup feature is ever built it belongs here as an
+             explicit, disclosed choice — not as a default nobody decided on. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
