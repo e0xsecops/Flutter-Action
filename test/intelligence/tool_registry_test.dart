@@ -34,13 +34,15 @@ AiResponse jsonResponse(Map<String, dynamic> body) =>
 
 void main() {
   group('registry', () {
-    test('holds exactly the fifteen capabilities', () {
-      expect(ToolRegistry.all, hasLength(15));
+    test('holds every capability, and no duplicates', () {
+      // Seventeen at V2: the original fifteen plus the credential scanner and
+      // the link inspector, both local.
+      expect(ToolRegistry.all, hasLength(17));
     });
 
     test('every id is unique and stable-looking', () {
       final ids = ToolRegistry.all.map((t) => t.id).toSet();
-      expect(ids, hasLength(15));
+      expect(ids, hasLength(17));
       for (final id in ids) {
         expect(id, matches(RegExp(r'^[a-z0-9-]+$')), reason: id);
       }
@@ -52,7 +54,7 @@ void main() {
       expect(ToolRegistry.inCategory(IntelligenceCategory.plan), hasLength(4));
       expect(ToolRegistry.inCategory(IntelligenceCategory.create), hasLength(3));
       expect(ToolRegistry.inCategory(IntelligenceCategory.extract), hasLength(2));
-      expect(ToolRegistry.inCategory(IntelligenceCategory.verify), hasLength(2));
+      expect(ToolRegistry.inCategory(IntelligenceCategory.verify), hasLength(4));
     });
 
     test('exactly one execution mode is set per tool', () {
@@ -67,8 +69,15 @@ void main() {
 
     test('the local tools need no provider', () {
       // The product promise: some of this works before you connect anything.
-      expect(ToolRegistry.local.map((t) => t.id),
-          containsAll(['redaction-assistant', 'authenticity-inspector']));
+      expect(
+        ToolRegistry.local.map((t) => t.id),
+        containsAll([
+          'redaction-assistant',
+          'authenticity-inspector',
+          'credential-scanner',
+          'link-inspector',
+        ]),
+      );
       for (final tool in ToolRegistry.local) {
         expect(tool.localStrategy, isNotNull);
       }

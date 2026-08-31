@@ -52,6 +52,8 @@ enum ToolGlyph {
   deadline,
   shield,
   provenance,
+  credential,
+  link,
 }
 
 /// What a tool can be pointed at.

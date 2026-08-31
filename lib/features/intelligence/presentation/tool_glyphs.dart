@@ -28,6 +28,8 @@ IconData iconForGlyph(ToolGlyph glyph) => switch (glyph) {
       ToolGlyph.deadline => Icons.event_outlined,
       ToolGlyph.shield => Icons.shield_outlined,
       ToolGlyph.provenance => Icons.verified_outlined,
+      ToolGlyph.credential => Icons.key_outlined,
+      ToolGlyph.link => Icons.link_rounded,
     };
 
 /// The category's own mark, for the section header.

@@ -9,7 +9,14 @@ import '../data/tools/verify_tools.dart';
 import 'intelligence_tool.dart';
 
 abstract final class ToolRegistry {
-  /// The fifteen, in the order the Studio presents them.
+  /// Every capability, in the order the Studio presents them.
+  ///
+  /// VERIFY grew by two at V2, and both additions are local: a credential
+  /// scanner and a link inspector. They earned their place by answering
+  /// questions no existing tool did — "is there a live key in what I am about
+  /// to send" is not the same question as "is there personal data in it" — and
+  /// by needing no provider, which is what lets someone who has connected
+  /// nothing still get something out of this screen.
   static const List<IntelligenceToolDefinition> all = [
     // UNDERSTAND
     documentIntelligenceTool,
@@ -30,6 +37,8 @@ abstract final class ToolRegistry {
     deadlineFinderTool,
     // VERIFY
     redactionTool,
+    credentialScannerTool,
+    linkInspectorTool,
     authenticityTool,
   ];
 
