@@ -10,7 +10,10 @@ import '../../intelligence/application/intelligence_context.dart';
 import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../design/ambient/ambient_background.dart';
 import '../../../shared/widgets/error_view.dart';
+import '../../actions/application/action_providers.dart';
+import '../../actions/domain/action_item.dart';
 import '../../extraction/application/action_review_state.dart'
     show sourceReadyForExtraction;
 import '../application/capture_controller.dart';
@@ -32,8 +35,21 @@ class SourceDetailScreen extends ConsumerWidget {
     final sources = ref.watch(sourcesProvider);
     final item = sources.value?.where((s) => s.id == id).firstOrNull;
 
-    return Scaffold(
+    // What this capture already became. Library has derived this since V2 so a
+    // card could say "Action created" instead of inviting the user to review
+    // the same notice twice; this screen was still asking them to.
+    final created = <ActionItem>[
+      for (final action in ref.watch(actionsStreamProvider).value ??
+          const <ActionItem>[])
+        if (action.sourceId == id) action,
+    ];
+
+    return AmbientBackground(
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         title: const Text('What we read'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -50,13 +66,14 @@ class SourceDetailScreen extends ConsumerWidget {
       ),
       body: item == null
           ? const ErrorView(message: 'That capture is no longer available.')
-          : _Body(item: item),
+          : _Body(item: item, created: created),
       // The bridge into review: the one production entry point to
       // extraction. Only offered once the capture actually has text to
       // interpret — the review flow's manual path covers everything else.
       bottomNavigationBar: item != null && sourceReadyForExtraction(item)
-          ? _ReviewBar(id: id)
+          ? _ReviewBar(id: id, created: created)
           : null,
+      ),
     );
   }
 
@@ -88,13 +105,18 @@ class SourceDetailScreen extends ConsumerWidget {
 }
 
 class _ReviewBar extends StatelessWidget {
-  const _ReviewBar({required this.id});
+  const _ReviewBar({required this.id, this.created = const []});
 
   final String id;
+
+  /// Actions already created from this capture.
+  final List<ActionItem> created;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final done = created.isNotEmpty;
+
     return Container(
       decoration: BoxDecoration(
         color: colors.surface,
@@ -107,10 +129,33 @@ class _ReviewBar extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
               Space.page, Space.md, Space.page, Space.md),
-          child: FilledButton(
-            onPressed: () => context.push(Routes.sourceReview(id)),
-            child: const Text('Create an action from this'),
-          ),
+          // Once this capture has become something, opening that thing is what
+          // the user wants; making another is still available and no longer
+          // the loudest control on the screen.
+          child: done
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    FilledButton(
+                      onPressed: () =>
+                          context.push(Routes.action(created.first.id)),
+                      child: Text(
+                        created.length == 1
+                            ? 'Open the action'
+                            : 'Open ${created.length} actions',
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => context.push(Routes.sourceReview(id)),
+                      child: const Text('Create another from this'),
+                    ),
+                  ],
+                )
+              : FilledButton(
+                  onPressed: () => context.push(Routes.sourceReview(id)),
+                  child: const Text('Create an action from this'),
+                ),
         ),
       ),
     );
@@ -118,9 +163,10 @@ class _ReviewBar extends StatelessWidget {
 }
 
 class _Body extends ConsumerWidget {
-  const _Body({required this.item});
+  const _Body({required this.item, this.created = const []});
 
   final SourceItem item;
+  final List<ActionItem> created;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -138,7 +184,11 @@ class _Body extends ConsumerWidget {
           _ImagePanel(item: item),
         ],
         const SizedBox(height: Space.xxl),
-        _StateSection(item: item),
+        _StateSection(item: item, created: created),
+        if (created.isNotEmpty) ...[
+          const SizedBox(height: Space.xxl),
+          _CreatedActions(actions: created),
+        ],
         if (item.hasText) ...[
           const SizedBox(height: Space.xxl),
           _IntelligenceStrip(item: item),
@@ -290,9 +340,10 @@ class _ImagePanel extends StatelessWidget {
 }
 
 class _StateSection extends ConsumerWidget {
-  const _StateSection({required this.item});
+  const _StateSection({required this.item, this.created = const []});
 
   final SourceItem item;
+  final List<ActionItem> created;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -301,8 +352,9 @@ class _StateSection extends ConsumerWidget {
       SourceProcessingState.processing =>
         const _Processing(),
       SourceProcessingState.failed => _Failed(item: item),
-      SourceProcessingState.ready =>
-        item.hasText ? _TextPanel(item: item) : _NoTextFound(item: item),
+      SourceProcessingState.ready => item.hasText
+          ? _TextPanel(item: item, interpreted: created.isNotEmpty)
+          : _NoTextFound(item: item),
     };
   }
 }
@@ -328,9 +380,12 @@ class _Processing extends StatelessWidget {
 }
 
 class _TextPanel extends StatelessWidget {
-  const _TextPanel({required this.item});
+  const _TextPanel({required this.item, this.interpreted = false});
 
   final SourceItem item;
+
+  /// Whether something has already been made from this capture.
+  final bool interpreted;
 
   @override
   Widget build(BuildContext context) {
@@ -367,8 +422,13 @@ class _TextPanel extends StatelessWidget {
         ),
         const SizedBox(height: Space.md),
         Text(
-          'Nothing has been interpreted yet. Action will suggest what to do '
-          'with this, and you confirm before anything is created.',
+          // Saying "nothing has been interpreted yet" over a capture that has
+          // already become an Action is simply false, and it was what the
+          // screen said after the user had just finished doing exactly that.
+          interpreted
+              ? 'This is the text Action read. What was made from it is below.'
+              : 'Nothing has been interpreted yet. Action will suggest what to '
+                  'do with this, and you confirm before anything is created.',
           style: text.bodySmall,
         ),
       ],
@@ -507,5 +567,101 @@ class _Actions extends ConsumerWidget {
     controller.dispose();
     if (saved == null || saved.trim().isEmpty) return;
     await ref.read(sourcesProvider.notifier).setManualText(item.id, saved);
+  }
+}
+
+
+/// What this capture already became.
+///
+/// The screen used to end at "nothing has been interpreted yet" no matter how
+/// many Actions had come out of the capture — so the last thing a user saw
+/// after finishing the whole flow was an invitation to start it again. The
+/// link back is the other half: a capture and the Action made from it should
+/// each be one tap from the other.
+class _CreatedActions extends StatelessWidget {
+  const _CreatedActions({required this.actions});
+
+  final List<ActionItem> actions;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.check_circle_outline_rounded,
+              size: 18,
+              color: colors.confidenceConfirmed,
+            ),
+            const SizedBox(width: Space.sm),
+            // Expanded, because the plural form is longer than the singular
+            // and overflowed a 380px row by 8px — which is every narrow phone,
+            // and every phone once the text scale goes up.
+            Expanded(
+              child: Text(
+                actions.length == 1
+                    ? 'Made from this capture'
+                    : '${actions.length} made from this capture',
+                style: text.titleSmall,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: Space.md),
+        for (final action in actions)
+          Padding(
+            padding: const EdgeInsets.only(bottom: Space.sm),
+            child: Material(
+              color: colors.surfaceElevated,
+              borderRadius: Radii.rMd,
+              child: InkWell(
+                borderRadius: Radii.rMd,
+                onTap: () => context.push(Routes.action(action.id)),
+                child: Container(
+                  padding: const EdgeInsets.all(Space.lg),
+                  decoration: BoxDecoration(
+                    borderRadius: Radii.rMd,
+                    border: Border.all(
+                      color: colors.border,
+                      width: Strokes.hairline,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(action.title, style: text.titleSmall),
+                            if (action.status == ActionStatus.completed) ...[
+                              const SizedBox(height: Space.xxs),
+                              Text(
+                                'Done',
+                                style: text.labelSmall?.copyWith(
+                                  color: colors.confidenceConfirmed,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        size: 20,
+                        color: colors.textTertiary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
   }
 }

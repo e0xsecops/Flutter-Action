@@ -579,7 +579,12 @@ class _ExtractionReviewScreenState
       case CanonicalStatus.absent:
         return FactRow(
           label: 'Deadline',
-          value: 'None found in this document',
+          // In manual mode nothing was searched, so "none found" would be
+          // claiming a search that never happened — over a field the user
+          // simply has not filled in yet.
+          value: review.mode == ReviewMode.manual
+              ? 'Not set'
+              : 'None found in this document',
           display: ConfidenceDisplay.missing,
           onEdit: () => _resolveDue(review),
         );
@@ -641,7 +646,12 @@ class _ExtractionReviewScreenState
       case CanonicalStatus.absent:
         return FactRow(
           label: 'Amount',
-          value: 'None found in this document',
+          // In manual mode nothing was searched, so "none found" would be
+          // claiming a search that never happened — over a field the user
+          // simply has not filled in yet.
+          value: review.mode == ReviewMode.manual
+              ? 'Not set'
+              : 'None found in this document',
           display: ConfidenceDisplay.missing,
           onEdit: () => _resolveAmount(review),
         );

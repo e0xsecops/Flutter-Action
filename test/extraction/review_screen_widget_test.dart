@@ -460,6 +460,23 @@ void main() {
       expect(find.text('Created by you.'), findsOneWidget);
     });
 
+    testWidgets('the manual path does not claim a search that never ran',
+        (tester) async {
+      // "None found in this document" is the right words when extraction ran
+      // and found nothing. In the manual path nothing was searched — the user
+      // simply has not filled the field in — and saying "none found" claims a
+      // search that never happened, over the user's own document.
+      final unusable = validate('this is not json', inputFor('anything'));
+      await pumpReview(tester, unusable);
+      await tester.tap(find.text('Enter the details'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('None found in this document'), findsNothing);
+      expect(find.text('Not set'), findsNWidgets(2));
+      // And they are still honestly marked as absent.
+      expect(find.text('Missing'), findsNWidgets(2));
+    });
+
     testWidgets('no action required does not manufacture an action',
         (tester) async {
       final result =
