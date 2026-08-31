@@ -57,6 +57,16 @@ dependencies:
   timezone: ^0.11.1
   flutter_timezone: ^5.1.0
 
+  # V2 / BYOK. `http` was already in the lock file transitively; it is a direct
+  # dependency now because the provider adapters talk to OpenAI, Anthropic and
+  # Gemini over plain HTTPS. There is no official Dart SDK for any of the three,
+  # and raw HTTP is what their own docs specify for a language without one.
+  http: ^1.6.0
+  # OS-backed secret storage for the user's own API key: Android Keystore,
+  # iOS Keychain. Wrapped behind `SecretStore` so tests never touch a platform
+  # channel and the package can be replaced without touching call sites.
+  flutter_secure_storage: ^9.2.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

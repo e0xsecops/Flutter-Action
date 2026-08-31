@@ -32,13 +32,13 @@ abstract final class SecretRedactor {
   /// the custom endpoint, where the shape is not.
   static final RegExp _headerLine = RegExp(
     r'(authorization|x-api-key|x-goog-api-key|api[-_]?key)'
-    r'''\s*[:=]\s*["']?(?:Bearer\s+)?[^\s"',}\]]+''',
+    r'''\s*[:=]\s*(?!\[redacted\])["']?(?:Bearer\s+)?[^\s"',}\]]+''',
     caseSensitive: false,
   );
 
   /// A bare `Bearer <token>` with no header name in front of it.
   static final RegExp _bearer = RegExp(
-    r'''\bBearer\s+[A-Za-z0-9\-._~+/]+=*''',
+    r'''\bBearer\s+(?!\[redacted\])[A-Za-z0-9\-._~+/]+=*''',
     caseSensitive: false,
   );
 
@@ -93,6 +93,10 @@ abstract final class SecretRedactor {
   /// Used by tests as an independent check rather than by production code:
   /// asserting "the output is clean" is stronger than asserting "we called
   /// redact", because only the first one fails when the patterns are wrong.
+  ///
+  /// The placeholder is excluded by the patterns themselves, which is what
+  /// makes [redact] idempotent — without that, redacted text reads as still
+  /// carrying a secret and a second pass mangles it further.
   static bool containsSecret(String text) =>
       _headerLine.hasMatch(text) ||
       _bearer.hasMatch(text) ||

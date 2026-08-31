@@ -89,6 +89,23 @@ void main() {
       expect(SecretRedactor.redact(''), isEmpty);
     });
 
+    test('is idempotent', () {
+      // Redaction happens at several sinks and a string can pass through more
+      // than one. A second pass that re-matched its own placeholder would both
+      // corrupt the text and make containsSecret report a leak that is not
+      // there.
+      final once = SecretRedactor.redact('Authorization: Bearer $_openAiKey');
+      expect(SecretRedactor.redact(once), equals(once));
+      expect(SecretRedactor.containsSecret(once), isFalse);
+    });
+
+    test('an already-redacted header does not read as a secret', () {
+      const redactedBody =
+          '{"error":{"message":"bad request with x-api-key: $redactedPlaceholder"}}';
+      expect(SecretRedactor.containsSecret(redactedBody), isFalse);
+      expect(SecretRedactor.redact(redactedBody), equals(redactedBody));
+    });
+
     test('redacts every key when several appear at once', () {
       final out = SecretRedactor.redact(
         'a=$_openAiKey b=$_anthropicKey c=$_googleKey',
