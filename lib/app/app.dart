@@ -6,6 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../design/app_theme.dart';
 import '../features/actions/application/action_providers.dart';
+import '../features/capture/application/capture_controller.dart';
+import '../features/capture/domain/shared_payload.dart';
+import '../features/capture/domain/source_item.dart';
+import '../features/capture/presentation/preview_screen.dart';
 import '../features/settings/application/settings_providers.dart';
 import 'app_lock_gate.dart';
 import 'router.dart';
@@ -21,6 +25,7 @@ class ActionApp extends ConsumerStatefulWidget {
 
 class _ActionAppState extends ConsumerState<ActionApp> {
   StreamSubscription<String>? _taps;
+  StreamSubscription<void>? _shares;
 
   @override
   void initState() {
@@ -68,6 +73,56 @@ class _ActionAppState extends ConsumerState<ActionApp> {
     unawaited(
       ref.read(privacyDeletionServiceProvider).retryPendingCloudDeletion(),
     );
+
+    // A share that launched the app has been waiting since before the engine
+    // existed, and one that arrives later is pushed. Both end up here.
+    _shares = ref.read(shareIntakeProvider).arrivals.listen((_) {
+      unawaited(_takeShare());
+    });
+    await _takeShare();
+  }
+
+  /// Acts on a share, once.
+  ///
+  /// **Nothing is created here.** A shared image goes to the same preview the
+  /// gallery picker goes to, and shared text goes into the paste field. Both
+  /// are confirm-or-abandon screens: a share is another app's decision until
+  /// the person holding the phone agrees with it, and an app that silently
+  /// accumulated everything ever sent to it would be a worse place to send
+  /// anything.
+  Future<void> _takeShare() async {
+    final payload = await ref.read(shareIntakeProvider).consumePending();
+    if (payload == null || !mounted) return;
+
+    final router = ref.read(routerProvider);
+    switch (payload) {
+      case SharedText(:final text):
+        unawaited(ref.read(appAnalyticsProvider).log(
+          AnalyticsEvents.captureStarted,
+          parameters: {AnalyticsParams.captureType: 'share_text'},
+        ));
+        router.push(Routes.captureText, extra: text);
+
+      case SharedImage(:final path):
+        unawaited(ref.read(appAnalyticsProvider).log(
+          AnalyticsEvents.captureStarted,
+          parameters: {AnalyticsParams.captureType: 'share_image'},
+        ));
+        router.push(
+          Routes.capturePreview,
+          extra: PreviewArgs(path: path, type: SourceType.gallery),
+        );
+
+      case SharedRejected(:final message):
+        // Said out loud rather than dropped. A share that vanishes leaves the
+        // user thinking Action took it.
+        final context = router.routerDelegate.navigatorKey.currentContext;
+        if (context != null && context.mounted) {
+          ScaffoldMessenger.of(context)
+            ..clearSnackBars()
+            ..showSnackBar(SnackBar(content: Text(message)));
+        }
+    }
   }
 
   void _openAction(String actionId) {
@@ -83,6 +138,7 @@ class _ActionAppState extends ConsumerState<ActionApp> {
   @override
   void dispose() {
     unawaited(_taps?.cancel());
+    unawaited(_shares?.cancel());
     super.dispose();
   }
 

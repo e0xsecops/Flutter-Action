@@ -2,11 +2,14 @@ package com.solvex.actionapp
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.provider.OpenableColumns
 import android.provider.Settings
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import java.io.File
 
 /**
  * Adds the few capabilities Flutter has no way to reach on its own.
@@ -15,16 +18,30 @@ import io.flutter.plugin.common.MethodChannel
  * androidx BiometricPrompt through `local_auth`, and BiometricPrompt can only
  * be shown from a FragmentActivity — it needs a FragmentManager to host its
  * dialog. This is the base class `local_auth` documents, and it is a superset
- * of what the app previously used: FlutterFragmentActivity extends
- * FragmentActivity and provides the same Flutter embedding.
+ * of what the app previously used.
  *
- * The two channels below are here for the same reason as each other: a whole
+ * The channels below are here for the same reason as each other: a whole
  * dependency for a single system call is a worse trade than a few lines of
- * Kotlin.
+ * Kotlin. Share-in is the strongest case of the three — the interesting part
+ * of receiving a share is validating an untrusted URI, and that is exactly the
+ * part a plugin would be doing on this app's behalf.
  */
 class MainActivity : FlutterFragmentActivity() {
     private val settingsChannel = "com.solvex.actionapp/system_settings"
     private val privacyChannel = "com.solvex.actionapp/screen_privacy"
+    private val shareChannel = "com.solvex.actionapp/share_in"
+
+    /**
+     * A share that has arrived and not yet been handed to Dart.
+     *
+     * Held rather than pushed because Dart may not be listening yet: a cold
+     * start delivers the intent before the engine exists. Dart asks for it when
+     * it is ready, and asking clears it — an intent must be acted on once, not
+     * once per rebuild.
+     */
+    private var pendingShare: Map<String, Any?>? = null
+
+    private var shareMethods: MethodChannel? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -53,6 +70,163 @@ class MainActivity : FlutterFragmentActivity() {
                 else -> result.notImplemented()
             }
         }
+
+        shareMethods = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            shareChannel,
+        ).also { channel ->
+            channel.setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "consumePendingShare" -> {
+                        val share = pendingShare
+                        pendingShare = null
+                        result.success(share)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+        }
+
+        // The launching intent. Read here rather than in onCreate because the
+        // engine has to exist before there is anywhere to hold the result, and
+        // a cold-start share arrives before Dart is listening either way.
+        readShare(intent)
+    }
+
+    /**
+     * A share that arrives while Action is already running.
+     *
+     * `setIntent` matters: without it `getIntent()` keeps returning the
+     * original launch intent, so a second share would be read as a repeat of
+     * the first.
+     */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (readShare(intent)) {
+            shareMethods?.invokeMethod("shareArrived", null)
+        }
+    }
+
+    /**
+     * Turns an ACTION_SEND intent into something Dart can act on, or does
+     * nothing.
+     *
+     * **Everything here treats the payload as hostile.** The sender chose the
+     * URI, the MIME type and the file name, and none of them has been checked
+     * by anyone. So: the stream is read here, while the temporary read grant is
+     * still valid, into a file this app owns — Dart never handles a `content://`
+     * URI and never depends on a permission that expires. The declared MIME is
+     * passed along as a *claim*; Dart checks it against the actual leading
+     * bytes before believing it. The size is capped so a hostile or accidental
+     * multi-gigabyte share cannot exhaust memory before any of that happens.
+     */
+    private fun readShare(intent: Intent?): Boolean {
+        if (intent == null) return false
+        if (intent.action != Intent.ACTION_SEND) return false
+
+        val type = intent.type ?: return false
+
+        if (type.startsWith("text/")) {
+            val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return false
+            if (text.isBlank()) return false
+            // Truncated rather than refused: a very long share is still
+            // usable, and the alternative is silently dropping it.
+            val bounded = if (text.length > MAX_TEXT_CHARS) {
+                text.substring(0, MAX_TEXT_CHARS)
+            } else {
+                text
+            }
+            pendingShare = mapOf(
+                "kind" to "text",
+                "text" to bounded,
+                "truncated" to (text.length > MAX_TEXT_CHARS),
+            )
+            return true
+        }
+
+        val uri: Uri = (
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra(Intent.EXTRA_STREAM)
+            }
+            ) ?: return false
+
+        val copied = copyToOwnStorage(uri)
+        if (copied == null) {
+            // Says so rather than dropping it. A share that simply vanishes
+            // leaves the user believing Action took it — which is the worst
+            // outcome available here, because they will not send it again.
+            //
+            // This is the path a revoked or expired URI grant takes, and it is
+            // reachable in practice: the grant is attached to the intent, and
+            // an intent can be replayed or forwarded by something that no
+            // longer holds it.
+            pendingShare = mapOf("kind" to "unreadable")
+            return true
+        }
+        pendingShare = mapOf(
+            "kind" to "file",
+            "path" to copied.absolutePath,
+            // A claim, not a fact. Dart checks it against the bytes.
+            "declaredMimeType" to type,
+            "declaredName" to displayName(uri),
+            "size" to copied.length(),
+        )
+        return true
+    }
+
+    /**
+     * Copies the shared stream into this app's cache and returns the file.
+     *
+     * Null on anything unexpected — an unreadable URI, a stream that turns out
+     * to be larger than the cap, a write that fails. A partial copy is deleted
+     * rather than handed on: half a JPEG is not a smaller JPEG.
+     */
+    private fun copyToOwnStorage(uri: Uri): File? {
+        val directory = File(cacheDir, "shared").apply { mkdirs() }
+        val target = File(directory, "share_${System.currentTimeMillis()}")
+
+        return try {
+            contentResolver.openInputStream(uri).use { input ->
+                if (input == null) return null
+                target.outputStream().use { output ->
+                    val buffer = ByteArray(64 * 1024)
+                    var total = 0L
+                    while (true) {
+                        val read = input.read(buffer)
+                        if (read <= 0) break
+                        total += read
+                        if (total > MAX_FILE_BYTES) {
+                            target.delete()
+                            return null
+                        }
+                        output.write(buffer, 0, read)
+                    }
+                }
+            }
+            if (target.length() == 0L) {
+                target.delete()
+                null
+            } else {
+                target
+            }
+        } catch (error: Exception) {
+            target.delete()
+            null
+        }
+    }
+
+    /** The sender's name for the file. Untrusted text; Dart sanitises it. */
+    private fun displayName(uri: Uri): String? = try {
+        contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (index >= 0 && cursor.moveToFirst()) cursor.getString(index) else null
+        }
+    } catch (error: Exception) {
+        null
     }
 
     /**
@@ -65,12 +239,7 @@ class MainActivity : FlutterFragmentActivity() {
      *
      * What it does not do: it is not a guarantee against a determined party.
      * A second camera pointed at the screen defeats it entirely, and rooted or
-     * modified systems can bypass it. The Security Centre says so rather than
-     * calling this "screenshot protection" and leaving the user to assume more
-     * than is true.
-     *
-     * Must run on the UI thread — a window flag set from any other thread
-     * throws — and the channel handler is already there.
+     * modified systems can bypass it.
      */
     private fun setSecure(enabled: Boolean): Boolean = try {
         if (enabled) {
@@ -118,5 +287,20 @@ class MainActivity : FlutterFragmentActivity() {
         true
     } catch (error: Exception) {
         false
+    }
+
+    private companion object {
+        /**
+         * 25 MB. Above this a share is refused before anything is copied.
+         *
+         * Chosen against what Action can actually do with the result rather
+         * than against what the device could hold: the OCR pipeline normalises
+         * images well below this, and a document larger than it would exceed
+         * every provider's input limit anyway.
+         */
+        const val MAX_FILE_BYTES = 25L * 1024 * 1024
+
+        /** Longer than any notice, shorter than a novel. */
+        const val MAX_TEXT_CHARS = 200_000
     }
 }

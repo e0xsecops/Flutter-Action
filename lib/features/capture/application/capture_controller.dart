@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 
 import '../data/image_normalizer.dart';
 import '../data/ocr_service.dart';
+import '../data/share_intake.dart';
 import '../data/source_file_store.dart';
 import '../data/source_store.dart';
 import '../domain/source_item.dart';
@@ -64,6 +65,16 @@ class CapturePicker {
     return response.file;
   }
 }
+
+/// Where shares from other apps arrive.
+///
+/// A `Provider` rather than a `FutureProvider` because the channel is cheap to
+/// construct and a share can be waiting before anything async has resolved.
+final shareIntakeProvider = Provider<ShareIntake>((ref) {
+  final intake = PlatformShareIntake();
+  ref.onDispose(intake.dispose);
+  return intake;
+});
 
 final capturePickerProvider = Provider<CapturePicker>(
   (ref) => CapturePicker(ref.watch(imagePickerProvider)),

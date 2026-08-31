@@ -117,7 +117,18 @@ abstract final class AnalyticsEvents {
 abstract final class AnalyticsParams {
   /// How a capture was started.
   static const captureType = 'capture_type';
-  static const captureTypeValues = {'camera', 'gallery', 'paste'};
+  /// Extended at V2 for Android share-in. Two values rather than one, because
+  /// "someone sent Action a screenshot" and "someone sent Action some text"
+  /// are different product facts and collapsing them would lose the only
+  /// interesting half. Still a closed set of machine words: nothing about
+  /// *what* was shared can reach this.
+  static const captureTypeValues = {
+    'camera',
+    'gallery',
+    'paste',
+    'share_text',
+    'share_image',
+  };
 
   /// How an extraction attempt ended.
   static const extractionOutcome = 'extraction_outcome';

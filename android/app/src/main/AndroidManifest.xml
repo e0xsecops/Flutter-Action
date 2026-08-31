@@ -90,6 +90,30 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- Share-in.
+
+                 Only the types Action can actually do something with. It would
+                 be trivial to add application/pdf and */* here and appear in
+                 every share sheet on the device, and it would be a worse
+                 product: a user who shares a spreadsheet to an app that
+                 volunteered for it and then cannot read it has been misled by
+                 the share sheet itself. PDF belongs here when PDF input
+                 exists, and not before.
+
+                 singleTop on the activity above is what makes a share into an
+                 already-running Action arrive at onNewIntent rather than
+                 stacking a second copy of the app. -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
         </activity>
         <!-- Shows a scheduled reminder when its alarm fires. -->
         <receiver

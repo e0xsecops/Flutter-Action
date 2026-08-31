@@ -158,7 +158,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.captureText,
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const PasteTextScreen(),
+        // `extra` carries text shared in from another app. Anything else that
+        // reaches this route — a restored stack, a deep link — gets the empty
+        // screen rather than a cast that throws.
+        builder: (context, state) => PasteTextScreen(
+          initialText: state.extra is String ? state.extra as String : null,
+        ),
       ),
       GoRoute(
         path: Routes.sourcePattern,

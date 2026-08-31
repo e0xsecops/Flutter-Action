@@ -10,14 +10,23 @@ import '../application/capture_controller.dart';
 /// Paste-and-analyse. The editor is the whole screen: no card, no border, no
 /// competing affordances, because the only thing to do here is put text in.
 class PasteTextScreen extends ConsumerStatefulWidget {
-  const PasteTextScreen({super.key});
+  const PasteTextScreen({super.key, this.initialText});
+
+  /// Text handed in from elsewhere — a share from another app.
+  ///
+  /// It arrives in the field rather than being turned straight into a capture,
+  /// so the user sees what Action received and can edit or abandon it. A share
+  /// is someone else's decision until the person holding the phone agrees
+  /// with it.
+
+  final String? initialText;
 
   @override
   ConsumerState<PasteTextScreen> createState() => _PasteTextScreenState();
 }
 
 class _PasteTextScreenState extends ConsumerState<PasteTextScreen> {
-  final _controller = TextEditingController();
+  late final _controller = TextEditingController(text: widget.initialText);
   final _focus = FocusNode();
   bool _busy = false;
 
