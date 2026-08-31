@@ -162,17 +162,30 @@ class GlassSurface extends StatelessWidget {
           surface.withValues(alpha: spec.surfaceOpacity),
         ),
       ),
+      // The highlight, and the difference between glass and a gradient.
+      //
+      // A top-to-middle linear wash is what most "glassmorphism" does, and it
+      // reads as a gradient painted on a panel because it has no source: the
+      // light is everywhere along the top edge at once. A real surface catches
+      // one light and is brightest where it faces it.
+      //
+      // So this is a radial hotspot, placed at the same corner the ambient
+      // field's brand pool occupies — `AmbientBackground` puts it at
+      // Alignment(0.85, -0.75). Every glass surface on a screen now catches
+      // the light from the same direction as every other one, which is the
+      // cue that makes a set of surfaces read as being in one room.
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: radius,
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+          gradient: RadialGradient(
+            center: const Alignment(0.72, -1.05),
+            radius: 1.25,
             colors: [
               Colors.white.withValues(alpha: spec.specular),
+              Colors.white.withValues(alpha: spec.specular * 0.35),
               Colors.white.withValues(alpha: 0),
             ],
-            stops: const [0, 0.55],
+            stops: const [0, 0.42, 1],
           ),
         ),
         child: content,
@@ -382,7 +395,12 @@ class _GlassSpec {
             // looked like a rendering fault. `hero` can be far more
             // transparent because what is behind it is the quiet ambient
             // field, not text.
-            GlassIntensity.strong => dark ? 0.62 : 0.56,
+            // Raised again once the opacity actually painted. Measured on
+            // device, the selected nav label — brand blue on the bar — came
+            // out at 4.35:1 against it, just under AA for small text. The bar
+            // is chrome over moving content, so a lighter body serves the same
+            // purpose the role was created for.
+            GlassIntensity.strong => dark ? 0.74 : 0.72,
             GlassIntensity.hero => dark ? 0.33 : 0.27,
             // Anchored. See the enum comment: this is the one surface whose
             // backdrop is a scrim rather than the app, so it cannot afford to
@@ -402,7 +420,11 @@ class _GlassSpec {
       // A whisper, not a sheen. The old value (0.44) lightened the whole top
       // half of the fill, which is what made the surface read as a pale grey
       // panel rather than a lens — the highlight belongs on the edge.
-      specular: dark ? 0.04 : 0.14,
+      // Raised alongside the move to a radial hotspot: a concentrated
+      // highlight can be brighter than a full-width wash without lightening
+      // the panel, which is what made the old linear version read as pale grey
+      // rather than as a lens.
+      specular: dark ? 0.07 : 0.20,
       edgeHighlight: dark ? 0.26 : 0.92,
       // The 2026 addition to Apple's material: a darkened opposite edge is
       // what gives the surface thickness. Without it a bright top rim alone

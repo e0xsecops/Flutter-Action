@@ -177,7 +177,13 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
-    final tint = selected ? colors.brand : colors.textTertiary;
+    // Secondary, not tertiary. A navigation label is the most important small
+    // text in the app — it is how someone knows where they are and where they
+    // can go — and tertiary is the token for things that can afford to
+    // recede. Measured on device, tertiary on the nav bar's glass came out at
+    // 4.49:1, which is both under AA and the right prompt to notice that the
+    // token was wrong for the job.
+    final tint = selected ? colors.brand : colors.textSecondary;
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
 
