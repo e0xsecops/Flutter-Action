@@ -4,7 +4,10 @@ import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../../design/tokens/typography.dart';
 import '../domain/extracted_field.dart';
+import '../../capture/domain/source_item.dart';
+import '../application/evidence_regions.dart';
 import '../domain/extraction_evidence.dart';
+import 'evidence_lens.dart';
 import '../domain/extraction_schema.dart';
 
 /// Shared pieces of the review screen.
@@ -97,11 +100,21 @@ class EvidenceTile extends StatefulWidget {
   const EvidenceTile({
     required this.evidence,
     this.onFirstExpand,
+    this.source,
+    this.label = 'This value',
     super.key,
   });
 
   final ExtractionEvidence evidence;
   final VoidCallback? onFirstExpand;
+
+  /// The capture this evidence points into. When it has usable geometry the
+  /// tile offers the lens; when it does not, the quote is the whole answer and
+  /// no promise of a highlight is made.
+  final SourceItem? source;
+
+  /// What the evidence supports, for the lens header.
+  final String label;
 
   @override
   State<EvidenceTile> createState() => _EvidenceTileState();
@@ -110,6 +123,21 @@ class EvidenceTile extends StatefulWidget {
 class _EvidenceTileState extends State<EvidenceTile> {
   bool _expanded = false;
   bool _everExpanded = false;
+
+  /// Whether the lens would actually have a region to draw.
+  ///
+  /// Asked here rather than inside the sheet so the affordance and the answer
+  /// cannot disagree.
+  bool get _canShowOnCapture {
+    final source = widget.source;
+    if (source?.imagePath == null) return false;
+    return EvidenceRegions.forEvidence(
+      evidence: widget.evidence,
+      lines: source!.ocr?.lines ?? const [],
+      imageWidth: source.imageWidth,
+      imageHeight: source.imageHeight,
+    ).isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +226,34 @@ class _EvidenceTileState extends State<EvidenceTile> {
                           fontStyle: FontStyle.italic,
                         ),
                       ),
+                      // Offered only when there is genuinely something to
+                      // show. A button that opens a sheet saying "Action could
+                      // not work out where" would be worse than no button.
+                      if (_canShowOnCapture) ...[
+                        const SizedBox(height: Space.xs),
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: TextButton.icon(
+                            onPressed: () => showEvidenceLens(
+                              context,
+                              evidence: widget.evidence,
+                              label: widget.label,
+                              source: widget.source,
+                            ),
+                            icon: const Icon(Icons.center_focus_strong_outlined,
+                                size: 18),
+                            label: const Text('See it on the capture'),
+                            style: TextButton.styleFrom(
+                              // The shared theme sizes buttons to full width,
+                              // which is fatal inside a Column of prose.
+                              minimumSize: const Size(0, 40),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Space.sm,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 )
@@ -270,6 +326,7 @@ class FactRow extends StatelessWidget {
     this.onConfirm,
     this.evidence,
     this.onEvidenceViewed,
+    this.source,
     super.key,
   });
 
@@ -281,6 +338,9 @@ class FactRow extends StatelessWidget {
   final VoidCallback? onConfirm;
   final ExtractionEvidence? evidence;
   final VoidCallback? onEvidenceViewed;
+
+  /// Passed through to the evidence tile so it can offer the lens.
+  final SourceItem? source;
 
   @override
   Widget build(BuildContext context) {
@@ -341,6 +401,8 @@ class FactRow extends StatelessWidget {
               child: EvidenceTile(
                 evidence: evidence!,
                 onFirstExpand: onEvidenceViewed,
+                source: source,
+                label: label,
               ),
             )
           else

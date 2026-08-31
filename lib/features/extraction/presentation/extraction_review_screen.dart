@@ -397,6 +397,7 @@ class _ExtractionReviewScreenState
                   onEdit: () => _editField(review, field),
                   evidence: field.evidence,
                   onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+                  source: _sourceItem,
                 ),
               ],
             ],
@@ -432,6 +433,8 @@ class _ExtractionReviewScreenState
                     EvidenceTile(
                       evidence: draft.consequenceEvidence!,
                       onFirstExpand: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+                      source: _sourceItem,
+                      label: 'Why this matters',
                     ),
                 ],
               ],
@@ -546,6 +549,7 @@ class _ExtractionReviewScreenState
           onEdit: () => _resolveDue(review),
           evidence: field.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+                  source: _sourceItem,
         );
       case CanonicalStatus.ambiguous:
         return _AmbiguityCard(
@@ -567,6 +571,7 @@ class _ExtractionReviewScreenState
           onEdit: () => _resolveDue(review),
           evidence: candidate.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+                  source: _sourceItem,
         );
       case CanonicalStatus.absent:
         return FactRow(
@@ -606,6 +611,7 @@ class _ExtractionReviewScreenState
           onEdit: () => _resolveAmount(review),
           evidence: field.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+                  source: _sourceItem,
         );
       case CanonicalStatus.ambiguous:
         return _AmbiguityCard(
@@ -627,6 +633,7 @@ class _ExtractionReviewScreenState
           onEdit: () => _resolveAmount(review),
           evidence: candidate.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+                  source: _sourceItem,
         );
       case CanonicalStatus.absent:
         return FactRow(
