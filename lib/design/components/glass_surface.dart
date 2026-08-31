@@ -337,8 +337,15 @@ class _GlassSpec {
         ? 1.0
         : switch (intensity) {
             GlassIntensity.subtle => dark ? 0.46 : 0.40,
-            GlassIntensity.regular => dark ? 0.40 : 0.34,
-            GlassIntensity.strong => dark ? 0.36 : 0.30,
+            GlassIntensity.regular => dark ? 0.42 : 0.36,
+            // NOT a continuation of the ramp. `strong` is chrome that sits
+            // over *moving content* — the nav bar, a sheet — and it has to stay
+            // legible while a list scrolls beneath it. On device at 0.30 the
+            // headings passing underneath read straight through the bar and
+            // looked like a rendering fault. `hero` can be far more
+            // transparent because what is behind it is the quiet ambient
+            // field, not text.
+            GlassIntensity.strong => dark ? 0.62 : 0.56,
             GlassIntensity.hero => dark ? 0.33 : 0.27,
           };
 

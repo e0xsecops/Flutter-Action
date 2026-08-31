@@ -189,7 +189,8 @@ void main() {
       await pumpApp(tester);
       await openStudio(tester);
 
-      expect(find.text('Connect your AI'), findsOneWidget);
+      expect(find.text('Action Intelligence'), findsOneWidget);
+      expect(find.text('NOT CONNECTED'), findsOneWidget);
       expect(find.text('Connect AI'), findsOneWidget);
       // Never an error state: the user has done nothing wrong.
       expect(find.textContaining('Error'), findsNothing);
@@ -200,9 +201,18 @@ void main() {
       await pumpApp(tester);
       await openStudio(tester);
 
-      // SectionHeader uppercases its title, which is part of the design
-      // system rather than something this test should work around.
-      expect(find.text('WORKS WITHOUT SETUP'), findsOneWidget);
+      // Local tools now sit in their own categories with an on-device mark,
+      // and the hero says how many there are — so a disconnected user can see
+      // the screen is not entirely gated.
+      expect(
+        find.textContaining('already work without any of that'),
+        findsOneWidget,
+      );
+      await tester.scrollUntilVisible(
+        find.text('Hide sensitive details'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('Hide sensitive details'), findsWidgets);
     });
 
@@ -615,7 +625,7 @@ void main() {
       await tester.tap(find.byTooltip('Intelligence'));
       await tester.pumpAndSettle();
 
-      expect(find.text('WORKS WITHOUT SETUP'), findsOneWidget);
+      expect(find.text('Action Intelligence'), findsOneWidget);
       expect(_http.calls, 0);
     });
 

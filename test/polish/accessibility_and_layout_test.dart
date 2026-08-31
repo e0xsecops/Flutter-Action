@@ -471,6 +471,11 @@ void main() {
       await pumpApp(tester);
       await openStudio(tester);
 
+      await tester.scrollUntilVisible(
+        find.text('Hide sensitive details'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
       final semantics = tester.getSemantics(
         find.bySemanticsLabel(RegExp('Hide sensitive details')).first,
       );

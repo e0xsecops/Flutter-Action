@@ -145,6 +145,7 @@ Only suggest an action if the material actually asks the reader to do something.
 
 const documentIntelligenceTool = IntelligenceToolDefinition(
   id: 'document-intelligence',
+  glyph: ToolGlyph.document,
   title: 'Understand this document',
   shortDescription: 'What it is, what matters, and what to do about it.',
   category: IntelligenceCategory.understand,
@@ -240,6 +241,7 @@ Never guess. Never fill a gap with what is usually true.''';
 
 const askDocumentTool = IntelligenceToolDefinition(
   id: 'ask-document',
+  glyph: ToolGlyph.question,
   title: 'Ask about a source',
   shortDescription: 'Answers grounded in what you selected — or nothing.',
   category: IntelligenceCategory.understand,
@@ -341,6 +343,7 @@ $factualRules''';
 
 const smartSummaryTool = IntelligenceToolDefinition(
   id: 'smart-summary',
+  glyph: ToolGlyph.summary,
   title: 'Summarise',
   shortDescription: 'The short version — or the version that affects you.',
   category: IntelligenceCategory.understand,
@@ -470,6 +473,7 @@ $factualRules''';
 
 const compareDocumentsTool = IntelligenceToolDefinition(
   id: 'compare-documents',
+  glyph: ToolGlyph.compare,
   title: 'Compare documents',
   shortDescription: 'What changed, what conflicts, what is missing.',
   category: IntelligenceCategory.understand,

@@ -135,6 +135,7 @@ class RedactionStrategy implements LocalIntelligenceStrategy {
 
 const redactionTool = IntelligenceToolDefinition(
   id: 'redaction-assistant',
+  glyph: ToolGlyph.shield,
   title: 'Hide sensitive details',
   shortDescription: 'Find what should not be shared, and make a clean copy.',
   category: IntelligenceCategory.verify,
@@ -222,6 +223,7 @@ class AuthenticityStrategy implements LocalIntelligenceStrategy {
 
 const authenticityTool = IntelligenceToolDefinition(
   id: 'authenticity-inspector',
+  glyph: ToolGlyph.provenance,
   title: 'Check where this came from',
   shortDescription: 'What a file declares about its own origin.',
   category: IntelligenceCategory.verify,

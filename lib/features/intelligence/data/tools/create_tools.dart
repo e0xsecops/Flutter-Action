@@ -142,6 +142,7 @@ Return the improved text and a short list of what you changed and why. If the te
 
 const rewriteTool = IntelligenceToolDefinition(
   id: 'rewrite',
+  glyph: ToolGlyph.rewrite,
   title: 'Improve this writing',
   shortDescription: 'Clearer, shorter or more formal — facts kept intact.',
   category: IntelligenceCategory.create,
@@ -269,6 +270,7 @@ This is a draft for the person to review, edit and send themselves.''';
 
 const draftReplyTool = IntelligenceToolDefinition(
   id: 'draft-reply',
+  glyph: ToolGlyph.reply,
   title: 'Draft a reply',
   shortDescription: 'A response you can edit and send yourself.',
   category: IntelligenceCategory.create,
@@ -372,6 +374,7 @@ This is a translation for understanding. It is not a certified or legal translat
 
 const translateTool = IntelligenceToolDefinition(
   id: 'translate',
+  glyph: ToolGlyph.translate,
   title: 'Translate',
   shortDescription: 'Another language, with the numbers and names kept intact.',
   category: IntelligenceCategory.create,

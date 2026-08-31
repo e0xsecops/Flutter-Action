@@ -127,6 +127,7 @@ Everything you return is a suggestion for the person to accept or reject. Do not
 
 const goalOptimizerTool = IntelligenceToolDefinition(
   id: 'goal-optimizer',
+  glyph: ToolGlyph.goal,
   title: 'Improve a goal',
   shortDescription: 'What is missing, what blocks it, what to do first.',
   category: IntelligenceCategory.plan,
@@ -205,6 +206,7 @@ $_noInventedDates''';
 
 const actionPlanTool = IntelligenceToolDefinition(
   id: 'action-plan',
+  glyph: ToolGlyph.plan,
   title: 'Build a plan',
   shortDescription: 'An ordered set of steps you can turn into Actions.',
   category: IntelligenceCategory.plan,
@@ -280,6 +282,7 @@ $factualRules''';
 
 const smartChecklistTool = IntelligenceToolDefinition(
   id: 'smart-checklist',
+  glyph: ToolGlyph.checklist,
   title: 'Make a checklist',
   shortDescription: 'Everything this asks of you, in order.',
   category: IntelligenceCategory.plan,
@@ -389,6 +392,7 @@ $factualRules''';
 
 const missingInformationTool = IntelligenceToolDefinition(
   id: 'missing-information',
+  glyph: ToolGlyph.gap,
   title: 'What is missing',
   shortDescription: 'The gaps, and what to ask about them.',
   category: IntelligenceCategory.plan,

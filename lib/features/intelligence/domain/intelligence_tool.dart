@@ -30,6 +30,30 @@ enum IntelligenceCategory {
   final String blurb;
 }
 
+/// The visual mark for a tool.
+///
+/// An enum rather than an `IconData` so the domain stays free of Flutter, and
+/// so the *meaning* is named once. Chosen by intent - what the tool does to
+/// your material - never by "this is AI". There is no sparkle here and no
+/// robot: a tool that finds a deadline is a calendar, not a magic wand.
+enum ToolGlyph {
+  document,
+  question,
+  summary,
+  compare,
+  goal,
+  plan,
+  checklist,
+  gap,
+  rewrite,
+  reply,
+  translate,
+  table,
+  deadline,
+  shield,
+  provenance,
+}
+
 /// What a tool can be pointed at.
 enum IntelligenceInputKind {
   /// A stored Source — a capture, a document, a pasted note.
@@ -133,6 +157,7 @@ class IntelligenceToolDefinition {
     required this.shortDescription,
     required this.category,
     required this.acceptedInputs,
+    required this.glyph,
     this.strategy,
     this.localStrategy,
     this.extraCapabilities = const [],
@@ -166,6 +191,9 @@ class IntelligenceToolDefinition {
   final IntelligenceCategory category;
 
   final Set<IntelligenceInputKind> acceptedInputs;
+
+  /// The mark shown on this tool's card.
+  final ToolGlyph glyph;
 
   /// Set for a tool that calls the configured provider. Null for a local one.
   final IntelligenceToolStrategy? strategy;

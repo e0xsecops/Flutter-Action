@@ -140,6 +140,7 @@ $factualRules''';
 
 const structuredDataTool = IntelligenceToolDefinition(
   id: 'structured-data',
+  glyph: ToolGlyph.table,
   title: 'Extract a table',
   shortDescription: 'Rows, fields and figures you can copy out.',
   category: IntelligenceCategory.extract,
@@ -273,6 +274,7 @@ $factualRules''';
 
 const deadlineFinderTool = IntelligenceToolDefinition(
   id: 'deadline-finder',
+  glyph: ToolGlyph.deadline,
   title: 'Find deadlines',
   shortDescription: 'What is due, when, and what happens if it is not.',
   category: IntelligenceCategory.extract,

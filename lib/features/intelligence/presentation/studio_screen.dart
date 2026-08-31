@@ -1,28 +1,38 @@
-/// Intelligence Studio.
+/// Intelligence Studio — a workspace, not a catalogue.
 ///
-/// **Not a grid of fifteen equal cards.** Fifteen things presented at one
-/// weight is a control panel, and a control panel is what a user closes. So the
-/// page leads with what they used last and what runs without setup, then the
-/// five intents, each collapsed to its own heading.
+/// **What was wrong with the first version.** It listed fifteen tools as
+/// fifteen identical rounded rectangles with no iconography, differentiated
+/// only by their titles, under grey uppercase labels carrying the same visual
+/// weight as any other caption. It read as a settings screen for a feature
+/// rather than a place you would choose to work.
 ///
-/// With no provider connected this is an invitation, never an error, and it
-/// still has two working tools in it.
+/// **What changed.** A hero that says what this is for and what state the
+/// connection is in. Every tool has a mark chosen by intent — what it does to
+/// your material — and every category has a colour, so the family is legible
+/// before the title is read. Recommendations come first when there is something
+/// to recommend about, decided from local signals; Action never asks a model
+/// which model button to draw.
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/action_shell.dart';
 import '../../../app/router.dart';
+import '../../../design/ambient/ambient_background.dart';
 import '../../../design/components/glass_surface.dart';
 import '../../../design/components/readable_width.dart';
-import '../../../design/components/section_header.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../capture/application/capture_controller.dart';
+import '../../capture/domain/source_item.dart';
+import '../application/intelligence_context.dart';
 import '../application/intelligence_providers.dart';
 import '../domain/intelligence_tool.dart';
 import '../domain/tool_registry.dart';
 import 'connect_provider_sheet.dart';
+import 'tool_glyphs.dart';
 
 class StudioScreen extends ConsumerWidget {
   const StudioScreen({super.key});
@@ -31,61 +41,166 @@ class StudioScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(aiProviderConfigProvider);
     final recents = ref.watch(recentToolsProvider);
+    final sources = ref.watch(sourcesProvider).value ?? const <SourceItem>[];
 
     // A stored id from an older build resolves to null and simply drops out.
-    final recentTools = [
-      for (final id in recents) ?ToolRegistry.byId(id),
-    ];
+    final recentTools = [for (final id in recents) ?ToolRegistry.byId(id)];
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Intelligence')),
-      body: SafeArea(
-        top: false,
-        child: ReadableWidth.list(
-          child: CustomScrollView(
-            slivers: [
-              if (config == null)
-                const SliverToBoxAdapter(child: _ConnectInvitation()),
+    // Recommendations come from the most recent capture that has text — a real
+    // thing the user has, read with local signals only.
+    final newest = sources.where((s) => s.hasText).fold<SourceItem?>(
+          null,
+          (best, s) =>
+              best == null || s.capturedAt.isAfter(best.capturedAt) ? s : best,
+        );
+    final recommended = newest == null
+        ? const <IntelligenceToolDefinition>[]
+        : recommendedFor(newest);
 
-              if (recentTools.isNotEmpty) ...[
-                const SliverToBoxAdapter(
-                  child: SectionHeader(title: 'Recently used'),
-                ),
-                _ToolList(tools: recentTools),
-              ],
+    return SafeArea(
+      bottom: false,
+      child: ReadableWidth.list(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(child: _StudioHero(connected: config != null)),
 
-              if (config == null) ...[
-                const SliverToBoxAdapter(
-                  child: SectionHeader(title: 'Works without setup'),
-                ),
-                _ToolList(tools: ToolRegistry.local),
-              ],
+            if (recommended.isNotEmpty) ...[
+              _Heading(
+                label: 'Suggested for your last capture',
+                icon: Icons.auto_awesome_motion_outlined,
+                colour: context.colors.brand,
+              ),
+              _ToolList(tools: recommended),
+            ],
 
-              for (final category in IntelligenceCategory.values) ...[
-                SliverToBoxAdapter(
-                  child: SectionHeader(
-                    title: category.label,
-                    count: ToolRegistry.inCategory(category).length,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      Space.page,
-                      0,
-                      Space.page,
-                      Space.sm,
+            if (recentTools.isNotEmpty) ...[
+              _Heading(
+                label: 'Recently used',
+                icon: Icons.history_rounded,
+                colour: context.colors.textSecondary,
+              ),
+              _ToolList(tools: recentTools),
+            ],
+
+            for (final category in IntelligenceCategory.values) ...[
+              _Heading(
+                label: category.label,
+                blurb: category.blurb,
+                icon: iconForCategory(category),
+                colour: colourForCategory(category, context.colors),
+                count: ToolRegistry.inCategory(category).length,
+              ),
+              _ToolList(tools: ToolRegistry.inCategory(category)),
+            ],
+
+            const SliverToBoxAdapter(
+              child: SizedBox(height: actionNavBarClearance + Space.lg),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The hero. Says what this place is, and what state the connection is in.
+class _StudioHero extends ConsumerWidget {
+  const _StudioHero({required this.connected});
+
+  final bool connected;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final localCount = ToolRegistry.local.length;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Space.page,
+        Space.xl,
+        Space.page,
+        Space.sm,
+      ),
+      child: AmbientGlow(
+        child: GlassSurface(
+          intensity: GlassIntensity.hero,
+          padding: const EdgeInsets.all(Space.xl),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: connected
+                          ? colors.confidenceConfirmed
+                          : colors.textTertiary,
+                      shape: BoxShape.circle,
                     ),
-                    child: Text(
-                      category.blurb,
-                      style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(width: Space.sm),
+                  Text(
+                    connected ? 'READY' : 'NOT CONNECTED',
+                    style: text.labelSmall?.copyWith(
+                      color: connected
+                          ? colors.confidenceConfirmed
+                          : colors.textTertiary,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
-                _ToolList(tools: ToolRegistry.inCategory(category)),
-              ],
+                ],
+              ),
+              const SizedBox(height: Space.md),
+              Text('Action Intelligence', style: text.headlineSmall),
+              const SizedBox(height: Space.xs),
+              Text(
+                connected
+                    ? 'Understand a document, improve a goal, build a plan, '
+                        'draft a reply, or check what you are looking at.'
+                    : 'Fifteen tools for understanding documents, planning and '
+                        'writing. Connect your own AI account to use them — you '
+                        'are billed by your provider, never by Action.',
+                style: text.bodyMedium,
+              ),
 
-              const SliverToBoxAdapter(child: SizedBox(height: Space.xxxl)),
+              if (!connected) ...[
+                const SizedBox(height: Space.lg),
+                FilledButton(
+                  onPressed: () => showConnectProviderSheet(context),
+                  child: const Text('Connect AI'),
+                ),
+                const SizedBox(height: Space.xs),
+                TextButton(
+                  onPressed: () => context.push(Routes.settingsIntelligence),
+                  child: const Text('How it works'),
+                ),
+                const SizedBox(height: Space.sm),
+                // The one thing a disconnected user can act on immediately.
+                // Saying it here stops the screen reading as entirely gated.
+                Row(
+                  children: [
+                    Icon(
+                      Icons.phone_android,
+                      size: 15,
+                      color: colors.confidenceConfirmed,
+                    ),
+                    const SizedBox(width: Space.xs),
+                    Expanded(
+                      child: Text(
+                        '$localCount of them already work without any of that, '
+                        'entirely on this device.',
+                        style: text.bodySmall?.copyWith(
+                          color: colors.confidenceConfirmed,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -94,48 +209,66 @@ class StudioScreen extends ConsumerWidget {
   }
 }
 
-/// The no-provider state. An invitation, with no upsell and no error styling.
-class _ConnectInvitation extends ConsumerWidget {
-  const _ConnectInvitation();
+/// A section heading with its own mark and colour.
+class _Heading extends StatelessWidget {
+  const _Heading({
+    required this.label,
+    required this.icon,
+    required this.colour,
+    this.blurb,
+    this.count,
+  });
+
+  final String label;
+  final String? blurb;
+  final IconData icon;
+  final Color colour;
+  final int? count;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        Space.page,
-        Space.lg,
-        Space.page,
-        Space.sm,
-      ),
-      child: GlassSurface(
-        intensity: GlassIntensity.regular,
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          Space.page,
+          Space.xxl,
+          Space.page,
+          Space.md,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Connect your AI', style: text.titleMedium),
-            const SizedBox(height: Space.sm),
-            Text(
-              'Action works without it. Connecting your own provider account '
-              'adds document analysis, planning and drafting — you use your '
-              'own API key, and you are billed by your provider.',
-              style: text.bodyMedium,
+            Row(
+              children: [
+                Icon(icon, size: 16, color: colour),
+                const SizedBox(width: Space.sm),
+                Flexible(
+                  child: Text(
+                    label.toUpperCase(),
+                    style: text.labelLarge?.copyWith(
+                      color: colors.textPrimary,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                ),
+                if (count != null) ...[
+                  const SizedBox(width: Space.sm),
+                  Text(
+                    '$count',
+                    style: text.labelSmall?.copyWith(
+                      color: colors.textTertiary,
+                    ),
+                  ),
+                ],
+              ],
             ),
-            const SizedBox(height: Space.lg),
-            // Stacked, not side by side: the app's FilledButton style sets a
-            // minimum size of Size.fromHeight(52), whose width is infinity, so
-            // these are full-width buttons by design and a Row would hand one
-            // unbounded width.
-            FilledButton(
-              onPressed: () => showConnectProviderSheet(context),
-              child: const Text('Connect AI'),
-            ),
-            const SizedBox(height: Space.xs),
-            TextButton(
-              onPressed: () => context.push(Routes.settingsIntelligence),
-              child: const Text('How it works'),
-            ),
+            if (blurb != null) ...[
+              const SizedBox(height: Space.xxs),
+              Text(blurb!, style: text.bodySmall),
+            ],
           ],
         ),
       ),
@@ -161,6 +294,10 @@ class _ToolList extends StatelessWidget {
   }
 }
 
+/// A tool, as a card you can tell apart from the one above it.
+///
+/// Solid rather than glass: these live in a long scrolling list, and a
+/// BackdropFilter per row is exactly the cost Day 16 removed.
 class _ToolCard extends StatelessWidget {
   const _ToolCard({required this.tool});
 
@@ -168,42 +305,73 @@ class _ToolCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
     final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final tone = colourForCategory(tool.category, colors);
 
-    return GlassSurface(
-      intensity: GlassIntensity.subtle,
-      padding: const EdgeInsets.all(Space.lg),
-      onTap: () => context.push(Routes.tool(tool.id)),
-      semanticLabel: '${tool.title}. ${tool.shortDescription}',
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(tool.title, style: text.titleSmall),
-                const SizedBox(height: Space.xxs),
-                Text(tool.shortDescription, style: text.bodySmall),
-              ],
-            ),
+    return Semantics(
+      button: true,
+      // Name and purpose together: a screen reader landing on fifteen of these
+      // should hear what each one does, not fifteen titles.
+      label: '${tool.title}. ${tool.shortDescription}'
+          '${tool.isLocal ? ' Runs on this device.' : ''}',
+      child: Material(
+      color: colors.surfaceElevated,
+      borderRadius: Radii.rLg,
+      child: InkWell(
+        onTap: () => context.push(Routes.tool(tool.id)),
+        borderRadius: Radii.rLg,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: Radii.rLg,
+            border: Border.all(color: colors.border, width: Strokes.hairline),
           ),
-          // Local tools say so, because "this never leaves your device" is the
-          // most useful thing a user can know about a tool before running it.
-          if (tool.isLocal)
-            Padding(
-              padding: const EdgeInsets.only(left: Space.sm),
-              child: Tooltip(
-                message: 'Runs on this device',
-                child: Icon(
-                  Icons.phone_android,
-                  size: 16,
-                  color: colors.confidenceConfirmed,
+          padding: const EdgeInsets.all(Space.md),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: tone.withValues(alpha: 0.10),
+                  borderRadius: Radii.rMd,
+                ),
+                child: Icon(iconForGlyph(tool.glyph), size: 19, color: tone),
+              ),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(tool.title, style: text.titleSmall),
+                    const SizedBox(height: Space.xxs),
+                    Text(tool.shortDescription, style: text.bodySmall),
+                  ],
                 ),
               ),
-            ),
-        ],
+              // Whether this tool needs a provider is the single most useful
+              // thing to know before tapping it, so it is on the card rather
+              // than discovered on the next screen.
+              if (tool.isLocal)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: Space.sm,
+                    top: Space.xxs,
+                  ),
+                  child: Tooltip(
+                    message: 'Runs on this device',
+                    child: Icon(
+                      Icons.phone_android,
+                      size: 15,
+                      color: colors.confidenceConfirmed,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
       ),
     );
   }
