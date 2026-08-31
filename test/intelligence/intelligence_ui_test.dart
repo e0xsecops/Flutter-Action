@@ -230,7 +230,7 @@ void main() {
       final container = ProviderScope.containerOf(
         tester.element(find.byType(ActionApp)),
       );
-      container.read(routerProvider).push('/studio/tool/smart-summary');
+      container.read(routerProvider).push('/tool/smart-summary');
       await tester.pumpAndSettle();
 
       expect(
@@ -253,7 +253,7 @@ void main() {
       final container = ProviderScope.containerOf(
         tester.element(find.byType(ActionApp)),
       );
-      container.read(routerProvider).push('/studio/tool/redaction-assistant');
+      container.read(routerProvider).push('/tool/redaction-assistant');
       await tester.pumpAndSettle();
 
       // No connect prompt, because this one never needed a provider.
@@ -274,7 +274,7 @@ void main() {
       final container = ProviderScope.containerOf(
         tester.element(find.byType(ActionApp)),
       );
-      container.read(routerProvider).push('/studio/tool/nope');
+      container.read(routerProvider).push('/tool/nope');
       await tester.pumpAndSettle();
 
       expect(find.text('That tool is not available'), findsOneWidget);
@@ -556,7 +556,7 @@ void main() {
       final container = ProviderScope.containerOf(
         tester.element(find.byType(ActionApp)),
       );
-      container.read(routerProvider).push('/studio/tool/redaction-assistant');
+      container.read(routerProvider).push('/tool/redaction-assistant');
       await tester.pumpAndSettle();
 
       // Pick exactly one of the three.
@@ -597,7 +597,7 @@ void main() {
       final container = ProviderScope.containerOf(
         tester.element(find.byType(ActionApp)),
       );
-      container.read(routerProvider).push('/studio/tool/redaction-assistant');
+      container.read(routerProvider).push('/tool/redaction-assistant');
       await tester.pumpAndSettle();
 
       // Labelled by kind, never by file path.
@@ -619,10 +619,11 @@ void main() {
       expect(_http.calls, 0);
     });
 
-    uiTest('Add is still the primary action on Home', (tester) async {
-      // Intelligence sits beside Add; it must not displace it.
+    uiTest('Capture is still the primary action', (tester) async {
+      // Intelligence is a destination now; Capture stays the one raised,
+      // brand-filled control in the shell.
       await pumpApp(tester);
-      expect(find.text('Add something'), findsOneWidget);
+      expect(find.byTooltip('Capture something'), findsOneWidget);
     });
 
     uiTest('a source suggests tools chosen from its own text', (tester) async {

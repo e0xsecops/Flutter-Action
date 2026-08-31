@@ -94,11 +94,17 @@ Widget _app(SourceStore store, {OcrService? ocr}) {
 /// finishes closing.
 void appTest(String description, Future<void> Function(WidgetTester) body) {
   testWidgets(description, (tester) async {
-    await body(tester);
-    await tester.pumpWidget(const SizedBox.shrink());
-    // Elapsing is what runs that timer: a bare `pump()` only flushes
-    // microtasks and would leave it pending.
-    await tester.pump(Duration.zero);
+    try {
+      await body(tester);
+    } finally {
+      // In a finally, so a failing test still tears its tree down. Without it
+      // one failure left pending timers behind and every later test in the
+      // file hung — turning a two-second failure into an eight-minute one.
+      await tester.pumpWidget(const SizedBox.shrink());
+      // Elapsing is what runs that timer: a bare `pump()` only flushes
+      // microtasks and would leave it pending.
+      await tester.pump(Duration.zero);
+    }
   });
 }
 
@@ -125,8 +131,11 @@ void main() {
     await tester.pumpWidget(_app(FakeSourceStore()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Nothing needs your attention'), findsOneWidget);
-    expect(find.text('Add something'), findsOneWidget);
+    // V2 splits the empty state. A brand-new user is told what Action can do
+    // and given a way in, rather than being told only what is absent.
+    expect(find.text('Start with anything'), findsOneWidget);
+    expect(find.text('WHAT ACTION HANDLES'), findsOneWidget);
+    expect(find.text('Capture something'), findsWidgets);
   });
 
   appTest('a confirmed Action that was saved earlier is on Home after a '
@@ -146,7 +155,7 @@ void main() {
     await tester.pumpWidget(_app(FakeSourceStore()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Upcoming'.toUpperCase()), findsOneWidget);
+    expect(find.text('AHEAD'), findsOneWidget);
     expect(find.text('Pay the Riverford Energy bill'), findsOneWidget);
     expect(find.text('Nothing needs your attention'), findsNothing);
   });
@@ -282,7 +291,9 @@ void main() {
     await tester.pumpWidget(_app(FakeSourceStore()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Needs attention'.toUpperCase()), findsOneWidget);
+    // A single needs-attention Action is the hero, so there is no section
+    // header above it — but it still says why it is there.
+    expect(find.text('NEEDS YOU'), findsOneWidget);
     expect(find.text('CRITICAL'), findsOneWidget);
   });
 
@@ -291,8 +302,10 @@ void main() {
     await tester.pumpWidget(_app(FakeSourceStore()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Upcoming'.toUpperCase()), findsOneWidget);
-    expect(find.text('Needs attention'.toUpperCase()), findsNothing);
+    // A quiet Action is the hero, but the brief says the day is clear rather
+    // than manufacturing urgency for it.
+    expect(find.text('AHEAD'), findsOneWidget);
+    expect(find.text('NEEDS YOU'), findsNothing);
     // No badge: a label on every card is a label on none of them.
     expect(find.text('CRITICAL'), findsNothing);
   });
@@ -307,7 +320,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('ALL STEPS DONE'), findsOneWidget);
-    expect(find.text('Needs attention'.toUpperCase()), findsOneWidget);
+    expect(find.text('NEEDS YOU'), findsOneWidget);
   });
 
   appTest('a reminder the user set for soon lifts an Action', (tester) async {
@@ -326,7 +339,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('REMINDER SOON'), findsOneWidget);
-    expect(find.text('Needs attention'.toUpperCase()), findsOneWidget);
+    expect(find.text('NEEDS YOU'), findsOneWidget);
   });
 
   appTest('a reminder blocked on permission lifts nothing', (tester) async {
@@ -361,8 +374,11 @@ void main() {
     await tester.tap(find.byTooltip('Mark "Pay the water bill" as done'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Completed'.toUpperCase()), findsOneWidget);
-    expect(find.text('Needs attention'.toUpperCase()), findsNothing);
+    // Finished work leaves the daily surface entirely: Today acknowledges it
+    // in one line and the Logbook is Library -> Done. No researched product
+    // keeps completions on the daily screen.
+    expect(find.text('1 done'), findsOneWidget);
+    expect(find.text('NEEDS YOU'), findsNothing);
     // A finished obligation is never described as late.
     expect(find.text('DUE TODAY'), findsNothing);
   });
@@ -375,7 +391,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Return the router'), findsNothing);
-    expect(find.text('Nothing needs your attention'), findsOneWidget);
+    // An archived Action still counts as having used the app, so this is the
+    // cleared state rather than the first-run one.
+    expect(find.text("You're clear"), findsOneWidget);
   });
 
   appTest('a big amount does not jump the queue', (tester) async {
@@ -419,8 +437,13 @@ void main() {
 
     // Confirmed Actions own "Needs attention" now; raw captures have their
     // own section.
-    expect(find.text('Captures'.toUpperCase()), findsOneWidget);
-    expect(find.text(SourceType.pastedText.provenanceLabel), findsOneWidget);
+    // Today shows captures that are actually waiting on the user; the full
+    // inbox lives in Library -> Captures.
+    expect(find.text('WAITING FOR REVIEW'), findsOneWidget);
+    expect(
+      find.textContaining(SourceType.pastedText.provenanceLabel),
+      findsWidgets,
+    );
     expect(find.textContaining('30 September'), findsOneWidget);
   });
 
@@ -527,7 +550,7 @@ void main() {
     await tester.pumpWidget(_app(FakeSourceStore()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Add something'));
+    await tester.tap(find.byTooltip('Capture something'));
     await tester.pumpAndSettle();
 
     expect(find.text('Take a photo'), findsOneWidget);
@@ -540,14 +563,14 @@ void main() {
     await tester.pumpWidget(_app(FakeSourceStore()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Add something'));
+    await tester.tap(find.byTooltip('Capture something'));
     await tester.pumpAndSettle();
 
     await tester.tapAt(const Offset(200, 60));
     await tester.pumpAndSettle();
 
     expect(find.text('Take a photo'), findsNothing);
-    expect(find.text('Nothing needs your attention'), findsOneWidget);
+    expect(find.text('Start with anything'), findsOneWidget);
   });
 
   appTest('paste screen gates Continue until there is enough text',
@@ -555,7 +578,7 @@ void main() {
     await tester.pumpWidget(_app(FakeSourceStore()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Add something'));
+    await tester.tap(find.byTooltip('Capture something'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Paste text'));
     await tester.pumpAndSettle();
@@ -578,7 +601,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(SourceType.pastedText.provenanceLabel));
+    await tester.tap(find.textContaining('Renewal due 30 September'));
     await tester.pumpAndSettle();
 
     expect(find.text('What we read'), findsOneWidget);
@@ -607,7 +630,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(SourceType.photo.provenanceLabel));
+    // The card now leads with the reason it failed, which is both the useful
+    // thing to show and a stable handle for opening it.
+    await tester.tap(find.text('Text recognition could not run.'));
     await tester.pumpAndSettle();
 
     expect(find.text("Couldn't read this"), findsOneWidget);

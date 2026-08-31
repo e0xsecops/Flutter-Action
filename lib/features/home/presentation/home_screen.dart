@@ -1,47 +1,58 @@
-import 'dart:async';
-import 'dart:io';
+/// Today — what requires you, what to do next, what is coming.
+///
+/// **What changed in V2 and why.** The previous Home was a greeting, a date,
+/// three small icons and a triaged list. On device it was more than half empty
+/// canvas, the largest element on screen was the word "Good evening", and a new
+/// user was told only what was *absent*: "Nothing needs your attention". None
+/// of the app's actual capability — reading documents, finding deadlines,
+/// keeping evidence, the Intelligence tools — was visible anywhere.
+///
+/// Today now answers four questions in order, and only shows a section when it
+/// has something in it:
+///
+///   WHAT REQUIRES ME?       the brief, and the one Action it points at
+///   WHAT SHOULD I DO NEXT?  that Action's next step, on the hero
+///   WHAT IS WAITING?        captures read but not yet acted on
+///   WHAT IS COMING?         upcoming deadlines
+///
+/// **The brief is deterministic.** Every number and sentence comes from
+/// [ActionBrief], which counts triaged Actions and unreviewed captures. No
+/// model, no score, no network. The first screen of the app must be true and
+/// instant.
+library;
 
-import 'package:flutter/foundation.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../../app/action_shell.dart';
 import '../../../app/router.dart';
 import '../../../design/components/glass_surface.dart';
 import '../../../design/components/readable_width.dart';
 import '../../../design/components/section_header.dart';
+import '../../../design/ambient/ambient_background.dart';
 import '../../../design/tokens/colors.dart';
-import '../../../design/tokens/dimens.dart';
-import '../../../design/tokens/typography.dart';
-import '../../../shared/widgets/empty_view.dart';
-import '../../../shared/widgets/error_view.dart';
-import '../../../shared/widgets/loading_view.dart';
-import '../../actions/application/action_triage.dart';
-import '../../actions/application/triage_labels.dart';
-import '../../actions/application/action_providers.dart';
-import '../../actions/domain/action_item.dart';
-import '../../capture/application/capture_controller.dart';
-import '../../capture/domain/source_item.dart';
-import '../../capture/presentation/capture_sheet.dart';
-import '../../capture/presentation/preview_screen.dart';
-import '../../extraction/domain/extraction_schema.dart';
 import '../../../core/analytics/app_analytics.dart';
 import '../../../core/analytics/firebase_app_analytics.dart';
+import '../../../design/tokens/dimens.dart';
+import '../../../shared/widgets/error_view.dart';
+import '../../../shared/widgets/loading_view.dart';
+import '../../actions/application/action_providers.dart';
+import '../../actions/application/action_triage.dart';
+import '../../actions/application/triage_labels.dart';
+import '../../actions/domain/action_item.dart';
+import '../../actions/presentation/action_card.dart';
+import '../../capture/application/capture_controller.dart';
+import '../../capture/domain/source_item.dart';
+import '../../capture/presentation/preview_screen.dart';
+import '../../library/presentation/source_card.dart';
+import '../application/action_brief.dart';
+import 'capability_preview.dart';
 
-/// Home: the user's confirmed Actions, then their unreviewed captures.
-///
-/// Actions are the product object now — read from the durable local store,
-/// never from anything in memory, grouped into NEEDS ATTENTION / UPCOMING /
-/// COMPLETED by the deterministic, explainable rules in [triageHome]. Captures
-/// keep their own section below: a capture is still something to deal with,
-/// but it is raw material rather than a commitment.
-///
-/// Empty sections are hidden rather than rendered as rows of nothing — three
-/// permanently empty headings is what makes a productivity app feel like a
-/// spreadsheet. A database error is its own state: it must never read as
-/// "your Actions disappeared", and it never triggers a silent re-create.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -68,10 +79,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   /// in which case the picker's result is never delivered to the call that is
   /// waiting for it — that call died with the process. image_picker holds the
   /// result until `retrieveLostData` is asked for it.
-  ///
-  /// This recovers the *picked file* only. Anything the user had typed
-  /// elsewhere is genuinely gone, and the routing structure on its own does not
-  /// change that.
   Future<void> _recoverLostCapture() async {
     final XFile? file;
     try {
@@ -81,8 +88,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
     if (file == null || !mounted) return;
 
-    // The lost activity is almost always the camera; gallery picking does not
-    // put another app in the foreground long enough to be reclaimed.
     context.push(
       Routes.capturePreview,
       extra: PreviewArgs(path: file.path, type: SourceType.photo),
@@ -91,412 +96,209 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sources = ref.watch(sourcesProvider);
-    final actions = ref.watch(actionsStreamProvider);
+    final sourcesAsync = ref.watch(sourcesProvider);
+    final actionsAsync = ref.watch(actionsStreamProvider);
     final triaged = ref.watch(triagedHomeProvider);
 
-    final Widget body;
-    if (actions is AsyncError) {
+    if (actionsAsync is AsyncError) {
       // The local database could not be read. This is loud but calm, and it
       // deliberately does not overlap with "no Actions yet" — data that
       // cannot be loaded has not vanished.
-      body = ErrorView(
-        message: "Your actions couldn't be loaded. They are still stored on "
-            'this device.',
-        onRetry: () => ref.invalidate(actionsStreamProvider),
-      );
-    } else if (actions is AsyncLoading && sources is AsyncLoading) {
-      body = const LoadingView();
-    } else {
-      body = _Inbox(
-        // Ranking is decided by the triage engine, not here: a widget is the
-        // wrong place to argue about what deserves attention.
-        home: switch (triaged) {
-          AsyncData(:final value) => value,
-          _ => const TriagedHome(
-              needsAttention: [],
-              upcoming: [],
-              completed: [],
-              decisions: {},
-            ),
-        },
-        now: ref.watch(appClockProvider)(),
-        sourceItems: sources.value ?? const [],
+      return SafeArea(
+        child: ReadableWidth.list(
+          child: ErrorView(
+            message:
+                "Your actions couldn't be loaded. They are still stored "
+                'on this device.',
+            onRetry: () => ref.invalidate(actionsStreamProvider),
+          ),
+        ),
       );
     }
 
-    return Scaffold(
-      // The inbox runs the full height and the Add bar floats over it, so
-      // cards pass *behind* the glass rather than stopping above a solid
-      // strip. That is the whole reason the bar is glass: a translucent panel
-      // with nothing moving underneath is just a tinted rectangle.
-      extendBody: true,
-      body: SafeArea(bottom: false, child: ReadableWidth.list(child: body)),
-      bottomNavigationBar: const _AddBar(),
-    );
-  }
-}
+    if (actionsAsync is AsyncLoading && sourcesAsync is AsyncLoading) {
+      return const SafeArea(child: LoadingView());
+    }
 
-class _Inbox extends StatelessWidget {
-  const _Inbox({
-    required this.home,
-    required this.now,
-    required this.sourceItems,
-  });
+    final home = switch (triaged) {
+      AsyncData(:final value) => value,
+      _ => const TriagedHome(
+        needsAttention: [],
+        upcoming: [],
+        completed: [],
+        decisions: {},
+      ),
+    };
+    final sources = sourcesAsync.value ?? const <SourceItem>[];
+    final actions = actionsAsync.value ?? const <ActionItem>[];
+    final now = ref.watch(appClockProvider)();
 
-  final TriagedHome home;
-  final DateTime now;
-  final List<SourceItem> sourceItems;
-
-  @override
-  Widget build(BuildContext context) {
-    final nothingAtAll = home.isEmpty && sourceItems.isEmpty;
-
-    SliverList actionList(List<ActionItem> actions) => SliverList.separated(
-          itemCount: actions.length,
-          separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
-          itemBuilder: (context, i) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Space.page),
-            child: _ActionRow(
-              item: actions[i],
-              decision: home.decisionFor(actions[i].id),
-              now: now,
-            ),
-          ),
-        );
-
-    return CustomScrollView(
-      slivers: [
-        const SliverToBoxAdapter(child: _Greeting()),
-        if (nothingAtAll)
-          const SliverFillRemaining(
-            hasScrollBody: false,
-            // The Add bar floats over the body, so the empty state reserves
-            // its height. In portrait this clears the message comfortably.
-            //
-            // In landscape on a phone it does not: there is roughly 800 px
-            // of body for a greeting plus this content, and the last line of
-            // the message still sits under the bar. Doubling the reservation
-            // was tried and changed nothing, so the cause is the sheer lack
-            // of height rather than the padding. Left as it is deliberately —
-            // this is the empty state, seen once before anything is added,
-            // with the only available action being the button doing the
-            // covering. Recorded in the Day-19 limitations rather than
-            // solved with a landscape-specific layout during a freeze.
-            child: Padding(
-              padding: EdgeInsets.only(bottom: _addBarClearance),
-              child: EmptyView(
-                icon: Icons.inbox_outlined,
-                title: 'Nothing needs your attention',
-                message:
-                    'Add a photo, a screenshot, or some text. Action works out '
-                    'what it is and what you need to do about it.',
-              ),
-            ),
-          )
-        else ...[
-          if (home.needsAttention.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: SectionHeader(
-                title: 'Needs attention',
-                count: home.needsAttention.length,
-              ),
-            ),
-            actionList(home.needsAttention),
-          ],
-          if (home.upcoming.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: SectionHeader(
-                title: 'Upcoming',
-                count: home.upcoming.length,
-              ),
-            ),
-            actionList(home.upcoming),
-          ],
-          if (home.completed.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: SectionHeader(
-                title: 'Completed',
-                count: home.completed.length,
-              ),
-            ),
-            actionList(home.completed),
-          ],
-          if (sourceItems.isNotEmpty) ...[
-            SliverToBoxAdapter(
-              child: SectionHeader(
-                title: 'Captures',
-                count: sourceItems.length,
-              ),
-            ),
-            SliverList.separated(
-              itemCount: sourceItems.length,
-              separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
-              itemBuilder: (context, i) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Space.page),
-                child: _SourceRow(item: sourceItems[i]),
-              ),
-            ),
-          ],
-          // Clears the floating Add bar, so the last card can be scrolled
-          // out from under it and read in full.
-          const SliverToBoxAdapter(child: SizedBox(height: _addBarClearance)),
-        ],
-      ],
-    );
-  }
-}
-
-/// The Action Card: urgency spine on the left (warm, solid — the documented
-/// treatment), title, deadline and amount in tabular figures, and a
-/// completion toggle, and the way into the Action itself.
-///
-/// The triage badge is the card's one piece of explanation: why this card is
-/// where it is, readable at a glance. Quiet Actions get no badge at all —
-/// a label on every row is a label on none of them.
-class _ActionRow extends ConsumerWidget {
-  const _ActionRow({
-    required this.item,
-    required this.decision,
-    required this.now,
-  });
-
-  final ActionItem item;
-  final ActionTriageDecision? decision;
-  final DateTime now;
-
-  /// Whether the triage badge already says where the deadline stands.
-  ///
-  /// "Critical" and "All steps done" say nothing about a date, so those cards
-  /// still want "Due 23 Aug" on the meta line.
-  bool get _badgeStatesDue => switch (decision?.primaryReason) {
-        TriageReason.overdue ||
-        TriageReason.dueToday ||
-        TriageReason.dueTomorrow =>
-          true,
-        _ => false,
-      };
-
-  /// The one-line reason, or nothing.
-  ///
-  /// Tapping it explains in a full sentence — the same sentence a screen
-  /// reader hears, because a colour is not an explanation.
-  Widget? _triageBadge(BuildContext context) {
-    final d = decision;
-    if (d == null) return null;
-    final label = TriageLabels.badge(d, item, now);
-    if (label == null) return null;
-
-    final colors = context.colors;
-    final text = Theme.of(context).textTheme;
-    // Emphasis in proportion: overdue is important, not an emergency, so it
-    // gets a warm word rather than a red slab.
-    final tone = switch (d.primaryReason) {
-      TriageReason.overdue => colors.urgencyCritical,
-      TriageReason.dueToday ||
-      TriageReason.criticalDueSoon ||
-      TriageReason.criticalNoDeadline =>
-        colors.urgencyImportant,
-      _ => colors.textSecondary,
+    final actionedSourceIds = {
+      for (final action in actions)
+        if (action.sourceId != null) action.sourceId!,
     };
 
-    return Padding(
-      padding: const EdgeInsets.only(top: Space.xs),
-      child: Semantics(
-        label: TriageLabels.semanticLabel(d, item, now),
-        button: true,
-        child: InkWell(
-          onTap: () => _explain(context, d),
-          borderRadius: Radii.rSm,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: Space.xxs),
-            child: Text(
-              label,
-              style: text.labelSmall?.copyWith(
-                color: tone,
-                letterSpacing: 0.8,
+    final brief = ActionBrief.from(
+      home: home,
+      sources: sources,
+      actionedSourceIds: actionedSourceIds,
+      hasAnyAction: actions.isNotEmpty,
+    );
+
+    // Same rule as the brief: anything not yet turned into an Action. A
+    // capture still being read belongs here too, so what you just added is
+    // visible immediately rather than after OCR finishes.
+    final awaitingReview =
+        sources.where((s) => !actionedSourceIds.contains(s.id)).toList()
+          ..sort((a, b) => b.capturedAt.compareTo(a.capturedAt));
+
+    return SafeArea(
+      bottom: false,
+      child: ReadableWidth.list(
+        child: CustomScrollView(
+          slivers: [
+            const SliverToBoxAdapter(child: _TodayHeader()),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  Space.page,
+                  Space.sm,
+                  Space.page,
+                  Space.lg,
+                ),
+                child: _BriefHero(brief: brief, now: now),
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
 
-  void _explain(BuildContext context, ActionTriageDecision decision) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(TriageLabels.explanation(decision, item, now)),
-      ),
-    );
-  }
+            // A brand-new user gets the capability preview instead of a list of
+            // empty headings. This is the single most important thing on the
+            // screen for them: it is the only place the app says what it does.
+            if (brief.isFirstRun)
+              const SliverToBoxAdapter(child: CapabilityPreview()),
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.colors;
-    final text = Theme.of(context).textTheme;
-    final completed = item.status == ActionStatus.completed;
-
-    final spine = switch (item.urgency) {
-      ActionUrgency.critical => colors.urgencyCritical,
-      ActionUrgency.important => colors.urgencyImportant,
-      ActionUrgency.normal => colors.urgencyNormal,
-      ActionUrgency.low || ActionUrgency.unknown => colors.urgencyLow,
-    };
-
-    return Material(
-      color: colors.surfaceElevated,
-      borderRadius: Radii.rMd,
-      child: InkWell(
-        // The card opens the Action; the completion toggle keeps its own hit
-        // target inside it, so finishing something never costs a navigation.
-        onTap: () => context.push(Routes.action(item.id)),
-        borderRadius: Radii.rMd,
-        child: Container(
-        decoration: BoxDecoration(
-          borderRadius: Radii.rMd,
-          border: Border.all(color: colors.border, width: Strokes.hairline),
-        ),
-        padding: const EdgeInsets.fromLTRB(0, Space.md, Space.xs, Space.md),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: Strokes.spine,
-              height: 40,
-              margin: const EdgeInsets.only(left: Space.md),
-              decoration: BoxDecoration(
-                color: completed ? colors.border : spine,
-                borderRadius: BorderRadius.circular(Radii.pill),
+            // Whatever the hero is showing is excluded from the lists below.
+            // The hero draws from needsAttention when it can and falls back to
+            // upcoming, so the exclusion has to follow it rather than always
+            // skipping the head of one particular list.
+            if (_without(home.needsAttention, brief.topAction)
+                case final rest when rest.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: SectionHeader(
+                  title: brief.topAction != null &&
+                          home.needsAttention.contains(brief.topAction)
+                      ? 'Also needs attention'
+                      : 'Needs attention',
+                ),
               ),
-            ),
-            const SizedBox(width: Space.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.title,
-                    style: text.titleSmall?.copyWith(
-                      color:
-                          completed ? colors.textTertiary : colors.textPrimary,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+              _actionList(rest, home, now),
+            ],
+
+            if (awaitingReview.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: SectionHeader(
+                  title: 'Waiting for review',
+                  count: awaitingReview.length,
+                ),
+              ),
+              SliverList.separated(
+                itemCount: awaitingReview.length.clamp(0, 3),
+                separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
+                itemBuilder: (context, i) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Space.page),
+                  child: SourceCard(
+                    source: awaitingReview[i],
+                    hasAction: false,
+                    onTap: () =>
+                        context.push(Routes.source(awaitingReview[i].id)),
                   ),
-                  const SizedBox(height: Space.xxs),
-                  // The badge owns the deadline story when it has one, so the
-                  // meta line does not repeat it. "Overdue · was due 14 Aug"
-                  // above "OVERDUE · 4 DAYS" is the same fact twice.
-                  _ActionMetaLine(item: item, suppressDue: _badgeStatesDue),
-                  ?_triageBadge(context),
-                ],
+                ),
               ),
-            ),
-            IconButton(
-              // Named, because a screen reader announcing "Mark as done"
-              // three times in a list says nothing about which of the three
-              // is about to be marked.
-              tooltip: completed
-                  ? 'Completed: ${item.title}'
-                  : 'Mark "${item.title}" as done',
-              onPressed: completed
-                  ? null
-                  : () async {
-                      await ref
-                          .read(actionRepositoryProvider)
-                          .complete(item.id, at: DateTime.now());
-                      ref
-                          .read(appAnalyticsProvider)
-                          .log(AnalyticsEvents.actionCompleted);
-                      unawaited(
-                          ref.read(actionSyncServiceProvider).flush());
-                    },
-              icon: Icon(
-                completed
-                    ? Icons.check_circle_outline_rounded
-                    : Icons.radio_button_unchecked_rounded,
-                color: completed
-                    ? colors.confidenceConfirmed
-                    : colors.textTertiary,
+              if (awaitingReview.length > 3)
+                SliverToBoxAdapter(
+                  child: _SeeAll(
+                    label: 'See all ${awaitingReview.length} captures',
+                    onTap: () => context.go(Routes.library),
+                  ),
+                ),
+            ],
+
+            if (_without(home.upcoming, brief.topAction)
+                case final upcoming when upcoming.isNotEmpty) ...[
+              const SliverToBoxAdapter(
+                child: SectionHeader(title: 'Coming up'),
               ),
+              _actionList(upcoming.take(4).toList(), home, now),
+              if (upcoming.length > 4)
+                SliverToBoxAdapter(
+                  child: _SeeAll(
+                    label: 'See all in Library',
+                    onTap: () => context.go(Routes.library),
+                  ),
+                ),
+            ],
+
+            // Finished work gets one line, not a section.
+            //
+            // Every comparable product keeps completions off the daily surface
+            // — Things has a Logbook, Todoist has Activity — because a growing
+            // list of things you already did costs scroll every day and buys
+            // nothing. Action's Logbook is Library → Done, so Today only needs
+            // to acknowledge the win and point at it.
+            if (home.completed.isNotEmpty)
+              SliverToBoxAdapter(
+                child: _CompletedSummary(count: home.completed.length),
+              ),
+
+            const SliverToBoxAdapter(
+              child: SizedBox(height: actionNavBarClearance + Space.lg),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// [items] minus the Action the hero is already showing.
+  ///
+  /// The hero draws from needsAttention when it can and falls back to upcoming,
+  /// so the exclusion has to follow it rather than always skipping the head of
+  /// one particular list — which is how the same Action ended up rendered twice.
+  static List<ActionItem> _without(List<ActionItem> items, ActionItem? hero) {
+    if (hero == null) return items;
+    return items.where((a) => a.id != hero.id).toList();
+  }
+
+  Widget _actionList(List<ActionItem> items, TriagedHome home, DateTime now) {
+    return SliverList.separated(
+      itemCount: items.length,
+      separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
+      itemBuilder: (context, i) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Space.page),
+        child: ActionCard(
+          item: items[i],
+          decision: home.decisionFor(items[i].id),
+          now: now,
         ),
       ),
     );
   }
 }
 
-class _ActionMetaLine extends StatelessWidget {
-  const _ActionMetaLine({required this.item, this.suppressDue = false});
-
-  final ActionItem item;
-
-  /// True when the triage badge already states the deadline relation, so
-  /// repeating it here would be the same fact twice.
-  final bool suppressDue;
+/// The header.
+///
+/// The date is the eyebrow and the greeting is the title — the reverse of the
+/// old arrangement, where a 32px "Good evening" was the largest thing on screen
+/// and told the user nothing. Settings is the only control here now; Search and
+/// Intelligence became destinations in the shell, which is where a place
+/// belongs.
+class _TodayHeader extends StatelessWidget {
+  const _TodayHeader();
 
   @override
   Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
     final colors = context.colors;
-    final text = Theme.of(context).textTheme;
-    final now = DateTime.now();
-
-    final parts = <InlineSpan>[];
-    final due = item.dueAt;
-    if (item.status == ActionStatus.completed) {
-      parts.add(TextSpan(
-        text: 'Done ${_relativeTime(item.completedAt ?? item.updatedAt)}',
-      ));
-    } else if (due != null && !suppressDue) {
-      final startOfToday = DateTime(now.year, now.month, now.day);
-      final overdue = due.wallClock.isBefore(startOfToday);
-      final dueToday = !overdue &&
-          due.wallClock.isBefore(startOfToday.add(const Duration(days: 1)));
-      final label = overdue
-          ? 'Overdue · was due ${DateFormat('d MMM').format(due.wallClock)}'
-          : dueToday
-              ? 'Due today'
-              : 'Due ${DateFormat(due.wallClock.year == now.year ? 'd MMM' : 'd MMM yyyy').format(due.wallClock)}';
-      parts.add(TextSpan(
-        text: label,
-        style: overdue || dueToday
-            ? text.bodySmall?.copyWith(color: colors.urgencyCritical)
-            : null,
-      ));
-    }
-    if (item.amount != null) {
-      if (parts.isNotEmpty) parts.add(const TextSpan(text: '  ·  '));
-      parts.add(TextSpan(text: '${item.amount}'));
-    }
-    if (parts.isEmpty) {
-      // Nothing to summarise. A manually created Action has no category
-      // either, and its label would read "Not sure" — a doubt the app has no
-      // business claiming about something the user typed themselves.
-      parts.add(TextSpan(
-        text: item.origin == ActionOrigin.manual
-            ? 'Created by you'
-            : item.category.label,
-      ));
-    }
-
-    return Text.rich(
-      TextSpan(children: parts),
-      style: text.bodySmall?.copyWith(fontFeatures: AppText.numeric),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-}
-
-class _Greeting extends StatelessWidget {
-  const _Greeting();
-
-  @override
-  Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
     final now = DateTime.now();
 
     final greeting = switch (now.hour) {
@@ -508,8 +310,8 @@ class _Greeting extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         Space.page,
-        Space.xxl,
-        Space.page,
+        Space.xl,
+        Space.sm,
         Space.xs,
       ),
       child: Row(
@@ -519,241 +321,333 @@ class _Greeting extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(greeting, style: text.displaySmall),
-                const SizedBox(height: Space.xs),
                 Text(
-                  DateFormat('EEEE, d MMMM').format(now),
-                  style: text.bodyMedium,
+                  DateFormat('EEEE · d MMMM').format(now).toUpperCase(),
+                  style: text.labelSmall?.copyWith(
+                    color: colors.textTertiary,
+                    letterSpacing: 1.1,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
+                const SizedBox(height: Space.xxs),
+                Text(greeting, style: text.headlineMedium),
               ],
             ),
-          ),
-          IconButton(
-            tooltip: 'Search',
-            icon: const Icon(Icons.search),
-            onPressed: () => context.push(Routes.search),
           ),
           IconButton(
             tooltip: 'Settings',
             icon: const Icon(Icons.tune_rounded),
             onPressed: () => context.push(Routes.settings),
           ),
-          // Debug builds only; the route itself is not registered in release.
-          if (kDebugMode)
-            IconButton(
-              tooltip: 'OCR diagnostics',
-              icon: const Icon(Icons.science_outlined),
-              onPressed: () => context.push(Routes.diagnostics),
-            ),
         ],
       ),
     );
   }
 }
 
-/// A capture that has not been read yet.
+/// The signature surface of the app.
 ///
-/// Deliberately not an Action Card: there is no urgency to show and no
-/// confidence to report, and borrowing that treatment now would imply the app
-/// understands more than it does.
-class _SourceRow extends StatelessWidget {
-  const _SourceRow({required this.item});
+/// One hero, elevated glass, sitting in its own pool of light. It carries the
+/// brief's headline and — when there is one — the single Action that matters
+/// most, with its next step. This is the only place on Today that uses glass:
+/// everything below is a solid card in a scrolling list, where a blur per row
+/// would be exactly the cost Day 16 removed.
+class _BriefHero extends StatelessWidget {
+  const _BriefHero({required this.brief, required this.now});
 
-  final SourceItem item;
+  final ActionBrief brief;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
-    return Material(
-      color: colors.surfaceElevated,
-      borderRadius: Radii.rMd,
-      child: InkWell(
-        borderRadius: Radii.rMd,
-        onTap: () => context.push(Routes.source(item.id)),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: Radii.rMd,
-            border: Border.all(color: colors.border, width: Strokes.hairline),
-          ),
-          padding: const EdgeInsets.all(Space.md),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Thumbnail(item: item),
-              const SizedBox(width: Space.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.type.provenanceLabel,
-                      style: text.titleSmall,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: Space.xxs),
-                    _Status(item: item),
-                    const SizedBox(height: Space.sm),
-                    Text(
-                      _relativeTime(item.capturedAt),
-                      style:
-                          text.labelSmall?.copyWith(color: colors.textTertiary),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+    final tone = switch (brief.tone) {
+      BriefTone.attention => colors.urgencyImportant,
+      BriefTone.review => colors.brand,
+      BriefTone.upcoming => colors.textSecondary,
+      BriefTone.clear => colors.confidenceConfirmed,
+    };
 
-/// One line describing where the capture has got to.
-///
-/// "Reading" and "couldn't read" are states the user needs to distinguish, so
-/// they read as sentences rather than as a badge they have to decode.
-class _Status extends StatelessWidget {
-  const _Status({required this.item});
+    final top = brief.topAction;
 
-  final SourceItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final text = Theme.of(context).textTheme;
-
-    return switch (item.state) {
-      SourceProcessingState.pending ||
-      SourceProcessingState.processing =>
-        Row(
+    return AmbientGlow(
+      colour: brief.tone == BriefTone.attention
+          ? colors.urgencyImportant
+          : null,
+      intensity: brief.tone == BriefTone.clear ? 0.6 : 1,
+      child: GlassSurface(
+        intensity: GlassIntensity.hero,
+        padding: const EdgeInsets.all(Space.xl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: 12,
-              height: 12,
-              child: CircularProgressIndicator(
-                strokeWidth: 1.6,
-                color: colors.textTertiary,
-              ),
+            Row(
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: tone,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: Space.sm),
+                Text(
+                  switch (brief.tone) {
+                    BriefTone.attention => 'NEEDS YOU',
+                    BriefTone.review => 'TO REVIEW',
+                    BriefTone.upcoming => 'AHEAD',
+                    // "CLEAR" congratulates someone who has cleared a list; it
+                    // is meaningless to someone who has never had one.
+                    BriefTone.clear =>
+                      brief.isFirstRun ? 'START HERE' : 'CLEAR',
+                  },
+                  style: text.labelSmall?.copyWith(
+                    color: tone,
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: Space.sm),
-            Text('Reading the text…', style: text.bodySmall),
+            const SizedBox(height: Space.md),
+            Text(brief.headline, style: text.headlineSmall),
+            if (brief.detail != null) ...[
+              const SizedBox(height: Space.xs),
+              Text(brief.detail!, style: text.bodyMedium),
+            ],
+
+            if (top != null) ...[
+              const SizedBox(height: Space.lg),
+              Divider(color: colors.border, height: Strokes.hairline),
+              const SizedBox(height: Space.lg),
+              _TopAction(item: top, now: now, decision: brief.topDecision),
+            ],
           ],
         ),
-      SourceProcessingState.failed => Text(
-          item.failureReason ?? "Couldn't read this",
-          style: text.bodySmall?.copyWith(color: colors.danger),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-      SourceProcessingState.ready => Text(
-          item.hasText ? item.analysisText : 'No text found',
-          style: text.bodySmall,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-    };
-  }
-}
-
-class _Thumbnail extends StatelessWidget {
-  const _Thumbnail({required this.item});
-
-  final SourceItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    return Container(
-      width: 52,
-      height: 52,
-      decoration: BoxDecoration(
-        color: colors.surfaceSunken,
-        borderRadius: Radii.rSm,
       ),
-      // In front of the image, not behind it. Documents are overwhelmingly
-      // white, so without an edge the thumbnail reads as a blank white block
-      // against a dark card and as nothing at all against a light one. A
-      // border in `decoration` would be painted under the image and lost.
-      foregroundDecoration: BoxDecoration(
-        borderRadius: Radii.rSm,
-        border: Border.all(color: colors.border, width: Strokes.hairline),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: item.hasImage
-          // cacheWidth keeps a 2048px capture from being decoded at full size
-          // for a 52px box, which is the difference between a smooth list and a
-          // stuttering one.
-          ? Image.file(
-              File(item.imagePath!),
-              fit: BoxFit.cover,
-              cacheWidth: 156,
-              errorBuilder: (_, _, _) =>
-                  Icon(Icons.broken_image_outlined, color: colors.textTertiary),
-            )
-          : Icon(Icons.text_snippet_outlined, color: colors.textTertiary),
     );
   }
 }
 
-/// Enough room below the last card for the floating Add bar plus breathing
-/// space, so nothing important ever sits under it.
-const double _addBarClearance = 104;
+/// The one Action the brief is pointing at, inside the hero.
+///
+/// Carries the same three things an Action card does — the triage badge that
+/// says why it is here, the title, and the next step — plus its own completion
+/// control. The hero is the *most* important Action on the screen, so it would
+/// be perverse for it to be the one card you cannot finish without opening it,
+/// or the one that never says why it is at the top.
+class _TopAction extends ConsumerWidget {
+  const _TopAction({required this.item, required this.now, this.decision});
 
-class _AddBar extends ConsumerWidget {
-  const _AddBar();
+  final ActionItem item;
+  final DateTime now;
+  final ActionTriageDecision? decision;
+
+  /// The next thing to do — the first unticked step, else the reviewed
+  /// recommendation. Never invented.
+  String? get _next {
+    for (final step in item.steps) {
+      if (!step.isCompleted) return step.title;
+    }
+    if (item.steps.isNotEmpty) return null;
+    final recommended = item.recommendedNextStep?.trim();
+    return (recommended == null || recommended.isEmpty) ? null : recommended;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ReadableWidth.list(
-      shrinkVertically: true,
-      child: Padding(
-      padding: const EdgeInsets.fromLTRB(Space.page, 0, Space.page, Space.sm),
-      child: SafeArea(
-        top: false,
-        child: GlassSurface(
-          borderRadius: Radii.rXl,
-          padding: const EdgeInsets.all(Space.sm),
-          // Add is the primary act and keeps the width; Intelligence sits
-          // beside it as the other thing you can do with what you already
-          // have. It lives here rather than in the greeting because that row
-          // already carries Search, Settings and — in debug — diagnostics, and
-          // a fourth control there squeezes the greeting wide enough to
-          // starve the empty state's remaining height at large text sizes.
-          child: Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () => startCapture(context, ref),
-                  icon: const Icon(Icons.add_rounded, size: 22),
-                  label: const Text('Add something'),
-                ),
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final next = _next;
+
+    final badge = decision == null
+        ? null
+        : TriageLabels.badge(decision!, item, now);
+    final tone = switch (decision?.primaryReason) {
+      TriageReason.overdue => colors.urgencyCritical,
+      TriageReason.dueToday ||
+      TriageReason.criticalDueSoon ||
+      TriageReason.criticalNoDeadline => colors.urgencyImportant,
+      _ => colors.textSecondary,
+    };
+    // The badge owns the deadline story when it states one, so the meta line
+    // does not say it a second time.
+    final badgeStatesDue = switch (decision?.primaryReason) {
+      TriageReason.overdue ||
+      TriageReason.dueToday ||
+      TriageReason.dueTomorrow => true,
+      _ => false,
+    };
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Semantics(
+            button: true,
+            label: 'Open ${item.title}',
+            child: InkWell(
+              onTap: () => context.push(Routes.action(item.id)),
+              borderRadius: Radii.rMd,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (badge != null)
+                    Semantics(
+                      label: TriageLabels.semanticLabel(decision!, item, now),
+                      button: true,
+                      child: InkWell(
+                        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              TriageLabels.explanation(decision!, item, now),
+                            ),
+                          ),
+                        ),
+                        borderRadius: Radii.rSm,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: Space.xxs),
+                          child: Text(
+                            badge,
+                            style: text.labelSmall?.copyWith(
+                              color: tone,
+                              letterSpacing: 0.8,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  Text(
+                    item.title,
+                    style: text.titleMedium,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: Space.xxs),
+                  ActionMetaLine(item: item, suppressDue: badgeStatesDue),
+                  if (next != null) ...[
+                    const SizedBox(height: Space.md),
+                    Row(
+                      children: [
+                        Text(
+                          'NEXT',
+                          style: text.labelSmall?.copyWith(
+                            color: colors.textTertiary,
+                            letterSpacing: 1.1,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(width: Space.sm),
+                        Expanded(
+                          child: Text(
+                            next,
+                            style: text.bodyLarge,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
               ),
-              const SizedBox(width: Space.sm),
-              IconButton(
-                tooltip: 'Intelligence',
-                icon: const Icon(Icons.auto_awesome_outlined),
-                onPressed: () => context.push(Routes.studio),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
+        IconButton(
+          // Named, so a screen reader hears which Action is about to be marked
+          // rather than "Mark as done" repeated down the screen.
+          tooltip: 'Mark "${item.title}" as done',
+          onPressed: () async {
+            await ref
+                .read(actionRepositoryProvider)
+                .complete(item.id, at: DateTime.now());
+            ref.read(appAnalyticsProvider).log(AnalyticsEvents.actionCompleted);
+            unawaited(ref.read(actionSyncServiceProvider).flush());
+          },
+          icon: Icon(
+            Icons.radio_button_unchecked_rounded,
+            color: colors.textTertiary,
+          ),
+        ),
+      ],
     );
   }
 }
 
-String _relativeTime(DateTime when) {
-  final diff = DateTime.now().difference(when);
-  if (diff.inMinutes < 1) return 'Just now';
-  if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-  if (diff.inHours < 24) return '${diff.inHours}h ago';
-  if (diff.inDays == 1) return 'Yesterday';
-  if (diff.inDays < 7) return '${diff.inDays}d ago';
-  return DateFormat('d MMM').format(when);
+class _SeeAll extends StatelessWidget {
+  const _SeeAll({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Space.page, Space.sm, Space.page, 0),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: TextButton(onPressed: onTap, child: Text(label)),
+      ),
+    );
+  }
+}
+
+/// One line acknowledging finished work, linking to the log.
+///
+/// Deliberately not a section with cards. See the call site for why.
+class _CompletedSummary extends StatelessWidget {
+  const _CompletedSummary({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Space.page, Space.lg, Space.page, 0),
+      child: Semantics(
+        button: true,
+        label: count == 1
+            ? '1 action completed. Open the library.'
+            : '$count actions completed. Open the library.',
+        child: InkWell(
+          onTap: () => context.go(Routes.library),
+          borderRadius: Radii.rMd,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: Space.sm),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.check_circle_outline_rounded,
+                  size: 18,
+                  color: colors.confidenceConfirmed,
+                ),
+                const SizedBox(width: Space.sm),
+                Expanded(
+                  child: Text(
+                    count == 1 ? '1 done' : '$count done',
+                    style: text.bodyMedium?.copyWith(
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 20,
+                  color: colors.textTertiary,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
