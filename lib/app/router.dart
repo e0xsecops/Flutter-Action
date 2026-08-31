@@ -19,6 +19,7 @@ import '../features/library/presentation/library_screen.dart';
 import '../features/onboarding/application/onboarding_controller.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/search/presentation/search_screen.dart';
+import '../features/goals/presentation/goal_workspace_screen.dart';
 import '../features/settings/presentation/help_screen.dart';
 import '../features/settings/presentation/privacy_screen.dart';
 import '../features/settings/presentation/security_screen.dart';
@@ -62,13 +63,23 @@ abstract final class Routes {
   /// A tool, optionally already pointed at a source or an Action. The context
   /// travels as a query parameter so a link into a tool survives a restart the
   /// same way an Action deep link does.
-  static String tool(String id, {String? sourceId, String? actionId}) {
+  static String tool(
+    String id, {
+    String? sourceId,
+    String? actionId,
+    String? goalId,
+  }) {
     final query = <String>[
       if (sourceId != null) 'source=$sourceId',
       if (actionId != null) 'action=$actionId',
+      if (goalId != null) 'goal=$goalId',
     ];
     return query.isEmpty ? '/tool/$id' : '/tool/$id?${query.join('&')}';
   }
+
+  static const goalPattern = '/goal/:id';
+
+  static String goal(String id) => '/goal/$id';
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -204,7 +215,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           toolId: state.pathParameters['id']!,
           sourceId: state.uri.queryParameters['source'],
           actionId: state.uri.queryParameters['action'],
+          goalId: state.uri.queryParameters['goal'],
         ),
+      ),
+      GoRoute(
+        path: Routes.goalPattern,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) =>
+            GoalWorkspaceScreen(id: state.pathParameters['id']!),
       ),
       GoRoute(
         path: Routes.settings,

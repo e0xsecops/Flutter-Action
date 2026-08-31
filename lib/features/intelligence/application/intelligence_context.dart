@@ -12,6 +12,7 @@ import '../domain/ai_request.dart';
 import 'dart:io';
 import 'dart:typed_data';
 
+import '../../goals/domain/goal.dart';
 import '../domain/intelligence_tool.dart';
 import '../domain/tool_registry.dart';
 
@@ -219,6 +220,43 @@ IntelligenceRunInput buildActionRunInput({
     question: question,
     mode: mode,
     sourceLabels: {action.id: action.title},
+  );
+}
+
+/// Renders a Goal as text a planning tool can reason about.
+///
+/// **The Goal's own words and nothing else.** A tool pointed at a Goal sees the
+/// three things the user wrote. It does not see their other Goals, their
+/// Actions, or the captures any of it came from — the same rule an Action gets,
+/// for the same reason: the user pointed at one thing.
+String describeGoal(Goal goal) {
+  final lines = <String>[
+    'Goal: ${goal.title}',
+    if (goal.outcome != null) 'What done looks like: ${goal.outcome}',
+    if (goal.context != null) 'Where it stands: ${goal.context}',
+  ];
+  return lines.join('\n');
+}
+
+IntelligenceRunInput buildGoalRunInput({
+  required Goal goal,
+  String? question,
+  String? mode,
+}) {
+  return IntelligenceRunInput(
+    // Fenced as source material like everything else. A Goal is text the user
+    // typed, and text the user pasted into a Goal is no more trustworthy than
+    // text they pasted anywhere else.
+    parts: [
+      AiSourceTextPart(
+        text: describeGoal(goal),
+        sourceId: goal.id,
+        label: 'Goal',
+      ),
+    ],
+    question: question,
+    mode: mode,
+    sourceLabels: {goal.id: goal.title},
   );
 }
 

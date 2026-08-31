@@ -26,11 +26,15 @@ import '../../actions/domain/action_item.dart';
 import '../../actions/presentation/action_card.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../capture/domain/source_item.dart';
+import '../../goals/application/goal_providers.dart';
+import '../../goals/domain/goal.dart';
+import '../../goals/presentation/goal_edit_sheets.dart';
 import 'source_card.dart';
 
 enum LibrarySegment {
   actions('Actions'),
   captures('Captures'),
+  goals('Goals'),
   done('Done');
 
   const LibrarySegment(this.label);
@@ -65,6 +69,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
           .compareTo(a.completedAt ?? a.updatedAt));
 
     // Newest capture first: an inbox is read from the top.
+    final goals = ref.watch(openGoalsProvider);
     final captures = [...sources]
       ..sort((a, b) => b.capturedAt.compareTo(a.capturedAt));
 
@@ -108,6 +113,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
                 counts: {
                   LibrarySegment.actions: open.length,
                   LibrarySegment.captures: captures.length,
+                  LibrarySegment.goals: goals.length,
                   LibrarySegment.done: done.length,
                 },
                 onChanged: (s) => setState(() => _segment = s),
@@ -118,6 +124,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
               LibrarySegment.done => _actionSlivers(done, now, 'done'),
               LibrarySegment.captures =>
                 _captureSlivers(captures, actionedSourceIds),
+              LibrarySegment.goals => _goalSlivers(context, ref, goals),
             },
             const SliverToBoxAdapter(
               child: SizedBox(height: actionNavBarClearance + Space.lg),
@@ -126,6 +133,65 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
         ),
       ),
     );
+  }
+
+  List<Widget> _goalSlivers(
+    BuildContext context,
+    WidgetRef ref,
+    List<Goal> goals,
+  ) {
+    return [
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            Space.page,
+            0,
+            Space.page,
+            Space.md,
+          ),
+          child: OutlinedButton.icon(
+            onPressed: () => _newGoal(context, ref),
+            icon: const Icon(Icons.add_rounded, size: 18),
+            label: const Text('New goal'),
+          ),
+        ),
+      ),
+      if (goals.isEmpty)
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: Space.xxxl),
+            child: EmptyView(
+              icon: Icons.flag_outlined,
+              title: 'No goals yet',
+              // Says what a goal is for rather than that there are none. The
+              // difference between the two tools that take one and the
+              // fourteen that do not is worth a sentence.
+              message: 'A goal is something you want to happen. Action can '
+                  'find what is missing, what blocks it, and what to do '
+                  'first.',
+            ),
+          ),
+        )
+      else
+        SliverList.separated(
+          itemCount: goals.length,
+          separatorBuilder: (_, _) => const SizedBox(height: Space.sm),
+          itemBuilder: (context, i) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Space.page),
+            child: _GoalCard(goal: goals[i]),
+          ),
+        ),
+    ];
+  }
+
+  static Future<void> _newGoal(BuildContext context, WidgetRef ref) async {
+    final title = await showNewGoalSheet(context);
+    if (title == null || title.trim().isEmpty || !context.mounted) return;
+    final goal = await ref.read(goalsProvider.notifier).create(title: title);
+    if (!context.mounted) return;
+    // Straight into the workspace: a goal with one line in it is the start of
+    // the job, not the end, and the next thing to do is say more about it.
+    context.push(Routes.goal(goal.id));
   }
 
   /// Soonest deadline first, then most recently created. An Action with no
@@ -325,6 +391,71 @@ class _Segments extends StatelessWidget {
                 ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+
+/// One Goal in the Library list.
+///
+/// Deliberately plain next to an ActionCard: an Action has urgency, a deadline
+/// and a spine because those things are true of it. A Goal has none of them —
+/// it is a sentence and a count — and dressing it up to match would imply an
+/// urgency nobody set.
+class _GoalCard extends StatelessWidget {
+  const _GoalCard({required this.goal});
+
+  final Goal goal;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final linked = goal.linkedActionIds.length;
+
+    return Material(
+      color: colors.surfaceElevated,
+      borderRadius: Radii.rMd,
+      child: InkWell(
+        borderRadius: Radii.rMd,
+        onTap: () => context.push(Routes.goal(goal.id)),
+        child: Container(
+          padding: const EdgeInsets.all(Space.lg),
+          decoration: BoxDecoration(
+            borderRadius: Radii.rMd,
+            border: Border.all(color: colors.border, width: Strokes.hairline),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.flag_outlined, size: 20, color: colors.brand),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(goal.title, style: text.titleSmall),
+                    const SizedBox(height: Space.xxs),
+                    Text(
+                      linked == 0
+                          ? 'Nothing made from it yet'
+                          : '$linked ${linked == 1 ? 'action' : 'actions'} '
+                              'from this goal',
+                      style: text.bodySmall
+                          ?.copyWith(color: colors.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right_rounded,
+                size: 20,
+                color: colors.textTertiary,
+              ),
+            ],
+          ),
         ),
       ),
     );

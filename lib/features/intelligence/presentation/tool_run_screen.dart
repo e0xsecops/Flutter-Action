@@ -22,7 +22,17 @@ import '../../../shared/widgets/empty_view.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../actions/application/action_providers.dart';
 import '../../actions/domain/action_item.dart';
+import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../../core/analytics/app_analytics.dart' show AnalyticsEvents;
+import '../../../core/analytics/firebase_app_analytics.dart'
+    show appAnalyticsProvider;
+import '../../extraction/domain/extraction_schema.dart'
+    show ActionCategory, ActionUrgency;
 import '../../capture/domain/source_item.dart';
+import '../../goals/application/goal_providers.dart';
+import '../../goals/domain/goal.dart';
 import '../application/intelligence_context.dart';
 import '../application/intelligence_providers.dart';
 import '../application/intelligence_runner.dart';
@@ -42,6 +52,7 @@ class ToolRunScreen extends ConsumerStatefulWidget {
     required this.toolId,
     this.sourceId,
     this.actionId,
+    this.goalId,
   });
 
   final String toolId;
@@ -55,6 +66,11 @@ class ToolRunScreen extends ConsumerStatefulWidget {
   /// asked about this Action, so the picker is replaced by a statement of what
   /// is being worked on.
   final String? actionId;
+
+  /// Fixes the context to one Goal, arriving from the Goal workspace. Like
+  /// [actionId] and unlike [sourceId], this is not a pre-selection the user can
+  /// change: they asked about this Goal.
+  final String? goalId;
 
   @override
   ConsumerState<ToolRunScreen> createState() => _ToolRunScreenState();
@@ -101,7 +117,25 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
     return null;
   }
 
+  /// The Goal this run is about, when one was named.
+  Goal? get _goal {
+    final id = widget.goalId;
+    if (id == null) return null;
+    return ref.read(goalProvider(id));
+  }
+
   IntelligenceRunInput _buildInput(List<SourceItem> allSources) {
+    final goal = _goal;
+    if (goal != null) {
+      return buildGoalRunInput(
+        goal: goal,
+        question: _questionController.text.trim().isEmpty
+            ? null
+            : _questionController.text.trim(),
+        mode: _mode,
+      );
+    }
+
     final action = _action;
     if (action != null) {
       return buildActionRunInput(
@@ -205,6 +239,103 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
         setState(() => _selectedSuggestions.addAll(selected));
       }
     }
+  }
+
+
+  /// Turns the ticked suggestions into something durable.
+  ///
+  /// **Only ever what the user ticked, and only ever on a tap.** A plan that
+  /// wrote itself into the user's Actions would be the app deciding on their
+  /// behalf from a model's output — which is the one thing this product does
+  /// not do anywhere else, and the reason every extracted fact goes through a
+  /// review screen first.
+  ///
+  /// Two destinations, decided by where the run came from. From a Goal, the
+  /// steps become a new Action named after the Goal and linked back to it.
+  /// From an Action, they are appended to that Action's chain. There is no
+  /// third case: a run over a loose source has no obvious owner, and inventing
+  /// a title from a model's output is exactly the kind of quiet fabrication
+  /// the review screen exists to prevent.
+  Future<void> _saveSuggestions(IntelligenceResult result) async {
+    final chosen = result.suggestions
+        .where((s) => _selectedSuggestions.contains(s.id))
+        .where((s) =>
+            s.kind == IntelligenceSuggestionKind.step ||
+            s.kind == IntelligenceSuggestionKind.action)
+        .toList();
+    if (chosen.isEmpty) return;
+
+    final now = ref.read(appClockProvider)().toUtc();
+    final goal = _goal;
+    final action = _action;
+
+    if (goal != null) {
+      final id = const Uuid().v4();
+      final created = ActionItem(
+        id: id,
+        // The Goal's own words. Not the model's — a title is the thing the
+        // user will see in their list forever, and they wrote this one.
+        title: goal.title,
+        status: ActionStatus.active,
+        urgency: ActionUrgency.normal,
+        // `unknown` — "we could not tell" — rather than inventing a category
+        // from a plan. Nothing about a list of steps says what kind of thing
+        // this is, and guessing would put a wrong label on the user's list.
+        category: ActionCategory.unknown,
+        origin: ActionOrigin.manual,
+        createdAt: now,
+        updatedAt: now,
+        steps: [
+          for (var i = 0; i < chosen.length; i++)
+            ActionStepItem(
+              id: const Uuid().v4(),
+              title: chosen[i].title,
+              order: i,
+              createdAt: now,
+              updatedAt: now,
+            ),
+        ],
+      );
+      final ok = await ref.read(actionRepositoryProvider).create(created);
+      if (!ok || !mounted) return;
+      await ref.read(goalsProvider.notifier).linkAction(goal.id, id, now: now);
+      if (!mounted) return;
+      _log(AnalyticsEvents.actionCreated);
+      _say('Action created from ${chosen.length} '
+          '${chosen.length == 1 ? 'step' : 'steps'}.');
+      context.pop();
+      return;
+    }
+
+    if (action != null) {
+      final steps = ref.read(actionStepRepositoryProvider);
+      for (final suggestion in chosen) {
+        await steps.addStep(
+          action.id,
+          ActionStepItem(
+            id: const Uuid().v4(),
+            title: suggestion.title,
+            // Assigned by the repository from the chain's length.
+            order: 0,
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+      }
+      if (!mounted) return;
+      _log(AnalyticsEvents.stepAdded);
+      _say('${chosen.length} ${chosen.length == 1 ? 'step' : 'steps'} added.');
+      context.pop();
+    }
+  }
+
+  void _log(String event) =>
+      ref.read(appAnalyticsProvider).log(event);
+
+  void _say(String message) {
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   /// How much text is in this run, for the receipt.
@@ -375,6 +506,16 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
                   tool: tool,
                   result: _run.result!,
                   onRerun: () => _run_(tool, _buildInput(usable)),
+                  // Offered only where the result has an owner to belong to.
+                  onSave: (tool.allowsSaveToAction &&
+                          (widget.goalId != null || widget.actionId != null) &&
+                          _selectedSuggestions.isNotEmpty)
+                      ? () => _saveSuggestions(_run.result!)
+                      : null,
+                  saveLabel: widget.goalId != null
+                      ? 'Create an action'
+                      : 'Add to this action',
+                  selectedCount: _selectedSuggestions.length,
                 ),
               ],
             ],
@@ -648,16 +789,61 @@ class _ResultActions extends StatelessWidget {
     required this.tool,
     required this.result,
     required this.onRerun,
+    this.onSave,
+    this.saveLabel = 'Create an action',
+    this.selectedCount = 0,
   });
 
   final IntelligenceToolDefinition tool;
   final IntelligenceResult result;
   final VoidCallback onRerun;
 
+  /// Null when there is nothing ticked, or nowhere for it to go.
+  final VoidCallback? onSave;
+  final String saveLabel;
+  final int selectedCount;
+
   @override
   Widget build(BuildContext context) {
     final artifact = result.artifacts.isEmpty ? null : result.artifacts.first;
 
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (onSave != null) ...[
+          FilledButton.icon(
+            onPressed: onSave,
+            icon: const Icon(Icons.playlist_add_check_rounded, size: 18),
+            label: Text(
+              '$saveLabel · $selectedCount '
+              '${selectedCount == 1 ? 'step' : 'steps'}',
+            ),
+          ),
+          const SizedBox(height: Space.md),
+        ],
+        _SecondaryActions(
+          tool: tool,
+          artifact: artifact,
+          onRerun: onRerun,
+        ),
+      ],
+    );
+  }
+}
+
+class _SecondaryActions extends StatelessWidget {
+  const _SecondaryActions({
+    required this.tool,
+    required this.artifact,
+    required this.onRerun,
+  });
+
+  final IntelligenceToolDefinition tool;
+  final IntelligenceArtifact? artifact;
+  final VoidCallback onRerun;
+
+  @override
+  Widget build(BuildContext context) {
     // The app's OutlinedButton style is full-width by default
     // (Size.fromHeight), which a Wrap cannot lay out. These are secondary
     // actions that belong side by side, so they opt out of that width.
@@ -674,7 +860,7 @@ class _ResultActions extends StatelessWidget {
           OutlinedButton.icon(
             style: style,
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: artifact.text));
+              await Clipboard.setData(ClipboardData(text: artifact!.text));
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Copied')),
