@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../app/router.dart';
 import '../../intelligence/application/intelligence_context.dart';
+import '../../../design/ambient/ambient_background.dart';
 import '../../../design/components/readable_width.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
@@ -20,6 +21,7 @@ import '../../capture/domain/source_item.dart';
 import '../../extraction/application/canonical_fields.dart';
 import '../../extraction/domain/extraction_schema.dart';
 import '../application/action_chain.dart';
+import '../application/action_timeline.dart';
 import '../application/reminder_service.dart';
 import '../application/action_providers.dart';
 import '../domain/action_item.dart';
@@ -87,19 +89,22 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
   Widget build(BuildContext context) {
     final async = ref.watch(actionDetailProvider(widget.id));
 
-    return Scaffold(
-      body: SafeArea(
-        child: ReadableWidth.list(
-          child: switch (async) {
-            AsyncLoading() => const LoadingView(),
-            AsyncError() => ErrorView(
-                message: 'This action could not be loaded. It is still stored '
-                    'on this device.',
-              ),
+    return AmbientBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: ReadableWidth.list(
+            child: switch (async) {
+              AsyncLoading() => const LoadingView(),
+              AsyncError() => ErrorView(
+                  message: 'This action could not be loaded. It is still '
+                      'stored on this device.',
+                ),
             AsyncData(:final value) => value == null
-                ? _NotFound(onBack: () => _leave(context))
-                : _Loaded(action: value, state: this),
-          },
+                  ? _NotFound(onBack: () => _leave(context))
+                  : _Loaded(action: value, state: this),
+            },
+          ),
         ),
       ),
     );
@@ -470,6 +475,7 @@ class _Loaded extends ConsumerWidget {
               ),
               SliverToBoxAdapter(child: _WhyThisMatters(action: action)),
               SliverToBoxAdapter(child: _ActionIntelligence(action: action)),
+              SliverToBoxAdapter(child: _Timeline(action: action)),
               SliverToBoxAdapter(child: _Provenance(action: action)),
               const SliverToBoxAdapter(child: SizedBox(height: Space.xxxl)),
             ],
@@ -1434,4 +1440,194 @@ class _ActionIntelligence extends StatelessWidget {
       ),
     );
   }
+}
+
+
+/// What has happened to this Action.
+///
+/// Derived from stored timestamps rather than an event log — see
+/// [ActionTimeline] for why, and for the list of things it deliberately
+/// cannot say. Collapsed by default: on a healthy Action this is one line of
+/// history and nobody opened the screen to read it, but on an old one it is
+/// the fastest answer to "when did I do this?"
+class _Timeline extends ConsumerStatefulWidget {
+  const _Timeline({required this.action});
+
+  final ActionItem action;
+
+  @override
+  ConsumerState<_Timeline> createState() => _TimelineState();
+}
+
+class _TimelineState extends ConsumerState<_Timeline> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final reminders =
+        ref.watch(remindersForActionProvider(widget.action.id)).value ??
+            const [];
+    final events =
+        ActionTimeline.of(widget.action, reminders: reminders);
+    if (events.isEmpty) return const SizedBox.shrink();
+
+    final shown = _expanded ? events : events.take(3).toList();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Space.page,
+        Space.xxl,
+        Space.page,
+        0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Semantics(
+            header: true,
+            child: Text(
+              'HISTORY',
+              style: text.labelSmall?.copyWith(
+                color: colors.textTertiary,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ),
+          const SizedBox(height: Space.md),
+          for (var i = 0; i < shown.length; i++)
+            _TimelineRow(
+              event: shown[i],
+              isFirst: i == 0,
+              isLast: i == shown.length - 1 && shown.length == events.length,
+            ),
+          if (events.length > 3)
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton(
+                onPressed: () => setState(() => _expanded = !_expanded),
+                style: TextButton.styleFrom(
+                  minimumSize: const Size(0, 40),
+                  padding: const EdgeInsets.symmetric(horizontal: Space.sm),
+                ),
+                child: Text(
+                  _expanded
+                      ? 'Show less'
+                      : 'Show all ${events.length}',
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TimelineRow extends StatelessWidget {
+  const _TimelineRow({
+    required this.event,
+    required this.isFirst,
+    required this.isLast,
+  });
+
+  final ActionEvent event;
+  final bool isFirst;
+  final bool isLast;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // The rail. A dot per event and a hairline between them: the
+          // cheapest possible way to say "these are in order" without a
+          // decorated card round each one.
+          SizedBox(
+            width: 20,
+            child: Column(
+              children: [
+                const SizedBox(height: 5),
+                Container(
+                  width: 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isFirst ? colors.brand : colors.textTertiary,
+                  ),
+                ),
+                if (!isLast)
+                  Expanded(
+                    child: Container(
+                      width: Strokes.hairline,
+                      color: colors.border,
+                      margin: const EdgeInsets.symmetric(vertical: 3),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: Space.sm),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : Space.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _describe(event, context),
+                    style: text.bodyMedium?.copyWith(
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: Space.xxs),
+                  Text(
+                    _timestamp(event.at),
+                    style: text.labelSmall?.copyWith(
+                      color: colors.textTertiary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static String _describe(ActionEvent event, BuildContext context) {
+    return switch (event.kind) {
+      ActionEventKind.created => event.count == null
+          ? 'Created'
+          : 'Created with ${event.count} '
+              '${event.count == 1 ? 'step' : 'steps'}',
+      ActionEventKind.reviewed => 'You confirmed the details',
+      ActionEventKind.stepCompleted =>
+        'Finished “${event.subject ?? 'a step'}”',
+      ActionEventKind.reminderSet => _reminderLine(event.subject),
+      ActionEventKind.completed => 'Marked done',
+      ActionEventKind.archived => 'Archived',
+      // Never elaborated. The store knows that something changed and not what,
+      // and inventing the what is exactly what this section refuses to do.
+      ActionEventKind.changed => 'Last changed',
+    };
+  }
+
+  /// In the user's voice, like the rest of the history — and deliberately not
+  /// the words the Reminders section above uses. The same phrase twice on one
+  /// screen, meaning two different things, is ambiguous to a reader and was
+  /// ambiguous to a test.
+  static String _reminderLine(String? scheduledAt) {
+    final when = scheduledAt == null ? null : DateTime.tryParse(scheduledAt);
+    if (when == null) return 'You set a reminder';
+    return 'You set a reminder for ${_timestamp(when.toLocal())}';
+  }
+
+  static String _timestamp(DateTime at) =>
+      DateFormat('d MMM yyyy, HH:mm').format(at.toLocal());
 }

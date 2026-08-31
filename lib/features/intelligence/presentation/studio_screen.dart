@@ -161,9 +161,14 @@ class _StudioHero extends ConsumerWidget {
                 connected
                     ? 'Understand a document, improve a goal, build a plan, '
                         'draft a reply, or check what you are looking at.'
-                    : 'Fifteen tools for understanding documents, planning and '
-                        'writing. Connect your own AI account to use them — you '
-                        'are billed by your provider, never by Action.',
+                    // Counted, never spelled out as a constant. The registry
+                    // has grown twice already and a hardcoded "fifteen"
+                    // outlived both, telling the user something the screen
+                    // below it visibly contradicted.
+                    : '${ToolRegistry.all.length} tools for understanding '
+                        'documents, planning and writing. Connect your own AI '
+                        'account to use them — you are billed by your '
+                        'provider, never by Action.',
                 style: text.bodyMedium,
               ),
 

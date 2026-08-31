@@ -273,13 +273,16 @@ class _PrivacyNote extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(Icons.lock_outline_rounded, size: 15, color: colors.textTertiary),
+        Icon(Icons.lock_outline_rounded, size: 15, color: colors.textSecondary),
         const SizedBox(width: Space.sm),
         Expanded(
           child: Text(
             'Captures stay on this device. Nothing is analysed online until you '
             'ask for it.',
-            style: text.bodySmall?.copyWith(color: colors.textTertiary),
+            // Secondary, not tertiary. This is a promise the product is
+            // making, not a label on something else — and a privacy claim
+            // nobody can read is not a privacy claim.
+            style: text.bodySmall?.copyWith(color: colors.textSecondary),
           ),
         ),
       ],

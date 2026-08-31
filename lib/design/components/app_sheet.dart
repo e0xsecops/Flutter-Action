@@ -14,6 +14,11 @@ import 'glass_surface.dart';
 /// layer rather than a new screen. The theme sets the sheet route's own
 /// background to transparent so this widget owns the whole appearance -
 /// which is also why every sheet in the app goes through here.
+///
+/// V2 moved it from [GlassIntensity.strong] to [GlassIntensity.sheet]. The
+/// difference is not taste: a sheet samples the page through the modal scrim,
+/// so at chrome opacity the composite drifted to a mid grey and the subtitle
+/// measured 1.27:1 against its own background on device. See the enum.
 class AppSheet extends StatelessWidget {
   const AppSheet({
     required this.child,
@@ -34,7 +39,7 @@ class AppSheet extends StatelessWidget {
     return GlassSurface(
       // Rounded on the top edge only: the bottom is off-screen.
       borderRadius: Radii.sheet,
-      intensity: GlassIntensity.strong,
+      intensity: GlassIntensity.sheet,
       padding: EdgeInsets.zero,
       child: SafeArea(
         top: false,

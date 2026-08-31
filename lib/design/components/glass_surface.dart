@@ -26,6 +26,24 @@ enum GlassIntensity {
   /// brief, the Studio hero. At most one per screen; a page with two heroes
   /// has none.
   hero,
+
+  /// A modal sheet.
+  ///
+  /// **Its own role because a sheet is the one glass surface whose backdrop is
+  /// not the app.** Everything else here samples a page: an ambient field, a
+  /// list, a document. A sheet samples a page *through the modal scrim*, which
+  /// is arbitrary and dark, so its legibility stops being a property of the
+  /// design and becomes a property of whatever the barrier happens to be.
+  ///
+  /// Measured on device before this role existed: the capture sheet's subtitle
+  /// came out at 1.27:1 against its own background and the privacy note at
+  /// 2.96:1, where AA wants 4.5:1. The text colours were not wrong — they were
+  /// chosen against a near-white surface, and the composite had drifted to a
+  /// mid grey.
+  ///
+  /// So this is anchored: near-opaque, enough for a hint of movement behind it
+  /// and not enough for the scrim to drag the surface anywhere.
+  sheet,
 }
 
 /// Liquid / mirror glass, as one reusable surface.
@@ -123,6 +141,19 @@ class GlassSurface extends StatelessWidget {
     // gradient standing in for light falling across it — brightest at the top,
     // gone by the middle. This is the single detail that stops a translucent
     // box reading as flat.
+    //
+    // **Two boxes, not one, and this is load-bearing.** A `BoxDecoration`
+    // given both a `color` and a `gradient` paints only the gradient:
+    // `BoxPainter._getBackgroundPaint` assigns `paint.color` and then
+    // `paint.shader`, and a shader wins. So the single-decoration version of
+    // this widget silently discarded `surfaceOpacity` — every intensity in the
+    // ramp rendered identically, as nothing but the specular wash, and the
+    // whole table below was dead code.
+    //
+    // Found by measuring the capture sheet on device: its subtitle came out at
+    // 1.27:1 against its own background, which is not a value any of these
+    // numbers can produce. Nothing in the code reads wrong; it is one of those
+    // defects that is only visible in pixels.
     Widget painted = DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: radius,
@@ -130,17 +161,22 @@ class GlassSurface extends StatelessWidget {
           base.withValues(alpha: selected ? spec.selectedTint : spec.envTint),
           surface.withValues(alpha: spec.surfaceOpacity),
         ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.white.withValues(alpha: spec.specular),
-            Colors.white.withValues(alpha: 0),
-          ],
-          stops: const [0, 0.55],
-        ),
       ),
-      child: content,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: radius,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white.withValues(alpha: spec.specular),
+              Colors.white.withValues(alpha: 0),
+            ],
+            stops: const [0, 0.55],
+          ),
+        ),
+        child: content,
+      ),
     );
 
     // The lit edge. A hairline of near-white along the very top of the surface,
@@ -324,6 +360,7 @@ class _GlassSpec {
       GlassIntensity.regular => 18.0,
       GlassIntensity.strong => 24.0,
       GlassIntensity.hero => 28.0,
+      GlassIntensity.sheet => 24.0,
     };
 
     // Solid mode keeps every other property and drops only the see-through:
@@ -347,6 +384,10 @@ class _GlassSpec {
             // field, not text.
             GlassIntensity.strong => dark ? 0.62 : 0.56,
             GlassIntensity.hero => dark ? 0.33 : 0.27,
+            // Anchored. See the enum comment: this is the one surface whose
+            // backdrop is a scrim rather than the app, so it cannot afford to
+            // let the backdrop decide its contrast.
+            GlassIntensity.sheet => dark ? 0.94 : 0.95,
           };
 
     return _GlassSpec(
@@ -377,6 +418,7 @@ class _GlassSpec {
         GlassIntensity.regular => 18,
         GlassIntensity.strong => 26,
         GlassIntensity.hero => 34,
+        GlassIntensity.sheet => 30,
       },
       envTint: dark ? 0.05 : 0.035,
       selectedTint: dark ? 0.16 : 0.10,
