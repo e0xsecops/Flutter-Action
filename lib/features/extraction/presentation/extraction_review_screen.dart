@@ -20,14 +20,17 @@ import '../data/extraction_validator.dart' show parseStrictIso8601;
 import '../domain/action_draft.dart';
 import '../application/action_review_state.dart';
 import '../application/canonical_fields.dart';
+import '../application/evidence_regions.dart';
 import '../application/extraction_providers.dart';
 import '../domain/confirmed_action_draft.dart';
 import '../domain/extracted_field.dart';
 import '../domain/extraction_input.dart';
 import '../domain/extraction_result.dart';
+import '../domain/extraction_evidence.dart';
 import '../domain/extraction_schema.dart';
 import '../domain/escalation.dart';
 import '../domain/money_value.dart';
+import 'evidence_lens.dart';
 import 'review_widgets.dart';
 import '../../../core/analytics/app_analytics.dart';
 import '../../../core/analytics/firebase_app_analytics.dart';
@@ -549,7 +552,7 @@ class _ExtractionReviewScreenState
           onEdit: () => _resolveDue(review),
           evidence: field.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
-                  source: _sourceItem,
+          source: _sourceItem,
         );
       case CanonicalStatus.ambiguous:
         return _AmbiguityCard(
@@ -571,7 +574,7 @@ class _ExtractionReviewScreenState
           onEdit: () => _resolveDue(review),
           evidence: candidate.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
-                  source: _sourceItem,
+          source: _sourceItem,
         );
       case CanonicalStatus.absent:
         return FactRow(
@@ -611,7 +614,7 @@ class _ExtractionReviewScreenState
           onEdit: () => _resolveAmount(review),
           evidence: field.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
-                  source: _sourceItem,
+          source: _sourceItem,
         );
       case CanonicalStatus.ambiguous:
         return _AmbiguityCard(
@@ -633,7 +636,7 @@ class _ExtractionReviewScreenState
           onEdit: () => _resolveAmount(review),
           evidence: candidate.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
-                  source: _sourceItem,
+          source: _sourceItem,
         );
       case CanonicalStatus.absent:
         return FactRow(
@@ -892,6 +895,7 @@ class _ExtractionReviewScreenState
           child: _DateSlotSheet(
             candidates: review.due.canonical.candidates,
             dateFormat: _dateFormat,
+            source: _sourceItem,
           ),
         ),
       ),
@@ -911,7 +915,10 @@ class _ExtractionReviewScreenState
           subtitle: review.amount.canonical.status == CanonicalStatus.ambiguous
               ? 'The document mentions more than one amount.'
               : null,
-          child: _AmountSlotSheet(candidates: review.amount.canonical.candidates),
+          child: _AmountSlotSheet(
+            candidates: review.amount.canonical.candidates,
+            source: _sourceItem,
+          ),
         ),
       ),
     );
@@ -995,10 +1002,15 @@ class _TextPromptState extends State<_TextPrompt> {
 
 /// Choose between date candidates, enter another, or leave the slot unset.
 class _DateSlotSheet extends StatefulWidget {
-  const _DateSlotSheet({required this.candidates, required this.dateFormat});
+  const _DateSlotSheet({
+    required this.candidates,
+    required this.dateFormat,
+    this.source,
+  });
 
   final List<ExtractedField> candidates;
   final DateFormat dateFormat;
+  final SourceItem? source;
 
   @override
   State<_DateSlotSheet> createState() => _DateSlotSheetState();
@@ -1032,6 +1044,9 @@ class _DateSlotSheetState extends State<_DateSlotSheet> {
                   : (candidate.value ?? '—'),
               subtitle: candidate.label,
               quote: candidate.evidence?.quote,
+              evidence: candidate.evidence,
+              source: widget.source,
+              label: 'Deadline',
               trusted: candidate.isTrustworthy,
               // A candidate with no parseable date cannot be accepted as
               // one — it can only be typed in deliberately below.
@@ -1085,9 +1100,10 @@ class _DateSlotSheetState extends State<_DateSlotSheet> {
 
 /// Choose between amount candidates, enter another, or leave the slot unset.
 class _AmountSlotSheet extends StatefulWidget {
-  const _AmountSlotSheet({required this.candidates});
+  const _AmountSlotSheet({required this.candidates, this.source});
 
   final List<ExtractedField> candidates;
+  final SourceItem? source;
 
   @override
   State<_AmountSlotSheet> createState() => _AmountSlotSheetState();
@@ -1125,6 +1141,9 @@ class _AmountSlotSheetState extends State<_AmountSlotSheet> {
               title: candidate.moneyValue?.toString() ?? (candidate.value ?? '—'),
               subtitle: candidate.label,
               quote: candidate.evidence?.quote,
+              evidence: candidate.evidence,
+              source: widget.source,
+              label: 'Amount',
               trusted: candidate.isTrustworthy,
               onTap: candidate.moneyValue == null
                   ? null
@@ -1193,6 +1212,9 @@ class _CandidateRow extends StatelessWidget {
     required this.trusted,
     required this.onTap,
     this.quote,
+    this.evidence,
+    this.source,
+    this.label = 'This value',
   });
 
   final String title;
@@ -1200,6 +1222,28 @@ class _CandidateRow extends StatelessWidget {
   final String? quote;
   final bool trusted;
   final VoidCallback? onTap;
+
+  /// The evidence behind this candidate, so the row can offer the lens.
+  ///
+  /// Choosing between two deadlines is the moment where seeing *where on the
+  /// page* each one sits decides it — one is in a sentence about payment and
+  /// the other is the date at the top of the letter, and the quote alone
+  /// often does not make that obvious.
+  final ExtractionEvidence? evidence;
+  final SourceItem? source;
+  final String label;
+
+  bool get _canShowOnCapture {
+    final evidence = this.evidence;
+    final source = this.source;
+    if (evidence == null || source?.imagePath == null) return false;
+    return EvidenceRegions.forEvidence(
+      evidence: evidence,
+      lines: source!.ocr?.lines ?? const [],
+      imageWidth: source.imageWidth,
+      imageHeight: source.imageHeight,
+    ).isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1253,6 +1297,31 @@ class _CandidateRow extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
+              if (_canShowOnCapture)
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton.icon(
+                    // Deliberately does not select the candidate. Looking at
+                    // the evidence and choosing are different decisions, and
+                    // conflating them would make the safer action — checking
+                    // first — commit the user to an answer.
+                    onPressed: () => showEvidenceLens(
+                      context,
+                      evidence: evidence!,
+                      label: label,
+                      source: source,
+                    ),
+                    icon: const Icon(Icons.center_focus_strong_outlined,
+                        size: 18),
+                    label: const Text('See it on the capture'),
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(0, 40),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Space.sm,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
