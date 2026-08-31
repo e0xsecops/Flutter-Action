@@ -112,24 +112,50 @@ void main() {
       );
     });
 
-    test('a PDF declared as an image is a mismatch too', () {
+    test('a PDF mislabelled as an image is taken as the PDF it is', () {
+      // Not treated as a mismatch, and the distinction is deliberate. The
+      // reason to refuse a contradiction is that a *program* wearing an
+      // image's name is worth refusing on sight. A PDF wearing one is far more
+      // likely a careless sender, and Action reads PDFs — so it is accepted as
+      // what it actually is, which is the same rule as everywhere else: the
+      // bytes decide.
       final payload = _file(declared: 'image/jpeg', header: _pdf);
 
-      expect(
-        (payload as SharedRejected).reason,
-        ShareRejection.contentMismatch,
-      );
+      expect(payload, isA<SharedDocument>());
     });
 
-    test('something that never claimed to be an image is merely unsupported',
-        () {
+    test('something Action cannot read at all is merely unsupported', () {
       // Not suspicious — nothing was contradicted. Different situation,
       // different word.
-      final payload = _file(declared: 'application/pdf', header: _pdf);
+      final payload = _file(declared: 'application/zip', header: _zip);
 
       expect(
         (payload as SharedRejected).reason,
         ShareRejection.unsupportedType,
+      );
+    });
+
+    test('a shared PDF keeps its size and its cleaned name', () {
+      final payload = _file(
+        declared: 'application/pdf',
+        name: '../statement.pdf',
+        size: 90_000,
+        header: _pdf,
+      ) as SharedDocument;
+
+      expect(payload.sizeBytes, 90_000);
+      expect(payload.suggestedName, 'statement.pdf');
+    });
+
+    test('an oversized PDF is still refused before anything reads it', () {
+      expect(
+        (_file(
+          declared: 'application/pdf',
+          size: ShareValidator.maxBytes + 1,
+          header: _pdf,
+        ) as SharedRejected)
+            .reason,
+        ShareRejection.tooLarge,
       );
     });
 

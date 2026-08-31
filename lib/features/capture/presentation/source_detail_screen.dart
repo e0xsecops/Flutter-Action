@@ -10,6 +10,7 @@ import '../../intelligence/application/intelligence_context.dart';
 import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../core/security/file_identity.dart' show formatBytes;
 import '../../../design/ambient/ambient_background.dart';
 import '../../../shared/widgets/error_view.dart';
 import '../../actions/application/action_providers.dart';
@@ -189,7 +190,11 @@ class _Body extends ConsumerWidget {
           const SizedBox(height: Space.xxl),
           _CreatedActions(actions: created),
         ],
-        if (item.hasText) ...[
+        // Documents too, not only captures with text. A PDF cannot go through
+        // the local review flow — there is nothing on this device to review —
+        // so the tools are the *only* thing to do with one. Without this a
+        // document was a dead end.
+        if (item.hasText || item.hasDocument) ...[
           const SizedBox(height: Space.xxl),
           _IntelligenceStrip(item: item),
         ],
@@ -254,6 +259,7 @@ class _ProvenanceStrip extends StatelessWidget {
       SourceType.photo => Icons.photo_camera_outlined,
       SourceType.gallery => Icons.image_outlined,
       SourceType.pastedText => Icons.text_snippet_outlined,
+      SourceType.document => Icons.picture_as_pdf_outlined,
     };
 
     return Row(
@@ -352,6 +358,11 @@ class _StateSection extends ConsumerWidget {
       SourceProcessingState.processing =>
         const _Processing(),
       SourceProcessingState.failed => _Failed(item: item),
+      // A document before an empty-text check: a PDF legitimately has no text
+      // on this device, and falling through to "No text found" would tell the
+      // user their statement was unreadable when nothing has tried to read it.
+      SourceProcessingState.ready when item.hasDocument =>
+        _DocumentPanel(item: item),
       SourceProcessingState.ready => item.hasText
           ? _TextPanel(item: item, interpreted: created.isNotEmpty)
           : _NoTextFound(item: item),
@@ -661,6 +672,93 @@ class _CreatedActions extends StatelessWidget {
               ),
             ),
           ),
+      ],
+    );
+  }
+}
+
+
+/// What Action holds for a PDF, and what it has not done with it.
+///
+/// The honest part is the last line. Action has copied the file and read its
+/// structure; it has not read its contents, and it will not until the user
+/// asks for a tool that does — at which point the document goes to their own
+/// provider, which is a different thing again and disclosed separately.
+class _DocumentPanel extends StatelessWidget {
+  const _DocumentPanel({required this.item});
+
+  final SourceItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+    final pages = item.pageCount;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('The document', style: text.titleSmall),
+        const SizedBox(height: Space.md),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(Space.lg),
+          decoration: BoxDecoration(
+            color: colors.surfaceSunken,
+            borderRadius: Radii.rMd,
+            border: Border.all(color: colors.border, width: Strokes.hairline),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: colors.brandSubtle,
+                  borderRadius: Radii.rSm,
+                ),
+                child: Icon(
+                  Icons.picture_as_pdf_outlined,
+                  color: colors.brand,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('PDF', style: text.titleSmall),
+                    const SizedBox(height: Space.xxs),
+                    Text(
+                      // "Page count unknown" rather than a guess. Modern PDFs
+                      // commonly compress the page tree out of sight, and a
+                      // confident wrong number would end up in the sentence
+                      // that says what a run will cost.
+                      [
+                        if (pages != null)
+                          '$pages ${pages == 1 ? 'page' : 'pages'}'
+                        else
+                          'Page count unknown',
+                        if (item.byteSize != null)
+                          formatBytes(item.byteSize!),
+                      ].join(' · '),
+                      style: text.bodySmall
+                          ?.copyWith(color: colors.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: Space.md),
+        Text(
+          'Action has not read what is inside this document. When you run a '
+          'tool that needs to, the file goes to the AI provider you connected '
+          'and you will be told before it does.',
+          style: text.bodySmall,
+        ),
       ],
     );
   }

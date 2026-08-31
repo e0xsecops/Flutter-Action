@@ -21,7 +21,7 @@ import 'dart:typed_data';
 import '../../../core/security/file_identity.dart';
 
 /// What arrived.
-enum SharedKind { text, image }
+enum SharedKind { text, image, document }
 
 /// Why a share was refused.
 ///
@@ -49,7 +49,7 @@ enum ShareRejection {
 String describeShareRejection(ShareRejection rejection) => switch (rejection) {
       ShareRejection.empty => 'There was nothing in that share to read.',
       ShareRejection.unsupportedType =>
-        'Action can take text and images. That was something else.',
+        'Action can take text, images and PDFs. That was something else.',
       ShareRejection.contentMismatch =>
         'That file is not the kind of file it says it is, so Action has not '
             'opened it.',
@@ -91,6 +91,19 @@ final class SharedImage extends SharedPayload {
   final int sizeBytes;
 
   /// A cleaned form of the sender's file name, or null.
+  final String? suggestedName;
+}
+
+/// A PDF. Its structure is checked separately, by `DocumentIntake`.
+final class SharedDocument extends SharedPayload {
+  const SharedDocument({
+    required this.path,
+    required this.sizeBytes,
+    this.suggestedName,
+  });
+
+  final String path;
+  final int sizeBytes;
   final String? suggestedName;
 }
 
@@ -152,6 +165,17 @@ abstract final class ShareValidator {
       // Unknown bytes. Not called a mismatch, because nothing was contradicted
       // — Action simply does not recognise it.
       return const SharedRejected(ShareRejection.unsupportedType);
+    }
+
+    if (detected.mimeType == 'application/pdf') {
+      // Structure is checked later, by DocumentIntake, for the same reason a
+      // picked PDF is: an encrypted or truncated file has to be refused with
+      // its own sentence rather than as a generic unsupported type.
+      return SharedDocument(
+        path: path,
+        sizeBytes: sizeBytes,
+        suggestedName: sanitiseName(declaredName),
+      );
     }
 
     if (!readableImageTypes.contains(detected.mimeType)) {

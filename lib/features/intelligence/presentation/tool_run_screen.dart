@@ -127,8 +127,20 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
     );
   }
 
-  Future<void> _run_(IntelligenceToolDefinition tool, IntelligenceRunInput input) async {
+  Future<void> _run_(
+    IntelligenceToolDefinition tool,
+    IntelligenceRunInput rawInput,
+  ) async {
     final config = ref.read(aiProviderConfigProvider);
+
+    // Document bytes are loaded here and nowhere earlier: the picker, the
+    // recommendations and the scope preview must all stay free, and a file is
+    // only read once the user has asked to send it.
+    final selected = (ref.read(sourcesProvider).value ?? const <SourceItem>[])
+        .where((s) => _selectedSourceIds.contains(s.id))
+        .toList();
+    final input = await attachDocuments(rawInput, selected);
+    if (!mounted) return;
 
     // The disclosure and the scope confirmation both happen before a request
     // is built, so declining costs nothing.

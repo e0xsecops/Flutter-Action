@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../design/app_theme.dart';
 import '../features/actions/application/action_providers.dart';
 import '../features/capture/application/capture_controller.dart';
+import '../features/capture/domain/document_intake.dart';
 import '../features/capture/domain/shared_payload.dart';
 import '../features/capture/domain/source_item.dart';
 import '../features/capture/presentation/preview_screen.dart';
@@ -113,6 +114,13 @@ class _ActionAppState extends ConsumerState<ActionApp> {
           extra: PreviewArgs(path: path, type: SourceType.gallery),
         );
 
+      case SharedDocument(:final path, :final sizeBytes, :final suggestedName):
+        unawaited(ref.read(appAnalyticsProvider).log(
+          AnalyticsEvents.captureStarted,
+          parameters: {AnalyticsParams.captureType: 'share_document'},
+        ));
+        await _takeSharedDocument(path, sizeBytes, suggestedName);
+
       case SharedRejected(:final message):
         // Said out loud rather than dropped. A share that vanishes leaves the
         // user thinking Action took it.
@@ -122,6 +130,41 @@ class _ActionAppState extends ConsumerState<ActionApp> {
             ..clearSnackBars()
             ..showSnackBar(SnackBar(content: Text(message)));
         }
+    }
+  }
+
+  /// Runs a shared PDF through the same checks a picked one gets.
+  ///
+  /// Share and picker converge here deliberately: an encrypted or truncated
+  /// PDF has to be refused the same way whichever door it came through, and a
+  /// second implementation of that judgement is a second place for it to drift.
+  Future<void> _takeSharedDocument(
+    String path,
+    int sizeBytes,
+    String? suggestedName,
+  ) async {
+    final outcome = await ref
+        .read(sourcesProvider.notifier)
+        .addSharedDocument(
+          path: path,
+          sizeBytes: sizeBytes,
+          declaredName: suggestedName,
+        );
+    if (!mounted) return;
+
+    final context = ref.read(routerProvider).routerDelegate.navigatorKey
+        .currentContext;
+    switch (outcome) {
+      case SourceItem(:final id):
+        ref.read(routerProvider).push(Routes.source(id));
+      case RejectedDocument(:final message):
+        if (context != null && context.mounted) {
+          ScaffoldMessenger.of(context)
+            ..clearSnackBars()
+            ..showSnackBar(SnackBar(content: Text(message)));
+        }
+      default:
+        break;
     }
   }
 

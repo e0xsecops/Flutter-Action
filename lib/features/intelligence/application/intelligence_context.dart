@@ -9,6 +9,9 @@ library;
 import '../../actions/domain/action_item.dart';
 import '../../capture/domain/source_item.dart';
 import '../domain/ai_request.dart';
+import 'dart:io';
+import 'dart:typed_data';
+
 import '../domain/intelligence_tool.dart';
 import '../domain/tool_registry.dart';
 
@@ -20,6 +23,10 @@ String labelForSource(SourceItem source) => switch (source.type) {
       SourceType.pastedText => 'Pasted note',
       SourceType.photo => 'Photo',
       SourceType.gallery => 'Screenshot',
+      // Still not the file name. A document's name is the most identifying
+      // string a capture carries — it routinely holds a real name, an employer
+      // or a case number — and this label reaches prompts and citation chips.
+      SourceType.document => 'Document',
     };
 
 /// Builds the input for a run over [sources].
@@ -60,6 +67,59 @@ IntelligenceRunInput buildRunInput({
   );
 }
 
+/// Adds the bytes of any document sources to a run.
+///
+/// **Separate from [buildRunInput], and async, because reading a file is.**
+/// Keeping the synchronous builder synchronous means the picker, the
+/// recommendations and the scope preview all stay free — a document is only
+/// loaded at the point the user has actually asked to send it.
+///
+/// The filename sent is Action's own, never the user's. A document's name is
+/// the most identifying string a capture carries — it routinely holds a real
+/// name, an employer or a case number — and a provider has no use for it.
+Future<IntelligenceRunInput> attachDocuments(
+  IntelligenceRunInput input,
+  List<SourceItem> sources, {
+  Future<Uint8List> Function(String path)? readBytes,
+}) async {
+  final documents = sources.where((s) => s.hasDocument).toList();
+  if (documents.isEmpty) return input;
+
+  final read = readBytes ?? (path) => File(path).readAsBytes();
+  final parts = <AiPart>[...input.parts];
+  final labels = <String, String>{...input.sourceLabels};
+
+  for (final source in documents) {
+    final Uint8List bytes;
+    try {
+      bytes = await read(source.documentPath!);
+    } on FileSystemException {
+      // A capture whose file has gone is skipped rather than sent as an empty
+      // attachment, which a provider would charge for and reject.
+      continue;
+    }
+    final label = labelForSource(source);
+    labels[source.id] = label;
+    parts.add(AiDocumentPart(
+      bytes: bytes,
+      mimeType: source.mimeType ?? 'application/pdf',
+      sourceId: source.id,
+      filename: 'document.pdf',
+      pageCount: source.pageCount,
+      label: label,
+    ));
+  }
+
+  return IntelligenceRunInput(
+    parts: parts,
+    question: input.question,
+    freeText: input.freeText,
+    mode: input.mode,
+    targetLanguage: input.targetLanguage,
+    sourceLabels: labels,
+  );
+}
+
 /// Tools worth offering for one source, from local signals only.
 ///
 /// Action never asks the AI which AI button to render — that would spend the
@@ -71,7 +131,11 @@ List<IntelligenceToolDefinition> recommendedFor(SourceItem source) {
           source.analysisText,
           isImage: source.hasImage,
         )
-      : SourceSignals(characterCount: 0, isImage: source.hasImage);
+      : SourceSignals(
+          characterCount: 0,
+          isImage: source.hasImage,
+          isDocument: source.hasDocument,
+        );
   return ToolRecommendations.forSource(signals);
 }
 

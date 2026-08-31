@@ -1358,6 +1358,7 @@ class _SourceStrip extends StatelessWidget {
       SourceType.photo => Icons.photo_camera_outlined,
       SourceType.gallery => Icons.image_outlined,
       SourceType.pastedText => Icons.notes_rounded,
+      SourceType.document => Icons.picture_as_pdf_outlined,
     };
     return Container(
       margin: const EdgeInsets.fromLTRB(Space.page, Space.md, Space.page, 0),

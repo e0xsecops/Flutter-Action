@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,7 @@ import '../data/ocr_service.dart';
 import '../data/share_intake.dart';
 import '../data/source_file_store.dart';
 import '../data/source_store.dart';
+import '../domain/document_intake.dart';
 import '../domain/source_item.dart';
 import '../domain/text_normalizer.dart';
 
@@ -133,6 +135,109 @@ class SourcesNotifier extends AsyncNotifier<List<SourceItem>> {
     );
     await _add(item);
     return item;
+  }
+
+  /// Opens the document picker and stores what comes back, or reports why not.
+  ///
+  /// Returns null when the user backed out. Returns a [RejectedDocument] when
+  /// the file cannot be used — refused *before* anything is stored, so a
+  /// document Action cannot read never becomes a capture the user has to
+  /// tidy up.
+  ///
+  /// **No OCR.** A PDF's text is read by the provider that receives it, not on
+  /// this device, so the capture is ready the moment it is stored. That is
+  /// also why [SourceItem.documentPath] is a separate field: the resume pass
+  /// looks for unfinished *images*, and a document must not be swept into it.
+  Future<Object?> addPickedDocument() async {
+    final picked = await ref.read(shareIntakeProvider).pickDocument();
+    if (picked == null) return null;
+
+    return addSharedDocument(
+      path: picked.path,
+      sizeBytes: picked.sizeBytes,
+      declaredName: picked.declaredName,
+    );
+  }
+
+  /// Validates and stores a PDF that already sits in a file this app owns.
+  ///
+  /// The picker and the share sheet both land here. An encrypted or truncated
+  /// PDF has to be refused the same way whichever door it came through, and a
+  /// second implementation of that judgement is a second place for it to drift.
+  Future<Object?> addSharedDocument({
+    required String path,
+    required int sizeBytes,
+    String? declaredName,
+  }) async {
+    final file = File(path);
+    final Uint8List header;
+    final Uint8List content;
+    try {
+      header = await _leadingBytes(file, DocumentIntake.headerBytes);
+      // Bounded: the probe only reads the two ends of a file, and holding a
+      // 25 MB document in memory to answer one question would be wasteful on
+      // the way to sending it anyway.
+      content = await file.readAsBytes();
+    } on FileSystemException {
+      return const RejectedDocument('That document could not be read.');
+    }
+
+    final outcome = DocumentIntake.validate(
+      path: path,
+      declaredName: declaredName,
+      sizeBytes: sizeBytes,
+      header: header,
+      content: content,
+    );
+    if (outcome is RejectedDocument) {
+      // Nothing was stored, so nothing needs cleaning up beyond the platform's
+      // own copy, which lives in the cache directory Android reclaims.
+      unawaited(file.delete().catchError((_) => file));
+      return outcome;
+    }
+
+    final accepted = outcome as AcceptedDocument;
+    final store = await ref.read(sourceStoreProvider.future);
+    final files = await ref.read(sourceFileStoreProvider.future);
+    final id = _uuid.v4();
+
+    // Named for what it is: the parameter `path` is where the file came from,
+    // this is where the capture keeps it.
+    final storedPath = await files.save(
+      id: id,
+      bytes: content,
+      extension: 'pdf',
+    );
+    // The platform's copy has served its purpose; the capture owns its bytes
+    // now and two copies of the user's document is one too many.
+    unawaited(file.delete().catchError((_) => file));
+
+    final item = SourceItem(
+      id: id,
+      type: SourceType.document,
+      capturedAt: DateTime.now(),
+      documentPath: storedPath,
+      pageCount: accepted.pageCount,
+      mimeType: 'application/pdf',
+      originalByteSize: accepted.sizeBytes,
+      byteSize: accepted.sizeBytes,
+      // Nothing local left to do.
+      state: SourceProcessingState.ready,
+    );
+    await store.add(item);
+    await _publish(store);
+    return item;
+  }
+
+  static Future<Uint8List> _leadingBytes(File file, int count) async {
+    final handle = await file.open();
+    try {
+      final buffer = Uint8List(count);
+      final read = await handle.readInto(buffer);
+      return Uint8List.sublistView(buffer, 0, read);
+    } finally {
+      await handle.close();
+    }
   }
 
   /// Normalizes the picked file, writes the processed bytes, records the

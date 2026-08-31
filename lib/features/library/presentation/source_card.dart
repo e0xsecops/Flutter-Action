@@ -175,6 +175,7 @@ class _Thumbnail extends StatelessWidget {
       SourceType.photo => Icons.photo_camera_outlined,
       SourceType.gallery => Icons.image_outlined,
       SourceType.pastedText => Icons.notes_rounded,
+      SourceType.document => Icons.picture_as_pdf_outlined,
     };
 
     return Container(

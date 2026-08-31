@@ -10,12 +10,13 @@ import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../application/capture_controller.dart';
+import '../domain/document_intake.dart';
 import '../domain/source_item.dart';
 import 'preview_screen.dart';
 import '../../../core/analytics/app_analytics.dart';
 import '../../../core/analytics/firebase_app_analytics.dart';
 
-enum CaptureIntent { camera, gallery, pasteText }
+enum CaptureIntent { camera, gallery, pasteText, document }
 
 /// Entry point for every capture. Shown as a modal sheet from Home so the
 /// chooser never costs a screen transition, while everything after it is a real
@@ -49,6 +50,7 @@ Future<void> runCaptureIntent(
     CaptureIntent.pasteText => 'paste',
     CaptureIntent.camera => 'camera',
     CaptureIntent.gallery => 'gallery',
+    CaptureIntent.document => 'document',
   };
   final analytics = ref.read(appAnalyticsProvider);
   unawaited(analytics.log(
@@ -59,6 +61,23 @@ Future<void> runCaptureIntent(
   switch (intent) {
     case CaptureIntent.pasteText:
       context.push(Routes.captureText);
+
+    case CaptureIntent.document:
+      final outcome =
+          await ref.read(sourcesProvider.notifier).addPickedDocument();
+      if (!context.mounted) return;
+      switch (outcome) {
+        case RejectedDocument(:final message):
+          // Refused before anything was stored, and said out loud. A document
+          // that silently fails to appear reads as the app losing it.
+          ScaffoldMessenger.of(context)
+            ..clearSnackBars()
+            ..showSnackBar(SnackBar(content: Text(message)));
+        case SourceItem(:final id):
+          context.push(Routes.source(id));
+        default:
+          break; // the user backed out of the picker
+      }
 
     case CaptureIntent.camera:
       await _pickThenPreview(
@@ -161,6 +180,16 @@ class _CaptureSheet extends StatelessWidget {
               title: 'Paste text',
               subtitle: 'An email, message or notice',
               intent: CaptureIntent.pasteText,
+            ),
+            const SizedBox(height: Space.sm),
+            _Option(
+              icon: Icons.picture_as_pdf_outlined,
+              title: 'Choose a PDF',
+              // Says PDF rather than "document" because that is what it
+              // actually takes, and a chooser that accepts less than its label
+              // promises wastes the tap it invited.
+              subtitle: 'A statement, letter or form you already have',
+              intent: CaptureIntent.document,
             ),
             const SizedBox(height: Space.lg),
             const _PrivacyNote(),

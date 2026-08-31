@@ -9,9 +9,23 @@ library;
 import 'dart:async';
 import 'dart:io';
 
+
 import 'package:flutter/services.dart';
 
 import '../domain/shared_payload.dart';
+
+/// A document the user picked, already copied into app storage.
+class PickedDocument {
+  const PickedDocument({
+    required this.path,
+    required this.sizeBytes,
+    this.declaredName,
+  });
+
+  final String path;
+  final int sizeBytes;
+  final String? declaredName;
+}
 
 /// Where shares come from.
 abstract interface class ShareIntake {
@@ -24,6 +38,12 @@ abstract interface class ShareIntake {
 
   /// Fires when a share arrives while Action is already running.
   Stream<void> get arrivals;
+
+  /// Opens the system document picker.
+  ///
+  /// Null when the user backed out, which is an ordinary thing to do and not a
+  /// failure to report.
+  Future<PickedDocument?> pickDocument();
 }
 
 class PlatformShareIntake implements ShareIntake {
@@ -91,6 +111,27 @@ class PlatformShareIntake implements ShareIntake {
     }
   }
 
+  @override
+  Future<PickedDocument?> pickDocument() async {
+    final Map<Object?, Object?>? raw;
+    try {
+      raw = await _channel.invokeMapMethod<Object?, Object?>('pickDocument');
+    } on PlatformException {
+      return null;
+    } on MissingPluginException {
+      return null;
+    }
+    if (raw == null || raw['kind'] != 'file') return null;
+
+    final path = raw['path'] as String?;
+    if (path == null) return null;
+    return PickedDocument(
+      path: path,
+      sizeBytes: (raw['size'] as num?)?.toInt() ?? 0,
+      declaredName: raw['declaredName'] as String?,
+    );
+  }
+
   static Future<Uint8List?> _headerOf(String path) async {
     try {
       final handle = await File(path).open();
@@ -118,4 +159,7 @@ class NoShareIntake implements ShareIntake {
 
   @override
   Stream<void> get arrivals => const Stream.empty();
+
+  @override
+  Future<PickedDocument?> pickDocument() async => null;
 }

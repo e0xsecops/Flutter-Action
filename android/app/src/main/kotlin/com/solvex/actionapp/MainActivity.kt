@@ -1,5 +1,6 @@
 package com.solvex.actionapp
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -43,6 +44,15 @@ class MainActivity : FlutterFragmentActivity() {
 
     private var shareMethods: MethodChannel? = null
 
+    /**
+     * The Dart caller waiting for a document picker to come back.
+     *
+     * One at a time: the picker is a full-screen system activity, so a second
+     * request can only arrive if the first was abandoned, and answering the
+     * stale one would deliver a file to a screen that has gone.
+     */
+    private var pendingPick: MethodChannel.Result? = null
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
@@ -82,6 +92,7 @@ class MainActivity : FlutterFragmentActivity() {
                         pendingShare = null
                         result.success(share)
                     }
+                    "pickDocument" -> pickDocument(result)
                     else -> result.notImplemented()
                 }
             }
@@ -176,6 +187,65 @@ class MainActivity : FlutterFragmentActivity() {
             "size" to copied.length(),
         )
         return true
+    }
+
+    /**
+     * Opens the system document picker for the types Action can read.
+     *
+     * `ACTION_OPEN_DOCUMENT` rather than `GET_CONTENT`: it is the modern
+     * picker, it returns a stable URI, and it does not require any storage
+     * permission — the user granting access to one file *is* the permission.
+     * Action never asks to read the user's documents, only the one they hand
+     * over.
+     */
+    private fun pickDocument(result: MethodChannel.Result) {
+        pendingPick?.success(null)
+        pendingPick = result
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            .addCategory(Intent.CATEGORY_OPENABLE)
+            .setType("application/pdf")
+            .putExtra(Intent.EXTRA_LOCAL_ONLY, false)
+        try {
+            startActivityForResult(intent, PICK_DOCUMENT_REQUEST)
+        } catch (error: Exception) {
+            pendingPick = null
+            result.success(null)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode != PICK_DOCUMENT_REQUEST) {
+            super.onActivityResult(requestCode, resultCode, data)
+            return
+        }
+        val waiting = pendingPick
+        pendingPick = null
+        if (waiting == null) return
+
+        val uri = data?.data
+        if (resultCode != Activity.RESULT_OK || uri == null) {
+            // Cancelled. Null rather than an error: backing out of a picker is
+            // an ordinary thing to do and is not a failure to report.
+            waiting.success(null)
+            return
+        }
+
+        // Copied here, exactly like a share: the read grant belongs to this
+        // result and Dart should never depend on it lasting.
+        val copied = copyToOwnStorage(uri)
+        if (copied == null) {
+            waiting.success(mapOf("kind" to "unreadable"))
+            return
+        }
+        waiting.success(
+            mapOf(
+                "kind" to "file",
+                "path" to copied.absolutePath,
+                "declaredMimeType" to (contentResolver.getType(uri) ?: ""),
+                "declaredName" to displayName(uri),
+                "size" to copied.length(),
+            ),
+        )
     }
 
     /**
@@ -302,5 +372,8 @@ class MainActivity : FlutterFragmentActivity() {
 
         /** Longer than any notice, shorter than a novel. */
         const val MAX_TEXT_CHARS = 200_000
+
+        /** Distinctive enough not to collide with a plugin's own codes. */
+        const val PICK_DOCUMENT_REQUEST = 0x4143
     }
 }

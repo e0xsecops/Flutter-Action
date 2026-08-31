@@ -8,7 +8,8 @@ import 'ocr_result.dart';
 enum SourceType {
   photo('Captured from photo'),
   gallery('Captured from image'),
-  pastedText('Captured from pasted text');
+  pastedText('Captured from pasted text'),
+  document('Added as a document');
 
   const SourceType(this.provenanceLabel);
 
@@ -59,6 +60,8 @@ class SourceItem {
     required this.capturedAt,
     this.pastedText,
     this.imagePath,
+    this.documentPath,
+    this.pageCount,
     this.mimeType,
     this.originalFormat,
     this.imageWidth,
@@ -91,6 +94,22 @@ class SourceItem {
   /// strong hint the capture was a screenshot.
   final String? originalFormat;
 
+  /// Absolute path to a document this app copied into its own storage.
+  ///
+  /// Separate from [imagePath] rather than sharing it, because almost
+  /// everything downstream branches on the difference: OCR must not run on a
+  /// PDF, the inbox must not try to draw one as a thumbnail, and the resume
+  /// pass must not pick one up as unfinished. One field holding either would
+  /// make every one of those a guess.
+  final String? documentPath;
+
+  /// Pages, when the document said so plainly enough to be believed.
+  ///
+  /// Null means *unknown*, never zero — see [PdfProbe]. A scope disclosure
+  /// falls back to counting files rather than claiming a page count it does
+  /// not have.
+  final int? pageCount;
+
   final int? imageWidth;
   final int? imageHeight;
 
@@ -105,6 +124,8 @@ class SourceItem {
   final String? failureReason;
 
   bool get hasImage => imagePath != null;
+
+  bool get hasDocument => documentPath != null;
 
   /// What day-5 extraction will read. Pasted text is already analysis-ready;
   /// image captures contribute their normalized OCR text.
@@ -125,6 +146,8 @@ class SourceItem {
         'capturedAt': capturedAt.toIso8601String(),
         'pastedText': pastedText,
         'imagePath': imagePath,
+        'documentPath': documentPath,
+        'pageCount': pageCount,
         'mimeType': mimeType,
         'originalFormat': originalFormat,
         'imageWidth': imageWidth,
@@ -146,6 +169,10 @@ class SourceItem {
       // fields existed still read correctly.
       pastedText: (json['pastedText'] ?? json['rawText']) as String?,
       imagePath: json['imagePath'] as String?,
+      // Absent from every record written before V2, which reads correctly as
+      // "not a document".
+      documentPath: json['documentPath'] as String?,
+      pageCount: (json['pageCount'] as num?)?.toInt(),
       mimeType: json['mimeType'] as String?,
       originalFormat: json['originalFormat'] as String?,
       imageWidth: (json['imageWidth'] as num?)?.toInt(),

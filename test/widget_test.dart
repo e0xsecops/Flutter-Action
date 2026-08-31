@@ -566,7 +566,10 @@ void main() {
     await tester.tap(find.byTooltip('Capture something'));
     await tester.pumpAndSettle();
 
-    await tester.tapAt(const Offset(200, 60));
+    // The barrier rather than a fixed offset: the sheet's height depends on
+    // how many ways in there are, and a coordinate that was outside it stopped
+    // being outside it when a fourth was added.
+    await tester.tap(find.byType(ModalBarrier).last);
     await tester.pumpAndSettle();
 
     expect(find.text('Take a photo'), findsNothing);

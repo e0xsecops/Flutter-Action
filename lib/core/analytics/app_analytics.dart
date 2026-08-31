@@ -128,6 +128,8 @@ abstract final class AnalyticsParams {
     'paste',
     'share_text',
     'share_image',
+    'share_document',
+    'document',
   };
 
   /// How an extraction attempt ended.

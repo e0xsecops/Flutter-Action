@@ -79,6 +79,7 @@ class SourceSignals {
     this.hasAmounts = false,
     this.hasTabularLayout = false,
     this.isImage = false,
+    this.isDocument = false,
   });
 
   final int characterCount;
@@ -87,6 +88,13 @@ class SourceSignals {
   final bool hasAmounts;
   final bool hasTabularLayout;
   final bool isImage;
+
+  /// A PDF, whose text Action has not read and will not read locally.
+  ///
+  /// Every other signal here is derived from text, so a document arrives with
+  /// all of them false — which without this would look exactly like a capture
+  /// that turned out to be empty.
+  final bool isDocument;
 
   /// Derives the signals from text, with plain pattern matching.
   factory SourceSignals.fromText(String text, {bool isImage = false}) {
@@ -132,6 +140,13 @@ abstract final class ToolRecommendations {
 
     if (signals.isImage) {
       add(authenticityTool);
+    }
+    // A PDF is the case the summariser exists for: multi-page, and nobody
+    // picked it up because they were looking forward to reading it. The
+    // character-count rule below cannot fire for one, because Action has not
+    // read it.
+    if (signals.isDocument) {
+      add(smartSummaryTool);
     }
     // Two or more dates is where a document stops being informational and
     // starts being something with a deadline in it.
