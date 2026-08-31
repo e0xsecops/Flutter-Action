@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/router.dart';
+import '../../intelligence/application/intelligence_context.dart';
 import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
@@ -138,6 +139,52 @@ class _Body extends ConsumerWidget {
         ],
         const SizedBox(height: Space.xxl),
         _StateSection(item: item),
+        if (item.hasText) ...[
+          const SizedBox(height: Space.xxl),
+          _IntelligenceStrip(item: item),
+        ],
+      ],
+    );
+  }
+}
+
+/// Contextual entry points into the Intelligence tools.
+///
+/// **Why these three and not a menu of fifteen.** The tools shown are chosen
+/// from local signals in the text Action already has — a long document suggests
+/// summarising, a letter suggests a reply, several dates suggest looking for
+/// obligations. Action never asks the AI which AI button to render: that would
+/// spend the user's money to draw a menu, and would need the document sent
+/// before the user had chosen to send anything.
+class _IntelligenceStrip extends StatelessWidget {
+  const _IntelligenceStrip({required this.item});
+
+  final SourceItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    final tools = recommendedFor(item);
+    if (tools.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Do more with this', style: text.titleSmall),
+        const SizedBox(height: Space.md),
+        Wrap(
+          spacing: Space.sm,
+          runSpacing: Space.sm,
+          children: [
+            for (final tool in tools)
+              ActionChip(
+                label: Text(tool.title),
+                onPressed: () => context.push(
+                  Routes.tool(tool.id, sourceId: item.id),
+                ),
+              ),
+          ],
+        ),
       ],
     );
   }

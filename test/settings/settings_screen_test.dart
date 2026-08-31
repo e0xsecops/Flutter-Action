@@ -341,13 +341,23 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    settingsTest('names the two things that leave the device', (tester) async {
+    settingsTest('names every route data can take off the device',
+        (tester) async {
       await pumpApp(tester, onboardedPreferences());
       await openPrivacy(tester);
 
-      expect(find.text('On this device'), findsOneWidget);
-      expect(find.text('Sent to be read'), findsOneWidget);
-      expect(find.text('Stored in the cloud'), findsOneWidget);
+      // Four now, not three: V2 added the user's own AI provider, which is a
+      // genuinely different route from the built-in reader. The page is a lazy
+      // list, so each heading is scrolled to rather than assumed on screen.
+      for (final heading in [
+        'On this device',
+        'Sent to be read',
+        'Sent to your own AI provider',
+        'Stored in the cloud',
+      ]) {
+        await tester.scrollUntilVisible(find.text(heading), 200);
+        expect(find.text(heading), findsOneWidget, reason: heading);
+      }
     });
 
     // Copy assertions read the map itself: the page is long, and a widget

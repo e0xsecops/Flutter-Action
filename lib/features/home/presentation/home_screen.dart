@@ -718,10 +718,28 @@ class _AddBar extends ConsumerWidget {
         child: GlassSurface(
           borderRadius: Radii.rXl,
           padding: const EdgeInsets.all(Space.sm),
-          child: FilledButton.icon(
-            onPressed: () => startCapture(context, ref),
-            icon: const Icon(Icons.add_rounded, size: 22),
-            label: const Text('Add something'),
+          // Add is the primary act and keeps the width; Intelligence sits
+          // beside it as the other thing you can do with what you already
+          // have. It lives here rather than in the greeting because that row
+          // already carries Search, Settings and — in debug — diagnostics, and
+          // a fourth control there squeezes the greeting wide enough to
+          // starve the empty state's remaining height at large text sizes.
+          child: Row(
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () => startCapture(context, ref),
+                  icon: const Icon(Icons.add_rounded, size: 22),
+                  label: const Text('Add something'),
+                ),
+              ),
+              const SizedBox(width: Space.sm),
+              IconButton(
+                tooltip: 'Intelligence',
+                icon: const Icon(Icons.auto_awesome_outlined),
+                onPressed: () => context.push(Routes.studio),
+              ),
+            ],
           ),
         ),
       ),

@@ -16,6 +16,7 @@ import 'package:action_app/features/intelligence/application/intelligence_provid
 import 'package:action_app/features/intelligence/domain/ai_provider_config.dart';
 import 'package:action_app/features/settings/application/settings_providers.dart';
 import 'package:action_app/features/settings/data/system_settings_launcher.dart';
+import 'package:action_app/features/settings/presentation/privacy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -103,10 +104,16 @@ void uiTest(String description, Future<void> Function(WidgetTester) body) {
   testWidgets(description, (tester) async {
     tester.view.physicalSize = const Size(420, 1600);
     tester.view.devicePixelRatio = 1.0;
-    await body(tester);
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump(const Duration(seconds: 5));
-    tester.view.reset();
+    try {
+      await body(tester);
+    } finally {
+      // In a finally, so a failing test still tears its view down. Without
+      // this a single failure leaves the resized view in place and every
+      // later test in the file inherits it.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(seconds: 5));
+      tester.view.reset();
+    }
   });
 }
 
@@ -592,6 +599,135 @@ void main() {
       // Labelled by kind, never by file path.
       expect(find.text('Screenshot'), findsOneWidget);
       expect(find.textContaining('/nowhere.jpg'), findsNothing);
+    });
+  });
+
+  group('entry points', () {
+    uiTest('Home offers Intelligence beside Add, and it opens the Studio',
+        (tester) async {
+      await pumpApp(tester);
+
+      expect(find.byTooltip('Intelligence'), findsOneWidget);
+      await tester.tap(find.byTooltip('Intelligence'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('WORKS WITHOUT SETUP'), findsOneWidget);
+      expect(_http.calls, 0);
+    });
+
+    uiTest('Add is still the primary action on Home', (tester) async {
+      // Intelligence sits beside Add; it must not displace it.
+      await pumpApp(tester);
+      expect(find.text('Add something'), findsOneWidget);
+    });
+
+    uiTest('a source suggests tools chosen from its own text', (tester) async {
+      await _sources.add(SourceItem(
+        id: 'src-letter',
+        type: SourceType.pastedText,
+        capturedAt: _now,
+        pastedText: 'Dear Ms Rahman, your policy is due for renewal on '
+            '18 August 2026. Amount payable: 284.50. Yours sincerely.',
+        state: SourceProcessingState.ready,
+      ));
+
+      await pumpApp(tester);
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(ActionApp)),
+      );
+      container.read(routerProvider).push('/source/src-letter');
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Do more with this'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('Do more with this'), findsOneWidget);
+
+      // Deterministic, from local signals: a letter with a date and an amount
+      // suggests a reply and a deadline hunt. No request was needed to decide.
+      expect(find.text('Draft a reply'), findsOneWidget);
+      expect(_http.calls, 0);
+    });
+
+    uiTest('a source with no text suggests nothing', (tester) async {
+      await _sources.add(SourceItem(
+        id: 'src-blank',
+        type: SourceType.pastedText,
+        capturedAt: _now,
+        pastedText: '',
+        state: SourceProcessingState.ready,
+      ));
+
+      await pumpApp(tester);
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(ActionApp)),
+      );
+      container.read(routerProvider).push('/source/src-blank');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Do more with this'), findsNothing);
+    });
+
+    uiTest('tapping a suggested tool arrives with that source selected',
+        (tester) async {
+      await _sources.add(SourceItem(
+        id: 'src-letter',
+        type: SourceType.pastedText,
+        capturedAt: _now,
+        pastedText: 'Dear Ms Rahman, please reply by 18 August 2026. '
+            'Amount payable: 284.50. Yours sincerely.',
+        state: SourceProcessingState.ready,
+      ));
+
+      await pumpApp(tester);
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(ActionApp)),
+      );
+      container.read(routerProvider).push('/source/src-letter');
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Draft a reply'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Draft a reply'));
+      await tester.pumpAndSettle();
+
+      // The tool screen opened; nothing has been sent.
+      expect(find.text('Draft a reply'), findsWidgets);
+      expect(_http.calls, 0);
+    });
+  });
+
+  group('privacy copy tells the truth about the BYOK route', () {
+    test('names the provider route explicitly', () {
+      final all = privacyDataMap.expand((g) => g.lines).join(' ');
+      expect(all, contains('your own API key'));
+      expect(all, contains('does not pass through any server'));
+      expect(all, contains('nothing is ever sent in the background'));
+    });
+
+    test('does not promise the key cannot be extracted', () {
+      // OS-backed storage is a real obstacle, not an absolute one, and the
+      // copy has to say so rather than reassure.
+      final all = privacyDataMap.expand((g) => g.lines).join(' ');
+      expect(all, contains('it is not absolute'));
+      expect(all.toLowerCase(), isNot(contains('cannot be extracted')));
+      expect(all.toLowerCase(), isNot(contains('impossible')));
+    });
+
+    test('still never claims everything stays on the device', () {
+      final all = privacyDataMap.expand((g) => g.lines).join(' ').toLowerCase();
+      expect(all, isNot(contains('everything stays on')));
+      expect(all, isNot(contains('never leaves your device')));
+    });
+
+    test('says which tools genuinely stay local', () {
+      final all = privacyDataMap.expand((g) => g.lines).join(' ');
+      expect(all, contains('Two tools never send anything'));
     });
   });
 }

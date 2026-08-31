@@ -261,6 +261,31 @@ const privacyDataMap = <({String title, List<String> lines})>[
           'it.',
     ],
   ),
+  // V2. The BYOK layer sends content to a third party the user chose, using
+  // their own credential. That is a genuinely different data route from the
+  // built-in reader above, and collapsing the two into one reassuring
+  // paragraph would be the exact dishonesty this screen exists to avoid.
+  (
+    title: 'Sent to your own AI provider',
+    lines: [
+      'If you connect an AI provider in Settings, the Intelligence tools send '
+          'the content you select to that provider — OpenAI, Anthropic, '
+          'Google or an endpoint you chose — using your own API key.',
+      'It goes to them directly. It does not pass through any server '
+          'belonging to Action.',
+      'Only what you pick for a tool is sent, and only when you run it. Your '
+          'other Actions, captures and sources are never included, and '
+          'nothing is ever sent in the background.',
+      'Your API key is kept in this device’s secure storage and is sent only '
+          'to the provider it belongs to. Secure storage is a real obstacle '
+          'to anyone with your unlocked device, but it is not absolute, and '
+          'Action will not claim otherwise.',
+      'Two tools never send anything: hiding sensitive details, and checking '
+          'where a file came from. Both run entirely on this device.',
+      'What your provider does with what you send is governed by your '
+          'agreement with them, not by Action.',
+    ],
+  ),
   (
     title: 'Stored in the cloud',
     lines: [
