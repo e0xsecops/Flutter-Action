@@ -373,4 +373,96 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+
+  // ---------------------------------------------------------------------
+  // V2. The Intelligence screens are held to exactly the bar the rest of the
+  // app is: they must survive 200% text, stop growing on a tablet, and say
+  // what their controls act on.
+  // ---------------------------------------------------------------------
+
+  group('the Intelligence screens meet the same bar', () {
+    Future<void> openStudio(WidgetTester tester) async {
+      await tester.tap(find.byTooltip('Intelligence'));
+      await tester.pumpAndSettle();
+    }
+
+    polishTest('the Studio at 200% does not clip', (tester) async {
+      await pumpApp(tester, textScale: 2.0);
+      await openStudio(tester);
+      expect(tester.takeException(), isNull);
+    });
+
+    polishTest('a tool screen at 200% does not clip', (tester) async {
+      await pumpApp(tester, textScale: 2.0);
+      await openStudio(tester);
+
+      await tester.scrollUntilVisible(
+        find.text('Hide sensitive details'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Hide sensitive details').first);
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+    });
+
+    polishTest('Intelligence settings at 200% does not clip', (tester) async {
+      await pumpApp(tester, textScale: 2.0);
+      await tester.tap(find.byTooltip('Settings'));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('AI provider'), 200);
+      await tester.tap(find.text('AI provider'));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+    });
+
+    polishTest('the Studio stops growing on a tablet', (tester) async {
+      await pumpApp(tester, size: const Size(1400, 1600));
+      await openStudio(tester);
+
+      final body = tester.getSize(find.byType(CustomScrollView).first);
+      // A card list tolerates more width than prose, so it uses the list
+      // breakpoint - the same one Home uses.
+      expect(body.width, lessThanOrEqualTo(Breakpoints.readableList));
+    });
+
+    polishTest('and still fills a phone', (tester) async {
+      await pumpApp(tester, size: const Size(420, 1400));
+      await openStudio(tester);
+
+      final body = tester.getSize(find.byType(CustomScrollView).first);
+      expect(body.width, 420);
+    });
+
+    polishTest('the Intelligence control names itself', (tester) async {
+      await pumpApp(tester);
+      // A screen reader landing on an unlabelled icon says "button".
+      expect(find.byTooltip('Intelligence'), findsOneWidget);
+    });
+
+    polishTest('a tool card announces what it is', (tester) async {
+      await pumpApp(tester);
+      await openStudio(tester);
+
+      final semantics = tester.getSemantics(
+        find.bySemanticsLabel(RegExp('Hide sensitive details')).first,
+      );
+      // The card carries its description too, so the announcement says what
+      // the tool does rather than only its name.
+      expect(semantics.label, contains('Find what should not be shared'));
+    });
+
+    polishTest('the Studio renders in dark without throwing', (tester) async {
+      final prefs = InMemoryPreferenceStore({
+        PreferenceKeys.onboardingCompleted: true,
+        PreferenceKeys.themeMode: 'dark',
+      });
+      await pumpApp(tester, prefs: prefs);
+      await openStudio(tester);
+
+      expect(tester.takeException(), isNull);
+    });
+  });
 }
