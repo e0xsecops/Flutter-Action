@@ -66,6 +66,14 @@ dependencies:
   # iOS Keychain. Wrapped behind `SecretStore` so tests never touch a platform
   # channel and the package can be replaced without touching call sites.
   flutter_secure_storage: ^9.2.4
+  # SHA-256 for the file identity tool, and the chunked sink it hashes through
+  # so a large PDF is never held in memory twice. Both were already in the lock
+  # file transitively; they are direct now because Action's own code imports
+  # them. Dart has no SHA-256 in its core libraries, and this is the package the
+  # SDK team maintains — a hand-rolled digest would be exactly the home-grown
+  # cryptography this project has ruled out everywhere else.
+  crypto: ^3.0.6
+  convert: ^3.1.2
 
 dev_dependencies:
   flutter_test:
