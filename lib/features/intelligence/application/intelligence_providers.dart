@@ -13,6 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/preferences/preference_store.dart';
 import '../../../core/preferences/shared_preferences_store.dart';
+import '../../../core/security/activity_journal.dart';
+import '../../../core/security/activity_providers.dart';
 import '../../../core/security/secret_store.dart';
 import '../data/ai_http.dart';
 import '../data/anthropic_provider.dart';
@@ -111,6 +113,12 @@ class AiProviderConfigController extends Notifier<AiProviderConfig?> {
           IntelligencePreferenceKeys.providerConfig,
           jsonEncode(config.toJson()),
         );
+    // The provider *kind*, which is what the Security Centre shows. Never the
+    // key, and never the custom endpoint — a self-hosted URL is itself
+    // identifying, and the journal has no field that could hold one.
+    await ref
+        .read(activityRecorderProvider)
+        .record(ActivityEvent.providerConnected, providerId: config.kind.id);
   }
 
   /// Forgets the provider *and* removes its key from secure storage.
@@ -127,6 +135,10 @@ class AiProviderConfigController extends Notifier<AiProviderConfig?> {
       await ref
           .read(secretStoreProvider)
           .delete(SecretKeys.providerKey(previous.secretKey));
+      await ref.read(activityRecorderProvider).record(
+            ActivityEvent.providerDisconnected,
+            providerId: previous.kind.id,
+          );
     }
   }
 }

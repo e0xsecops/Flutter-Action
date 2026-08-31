@@ -6,10 +6,14 @@
 /// spends anything.
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/security/activity_journal.dart';
+import '../../../core/security/activity_providers.dart';
 import '../../../design/components/glass_surface.dart';
 import '../../../design/components/readable_width.dart';
 import '../../../design/tokens/colors.dart';
@@ -24,6 +28,7 @@ import '../application/intelligence_providers.dart';
 import '../application/intelligence_runner.dart';
 import '../domain/ai_failure.dart';
 import '../domain/ai_provider.dart';
+import '../domain/ai_request.dart';
 import '../domain/ai_provider_config.dart';
 import '../domain/intelligence_result.dart';
 import '../domain/intelligence_tool.dart';
@@ -144,6 +149,27 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
       _run = const IntelligenceRunState(stage: IntelligenceStage.preparing);
     });
 
+    // The receipt, written at the moment of sending rather than on success.
+    //
+    // A transparency log that only recorded completed runs would understate
+    // what left the device — a request rejected by the provider still reached
+    // it — and would lose the record entirely if the app were killed mid-run.
+    // A local tool sends nothing, so there is nothing to receipt.
+    if (!tool.isLocal && config != null) {
+      unawaited(ref.read(activityRecorderProvider).record(
+            ActivityEvent.aiRequestSent,
+            providerId: config.kind.id,
+            toolId: tool.id,
+            pages: input.parts
+                .whereType<AiDocumentPart>()
+                .fold(0, (sum, part) => sum + (part.pageCount ?? 0)),
+            attachments: input.parts
+                .where((p) => p is AiDocumentPart || p is AiImagePart)
+                .length,
+            textCharacters: _textLengthOf(input),
+          ));
+    }
+
     final stream = ref.read(intelligenceRunnerProvider).run(
           tool: tool,
           input: input,
@@ -167,6 +193,25 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
         setState(() => _selectedSuggestions.addAll(selected));
       }
     }
+  }
+
+  /// How much text is in this run, for the receipt.
+  ///
+  /// A character count, never the characters. The point of the number is to
+  /// let someone reading their own history tell a one-line question apart from
+  /// a forty-page contract.
+  static int _textLengthOf(IntelligenceRunInput input) {
+    var total = 0;
+    for (final part in input.parts) {
+      total += switch (part) {
+        AiTextPart(:final text) => text.length,
+        AiSourceTextPart(:final text) => text.length,
+        _ => 0,
+      };
+    }
+    total += input.freeText?.trim().length ?? 0;
+    total += input.question?.trim().length ?? 0;
+    return total;
   }
 
   Future<bool> _confirmFirstUse(String label, AiProviderKind kind) async {

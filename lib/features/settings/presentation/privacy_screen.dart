@@ -10,6 +10,8 @@ import '../application/settings_providers.dart';
 import 'settings_shell.dart';
 import '../../../core/analytics/app_analytics.dart';
 import '../../../core/analytics/firebase_app_analytics.dart';
+import '../../../core/security/activity_journal.dart';
+import '../../../core/security/activity_providers.dart';
 
 /// Where your information lives — and the controls that act on it.
 ///
@@ -101,6 +103,9 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
     setState(() => _busy = true);
     try {
       await ref.read(privacyDeletionServiceProvider).clearCaptures();
+      await ref
+          .read(activityRecorderProvider)
+          .record(ActivityEvent.capturesCleared);
       if (!mounted) return;
       _say('Captures deleted.');
     } on Object {
@@ -124,7 +129,12 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
 
     setState(() => _busy = true);
     final analytics = ref.read(appAnalyticsProvider);
+    final activity = ref.read(activityRecorderProvider);
     unawaited(analytics.log(AnalyticsEvents.privacyDeleteStarted));
+    // Recorded before the work starts. If deletion is interrupted, "you asked
+    // for this on Tuesday" is exactly the record the user needs, and one
+    // written only on success would not exist.
+    unawaited(activity.record(ActivityEvent.dataDeletionRequested));
     final outcome =
         await ref.read(privacyDeletionServiceProvider).deleteEverything();
     // Counts only: whether it finished, and whether the cloud could be
@@ -145,6 +155,10 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
           parameters: {AnalyticsParams.failureClass: failureClass},
         ),
     });
+
+    if (outcome is DeletionComplete) {
+      unawaited(activity.record(ActivityEvent.dataDeletionCompleted));
+    }
 
     if (!mounted) return;
     setState(() => _busy = false);
