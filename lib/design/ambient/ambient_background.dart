@@ -74,8 +74,13 @@ class _AmbientPainter extends CustomPainter {
     // 1. Tonal base. A vertical fall from slightly lighter to slightly deeper.
     //    This alone is what gives a glass surface something to differ from as
     //    it moves down the page.
+    // Dark is deliberately LIFTED off the surface colour (#0B0D10), not pushed
+    // below it. The first attempt went darker than the surface and the whole
+    // app lost its depth on device: a glass hero at 0.33 over near-black has
+    // nothing to separate from, so every card dissolved into the page. A
+    // slate-blue field an order lighter is what gives dark mode its geometry.
     final base = dark
-        ? const [Color(0xFF0B0E13), Color(0xFF090B0F)]
+        ? const [Color(0xFF171B23), Color(0xFF0E1116)]
         : const [Color(0xFFF8F9FD), Color(0xFFEDF0F7)];
     canvas.drawRect(
       rect,

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../app/router.dart';
 import '../../../design/components/glass_surface.dart';
+import '../../../app/action_shell.dart';
 import '../../../design/components/readable_width.dart';
 import '../../../design/components/section_header.dart';
 import '../../../design/tokens/colors.dart';
@@ -59,8 +60,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final state = ref.watch(searchControllerProvider);
     final notifier = ref.read(searchControllerProvider.notifier);
 
-    return Scaffold(
-      body: SafeArea(
+    // No Scaffold of its own: Search is one of the shell's four destinations,
+    // and the shell already owns the Scaffold, the ambient background and the
+    // navigation bar. Nesting a second one would paint an opaque page over the
+    // field the glass is supposed to sample.
+    return SafeArea(
         // Results run under the controls rather than stopping below them, so
         // a row sliding beneath the search field is what makes the field read
         // as glass. The list carries matching top padding, so nothing is ever
@@ -90,9 +94,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         notifier.clear();
                         _focus.requestFocus();
                       },
-                      onBack: () => context.canPop()
-                          ? context.pop()
-                          : context.go(Routes.home),
                     ),
                     _FilterBar(
                       filters: state.query.filters,
@@ -104,7 +105,99 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
           ],
         ),
-      ),
+    );
+  }
+}
+
+/// What you can search for, shown instead of a magnifying glass.
+///
+/// The old zero state was a grey glyph and one sentence over a large dead area.
+/// It carried the single best line in the product — that search never leaves
+/// the device — as grey body copy under an icon that said nothing.
+///
+/// This says what is actually searchable, because "search your actions" does
+/// not tell someone they can type a reference number off a letter and find the
+/// Action it became.
+class _SearchZeroState extends StatelessWidget {
+  const _SearchZeroState();
+
+  static const _fields = [
+    (Icons.title_rounded, 'Titles', 'Renew the car insurance'),
+    (Icons.tag_rounded, 'Reference numbers', 'MTR-4471-08'),
+    (Icons.business_outlined, 'Organisations', 'Northgate'),
+    (Icons.checklist_rounded, 'Steps inside an Action', 'Upload the form'),
+    (Icons.notes_rounded, 'The text read from a capture', 'renewal notice'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // The promise first. It is the reason this search is different from
+        // every other search the user does all day.
+        Row(
+          children: [
+            Icon(
+              Icons.lock_outline_rounded,
+              size: 16,
+              color: colors.confidenceConfirmed,
+            ),
+            const SizedBox(width: Space.sm),
+            Expanded(
+              child: Text(
+                'Searched on this device. Nothing you type here leaves it.',
+                style: text.bodyMedium?.copyWith(
+                  color: colors.confidenceConfirmed,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: Space.xxl),
+        Text(
+          'YOU CAN SEARCH',
+          style: text.labelSmall?.copyWith(
+            color: colors.textTertiary,
+            letterSpacing: 1.1,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: Space.md),
+        for (final (icon, label, example) in _fields)
+          Padding(
+            padding: const EdgeInsets.only(bottom: Space.md),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Icon(icon, size: 17, color: colors.textTertiary),
+                ),
+                const SizedBox(width: Space.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label, style: text.titleSmall),
+                      Text(
+                        // A worked example beats a description: it shows the
+                        // shape of the thing you would actually type.
+                        example,
+                        style: text.bodySmall?.copyWith(
+                          fontFeatures: AppText.numeric,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }
@@ -120,7 +213,6 @@ class _SearchField extends StatelessWidget {
     required this.onChanged,
     required this.onSubmitted,
     required this.onClear,
-    required this.onBack,
   });
 
   final TextEditingController controller;
@@ -128,20 +220,26 @@ class _SearchField extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final ValueChanged<String> onSubmitted;
   final VoidCallback onClear;
-  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.xs, Space.sm, Space.page, Space.sm),
+      // No back control. Search is one of the shell's four destinations now,
+      // so there is nothing to pop — an arrow here would either do nothing or
+      // eject the user out of a tab they deliberately chose.
+      padding: const EdgeInsets.fromLTRB(
+        Space.lg,
+        Space.sm,
+        Space.page,
+        Space.sm,
+      ),
       child: Row(
         children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            tooltip: 'Back',
-            onPressed: onBack,
+          Padding(
+            padding: const EdgeInsets.only(right: Space.md),
+            child: Icon(Icons.search_rounded, color: colors.textTertiary),
           ),
           Expanded(
             child: TextField(
@@ -299,14 +397,14 @@ class _Results extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state.isIdle) {
-      return Padding(
-        padding: EdgeInsets.only(top: topInset),
-        child: const EmptyView(
-          icon: Icons.search,
-          title: 'Search your actions and captures',
-          message: 'Everything is searched on this device. Nothing you type '
-              'here leaves it.',
+      return ListView(
+        padding: EdgeInsets.only(
+          top: topInset + Space.lg,
+          left: Space.page,
+          right: Space.page,
+          bottom: actionNavBarClearance + Space.lg,
         ),
+        children: const [_SearchZeroState()],
       );
     }
 
@@ -315,7 +413,10 @@ class _Results extends StatelessWidget {
     if (results.isEmpty && !results.hasFailure) {
       // Never offered as "ask the AI" — there is nothing to ask.
       return Padding(
-        padding: EdgeInsets.only(top: topInset),
+        padding: EdgeInsets.only(
+          top: topInset,
+          bottom: actionNavBarClearance,
+        ),
         child: EmptyView(
           icon: Icons.search_off,
           title: 'No matches for "${state.query.trimmed}"',
@@ -363,7 +464,9 @@ class _Results extends StatelessWidget {
             ),
           ),
         ],
-        const SliverToBoxAdapter(child: SizedBox(height: Space.xxxl)),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: actionNavBarClearance + Space.lg),
+        ),
       ],
     );
   }

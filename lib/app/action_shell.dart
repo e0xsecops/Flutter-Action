@@ -271,9 +271,13 @@ class _CaptureControl extends ConsumerWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: colors.brand.withValues(alpha: 0.34),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
+                  // Modest, and tight to the control. A wider, brighter glow
+                  // read straight through the capture sheet on device as a
+                  // blue smear near the bottom edge — chrome that is visible
+                  // through the surface covering it is an artifact, not depth.
+                  color: colors.brand.withValues(alpha: 0.26),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),

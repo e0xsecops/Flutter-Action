@@ -115,31 +115,42 @@ class _CaptureSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppSheet(
-      title: 'Add something',
+      title: 'Capture something',
       subtitle: 'Hand Action anything you would rather not read through.',
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(Space.md, 0, Space.md, Space.sm),
+        padding: const EdgeInsets.fromLTRB(
+          Space.page,
+          0,
+          Space.page,
+          Space.sm,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _Option(
-              icon: Icons.photo_camera_outlined,
+              icon: Icons.photo_camera_rounded,
               title: 'Take a photo',
-              subtitle: 'A letter, bill, or notice in front of you',
+              subtitle: 'A letter, bill or notice in front of you',
               intent: CaptureIntent.camera,
+              primary: true,
             ),
+            const SizedBox(height: Space.sm),
             _Option(
-              icon: Icons.image_outlined,
+              icon: Icons.image_rounded,
               title: 'Choose an image',
               subtitle: 'A screenshot or photo already on this device',
               intent: CaptureIntent.gallery,
             ),
+            const SizedBox(height: Space.sm),
             _Option(
-              icon: Icons.text_snippet_outlined,
+              icon: Icons.notes_rounded,
               title: 'Paste text',
-              subtitle: 'An email, message, or notice',
+              subtitle: 'An email, message or notice',
               intent: CaptureIntent.pasteText,
             ),
+            const SizedBox(height: Space.lg),
+            const _PrivacyNote(),
           ],
         ),
       ),
@@ -147,12 +158,21 @@ class _CaptureSheet extends StatelessWidget {
   }
 }
 
+/// One way in.
+///
+/// A card rather than a list row. On device the row version had a real
+/// legibility failure — a translucent sheet over a light page washed
+/// `textSecondary` out until the subtitles were barely readable — and a row of
+/// icon/title/subtitle/chevron reads as a settings list rather than as three
+/// distinct things you could do. Each option now sits on its own solid surface,
+/// which fixes the contrast and gives the three of them equal presence.
 class _Option extends StatelessWidget {
   const _Option({
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.intent,
+    this.primary = false,
   });
 
   final IconData icon;
@@ -160,48 +180,109 @@ class _Option extends StatelessWidget {
   final String subtitle;
   final CaptureIntent intent;
 
+  /// The camera gets slightly more weight: it is the one that turns something
+  /// physically in front of you into something Action can work with, which is
+  /// the product in one gesture.
+  final bool primary;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: Space.xs),
-      child: InkWell(
-        borderRadius: Radii.rMd,
-        onTap: () => Navigator.of(context).pop(intent),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Space.sm,
-            vertical: Space.md,
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: colors.brandSubtle,
-                  borderRadius: Radii.rMd,
-                ),
-                child: Icon(icon, color: colors.brand, size: 22),
+    return Semantics(
+      button: true,
+      label: '$title. $subtitle',
+      child: Material(
+        // Solid, not glass. The sheet itself is the glass; a translucent card
+        // on a translucent sheet is two read-backs and no contrast.
+        color: primary ? colors.brandSubtle : colors.surfaceElevated,
+        borderRadius: Radii.rLg,
+        child: InkWell(
+          borderRadius: Radii.rLg,
+          onTap: () => Navigator.of(context).pop(intent),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: Radii.rLg,
+              border: Border.all(
+                color: primary ? colors.brand.withValues(alpha: 0.28) : colors.border,
+                width: Strokes.hairline,
               ),
-              const SizedBox(width: Space.lg),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: text.titleSmall),
-                    const SizedBox(height: Space.xxs),
-                    Text(subtitle, style: text.bodySmall),
-                  ],
+            ),
+            padding: const EdgeInsets.all(Space.lg),
+            child: Row(
+              children: [
+                Container(
+                  width: 46,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: primary
+                        ? colors.brand
+                        : colors.brand.withValues(alpha: 0.10),
+                    borderRadius: Radii.rMd,
+                  ),
+                  child: Icon(
+                    icon,
+                    color: primary ? colors.onBrand : colors.brand,
+                    size: 23,
+                  ),
                 ),
-              ),
-              Icon(Icons.chevron_right, color: colors.textTertiary, size: 20),
-            ],
+                const SizedBox(width: Space.lg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: text.titleSmall),
+                      const SizedBox(height: Space.xxs),
+                      Text(
+                        subtitle,
+                        // textSecondary on a solid surface, which is the
+                        // contrast this copy was designed for.
+                        style: text.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_rounded,
+                  color: colors.textTertiary,
+                  size: 18,
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The promise that makes capturing safe to do.
+///
+/// Said here rather than only in the Privacy Centre because this is the moment
+/// the user is about to hand the app a document, and it is the question they
+/// would ask if there were anyone to ask.
+class _PrivacyNote extends StatelessWidget {
+  const _PrivacyNote();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final text = Theme.of(context).textTheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.lock_outline_rounded, size: 15, color: colors.textTertiary),
+        const SizedBox(width: Space.sm),
+        Expanded(
+          child: Text(
+            'Captures stay on this device. Nothing is analysed online until you '
+            'ask for it.',
+            style: text.bodySmall?.copyWith(color: colors.textTertiary),
+          ),
+        ),
+      ],
     );
   }
 }
