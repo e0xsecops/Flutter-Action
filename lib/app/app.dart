@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../design/app_theme.dart';
 import '../features/actions/application/action_providers.dart';
 import '../features/settings/application/settings_providers.dart';
+import 'app_lock_gate.dart';
 import 'router.dart';
 import '../core/analytics/app_analytics.dart';
 import '../core/analytics/firebase_app_analytics.dart';
@@ -96,6 +97,11 @@ class _ActionAppState extends ConsumerState<ActionApp> {
       themeMode: ref.watch(themeModeControllerProvider),
       routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
+      // Inside the router, so App Lock covers every route and every dialog on
+      // the root navigator rather than only the screen that happened to be
+      // showing. See app_lock_gate.dart for why it is here and not higher.
+      builder: (context, child) =>
+          AppLockGate(child: child ?? const SizedBox.shrink()),
     );
   }
 }

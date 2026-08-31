@@ -74,6 +74,12 @@ dependencies:
   # cryptography this project has ruled out everywhere else.
   crypto: ^3.0.6
   convert: ^3.1.2
+  # App Lock. Wraps Android's BiometricPrompt and the device-credential
+  # fallback, which is the only correct way to do this: Action never sees a
+  # fingerprint, a face or a PIN, and stores nothing about them. It asks the OS
+  # a yes/no question and gets an answer. Requires MainActivity to extend
+  # FlutterFragmentActivity — see the comment there.
+  local_auth: ^2.3.0
 
 dev_dependencies:
   flutter_test:

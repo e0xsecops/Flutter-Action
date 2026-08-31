@@ -32,6 +32,13 @@
     <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID"
         tools:node="remove" />
 
+    <!-- App Lock. Declared so BiometricPrompt can offer a fingerprint or face
+         where the device has one; the device PIN, pattern or password is the
+         fallback and needs no permission. Action never receives the biometric
+         itself - it asks the OS whether the owner is present and is told yes
+         or no. Nothing about a fingerprint or a face is stored by this app. -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+
     <!-- Deliberately NOT declared: SCHEDULE_EXACT_ALARM and USE_EXACT_ALARM.
          A reminder about a bill does not need second-perfect delivery, and
          those permissions are audited by app stores and (for

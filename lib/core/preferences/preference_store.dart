@@ -65,7 +65,25 @@ abstract final class PreferenceKeys {
   /// no titles, amounts or dates.
   static const pendingCloudDeletion = 'pending_cloud_deletion_v1';
 
+  /// Whether App Lock is on, and how long Action may be away first.
+  static const appLockEnabled = 'app_lock_enabled_v1';
+  static const appLockDelay = 'app_lock_delay_v1';
+
+  /// Whether Android is asked to block screenshots, screen recording and the
+  /// recent-apps preview.
+  static const screenPrivacyEnabled = 'screen_privacy_enabled_v1';
+
+  /// Whether a reminder shows the Action's title or a generic line.
+  static const privateNotifications = 'private_notifications_v1';
+
   /// Everything a "delete my data" wipe clears. [pendingCloudDeletion] is
   /// absent on purpose; see above.
+  ///
+  /// The four protection settings are absent on purpose too, and for a
+  /// different reason: they are not data *about* the user, they are how the
+  /// user asked to be protected. Silently switching someone's App Lock off as
+  /// a side effect of clearing their Actions would be a security regression
+  /// performed without asking, and there is nothing private about the fact
+  /// that a lock is on.
   static const clearedOnDelete = <String>[onboardingCompleted, themeMode];
 }

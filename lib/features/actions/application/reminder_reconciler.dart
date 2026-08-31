@@ -3,6 +3,7 @@ import '../domain/action_item.dart';
 import '../domain/action_reminder.dart';
 import '../domain/action_reminder_repository.dart';
 import '../domain/action_repository.dart';
+import 'reminder_presentation.dart';
 
 /// What one reconciliation pass did. Counts only — never content.
 final class ReminderReconcileReport {
@@ -53,28 +54,39 @@ class ReminderReconciler {
     required this._actions,
     required this._scheduler,
     required this._clock,
-  });
+    bool Function()? privateNotifications,
+  }) : _private = privateNotifications ?? _notPrivate;
 
   final ActionReminderRepository _reminders;
   final ActionRepository _actions;
   final NotificationScheduler _scheduler;
   final DateTime Function() _clock;
+  final bool Function() _private;
+
+  static bool _notPrivate() => false;
 
   bool _running = false;
 
   /// One bounded pass. Re-entrant calls are ignored rather than queued, so a
   /// second trigger can never turn this into a loop.
-  Future<ReminderReconcileReport> reconcile() async {
+  ///
+  /// [rearmAll] re-arms even the reminders both sides already agree about.
+  /// That is normally wasted work, and it is exactly what is needed when the
+  /// *content* of every pending notification has changed underneath us —
+  /// which is what turning private notifications on or off does. Without it
+  /// the setting would only apply to reminders created afterwards, and the
+  /// ones already waiting would keep announcing their titles.
+  Future<ReminderReconcileReport> reconcile({bool rearmAll = false}) async {
     if (_running) return const ReminderReconcileReport();
     _running = true;
     try {
-      return await _run();
+      return await _run(rearmAll: rearmAll);
     } finally {
       _running = false;
     }
   }
 
-  Future<ReminderReconcileReport> _run() async {
+  Future<ReminderReconcileReport> _run({required bool rearmAll}) async {
     final work = await _reminders.needingReconciliation();
     if (work.isEmpty) return const ReminderReconcileReport();
 
@@ -158,7 +170,7 @@ class ReminderReconciler {
       }
 
       final alreadyArmed = platformIds.contains(reminder.platformNotificationId);
-      if (reminder.state == ReminderState.scheduled && alreadyArmed) {
+      if (!rearmAll && reminder.state == ReminderState.scheduled && alreadyArmed) {
         continue; // both sides agree
       }
 
@@ -166,7 +178,7 @@ class ReminderReconciler {
         await _scheduler.schedule(
           platformNotificationId: reminder.platformNotificationId,
           actionId: reminder.actionId,
-          title: action.title,
+          title: reminderBody(action.title, private: _private()),
           scheduledAt: reminder.scheduledAt,
           timeZoneId: reminder.timeZoneId,
         );

@@ -3,30 +3,35 @@ package com.solvex.actionapp
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import io.flutter.embedding.android.FlutterActivity
+import android.view.WindowManager
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 /**
- * Adds one capability Flutter has no way to reach on its own: sending the user
- * to this app's own settings page.
+ * Adds the few capabilities Flutter has no way to reach on its own.
  *
- * Notification permission is the one setting the app can lose and never get
- * back by asking — once Android has stopped showing the runtime dialog, the
- * only remaining route is system settings. Telling someone "turn it on in
- * Settings" without taking them there is the kind of dead end this product is
- * supposed to avoid, and a whole dependency for a single Intent is a worse
- * trade than fifteen lines here.
+ * **Why FlutterFragmentActivity rather than FlutterActivity.** App Lock uses
+ * androidx BiometricPrompt through `local_auth`, and BiometricPrompt can only
+ * be shown from a FragmentActivity — it needs a FragmentManager to host its
+ * dialog. This is the base class `local_auth` documents, and it is a superset
+ * of what the app previously used: FlutterFragmentActivity extends
+ * FragmentActivity and provides the same Flutter embedding.
+ *
+ * The two channels below are here for the same reason as each other: a whole
+ * dependency for a single system call is a worse trade than a few lines of
+ * Kotlin.
  */
-class MainActivity : FlutterActivity() {
-    private val channelName = "com.solvex.actionapp/system_settings"
+class MainActivity : FlutterFragmentActivity() {
+    private val settingsChannel = "com.solvex.actionapp/system_settings"
+    private val privacyChannel = "com.solvex.actionapp/screen_privacy"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-            channelName,
+            settingsChannel,
         ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "openNotificationSettings" -> result.success(openNotificationSettings())
@@ -34,6 +39,48 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            privacyChannel,
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "setSecure" -> {
+                    val enabled = call.argument<Boolean>("enabled") ?: false
+                    result.success(setSecure(enabled))
+                }
+                "isSupported" -> result.success(true)
+                else -> result.notImplemented()
+            }
+        }
+    }
+
+    /**
+     * Sets or clears FLAG_SECURE on this window.
+     *
+     * What this actually does, so the Dart side can describe it honestly: it
+     * asks Android to block screenshots and screen recording of this app, and
+     * to show a blank page instead of a live preview in the recent-apps
+     * switcher. It is enforced by the window manager, not by Action.
+     *
+     * What it does not do: it is not a guarantee against a determined party.
+     * A second camera pointed at the screen defeats it entirely, and rooted or
+     * modified systems can bypass it. The Security Centre says so rather than
+     * calling this "screenshot protection" and leaving the user to assume more
+     * than is true.
+     *
+     * Must run on the UI thread — a window flag set from any other thread
+     * throws — and the channel handler is already there.
+     */
+    private fun setSecure(enabled: Boolean): Boolean = try {
+        if (enabled) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
+        true
+    } catch (error: Exception) {
+        false
     }
 
     /**
