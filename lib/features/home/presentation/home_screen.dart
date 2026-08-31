@@ -329,7 +329,7 @@ class _TodayHeader extends StatelessWidget {
     };
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
+      padding: const EdgeInsetsDirectional.fromSTEB(
         Space.page,
         Space.xl,
         Space.sm,

@@ -131,14 +131,14 @@ class ActionCard extends ConsumerWidget {
             borderRadius: Radii.rLg,
             border: Border.all(color: colors.border, width: Strokes.hairline),
           ),
-          padding: const EdgeInsets.fromLTRB(0, Space.md, Space.xs, Space.md),
+          padding: const EdgeInsetsDirectional.fromSTEB(0, Space.md, Space.xs, Space.md),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: Strokes.spine,
                 height: 44,
-                margin: const EdgeInsets.only(left: Space.md),
+                margin: const EdgeInsetsDirectional.only(start: Space.md),
                 decoration: BoxDecoration(
                   color: completed ? colors.border : spine,
                   borderRadius: BorderRadius.circular(Radii.pill),

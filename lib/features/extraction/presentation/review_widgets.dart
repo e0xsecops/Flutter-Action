@@ -348,7 +348,7 @@ class FactRow extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(Space.lg, Space.md, Space.sm, 0),
+      padding: const EdgeInsetsDirectional.fromSTEB(Space.lg, Space.md, Space.sm, 0),
       decoration: BoxDecoration(
         color: colors.surfaceElevated,
         borderRadius: Radii.rMd,
@@ -397,7 +397,7 @@ class FactRow extends StatelessWidget {
           ),
           if (evidence != null)
             Padding(
-              padding: const EdgeInsets.only(right: Space.sm),
+              padding: const EdgeInsetsDirectional.only(end: Space.sm),
               child: EvidenceTile(
                 evidence: evidence!,
                 onFirstExpand: onEvidenceViewed,

@@ -679,14 +679,14 @@ class _NextBlock extends StatelessWidget {
             const SizedBox(height: Space.lg),
             switch (next) {
               NextStep(:final step) => Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: FilledButton.tonal(
                     onPressed: () => state._toggleStep(action, step),
                     child: const Text('Mark step done'),
                   ),
                 ),
               ChainFinished() => Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: FilledButton.tonal(
                     onPressed: () => state._completeAction(action),
                     child: const Text('Complete this action'),
@@ -1011,7 +1011,7 @@ class _AddStepButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.page, Space.sm, Space.page, 0),
       child: Align(
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: TextButton.icon(
           onPressed: onAdd,
           icon: const Icon(Icons.add, size: 18),
@@ -1080,7 +1080,7 @@ class _Reminders extends ConsumerWidget {
             )
           else if (action.status == ActionStatus.active)
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: TextButton.icon(
                 onPressed: () => state._addReminder(action),
                 icon: const Icon(Icons.alarm_add_outlined, size: 18),

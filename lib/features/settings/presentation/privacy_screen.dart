@@ -437,7 +437,7 @@ class _PendingNotice extends StatelessWidget {
             ),
             const SizedBox(height: Space.sm),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: TextButton(
                 onPressed: busy ? null : () => onRetry(),
                 child: const Text('Try again'),

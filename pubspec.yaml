@@ -30,6 +30,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # Material's own strings and, more importantly, the delegates that let the
+  # framework resolve a locale's text direction at all. Without these an app
+  # is LTR by construction: there is no way for Directionality to become RTL,
+  # so every RTL layout bug is invisible rather than absent.
+  flutter_localizations:
+    sdk: flutter
 
   # cupertino_icons was removed at Day 19: it arrives with the Flutter
   # template and nothing in this app imports it. Action uses Material icons

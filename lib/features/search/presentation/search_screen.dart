@@ -229,7 +229,7 @@ class _SearchField extends StatelessWidget {
       // No back control. Search is one of the shell's four destinations now,
       // so there is nothing to pop — an arrow here would either do nothing or
       // eject the user out of a tab they deliberately chose.
-      padding: const EdgeInsets.fromLTRB(
+      padding: const EdgeInsetsDirectional.fromSTEB(
         Space.lg,
         Space.sm,
         Space.page,
@@ -238,7 +238,7 @@ class _SearchField extends StatelessWidget {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: Space.md),
+            padding: const EdgeInsetsDirectional.only(end: Space.md),
             child: Icon(Icons.search_rounded, color: colors.textTertiary),
           ),
           Expanded(
@@ -355,7 +355,7 @@ class _Chip extends StatelessWidget {
     final text = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.only(right: Space.sm),
+      padding: const EdgeInsetsDirectional.only(end: Space.sm),
       child: Semantics(
         selected: selected,
         button: true,

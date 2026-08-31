@@ -142,7 +142,8 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.page, Space.md, Space.sm, 0),
+      padding:
+          const EdgeInsetsDirectional.fromSTEB(Space.page, Space.md, Space.sm, 0),
       child: Row(
         children: [
           _Progress(page: page, total: total),
@@ -186,7 +187,7 @@ class _Progress extends StatelessWidget {
                     ? Duration.zero
                     : Motion.base,
                 curve: Motion.standard,
-                margin: const EdgeInsets.only(right: Space.xs),
+                margin: const EdgeInsetsDirectional.only(end: Space.xs),
                 height: 4,
                 width: i == page ? 24 : 12,
                 decoration: BoxDecoration(

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../design/app_theme.dart';
@@ -97,6 +98,28 @@ class _ActionAppState extends ConsumerState<ActionApp> {
       themeMode: ref.watch(themeModeControllerProvider),
       routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
+      // Material's own strings — the text-selection menu, the date picker, the
+      // "no results" of a dropdown — plus the delegate that lets the framework
+      // resolve a locale's text direction at all.
+      //
+      // **On the languages declared here.** Action's own copy exists in
+      // English, and that copy is not decoration: the test suite asserts exact
+      // sentences, bans specific phrases, and holds several screens to saying
+      // precisely what the code does and no more. Declaring locales whose
+      // strings do not exist would tell Android this app speaks languages it
+      // does not, and machine-translating the rest would quietly void every
+      // one of those guarantees in nineteen languages nobody could check.
+      //
+      // So: English is declared because it is what exists. The *layout* is
+      // right-to-left correct regardless — see test/polish/rtl_test.dart —
+      // which is the half that is expensive to retrofit and cheap to keep.
+      // Adding a translated locale is then a file, not a re-layout.
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en')],
       // Inside the router, so App Lock covers every route and every dialog on
       // the root navigator rather than only the screen that happened to be
       // showing. See app_lock_gate.dart for why it is here and not higher.

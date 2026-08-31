@@ -264,10 +264,12 @@ class _Quote extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.surfaceSunken,
         borderRadius: Radii.rMd,
-        border: Border(
-          left: BorderSide(color: colors.brand, width: 3),
+        // Directional: the accent marks the *leading* edge of a quotation, and
+        // in a right-to-left script that is the right-hand side.
+        border: BorderDirectional(
+          start: BorderSide(color: colors.brand, width: 3),
           top: BorderSide(color: colors.border, width: Strokes.hairline),
-          right: BorderSide(color: colors.border, width: Strokes.hairline),
+          end: BorderSide(color: colors.border, width: Strokes.hairline),
           bottom: BorderSide(color: colors.border, width: Strokes.hairline),
         ),
       ),

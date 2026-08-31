@@ -151,8 +151,10 @@ class _Quote extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(Space.md, Space.sm, Space.md, Space.sm),
       decoration: BoxDecoration(
-        border: Border(
-          left: BorderSide(color: colors.borderStrong, width: Strokes.spine),
+        // A quotation's spine marks its leading edge, which is the right-hand
+        // side in a right-to-left script.
+        border: BorderDirectional(
+          start: BorderSide(color: colors.borderStrong, width: Strokes.spine),
         ),
       ),
       child: SelectableText(
@@ -388,7 +390,7 @@ class _SuggestionsView extends StatelessWidget {
                 children: [
                   if (onToggle != null)
                     Padding(
-                      padding: const EdgeInsets.only(right: Space.sm),
+                      padding: const EdgeInsetsDirectional.only(end: Space.sm),
                       child: Icon(
                         selected.contains(suggestion.id)
                             ? Icons.check_box

@@ -687,7 +687,7 @@ class _ExtractionReviewScreenState
           ),
           if (step.editedByUser)
             Padding(
-              padding: const EdgeInsets.only(right: Space.xs),
+              padding: const EdgeInsetsDirectional.only(end: Space.xs),
               child: Icon(
                 Icons.check_circle_outline_rounded,
                 size: 16,
