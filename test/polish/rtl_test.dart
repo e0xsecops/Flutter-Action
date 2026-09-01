@@ -199,7 +199,10 @@ void main() {
       await pumpScreen(tester, const StudioScreen());
 
       expect(tester.takeException(), isNull);
-      expect(find.text('Action Intelligence'), findsWidgets);
+      // The Arabic hero title, because the harness declares an Arabic locale
+      // — asserting the English one would pass only if the translation were
+      // missing.
+      expect(find.text(AppL10nAr().studioHeroTitle), findsWidgets);
     });
 
     rtlTest('Search', (tester) async {

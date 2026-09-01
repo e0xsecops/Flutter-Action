@@ -414,4 +414,428 @@ class AppL10nEs extends AppL10n {
 
   @override
   String get settingsVersion => 'Versión';
+
+  @override
+  String get dateShortFormat => 'd MMM';
+
+  @override
+  String get dateLongFormat => 'd MMM yyyy';
+
+  @override
+  String get relativeJustNow => 'Ahora mismo';
+
+  @override
+  String relativeMinutes(int count) {
+    return 'hace $count min';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return 'hace $count h';
+  }
+
+  @override
+  String get relativeYesterday => 'Ayer';
+
+  @override
+  String relativeDays(int count) {
+    return 'hace $count d';
+  }
+
+  @override
+  String get libraryTitle => 'Biblioteca';
+
+  @override
+  String get librarySubtitle =>
+      'Todo lo que Action guarda para ti. Y todo ello se queda en este dispositivo.';
+
+  @override
+  String get librarySegmentActions => 'Tareas';
+
+  @override
+  String get librarySegmentCaptures => 'Capturas';
+
+  @override
+  String get librarySegmentGoals => 'Objetivos';
+
+  @override
+  String get librarySegmentDone => 'Hechas';
+
+  @override
+  String get libraryNewGoal => 'Nuevo objetivo';
+
+  @override
+  String get libraryNoGoalsTitle => 'Aún no hay objetivos';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      'Un objetivo es algo que quieres que ocurra. Action puede encontrar qué falta, qué lo bloquea y qué hacer primero.';
+
+  @override
+  String get libraryNoDoneTitle => 'Aún no has completado nada';
+
+  @override
+  String get libraryNoDoneMessage =>
+      'Las tareas que termines se guardarán aquí.';
+
+  @override
+  String get libraryNoOpenTitle => 'No hay tareas abiertas';
+
+  @override
+  String get libraryNoOpenMessage =>
+      'Captura algo y Action averiguará qué hay que hacer.';
+
+  @override
+  String get libraryNoCapturesTitle => 'Aún no has capturado nada';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      'Las fotos, capturas y textos que añadas llegan aquí primero. No se analiza nada hasta que lo pides.';
+
+  @override
+  String get libraryGoalNoActions => 'Todavía no ha salido nada de él';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tareas de este objetivo',
+      one: '1 tarea de este objetivo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'Buscar en tareas y capturas';
+
+  @override
+  String get searchClear => 'Borrar';
+
+  @override
+  String get searchPrivacyNote =>
+      'Se busca en este dispositivo. Nada de lo que escribas aquí sale de él.';
+
+  @override
+  String get searchYouCanSearch => 'PUEDES BUSCAR';
+
+  @override
+  String get searchFieldTitles => 'Títulos';
+
+  @override
+  String get searchFieldTitlesExample => 'Renovar el seguro del coche';
+
+  @override
+  String get searchFieldReferences => 'Números de referencia';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => 'Organizaciones';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'Pasos dentro de una tarea';
+
+  @override
+  String get searchFieldStepsExample => 'Subir el formulario';
+
+  @override
+  String get searchFieldCaptureText => 'El texto leído de una captura';
+
+  @override
+  String get searchFieldCaptureTextExample => 'aviso de renovación';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return 'Sin resultados para «$query»';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer =>
+      'Prueba con menos palabras, o con un número de referencia tal como aparece.';
+
+  @override
+  String get searchNoMatchesClearFilters =>
+      'Prueba con menos palabras, o borra los filtros.';
+
+  @override
+  String get searchFilterActive => 'Activas';
+
+  @override
+  String get searchFilterCompleted => 'Completadas';
+
+  @override
+  String get searchFilterOverdue => 'Vencidas';
+
+  @override
+  String get searchFilterThisWeek => 'Esta semana';
+
+  @override
+  String get searchFilterCritical => 'Críticas';
+
+  @override
+  String get searchFilterCreatedByYou => 'Creadas por ti';
+
+  @override
+  String get searchFilterArchived => 'Archivadas';
+
+  @override
+  String get searchFilterClear => 'Borrar filtros';
+
+  @override
+  String get searchIncompleteActions =>
+      'No se pudieron buscar tus tareas, así que estos resultados pueden estar incompletos.';
+
+  @override
+  String get searchIncompleteCaptures =>
+      'No se pudieron buscar tus capturas, así que estos resultados pueden estar incompletos.';
+
+  @override
+  String get searchIncompleteBoth =>
+      'No se pudieron buscar tus tareas ni tus capturas, así que estos resultados pueden estar incompletos.';
+
+  @override
+  String get searchMatchTitle => 'Título';
+
+  @override
+  String get searchMatchNextStep => 'Siguiente paso';
+
+  @override
+  String get searchMatchStep => 'Paso';
+
+  @override
+  String get searchMatchSummary => 'Resumen';
+
+  @override
+  String get searchMatchFromCapture => 'De una captura';
+
+  @override
+  String get studioSuggested => 'Sugerido para tu última captura';
+
+  @override
+  String get studioRecentlyUsed => 'Usado recientemente';
+
+  @override
+  String get studioReady => 'LISTO';
+
+  @override
+  String get studioNotConnected => 'SIN CONECTAR';
+
+  @override
+  String get studioHeroTitle => 'Inteligencia de Action';
+
+  @override
+  String get studioConnectedBlurb =>
+      'Entiende un documento, mejora un objetivo, arma un plan, redacta una respuesta o revisa lo que tienes delante.';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return '$count herramientas para entender documentos, planificar y escribir. Conecta tu propia cuenta de IA para usarlas: te cobra tu proveedor, nunca Action.';
+  }
+
+  @override
+  String get studioConnectAi => 'Conectar IA';
+
+  @override
+  String get studioHowItWorks => 'Cómo funciona';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count de ellas ya funcionan sin nada de eso, enteramente en este dispositivo.',
+      one: '1 de ellas ya funciona sin nada de eso, enteramente en este dispositivo.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'Se ejecuta en este dispositivo';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title. $description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title. $description Se ejecuta en este dispositivo.';
+  }
+
+  @override
+  String get categoryUnderstand => 'Entender';
+
+  @override
+  String get categoryUnderstandBlurb => 'Dale sentido a lo que tienes.';
+
+  @override
+  String get categoryPlan => 'Planificar';
+
+  @override
+  String get categoryPlanBlurb => 'Conviértelo en algo que puedas hacer.';
+
+  @override
+  String get categoryCreate => 'Crear';
+
+  @override
+  String get categoryCreateBlurb => 'Escríbelo, mejóralo, tradúcelo.';
+
+  @override
+  String get categoryExtract => 'Extraer';
+
+  @override
+  String get categoryExtractBlurb => 'Saca los datos que importan.';
+
+  @override
+  String get categoryVerify => 'Revisar';
+
+  @override
+  String get categoryVerifyBlurb => 'Revisa lo que tienes delante.';
+
+  @override
+  String get captureSheetTitle => 'Capturar algo';
+
+  @override
+  String get captureSheetSubtitle =>
+      'Dale a Action cualquier cosa que prefieras no leer entera.';
+
+  @override
+  String get captureTakePhoto => 'Hacer una foto';
+
+  @override
+  String get captureTakePhotoSubtitle =>
+      'Una carta, factura o aviso que tengas delante';
+
+  @override
+  String get captureChooseImage => 'Elegir una imagen';
+
+  @override
+  String get captureChooseImageSubtitle =>
+      'Una captura o foto que ya esté en este dispositivo';
+
+  @override
+  String get capturePasteText => 'Pegar texto';
+
+  @override
+  String get capturePasteTextSubtitle => 'Un correo, mensaje o aviso';
+
+  @override
+  String get captureChoosePdf => 'Elegir un PDF';
+
+  @override
+  String get captureChoosePdfSubtitle =>
+      'Un extracto, carta o formulario que ya tengas';
+
+  @override
+  String get captureFootnote =>
+      'Las capturas se quedan en este dispositivo. No se analiza nada en línea hasta que lo pides.';
+
+  @override
+  String get captureCouldNotOpen => 'No se pudo abrir. Prueba de otra manera.';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title. $subtitle';
+  }
+
+  @override
+  String get stageReading => 'Leyendo';
+
+  @override
+  String get stageNeedsReview => 'Requiere revisión';
+
+  @override
+  String get stageActionCreated => 'Tarea creada';
+
+  @override
+  String get stageNoText => 'No se encontró texto';
+
+  @override
+  String get stageCouldNotBeRead => 'No se pudo leer';
+
+  @override
+  String get stageReadingPreview => 'Leyendo el texto…';
+
+  @override
+  String get stageFailedPreview => 'Esto no se pudo leer en este dispositivo.';
+
+  @override
+  String get provenancePhoto => 'Capturado de una foto';
+
+  @override
+  String get provenanceImage => 'Capturado de una imagen';
+
+  @override
+  String get provenancePastedText => 'Capturado de texto pegado';
+
+  @override
+  String get provenanceDocument => 'Añadido como documento';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return 'Hecha $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return 'Vencida · vencía el $date';
+  }
+
+  @override
+  String get metaDueToday => 'Vence hoy';
+
+  @override
+  String metaDueOn(String date) {
+    return 'Vence el $date';
+  }
+
+  @override
+  String get metaCreatedByYou => 'Creada por ti';
+
+  @override
+  String get categoryPayment => 'Pago';
+
+  @override
+  String get categoryRenewal => 'Renovación';
+
+  @override
+  String get categoryAppointment => 'Cita';
+
+  @override
+  String get categoryBooking => 'Reserva';
+
+  @override
+  String get categoryTravel => 'Viaje';
+
+  @override
+  String get categoryDeadline => 'Fecha límite';
+
+  @override
+  String get categoryResponse => 'Requiere respuesta';
+
+  @override
+  String get categoryDelivery => 'Entrega';
+
+  @override
+  String get categoryDocument => 'Documento';
+
+  @override
+  String get categoryNoActionRequired => 'No hay nada que hacer';
+
+  @override
+  String get categoryUnsure => 'No está claro';
+
+  @override
+  String get errorEnterManually => 'Introducirlo a mano';
 }

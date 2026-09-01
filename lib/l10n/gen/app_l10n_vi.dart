@@ -409,4 +409,425 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get settingsVersion => 'Phiên bản';
+
+  @override
+  String get dateShortFormat => 'd MMM';
+
+  @override
+  String get dateLongFormat => 'd MMM yyyy';
+
+  @override
+  String get relativeJustNow => 'Vừa xong';
+
+  @override
+  String relativeMinutes(int count) {
+    return '$count phút trước';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return '$count giờ trước';
+  }
+
+  @override
+  String get relativeYesterday => 'Hôm qua';
+
+  @override
+  String relativeDays(int count) {
+    return '$count ngày trước';
+  }
+
+  @override
+  String get libraryTitle => 'Thư viện';
+
+  @override
+  String get librarySubtitle =>
+      'Mọi thứ Action đang giữ cho bạn. Và tất cả đều ở lại trên thiết bị này.';
+
+  @override
+  String get librarySegmentActions => 'Việc';
+
+  @override
+  String get librarySegmentCaptures => 'Đã thu nhận';
+
+  @override
+  String get librarySegmentGoals => 'Mục tiêu';
+
+  @override
+  String get librarySegmentDone => 'Xong';
+
+  @override
+  String get libraryNewGoal => 'Mục tiêu mới';
+
+  @override
+  String get libraryNoGoalsTitle => 'Chưa có mục tiêu nào';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      'Mục tiêu là điều bạn muốn xảy ra. Action có thể tìm ra cái gì còn thiếu, cái gì đang cản, và nên làm gì trước.';
+
+  @override
+  String get libraryNoDoneTitle => 'Chưa hoàn thành gì';
+
+  @override
+  String get libraryNoDoneMessage =>
+      'Những việc bạn làm xong sẽ được giữ ở đây.';
+
+  @override
+  String get libraryNoOpenTitle => 'Không có việc nào đang mở';
+
+  @override
+  String get libraryNoOpenMessage =>
+      'Thu nhận thứ gì đó và Action sẽ tìm ra việc cần làm.';
+
+  @override
+  String get libraryNoCapturesTitle => 'Chưa thu nhận gì';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      'Ảnh, ảnh màn hình và văn bản bạn thêm vào sẽ đến đây trước. Không có gì được phân tích cho tới khi bạn yêu cầu.';
+
+  @override
+  String get libraryGoalNoActions => 'Chưa có gì ra đời từ nó';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count việc từ mục tiêu này',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'Tìm trong việc và mục đã thu nhận';
+
+  @override
+  String get searchClear => 'Xoá';
+
+  @override
+  String get searchPrivacyNote =>
+      'Tìm ngay trên thiết bị này. Không có gì bạn gõ ở đây rời khỏi máy.';
+
+  @override
+  String get searchYouCanSearch => 'BẠN CÓ THỂ TÌM';
+
+  @override
+  String get searchFieldTitles => 'Tiêu đề';
+
+  @override
+  String get searchFieldTitlesExample => 'Gia hạn bảo hiểm xe';
+
+  @override
+  String get searchFieldReferences => 'Số tham chiếu';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => 'Tổ chức';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'Bước bên trong một việc';
+
+  @override
+  String get searchFieldStepsExample => 'Tải biểu mẫu lên';
+
+  @override
+  String get searchFieldCaptureText => 'Văn bản đọc được từ mục đã thu nhận';
+
+  @override
+  String get searchFieldCaptureTextExample => 'thông báo gia hạn';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return 'Không có kết quả cho \"$query\"';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer =>
+      'Thử ít từ hơn, hoặc nhập số tham chiếu đúng như nó hiện ra.';
+
+  @override
+  String get searchNoMatchesClearFilters => 'Thử ít từ hơn, hoặc xoá bộ lọc.';
+
+  @override
+  String get searchFilterActive => 'Đang mở';
+
+  @override
+  String get searchFilterCompleted => 'Đã xong';
+
+  @override
+  String get searchFilterOverdue => 'Quá hạn';
+
+  @override
+  String get searchFilterThisWeek => 'Tuần này';
+
+  @override
+  String get searchFilterCritical => 'Rất quan trọng';
+
+  @override
+  String get searchFilterCreatedByYou => 'Bạn tự tạo';
+
+  @override
+  String get searchFilterArchived => 'Đã lưu trữ';
+
+  @override
+  String get searchFilterClear => 'Xoá bộ lọc';
+
+  @override
+  String get searchIncompleteActions =>
+      'Không tìm được trong các việc của bạn, nên kết quả này có thể chưa đầy đủ.';
+
+  @override
+  String get searchIncompleteCaptures =>
+      'Không tìm được trong các mục đã thu nhận, nên kết quả này có thể chưa đầy đủ.';
+
+  @override
+  String get searchIncompleteBoth =>
+      'Không tìm được trong cả việc lẫn mục đã thu nhận, nên kết quả này có thể chưa đầy đủ.';
+
+  @override
+  String get searchMatchTitle => 'Tiêu đề';
+
+  @override
+  String get searchMatchNextStep => 'Bước tiếp theo';
+
+  @override
+  String get searchMatchStep => 'Bước';
+
+  @override
+  String get searchMatchSummary => 'Tóm tắt';
+
+  @override
+  String get searchMatchFromCapture => 'Từ mục đã thu nhận';
+
+  @override
+  String get studioSuggested => 'Gợi ý cho mục bạn thu nhận gần nhất';
+
+  @override
+  String get studioRecentlyUsed => 'Dùng gần đây';
+
+  @override
+  String get studioReady => 'SẴN SÀNG';
+
+  @override
+  String get studioNotConnected => 'CHƯA KẾT NỐI';
+
+  @override
+  String get studioHeroTitle => 'Trí tuệ Action';
+
+  @override
+  String get studioConnectedBlurb =>
+      'Hiểu một tài liệu, mài sắc một mục tiêu, dựng một kế hoạch, soạn một câu trả lời, hoặc kiểm tra thứ đang ở trước mặt bạn.';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return '$count công cụ để hiểu tài liệu, lập kế hoạch và viết. Kết nối tài khoản AI của riêng bạn để dùng — nhà cung cấp của bạn tính phí, Action thì không bao giờ.';
+  }
+
+  @override
+  String get studioConnectAi => 'Kết nối AI';
+
+  @override
+  String get studioHowItWorks => 'Cách hoạt động';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count trong số đó đã chạy được mà không cần bất cứ thứ nào trong đó, hoàn toàn trên thiết bị này.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'Chạy trên thiết bị này';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title. $description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title. $description Chạy trên thiết bị này.';
+  }
+
+  @override
+  String get categoryUnderstand => 'Hiểu';
+
+  @override
+  String get categoryUnderstandBlurb => 'Nắm được ý nghĩa của thứ bạn đang có.';
+
+  @override
+  String get categoryPlan => 'Lập kế hoạch';
+
+  @override
+  String get categoryPlanBlurb => 'Biến nó thành thứ bạn có thể làm.';
+
+  @override
+  String get categoryCreate => 'Viết';
+
+  @override
+  String get categoryCreateBlurb => 'Viết, chỉnh, dịch.';
+
+  @override
+  String get categoryExtract => 'Trích xuất';
+
+  @override
+  String get categoryExtractBlurb => 'Rút ra những chi tiết quan trọng.';
+
+  @override
+  String get categoryVerify => 'Kiểm tra';
+
+  @override
+  String get categoryVerifyBlurb => 'Kiểm tra thứ đang ở trước mặt bạn.';
+
+  @override
+  String get captureSheetTitle => 'Thu nhận thứ gì đó';
+
+  @override
+  String get captureSheetSubtitle =>
+      'Đưa cho Action bất cứ thứ gì bạn không muốn đọc hết.';
+
+  @override
+  String get captureTakePhoto => 'Chụp ảnh';
+
+  @override
+  String get captureTakePhotoSubtitle =>
+      'Một lá thư, hoá đơn hay thông báo trước mặt bạn';
+
+  @override
+  String get captureChooseImage => 'Chọn ảnh';
+
+  @override
+  String get captureChooseImageSubtitle =>
+      'Ảnh màn hình hoặc ảnh đã có sẵn trên thiết bị này';
+
+  @override
+  String get capturePasteText => 'Dán văn bản';
+
+  @override
+  String get capturePasteTextSubtitle => 'Một email, tin nhắn hay thông báo';
+
+  @override
+  String get captureChoosePdf => 'Chọn PDF';
+
+  @override
+  String get captureChoosePdfSubtitle =>
+      'Sao kê, thư từ hay biểu mẫu bạn đã có';
+
+  @override
+  String get captureFootnote =>
+      'Mục đã thu nhận ở lại trên thiết bị này. Không có gì được phân tích trực tuyến cho tới khi bạn yêu cầu.';
+
+  @override
+  String get captureCouldNotOpen => 'Không mở được thứ đó. Hãy thử cách khác.';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title. $subtitle';
+  }
+
+  @override
+  String get stageReading => 'Đang đọc';
+
+  @override
+  String get stageNeedsReview => 'Cần xem lại';
+
+  @override
+  String get stageActionCreated => 'Đã tạo việc';
+
+  @override
+  String get stageNoText => 'Không tìm thấy văn bản';
+
+  @override
+  String get stageCouldNotBeRead => 'Không đọc được';
+
+  @override
+  String get stageReadingPreview => 'Đang đọc văn bản…';
+
+  @override
+  String get stageFailedPreview => 'Không đọc được thứ này trên thiết bị.';
+
+  @override
+  String get provenancePhoto => 'Thu nhận từ ảnh chụp';
+
+  @override
+  String get provenanceImage => 'Thu nhận từ hình ảnh';
+
+  @override
+  String get provenancePastedText => 'Thu nhận từ văn bản dán vào';
+
+  @override
+  String get provenanceDocument => 'Thêm vào dưới dạng tài liệu';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return 'Xong $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return 'Quá hạn · hạn là $date';
+  }
+
+  @override
+  String get metaDueToday => 'Hạn hôm nay';
+
+  @override
+  String metaDueOn(String date) {
+    return 'Hạn $date';
+  }
+
+  @override
+  String get metaCreatedByYou => 'Bạn tự tạo';
+
+  @override
+  String get categoryPayment => 'Thanh toán';
+
+  @override
+  String get categoryRenewal => 'Gia hạn';
+
+  @override
+  String get categoryAppointment => 'Hẹn gặp';
+
+  @override
+  String get categoryBooking => 'Đặt chỗ';
+
+  @override
+  String get categoryTravel => 'Đi lại';
+
+  @override
+  String get categoryDeadline => 'Hạn chót';
+
+  @override
+  String get categoryResponse => 'Cần trả lời';
+
+  @override
+  String get categoryDelivery => 'Giao hàng';
+
+  @override
+  String get categoryDocument => 'Tài liệu';
+
+  @override
+  String get categoryNoActionRequired => 'Không cần làm gì';
+
+  @override
+  String get categoryUnsure => 'Chưa rõ';
+
+  @override
+  String get errorEnterManually => 'Tự nhập vào';
 }

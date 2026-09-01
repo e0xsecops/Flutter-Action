@@ -30,16 +30,15 @@ import '../../goals/application/goal_providers.dart';
 import '../../goals/domain/goal.dart';
 import '../../goals/presentation/goal_edit_sheets.dart';
 import 'source_card.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
-enum LibrarySegment {
-  actions('Actions'),
-  captures('Captures'),
-  goals('Goals'),
-  done('Done');
-
-  const LibrarySegment(this.label);
-  final String label;
-}
+/// The four things the Library holds.
+///
+/// The label lives in `lib/l10n/enum_labels.dart` rather than here: a `const`
+/// enum field cannot depend on the locale, and the segment bar has to read in
+/// the user's language.
+enum LibrarySegment { actions, captures, goals, done }
 
 class LibraryScreen extends ConsumerStatefulWidget {
   const LibraryScreen({super.key});
@@ -54,6 +53,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final actions = ref.watch(actionsStreamProvider).value ?? const <ActionItem>[];
     final sources = ref.watch(sourcesProvider).value ?? const <SourceItem>[];
     final now = ref.watch(appClockProvider)();
@@ -96,13 +96,9 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Library', style: text.headlineMedium),
+                    Text(l10n.libraryTitle, style: text.headlineMedium),
                     const SizedBox(height: Space.xs),
-                    Text(
-                      'Everything Action is holding for you. All of it stays '
-                      'on this device.',
-                      style: text.bodyMedium,
-                    ),
+                    Text(l10n.librarySubtitle, style: text.bodyMedium),
                   ],
                 ),
               ),
@@ -120,10 +116,11 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
               ),
             ),
             ...switch (_segment) {
-              LibrarySegment.actions => _actionSlivers(open, now, 'actions'),
-              LibrarySegment.done => _actionSlivers(done, now, 'done'),
+              LibrarySegment.actions =>
+                _actionSlivers(l10n, open, now, 'actions'),
+              LibrarySegment.done => _actionSlivers(l10n, done, now, 'done'),
               LibrarySegment.captures =>
-                _captureSlivers(captures, actionedSourceIds),
+                _captureSlivers(l10n, captures, actionedSourceIds),
               LibrarySegment.goals => _goalSlivers(context, ref, goals),
             },
             const SliverToBoxAdapter(
@@ -152,23 +149,21 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
           child: OutlinedButton.icon(
             onPressed: () => _newGoal(context, ref),
             icon: const Icon(Icons.add_rounded, size: 18),
-            label: const Text('New goal'),
+            label: Text(AppL10n.of(context).libraryNewGoal),
           ),
         ),
       ),
       if (goals.isEmpty)
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: Space.xxxl),
+            padding: const EdgeInsets.symmetric(vertical: Space.xxxl),
             child: EmptyView(
               icon: Icons.flag_outlined,
-              title: 'No goals yet',
+              title: AppL10n.of(context).libraryNoGoalsTitle,
               // Says what a goal is for rather than that there are none. The
               // difference between the two tools that take one and the
               // fourteen that do not is worth a sentence.
-              message: 'A goal is something you want to happen. Action can '
-                  'find what is missing, what blocks it, and what to do '
-                  'first.',
+              message: AppL10n.of(context).libraryNoGoalsMessage,
             ),
           ),
         )
@@ -207,6 +202,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   }
 
   List<Widget> _actionSlivers(
+    AppL10n l10n,
     List<ActionItem> items,
     DateTime now,
     String kind,
@@ -221,12 +217,11 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
                   ? Icons.check_circle_outline_rounded
                   : Icons.checklist_rounded,
               title: kind == 'done'
-                  ? 'Nothing completed yet'
-                  : 'No open actions',
+                  ? l10n.libraryNoDoneTitle
+                  : l10n.libraryNoOpenTitle,
               message: kind == 'done'
-                  ? 'Actions you finish will be kept here.'
-                  : 'Capture something and Action will work out what needs '
-                      'doing.',
+                  ? l10n.libraryNoDoneMessage
+                  : l10n.libraryNoOpenMessage,
             ),
           ),
         ),
@@ -253,19 +248,19 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   }
 
   List<Widget> _captureSlivers(
+    AppL10n l10n,
     List<SourceItem> captures,
     Set<String> actionedSourceIds,
   ) {
     if (captures.isEmpty) {
       return [
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: Space.giant),
+            padding: const EdgeInsets.symmetric(vertical: Space.giant),
             child: EmptyView(
               icon: Icons.photo_library_outlined,
-              title: 'Nothing captured yet',
-              message: 'Photos, screenshots and text you add land here first. '
-                  'Nothing is analysed until you ask.',
+              title: l10n.libraryNoCapturesTitle,
+              message: l10n.libraryNoCapturesMessage,
             ),
           ),
         ),
@@ -365,7 +360,7 @@ class _Segments extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              option.label,
+                              option.labelIn(AppL10n.of(context)),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: text.labelLarge?.copyWith(
@@ -440,9 +435,8 @@ class _GoalCard extends StatelessWidget {
                     const SizedBox(height: Space.xxs),
                     Text(
                       linked == 0
-                          ? 'Nothing made from it yet'
-                          : '$linked ${linked == 1 ? 'action' : 'actions'} '
-                              'from this goal',
+                          ? AppL10n.of(context).libraryGoalNoActions
+                          : AppL10n.of(context).libraryGoalActionCount(linked),
                       style: text.bodySmall
                           ?.copyWith(color: colors.textSecondary),
                     ),

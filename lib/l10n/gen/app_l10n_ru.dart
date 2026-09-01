@@ -429,4 +429,436 @@ class AppL10nRu extends AppL10n {
 
   @override
   String get settingsVersion => 'Версия';
+
+  @override
+  String get dateShortFormat => 'd MMM';
+
+  @override
+  String get dateLongFormat => 'd MMM yyyy';
+
+  @override
+  String get relativeJustNow => 'Только что';
+
+  @override
+  String relativeMinutes(int count) {
+    return '$count мин назад';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return '$count ч назад';
+  }
+
+  @override
+  String get relativeYesterday => 'Вчера';
+
+  @override
+  String relativeDays(int count) {
+    return '$count дн назад';
+  }
+
+  @override
+  String get libraryTitle => 'Библиотека';
+
+  @override
+  String get librarySubtitle =>
+      'Всё, что Action хранит для вас. И всё это остаётся на этом устройстве.';
+
+  @override
+  String get librarySegmentActions => 'Задачи';
+
+  @override
+  String get librarySegmentCaptures => 'Добавленное';
+
+  @override
+  String get librarySegmentGoals => 'Цели';
+
+  @override
+  String get librarySegmentDone => 'Готово';
+
+  @override
+  String get libraryNewGoal => 'Новая цель';
+
+  @override
+  String get libraryNoGoalsTitle => 'Целей пока нет';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      'Цель — это то, чего вы хотите добиться. Action может найти, чего не хватает, что мешает и с чего начать.';
+
+  @override
+  String get libraryNoDoneTitle => 'Пока ничего не завершено';
+
+  @override
+  String get libraryNoDoneMessage =>
+      'Задачи, которые вы закончите, будут храниться здесь.';
+
+  @override
+  String get libraryNoOpenTitle => 'Открытых задач нет';
+
+  @override
+  String get libraryNoOpenMessage =>
+      'Добавьте что-нибудь, и Action разберётся, что нужно сделать.';
+
+  @override
+  String get libraryNoCapturesTitle => 'Пока ничего не добавлено';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      'Фотографии, скриншоты и тексты, которые вы добавляете, попадают сначала сюда. Ничего не анализируется, пока вы не попросите.';
+
+  @override
+  String get libraryGoalNoActions => 'Из неё пока ничего не появилось';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count задачи из этой цели',
+      many: '$count задач из этой цели',
+      few: '$count задачи из этой цели',
+      one: '$count задача из этой цели',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'Поиск по задачам и добавленному';
+
+  @override
+  String get searchClear => 'Очистить';
+
+  @override
+  String get searchPrivacyNote =>
+      'Поиск идёт на этом устройстве. Ничего из того, что вы вводите здесь, его не покидает.';
+
+  @override
+  String get searchYouCanSearch => 'МОЖНО ИСКАТЬ';
+
+  @override
+  String get searchFieldTitles => 'Заголовки';
+
+  @override
+  String get searchFieldTitlesExample => 'Продлить автостраховку';
+
+  @override
+  String get searchFieldReferences => 'Номера обращений';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => 'Организации';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'Шаги внутри задачи';
+
+  @override
+  String get searchFieldStepsExample => 'Загрузить бланк';
+
+  @override
+  String get searchFieldCaptureText => 'Текст, прочитанный из добавленного';
+
+  @override
+  String get searchFieldCaptureTextExample => 'уведомление о продлении';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return 'Ничего не найдено по запросу «$query»';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer =>
+      'Попробуйте меньше слов или номер обращения ровно так, как он написан.';
+
+  @override
+  String get searchNoMatchesClearFilters =>
+      'Попробуйте меньше слов или снимите фильтры.';
+
+  @override
+  String get searchFilterActive => 'Активные';
+
+  @override
+  String get searchFilterCompleted => 'Завершённые';
+
+  @override
+  String get searchFilterOverdue => 'Просроченные';
+
+  @override
+  String get searchFilterThisWeek => 'На этой неделе';
+
+  @override
+  String get searchFilterCritical => 'Критичные';
+
+  @override
+  String get searchFilterCreatedByYou => 'Созданные вами';
+
+  @override
+  String get searchFilterArchived => 'В архиве';
+
+  @override
+  String get searchFilterClear => 'Снять фильтры';
+
+  @override
+  String get searchIncompleteActions =>
+      'Не удалось выполнить поиск по вашим задачам, поэтому результаты могут быть неполными.';
+
+  @override
+  String get searchIncompleteCaptures =>
+      'Не удалось выполнить поиск по добавленному, поэтому результаты могут быть неполными.';
+
+  @override
+  String get searchIncompleteBoth =>
+      'Не удалось выполнить поиск ни по задачам, ни по добавленному, поэтому результаты могут быть неполными.';
+
+  @override
+  String get searchMatchTitle => 'Заголовок';
+
+  @override
+  String get searchMatchNextStep => 'Следующий шаг';
+
+  @override
+  String get searchMatchStep => 'Шаг';
+
+  @override
+  String get searchMatchSummary => 'Краткое изложение';
+
+  @override
+  String get searchMatchFromCapture => 'Из добавленного';
+
+  @override
+  String get studioSuggested => 'Предложено для последнего добавленного';
+
+  @override
+  String get studioRecentlyUsed => 'Недавно использованные';
+
+  @override
+  String get studioReady => 'ГОТОВО';
+
+  @override
+  String get studioNotConnected => 'НЕ ПОДКЛЮЧЕНО';
+
+  @override
+  String get studioHeroTitle => 'Интеллект Action';
+
+  @override
+  String get studioConnectedBlurb =>
+      'Разобраться в документе, уточнить цель, построить план, набросать ответ или проверить то, что перед вами.';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return '$count инструментов для разбора документов, планирования и письма. Подключите собственную учётную запись ИИ, чтобы ими пользоваться, — счёт выставляет ваш провайдер, а не Action.';
+  }
+
+  @override
+  String get studioConnectAi => 'Подключить ИИ';
+
+  @override
+  String get studioHowItWorks => 'Как это работает';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count из них уже работают без всего этого, целиком на этом устройстве.',
+      many:
+          '$count из них уже работают без всего этого, целиком на этом устройстве.',
+      few:
+          '$count из них уже работают без всего этого, целиком на этом устройстве.',
+      one:
+          '$count из них уже работает без всего этого, целиком на этом устройстве.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'Работает на этом устройстве';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title. $description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title. $description Работает на этом устройстве.';
+  }
+
+  @override
+  String get categoryUnderstand => 'Разобраться';
+
+  @override
+  String get categoryUnderstandBlurb => 'Понять, что у вас есть.';
+
+  @override
+  String get categoryPlan => 'Спланировать';
+
+  @override
+  String get categoryPlanBlurb => 'Превратить это в то, что можно сделать.';
+
+  @override
+  String get categoryCreate => 'Написать';
+
+  @override
+  String get categoryCreateBlurb => 'Написать, улучшить, перевести.';
+
+  @override
+  String get categoryExtract => 'Извлечь';
+
+  @override
+  String get categoryExtractBlurb => 'Вытащить те детали, которые важны.';
+
+  @override
+  String get categoryVerify => 'Проверить';
+
+  @override
+  String get categoryVerifyBlurb => 'Проверить то, что перед вами.';
+
+  @override
+  String get captureSheetTitle => 'Добавить что-нибудь';
+
+  @override
+  String get captureSheetSubtitle =>
+      'Отдайте Action всё, что вам не хочется читать целиком.';
+
+  @override
+  String get captureTakePhoto => 'Сделать фото';
+
+  @override
+  String get captureTakePhotoSubtitle =>
+      'Письмо, счёт или уведомление перед вами';
+
+  @override
+  String get captureChooseImage => 'Выбрать изображение';
+
+  @override
+  String get captureChooseImageSubtitle =>
+      'Скриншот или фото, которые уже есть на этом устройстве';
+
+  @override
+  String get capturePasteText => 'Вставить текст';
+
+  @override
+  String get capturePasteTextSubtitle => 'Письмо, сообщение или уведомление';
+
+  @override
+  String get captureChoosePdf => 'Выбрать PDF';
+
+  @override
+  String get captureChoosePdfSubtitle =>
+      'Выписка, письмо или бланк, который у вас уже есть';
+
+  @override
+  String get captureFootnote =>
+      'Добавленное остаётся на этом устройстве. Ничего не анализируется в сети, пока вы не попросите.';
+
+  @override
+  String get captureCouldNotOpen => 'Это не удалось открыть. Попробуйте иначе.';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title. $subtitle';
+  }
+
+  @override
+  String get stageReading => 'Читается';
+
+  @override
+  String get stageNeedsReview => 'Нужна проверка';
+
+  @override
+  String get stageActionCreated => 'Задача создана';
+
+  @override
+  String get stageNoText => 'Текст не найден';
+
+  @override
+  String get stageCouldNotBeRead => 'Не удалось прочитать';
+
+  @override
+  String get stageReadingPreview => 'Читаем текст…';
+
+  @override
+  String get stageFailedPreview =>
+      'Это не удалось прочитать на этом устройстве.';
+
+  @override
+  String get provenancePhoto => 'Из фотографии';
+
+  @override
+  String get provenanceImage => 'Из изображения';
+
+  @override
+  String get provenancePastedText => 'Из вставленного текста';
+
+  @override
+  String get provenanceDocument => 'Добавлено как документ';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return 'Готово $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return 'Просрочено · срок был $date';
+  }
+
+  @override
+  String get metaDueToday => 'Срок сегодня';
+
+  @override
+  String metaDueOn(String date) {
+    return 'Срок $date';
+  }
+
+  @override
+  String get metaCreatedByYou => 'Создано вами';
+
+  @override
+  String get categoryPayment => 'Платёж';
+
+  @override
+  String get categoryRenewal => 'Продление';
+
+  @override
+  String get categoryAppointment => 'Приём';
+
+  @override
+  String get categoryBooking => 'Бронирование';
+
+  @override
+  String get categoryTravel => 'Поездка';
+
+  @override
+  String get categoryDeadline => 'Срок';
+
+  @override
+  String get categoryResponse => 'Нужен ответ';
+
+  @override
+  String get categoryDelivery => 'Доставка';
+
+  @override
+  String get categoryDocument => 'Документ';
+
+  @override
+  String get categoryNoActionRequired => 'Ничего делать не нужно';
+
+  @override
+  String get categoryUnsure => 'Неясно';
+
+  @override
+  String get errorEnterManually => 'Ввести вручную';
 }

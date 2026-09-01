@@ -414,4 +414,425 @@ class AppL10nBn extends AppL10n {
 
   @override
   String get settingsVersion => 'সংস্করণ';
+
+  @override
+  String get dateShortFormat => 'd MMM';
+
+  @override
+  String get dateLongFormat => 'd MMM yyyy';
+
+  @override
+  String get relativeJustNow => 'এইমাত্র';
+
+  @override
+  String relativeMinutes(int count) {
+    return '$count মিনিট আগে';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return '$count ঘণ্টা আগে';
+  }
+
+  @override
+  String get relativeYesterday => 'গতকাল';
+
+  @override
+  String relativeDays(int count) {
+    return '$count দিন আগে';
+  }
+
+  @override
+  String get libraryTitle => 'লাইব্রেরি';
+
+  @override
+  String get librarySubtitle =>
+      'Action আপনার জন্য যা কিছু রেখেছে, সবই এখানে। আর সবটাই এই ডিভাইসে থাকে।';
+
+  @override
+  String get librarySegmentActions => 'কাজ';
+
+  @override
+  String get librarySegmentCaptures => 'ক্যাপচার';
+
+  @override
+  String get librarySegmentGoals => 'লক্ষ্য';
+
+  @override
+  String get librarySegmentDone => 'সম্পন্ন';
+
+  @override
+  String get libraryNewGoal => 'নতুন লক্ষ্য';
+
+  @override
+  String get libraryNoGoalsTitle => 'এখনও কোনো লক্ষ্য নেই';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      'লক্ষ্য হলো এমন কিছু যা আপনি ঘটাতে চান। কী নেই, কী আটকে আছে, আর প্রথমে কী করতে হবে — Action তা খুঁজে দিতে পারে।';
+
+  @override
+  String get libraryNoDoneTitle => 'এখনও কিছু শেষ হয়নি';
+
+  @override
+  String get libraryNoDoneMessage =>
+      'আপনি যেসব কাজ শেষ করবেন, সেগুলো এখানে রাখা থাকবে।';
+
+  @override
+  String get libraryNoOpenTitle => 'খোলা কোনো কাজ নেই';
+
+  @override
+  String get libraryNoOpenMessage =>
+      'কিছু একটা ক্যাপচার করুন, Action বুঝে নেবে কী করা দরকার।';
+
+  @override
+  String get libraryNoCapturesTitle => 'এখনও কিছু ক্যাপচার করা হয়নি';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      'আপনার যোগ করা ছবি, স্ক্রিনশট আর লেখা প্রথমে এখানেই আসে। আপনি না বলা পর্যন্ত কিছুই বিশ্লেষণ করা হয় না।';
+
+  @override
+  String get libraryGoalNoActions => 'এখান থেকে কিছু তৈরি হয়নি';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'এই লক্ষ্য থেকে $countটি কাজ',
+      one: 'এই লক্ষ্য থেকে ১টি কাজ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'কাজ ও ক্যাপচারে খুঁজুন';
+
+  @override
+  String get searchClear => 'মুছুন';
+
+  @override
+  String get searchPrivacyNote =>
+      'এই ডিভাইসেই খোঁজা হয়। আপনি যা টাইপ করেন তার কিছুই বাইরে যায় না।';
+
+  @override
+  String get searchYouCanSearch => 'যা যা খুঁজতে পারেন';
+
+  @override
+  String get searchFieldTitles => 'শিরোনাম';
+
+  @override
+  String get searchFieldTitlesExample => 'গাড়ির বিমা নবায়ন';
+
+  @override
+  String get searchFieldReferences => 'রেফারেন্স নম্বর';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => 'প্রতিষ্ঠান';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'কাজের ভেতরের ধাপ';
+
+  @override
+  String get searchFieldStepsExample => 'ফর্মটি আপলোড করুন';
+
+  @override
+  String get searchFieldCaptureText => 'ক্যাপচার থেকে পড়া লেখা';
+
+  @override
+  String get searchFieldCaptureTextExample => 'নবায়নের নোটিশ';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return '\"$query\"-এর কোনো মিল নেই';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer =>
+      'কম শব্দ দিয়ে দেখুন, বা রেফারেন্স নম্বরটি যেভাবে আছে ঠিক সেভাবে লিখুন।';
+
+  @override
+  String get searchNoMatchesClearFilters =>
+      'কম শব্দ দিয়ে দেখুন, বা ফিল্টারগুলো মুছে দিন।';
+
+  @override
+  String get searchFilterActive => 'চলমান';
+
+  @override
+  String get searchFilterCompleted => 'সম্পন্ন';
+
+  @override
+  String get searchFilterOverdue => 'সময় পেরিয়েছে';
+
+  @override
+  String get searchFilterThisWeek => 'এই সপ্তাহ';
+
+  @override
+  String get searchFilterCritical => 'জরুরি';
+
+  @override
+  String get searchFilterCreatedByYou => 'আপনার তৈরি';
+
+  @override
+  String get searchFilterArchived => 'সংরক্ষিত';
+
+  @override
+  String get searchFilterClear => 'ফিল্টার মুছুন';
+
+  @override
+  String get searchIncompleteActions =>
+      'আপনার কাজগুলোতে খোঁজা যায়নি, তাই এই ফলাফল অসম্পূর্ণ হতে পারে।';
+
+  @override
+  String get searchIncompleteCaptures =>
+      'আপনার ক্যাপচারগুলোতে খোঁজা যায়নি, তাই এই ফলাফল অসম্পূর্ণ হতে পারে।';
+
+  @override
+  String get searchIncompleteBoth =>
+      'আপনার কাজ বা ক্যাপচার কোনোটিতেই খোঁজা যায়নি, তাই এই ফলাফল অসম্পূর্ণ হতে পারে।';
+
+  @override
+  String get searchMatchTitle => 'শিরোনাম';
+
+  @override
+  String get searchMatchNextStep => 'পরবর্তী ধাপ';
+
+  @override
+  String get searchMatchStep => 'ধাপ';
+
+  @override
+  String get searchMatchSummary => 'সারসংক্ষেপ';
+
+  @override
+  String get searchMatchFromCapture => 'ক্যাপচার থেকে';
+
+  @override
+  String get studioSuggested => 'আপনার শেষ ক্যাপচারের জন্য প্রস্তাবিত';
+
+  @override
+  String get studioRecentlyUsed => 'সম্প্রতি ব্যবহৃত';
+
+  @override
+  String get studioReady => 'প্রস্তুত';
+
+  @override
+  String get studioNotConnected => 'যুক্ত নয়';
+
+  @override
+  String get studioHeroTitle => 'Action ইন্টেলিজেন্স';
+
+  @override
+  String get studioConnectedBlurb =>
+      'একটি ডকুমেন্ট বুঝুন, লক্ষ্য উন্নত করুন, পরিকল্পনা সাজান, উত্তরের খসড়া লিখুন, বা সামনে যা আছে তা যাচাই করুন।';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return 'ডকুমেন্ট বোঝা, পরিকল্পনা ও লেখার জন্য $countটি টুল। ব্যবহার করতে নিজের AI অ্যাকাউন্ট যুক্ত করুন — বিল আপনার প্রোভাইডার নেয়, Action কখনও নয়।';
+  }
+
+  @override
+  String get studioConnectAi => 'AI যুক্ত করুন';
+
+  @override
+  String get studioHowItWorks => 'কীভাবে কাজ করে';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'এর $countটি এখনই ওসব ছাড়াই চলে, পুরোপুরি এই ডিভাইসে।',
+      one: 'এর ১টি এখনই ওসব ছাড়াই চলে, পুরোপুরি এই ডিভাইসে।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'এই ডিভাইসেই চলে';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title। $description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title। $description এই ডিভাইসেই চলে।';
+  }
+
+  @override
+  String get categoryUnderstand => 'বুঝুন';
+
+  @override
+  String get categoryUnderstandBlurb => 'আপনার কাছে যা আছে তার মানে বের করুন।';
+
+  @override
+  String get categoryPlan => 'পরিকল্পনা';
+
+  @override
+  String get categoryPlanBlurb => 'এটিকে করার মতো কিছুতে বদলান।';
+
+  @override
+  String get categoryCreate => 'তৈরি';
+
+  @override
+  String get categoryCreateBlurb => 'লিখুন, উন্নত করুন, অনুবাদ করুন।';
+
+  @override
+  String get categoryExtract => 'বের করুন';
+
+  @override
+  String get categoryExtractBlurb => 'যে বিবরণগুলো জরুরি, সেগুলো টেনে আনুন।';
+
+  @override
+  String get categoryVerify => 'যাচাই';
+
+  @override
+  String get categoryVerifyBlurb => 'সামনে যা আছে তা পরখ করুন।';
+
+  @override
+  String get captureSheetTitle => 'কিছু ক্যাপচার করুন';
+
+  @override
+  String get captureSheetSubtitle =>
+      'যা পুরো পড়তে ইচ্ছে করছে না, Action-কে দিয়ে দিন।';
+
+  @override
+  String get captureTakePhoto => 'ছবি তুলুন';
+
+  @override
+  String get captureTakePhotoSubtitle => 'সামনে থাকা চিঠি, বিল বা নোটিশ';
+
+  @override
+  String get captureChooseImage => 'ছবি বেছে নিন';
+
+  @override
+  String get captureChooseImageSubtitle => 'এই ডিভাইসে থাকা স্ক্রিনশট বা ছবি';
+
+  @override
+  String get capturePasteText => 'লেখা পেস্ট করুন';
+
+  @override
+  String get capturePasteTextSubtitle => 'ইমেইল, মেসেজ বা নোটিশ';
+
+  @override
+  String get captureChoosePdf => 'PDF বেছে নিন';
+
+  @override
+  String get captureChoosePdfSubtitle =>
+      'আপনার কাছে থাকা স্টেটমেন্ট, চিঠি বা ফর্ম';
+
+  @override
+  String get captureFootnote =>
+      'ক্যাপচার এই ডিভাইসেই থাকে। আপনি না বলা পর্যন্ত অনলাইনে কিছুই বিশ্লেষণ করা হয় না।';
+
+  @override
+  String get captureCouldNotOpen => 'ওটা খোলা গেল না। অন্যভাবে চেষ্টা করুন।';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title। $subtitle';
+  }
+
+  @override
+  String get stageReading => 'পড়া হচ্ছে';
+
+  @override
+  String get stageNeedsReview => 'পর্যালোচনা দরকার';
+
+  @override
+  String get stageActionCreated => 'কাজ তৈরি হয়েছে';
+
+  @override
+  String get stageNoText => 'কোনো লেখা পাওয়া যায়নি';
+
+  @override
+  String get stageCouldNotBeRead => 'পড়া যায়নি';
+
+  @override
+  String get stageReadingPreview => 'লেখা পড়া হচ্ছে…';
+
+  @override
+  String get stageFailedPreview => 'এটি এই ডিভাইসে পড়া যায়নি।';
+
+  @override
+  String get provenancePhoto => 'ছবি থেকে নেওয়া';
+
+  @override
+  String get provenanceImage => 'গ্যালারির ছবি থেকে নেওয়া';
+
+  @override
+  String get provenancePastedText => 'পেস্ট করা লেখা থেকে নেওয়া';
+
+  @override
+  String get provenanceDocument => 'ডকুমেন্ট হিসেবে যোগ করা';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return 'শেষ হয়েছে $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return 'সময় পেরিয়েছে · সময় ছিল $date';
+  }
+
+  @override
+  String get metaDueToday => 'আজকের মধ্যে';
+
+  @override
+  String metaDueOn(String date) {
+    return '$date-এর মধ্যে';
+  }
+
+  @override
+  String get metaCreatedByYou => 'আপনার তৈরি';
+
+  @override
+  String get categoryPayment => 'পেমেন্ট';
+
+  @override
+  String get categoryRenewal => 'নবায়ন';
+
+  @override
+  String get categoryAppointment => 'অ্যাপয়েন্টমেন্ট';
+
+  @override
+  String get categoryBooking => 'বুকিং';
+
+  @override
+  String get categoryTravel => 'ভ্রমণ';
+
+  @override
+  String get categoryDeadline => 'সময়সীমা';
+
+  @override
+  String get categoryResponse => 'উত্তর দরকার';
+
+  @override
+  String get categoryDelivery => 'ডেলিভারি';
+
+  @override
+  String get categoryDocument => 'ডকুমেন্ট';
+
+  @override
+  String get categoryNoActionRequired => 'কিছু করার নেই';
+
+  @override
+  String get categoryUnsure => 'নিশ্চিত নয়';
+
+  @override
+  String get errorEnterManually => 'নিজে লিখে দিন';
 }

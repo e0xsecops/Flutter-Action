@@ -399,4 +399,412 @@ class AppL10nJa extends AppL10n {
 
   @override
   String get settingsVersion => 'バージョン';
+
+  @override
+  String get dateShortFormat => 'M月d日';
+
+  @override
+  String get dateLongFormat => 'yyyy年M月d日';
+
+  @override
+  String get relativeJustNow => 'たった今';
+
+  @override
+  String relativeMinutes(int count) {
+    return '$count分前';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return '$count時間前';
+  }
+
+  @override
+  String get relativeYesterday => '昨日';
+
+  @override
+  String relativeDays(int count) {
+    return '$count日前';
+  }
+
+  @override
+  String get libraryTitle => 'ライブラリ';
+
+  @override
+  String get librarySubtitle => 'Action があなたのために預かっているものすべて。そのすべてがこの端末に留まります。';
+
+  @override
+  String get librarySegmentActions => 'タスク';
+
+  @override
+  String get librarySegmentCaptures => '取り込み';
+
+  @override
+  String get librarySegmentGoals => '目標';
+
+  @override
+  String get librarySegmentDone => '完了';
+
+  @override
+  String get libraryNewGoal => '新しい目標';
+
+  @override
+  String get libraryNoGoalsTitle => 'まだ目標はありません';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      '目標とは、あなたが実現したいことです。何が足りないか、何が妨げているか、まず何をすべきかを Action が見つけられます。';
+
+  @override
+  String get libraryNoDoneTitle => 'まだ完了したものはありません';
+
+  @override
+  String get libraryNoDoneMessage => '終えたタスクはここに残ります。';
+
+  @override
+  String get libraryNoOpenTitle => '未完了のタスクはありません';
+
+  @override
+  String get libraryNoOpenMessage => '何か取り込めば、Action が何をすべきか見きわめます。';
+
+  @override
+  String get libraryNoCapturesTitle => 'まだ何も取り込んでいません';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      '追加した写真・スクリーンショット・テキストは、まずここに届きます。あなたが頼むまで、何も解析されません。';
+
+  @override
+  String get libraryGoalNoActions => 'ここからはまだ何も生まれていません';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'この目標からのタスク$count件',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'タスクと取り込みを検索';
+
+  @override
+  String get searchClear => '消去';
+
+  @override
+  String get searchPrivacyNote => 'この端末の中で検索します。ここに入力したものは端末から出ません。';
+
+  @override
+  String get searchYouCanSearch => '検索できるもの';
+
+  @override
+  String get searchFieldTitles => 'タイトル';
+
+  @override
+  String get searchFieldTitlesExample => '自動車保険の更新';
+
+  @override
+  String get searchFieldReferences => '受付番号';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => '組織名';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'タスクの中の手順';
+
+  @override
+  String get searchFieldStepsExample => '書類をアップロードする';
+
+  @override
+  String get searchFieldCaptureText => '取り込みから読み取った文字';
+
+  @override
+  String get searchFieldCaptureTextExample => '更新のお知らせ';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return '「$query」に一致するものはありません';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer => '語を減らすか、受付番号を書かれているとおりに入力してみてください。';
+
+  @override
+  String get searchNoMatchesClearFilters => '語を減らすか、絞り込みを解除してみてください。';
+
+  @override
+  String get searchFilterActive => '未完了';
+
+  @override
+  String get searchFilterCompleted => '完了';
+
+  @override
+  String get searchFilterOverdue => '期限切れ';
+
+  @override
+  String get searchFilterThisWeek => '今週';
+
+  @override
+  String get searchFilterCritical => '重要';
+
+  @override
+  String get searchFilterCreatedByYou => '自分で作成';
+
+  @override
+  String get searchFilterArchived => 'アーカイブ済み';
+
+  @override
+  String get searchFilterClear => '絞り込みを解除';
+
+  @override
+  String get searchIncompleteActions => 'タスクを検索できなかったため、この結果は不完全な可能性があります。';
+
+  @override
+  String get searchIncompleteCaptures => '取り込みを検索できなかったため、この結果は不完全な可能性があります。';
+
+  @override
+  String get searchIncompleteBoth => 'タスクも取り込みも検索できなかったため、この結果は不完全な可能性があります。';
+
+  @override
+  String get searchMatchTitle => 'タイトル';
+
+  @override
+  String get searchMatchNextStep => '次の一手';
+
+  @override
+  String get searchMatchStep => '手順';
+
+  @override
+  String get searchMatchSummary => '要約';
+
+  @override
+  String get searchMatchFromCapture => '取り込みより';
+
+  @override
+  String get studioSuggested => '直近の取り込みへのおすすめ';
+
+  @override
+  String get studioRecentlyUsed => '最近使ったもの';
+
+  @override
+  String get studioReady => '準備完了';
+
+  @override
+  String get studioNotConnected => '未接続';
+
+  @override
+  String get studioHeroTitle => 'Action インテリジェンス';
+
+  @override
+  String get studioConnectedBlurb =>
+      '書類を読み解く、目標を練り直す、計画を組む、返信の下書きを書く、目の前のものを確かめる。';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return '書類の読み解き・計画・作文のための$count個のツール。ご自身の AI アカウントを接続すると使えます。料金を請求するのはあなたのプロバイダーで、Action ではありません。';
+  }
+
+  @override
+  String get studioConnectAi => 'AI を接続';
+
+  @override
+  String get studioHowItWorks => '仕組み';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'そのうち$count個は、接続なしで、すべてこの端末の中で動きます。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'この端末の中で動きます';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title。$description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title。$description この端末の中で動きます。';
+  }
+
+  @override
+  String get categoryUnderstand => '読み解く';
+
+  @override
+  String get categoryUnderstandBlurb => '手元のものの意味をつかむ。';
+
+  @override
+  String get categoryPlan => '計画する';
+
+  @override
+  String get categoryPlanBlurb => '実行できる形に変える。';
+
+  @override
+  String get categoryCreate => '書く';
+
+  @override
+  String get categoryCreateBlurb => '書く、直す、訳す。';
+
+  @override
+  String get categoryExtract => '取り出す';
+
+  @override
+  String get categoryExtractBlurb => '大事な項目を抜き出す。';
+
+  @override
+  String get categoryVerify => '確かめる';
+
+  @override
+  String get categoryVerifyBlurb => '目の前のものを確かめる。';
+
+  @override
+  String get captureSheetTitle => '何かを取り込む';
+
+  @override
+  String get captureSheetSubtitle => '読み通したくないものは、Action に渡してください。';
+
+  @override
+  String get captureTakePhoto => '写真を撮る';
+
+  @override
+  String get captureTakePhotoSubtitle => '目の前にある手紙・請求書・通知';
+
+  @override
+  String get captureChooseImage => '画像を選ぶ';
+
+  @override
+  String get captureChooseImageSubtitle => 'この端末にあるスクリーンショットや写真';
+
+  @override
+  String get capturePasteText => 'テキストを貼り付ける';
+
+  @override
+  String get capturePasteTextSubtitle => 'メール・メッセージ・通知';
+
+  @override
+  String get captureChoosePdf => 'PDF を選ぶ';
+
+  @override
+  String get captureChoosePdfSubtitle => 'すでにお持ちの明細・手紙・申込書';
+
+  @override
+  String get captureFootnote =>
+      '取り込んだものはこの端末に残ります。あなたが頼むまで、オンラインで解析されることはありません。';
+
+  @override
+  String get captureCouldNotOpen => 'それは開けませんでした。別の方法でお試しください。';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title。$subtitle';
+  }
+
+  @override
+  String get stageReading => '読み取り中';
+
+  @override
+  String get stageNeedsReview => '要確認';
+
+  @override
+  String get stageActionCreated => 'タスクを作成済み';
+
+  @override
+  String get stageNoText => '文字が見つかりません';
+
+  @override
+  String get stageCouldNotBeRead => '読み取れませんでした';
+
+  @override
+  String get stageReadingPreview => '文字を読み取っています…';
+
+  @override
+  String get stageFailedPreview => 'これはこの端末では読み取れませんでした。';
+
+  @override
+  String get provenancePhoto => '写真から取り込み';
+
+  @override
+  String get provenanceImage => '画像から取り込み';
+
+  @override
+  String get provenancePastedText => '貼り付けたテキストから取り込み';
+
+  @override
+  String get provenanceDocument => '書類として追加';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return '完了 $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return '期限切れ · 期限は $date でした';
+  }
+
+  @override
+  String get metaDueToday => '今日が期限';
+
+  @override
+  String metaDueOn(String date) {
+    return '期限 $date';
+  }
+
+  @override
+  String get metaCreatedByYou => '自分で作成';
+
+  @override
+  String get categoryPayment => '支払い';
+
+  @override
+  String get categoryRenewal => '更新';
+
+  @override
+  String get categoryAppointment => '予約・面談';
+
+  @override
+  String get categoryBooking => '予約';
+
+  @override
+  String get categoryTravel => '旅行';
+
+  @override
+  String get categoryDeadline => '期限';
+
+  @override
+  String get categoryResponse => '返信が必要';
+
+  @override
+  String get categoryDelivery => '配達';
+
+  @override
+  String get categoryDocument => '書類';
+
+  @override
+  String get categoryNoActionRequired => 'することはありません';
+
+  @override
+  String get categoryUnsure => '判断できません';
+
+  @override
+  String get errorEnterManually => '自分で入力する';
 }

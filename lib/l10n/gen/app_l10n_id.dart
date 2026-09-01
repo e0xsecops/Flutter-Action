@@ -412,4 +412,427 @@ class AppL10nId extends AppL10n {
 
   @override
   String get settingsVersion => 'Versi';
+
+  @override
+  String get dateShortFormat => 'd MMM';
+
+  @override
+  String get dateLongFormat => 'd MMM yyyy';
+
+  @override
+  String get relativeJustNow => 'Baru saja';
+
+  @override
+  String relativeMinutes(int count) {
+    return '$count mnt lalu';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return '$count jam lalu';
+  }
+
+  @override
+  String get relativeYesterday => 'Kemarin';
+
+  @override
+  String relativeDays(int count) {
+    return '$count hr lalu';
+  }
+
+  @override
+  String get libraryTitle => 'Pustaka';
+
+  @override
+  String get librarySubtitle =>
+      'Semua yang disimpan Action untuk Anda. Dan semuanya tetap di perangkat ini.';
+
+  @override
+  String get librarySegmentActions => 'Tugas';
+
+  @override
+  String get librarySegmentCaptures => 'Tangkapan';
+
+  @override
+  String get librarySegmentGoals => 'Sasaran';
+
+  @override
+  String get librarySegmentDone => 'Selesai';
+
+  @override
+  String get libraryNewGoal => 'Sasaran baru';
+
+  @override
+  String get libraryNoGoalsTitle => 'Belum ada sasaran';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      'Sasaran adalah sesuatu yang ingin Anda wujudkan. Action bisa menemukan apa yang kurang, apa yang menghambat, dan apa yang harus dilakukan lebih dulu.';
+
+  @override
+  String get libraryNoDoneTitle => 'Belum ada yang selesai';
+
+  @override
+  String get libraryNoDoneMessage =>
+      'Tugas yang Anda selesaikan akan disimpan di sini.';
+
+  @override
+  String get libraryNoOpenTitle => 'Tidak ada tugas terbuka';
+
+  @override
+  String get libraryNoOpenMessage =>
+      'Tangkap sesuatu dan Action akan mengetahui apa yang perlu dikerjakan.';
+
+  @override
+  String get libraryNoCapturesTitle => 'Belum ada yang ditangkap';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      'Foto, tangkapan layar, dan teks yang Anda tambahkan mendarat di sini lebih dulu. Tidak ada yang dianalisis sampai Anda meminta.';
+
+  @override
+  String get libraryGoalNoActions => 'Belum ada yang lahir darinya';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tugas dari sasaran ini',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'Cari tugas dan tangkapan';
+
+  @override
+  String get searchClear => 'Bersihkan';
+
+  @override
+  String get searchPrivacyNote =>
+      'Dicari di perangkat ini. Tidak ada yang Anda ketik di sini yang meninggalkannya.';
+
+  @override
+  String get searchYouCanSearch => 'ANDA BISA MENCARI';
+
+  @override
+  String get searchFieldTitles => 'Judul';
+
+  @override
+  String get searchFieldTitlesExample => 'Perpanjang asuransi mobil';
+
+  @override
+  String get searchFieldReferences => 'Nomor referensi';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => 'Organisasi';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'Langkah di dalam sebuah tugas';
+
+  @override
+  String get searchFieldStepsExample => 'Unggah formulirnya';
+
+  @override
+  String get searchFieldCaptureText => 'Teks yang dibaca dari tangkapan';
+
+  @override
+  String get searchFieldCaptureTextExample => 'pemberitahuan perpanjangan';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return 'Tidak ada hasil untuk \"$query\"';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer =>
+      'Coba lebih sedikit kata, atau nomor referensi persis seperti tertulis.';
+
+  @override
+  String get searchNoMatchesClearFilters =>
+      'Coba lebih sedikit kata, atau bersihkan filternya.';
+
+  @override
+  String get searchFilterActive => 'Aktif';
+
+  @override
+  String get searchFilterCompleted => 'Selesai';
+
+  @override
+  String get searchFilterOverdue => 'Terlambat';
+
+  @override
+  String get searchFilterThisWeek => 'Minggu ini';
+
+  @override
+  String get searchFilterCritical => 'Kritis';
+
+  @override
+  String get searchFilterCreatedByYou => 'Dibuat oleh Anda';
+
+  @override
+  String get searchFilterArchived => 'Diarsipkan';
+
+  @override
+  String get searchFilterClear => 'Bersihkan filter';
+
+  @override
+  String get searchIncompleteActions =>
+      'Tugas Anda tidak dapat dicari, jadi hasil ini mungkin tidak lengkap.';
+
+  @override
+  String get searchIncompleteCaptures =>
+      'Tangkapan Anda tidak dapat dicari, jadi hasil ini mungkin tidak lengkap.';
+
+  @override
+  String get searchIncompleteBoth =>
+      'Tugas maupun tangkapan Anda tidak dapat dicari, jadi hasil ini mungkin tidak lengkap.';
+
+  @override
+  String get searchMatchTitle => 'Judul';
+
+  @override
+  String get searchMatchNextStep => 'Langkah berikutnya';
+
+  @override
+  String get searchMatchStep => 'Langkah';
+
+  @override
+  String get searchMatchSummary => 'Ringkasan';
+
+  @override
+  String get searchMatchFromCapture => 'Dari tangkapan';
+
+  @override
+  String get studioSuggested => 'Disarankan untuk tangkapan terakhir Anda';
+
+  @override
+  String get studioRecentlyUsed => 'Baru dipakai';
+
+  @override
+  String get studioReady => 'SIAP';
+
+  @override
+  String get studioNotConnected => 'BELUM TERHUBUNG';
+
+  @override
+  String get studioHeroTitle => 'Kecerdasan Action';
+
+  @override
+  String get studioConnectedBlurb =>
+      'Pahami sebuah dokumen, pertajam sasaran, susun rencana, tulis draf balasan, atau periksa apa yang ada di hadapan Anda.';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return '$count alat untuk memahami dokumen, merencanakan, dan menulis. Hubungkan akun AI Anda sendiri untuk memakainya — yang menagih adalah penyedia Anda, tidak pernah Action.';
+  }
+
+  @override
+  String get studioConnectAi => 'Hubungkan AI';
+
+  @override
+  String get studioHowItWorks => 'Cara kerjanya';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count di antaranya sudah berjalan tanpa semua itu, sepenuhnya di perangkat ini.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'Berjalan di perangkat ini';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title. $description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title. $description Berjalan di perangkat ini.';
+  }
+
+  @override
+  String get categoryUnderstand => 'Pahami';
+
+  @override
+  String get categoryUnderstandBlurb => 'Pahami apa yang Anda punya.';
+
+  @override
+  String get categoryPlan => 'Rencanakan';
+
+  @override
+  String get categoryPlanBlurb =>
+      'Ubah menjadi sesuatu yang bisa Anda kerjakan.';
+
+  @override
+  String get categoryCreate => 'Buat';
+
+  @override
+  String get categoryCreateBlurb => 'Tulis, perbaiki, terjemahkan.';
+
+  @override
+  String get categoryExtract => 'Ambil';
+
+  @override
+  String get categoryExtractBlurb => 'Tarik keluar detail yang penting.';
+
+  @override
+  String get categoryVerify => 'Periksa';
+
+  @override
+  String get categoryVerifyBlurb => 'Periksa apa yang ada di hadapan Anda.';
+
+  @override
+  String get captureSheetTitle => 'Tangkap sesuatu';
+
+  @override
+  String get captureSheetSubtitle =>
+      'Serahkan ke Action apa pun yang enggan Anda baca sampai habis.';
+
+  @override
+  String get captureTakePhoto => 'Ambil foto';
+
+  @override
+  String get captureTakePhotoSubtitle =>
+      'Surat, tagihan, atau pemberitahuan di depan Anda';
+
+  @override
+  String get captureChooseImage => 'Pilih gambar';
+
+  @override
+  String get captureChooseImageSubtitle =>
+      'Tangkapan layar atau foto yang sudah ada di perangkat ini';
+
+  @override
+  String get capturePasteText => 'Tempel teks';
+
+  @override
+  String get capturePasteTextSubtitle => 'Email, pesan, atau pemberitahuan';
+
+  @override
+  String get captureChoosePdf => 'Pilih PDF';
+
+  @override
+  String get captureChoosePdfSubtitle =>
+      'Rekening koran, surat, atau formulir yang sudah Anda punya';
+
+  @override
+  String get captureFootnote =>
+      'Tangkapan tetap di perangkat ini. Tidak ada yang dianalisis daring sampai Anda meminta.';
+
+  @override
+  String get captureCouldNotOpen => 'Tidak bisa dibuka. Coba cara lain.';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title. $subtitle';
+  }
+
+  @override
+  String get stageReading => 'Sedang dibaca';
+
+  @override
+  String get stageNeedsReview => 'Perlu ditinjau';
+
+  @override
+  String get stageActionCreated => 'Tugas dibuat';
+
+  @override
+  String get stageNoText => 'Tidak ada teks ditemukan';
+
+  @override
+  String get stageCouldNotBeRead => 'Tidak bisa dibaca';
+
+  @override
+  String get stageReadingPreview => 'Sedang membaca teksnya…';
+
+  @override
+  String get stageFailedPreview => 'Ini tidak bisa dibaca di perangkat ini.';
+
+  @override
+  String get provenancePhoto => 'Ditangkap dari foto';
+
+  @override
+  String get provenanceImage => 'Ditangkap dari gambar';
+
+  @override
+  String get provenancePastedText => 'Ditangkap dari teks yang ditempel';
+
+  @override
+  String get provenanceDocument => 'Ditambahkan sebagai dokumen';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return 'Selesai $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return 'Terlambat · jatuh tempo $date';
+  }
+
+  @override
+  String get metaDueToday => 'Jatuh tempo hari ini';
+
+  @override
+  String metaDueOn(String date) {
+    return 'Jatuh tempo $date';
+  }
+
+  @override
+  String get metaCreatedByYou => 'Dibuat oleh Anda';
+
+  @override
+  String get categoryPayment => 'Pembayaran';
+
+  @override
+  String get categoryRenewal => 'Perpanjangan';
+
+  @override
+  String get categoryAppointment => 'Janji temu';
+
+  @override
+  String get categoryBooking => 'Pemesanan';
+
+  @override
+  String get categoryTravel => 'Perjalanan';
+
+  @override
+  String get categoryDeadline => 'Tenggat';
+
+  @override
+  String get categoryResponse => 'Perlu balasan';
+
+  @override
+  String get categoryDelivery => 'Pengiriman';
+
+  @override
+  String get categoryDocument => 'Dokumen';
+
+  @override
+  String get categoryNoActionRequired => 'Tidak ada yang perlu dilakukan';
+
+  @override
+  String get categoryUnsure => 'Belum jelas';
+
+  @override
+  String get errorEnterManually => 'Masukkan sendiri';
 }

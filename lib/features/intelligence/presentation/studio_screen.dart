@@ -25,6 +25,8 @@ import '../../../design/components/glass_surface.dart';
 import '../../../design/components/readable_width.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../capture/domain/source_item.dart';
 import '../application/intelligence_context.dart';
@@ -39,6 +41,7 @@ class StudioScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final config = ref.watch(aiProviderConfigProvider);
     final recents = ref.watch(recentToolsProvider);
     final sources = ref.watch(sourcesProvider).value ?? const <SourceItem>[];
@@ -66,7 +69,7 @@ class StudioScreen extends ConsumerWidget {
 
             if (recommended.isNotEmpty) ...[
               _Heading(
-                label: 'Suggested for your last capture',
+                label: l10n.studioSuggested,
                 icon: Icons.auto_awesome_motion_outlined,
                 colour: context.colors.brand,
               ),
@@ -75,7 +78,7 @@ class StudioScreen extends ConsumerWidget {
 
             if (recentTools.isNotEmpty) ...[
               _Heading(
-                label: 'Recently used',
+                label: l10n.studioRecentlyUsed,
                 icon: Icons.history_rounded,
                 colour: context.colors.textSecondary,
               ),
@@ -84,8 +87,8 @@ class StudioScreen extends ConsumerWidget {
 
             for (final category in IntelligenceCategory.values) ...[
               _Heading(
-                label: category.label,
-                blurb: category.blurb,
+                label: category.labelIn(l10n),
+                blurb: category.blurbIn(l10n),
                 icon: iconForCategory(category),
                 colour: colourForCategory(category, context.colors),
                 count: ToolRegistry.inCategory(category).length,
@@ -113,6 +116,7 @@ class _StudioHero extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final localCount = ToolRegistry.local.length;
 
     return Padding(
@@ -143,7 +147,7 @@ class _StudioHero extends ConsumerWidget {
                   ),
                   const SizedBox(width: Space.sm),
                   Text(
-                    connected ? 'READY' : 'NOT CONNECTED',
+                    connected ? l10n.studioReady : l10n.studioNotConnected,
                     style: text.labelSmall?.copyWith(
                       color: connected
                           ? colors.confidenceConfirmed
@@ -155,20 +159,16 @@ class _StudioHero extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: Space.md),
-              Text('Action Intelligence', style: text.headlineSmall),
+              Text(l10n.studioHeroTitle, style: text.headlineSmall),
               const SizedBox(height: Space.xs),
               Text(
                 connected
-                    ? 'Understand a document, improve a goal, build a plan, '
-                        'draft a reply, or check what you are looking at.'
+                    ? l10n.studioConnectedBlurb
                     // Counted, never spelled out as a constant. The registry
                     // has grown twice already and a hardcoded "fifteen"
                     // outlived both, telling the user something the screen
                     // below it visibly contradicted.
-                    : '${ToolRegistry.all.length} tools for understanding '
-                        'documents, planning and writing. Connect your own AI '
-                        'account to use them — you are billed by your '
-                        'provider, never by Action.',
+                    : l10n.studioDisconnectedBlurb(ToolRegistry.all.length),
                 style: text.bodyMedium,
               ),
 
@@ -176,12 +176,12 @@ class _StudioHero extends ConsumerWidget {
                 const SizedBox(height: Space.lg),
                 FilledButton(
                   onPressed: () => showConnectProviderSheet(context),
-                  child: const Text('Connect AI'),
+                  child: Text(l10n.studioConnectAi),
                 ),
                 const SizedBox(height: Space.xs),
                 TextButton(
                   onPressed: () => context.push(Routes.settingsIntelligence),
-                  child: const Text('How it works'),
+                  child: Text(l10n.studioHowItWorks),
                 ),
                 const SizedBox(height: Space.sm),
                 // The one thing a disconnected user can act on immediately.
@@ -196,8 +196,7 @@ class _StudioHero extends ConsumerWidget {
                     const SizedBox(width: Space.xs),
                     Expanded(
                       child: Text(
-                        '$localCount of them already work without any of that, '
-                        'entirely on this device.',
+                        l10n.studioLocalCount(localCount),
                         style: text.bodySmall?.copyWith(
                           color: colors.confidenceConfirmed,
                         ),
@@ -312,14 +311,16 @@ class _ToolCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final tone = colourForCategory(tool.category, colors);
 
     return Semantics(
       button: true,
       // Name and purpose together: a screen reader landing on fifteen of these
       // should hear what each one does, not fifteen titles.
-      label: '${tool.title}. ${tool.shortDescription}'
-          '${tool.isLocal ? ' Runs on this device.' : ''}',
+      label: tool.isLocal
+          ? l10n.studioToolSemanticsLocal(tool.title, tool.shortDescription)
+          : l10n.studioToolSemantics(tool.title, tool.shortDescription),
       child: Material(
       color: colors.surfaceElevated,
       borderRadius: Radii.rLg,
@@ -365,7 +366,7 @@ class _ToolCard extends StatelessWidget {
                     top: Space.xxs,
                   ),
                   child: Tooltip(
-                    message: 'Runs on this device',
+                    message: l10n.studioRunsOnThisDevice,
                     child: Icon(
                       Icons.phone_android,
                       size: 15,

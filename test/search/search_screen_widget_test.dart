@@ -1,5 +1,6 @@
 import 'package:action_app/design/app_theme.dart';
 import 'package:action_app/features/actions/application/action_providers.dart';
+import 'package:action_app/l10n/gen/app_l10n.dart';
 import 'package:action_app/features/actions/data/action_cloud_mirror.dart';
 import 'package:action_app/features/actions/data/actions_database.dart';
 import 'package:action_app/features/actions/data/auth_identity_service.dart';
@@ -92,6 +93,8 @@ Future<void> pumpSearch(
         notificationSchedulerProvider.overrideWithValue(_scheduler),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: AppL10n.localizationsDelegates,
+        supportedLocales: AppL10n.supportedLocales,
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),
         themeMode: themeMode,

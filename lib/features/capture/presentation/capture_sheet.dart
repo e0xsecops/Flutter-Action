@@ -9,6 +9,7 @@ import '../../../app/router.dart';
 import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../application/capture_controller.dart';
 import '../domain/document_intake.dart';
 import '../domain/source_item.dart';
@@ -120,7 +121,7 @@ Future<void> _pickThenPreview(
     // dialog.
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Couldn't open that. Try another way.")),
+        SnackBar(content: Text(AppL10n.of(context).captureCouldNotOpen)),
       );
     }
     return;
@@ -146,9 +147,10 @@ class _CaptureSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return AppSheet(
-      title: 'Capture something',
-      subtitle: 'Hand Action anything you would rather not read through.',
+      title: l10n.captureSheetTitle,
+      subtitle: l10n.captureSheetSubtitle,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           Space.page,
@@ -162,33 +164,33 @@ class _CaptureSheet extends StatelessWidget {
           children: [
             _Option(
               icon: Icons.photo_camera_rounded,
-              title: 'Take a photo',
-              subtitle: 'A letter, bill or notice in front of you',
+              title: l10n.captureTakePhoto,
+              subtitle: l10n.captureTakePhotoSubtitle,
               intent: CaptureIntent.camera,
               primary: true,
             ),
             const SizedBox(height: Space.sm),
             _Option(
               icon: Icons.image_rounded,
-              title: 'Choose an image',
-              subtitle: 'A screenshot or photo already on this device',
+              title: l10n.captureChooseImage,
+              subtitle: l10n.captureChooseImageSubtitle,
               intent: CaptureIntent.gallery,
             ),
             const SizedBox(height: Space.sm),
             _Option(
               icon: Icons.notes_rounded,
-              title: 'Paste text',
-              subtitle: 'An email, message or notice',
+              title: l10n.capturePasteText,
+              subtitle: l10n.capturePasteTextSubtitle,
               intent: CaptureIntent.pasteText,
             ),
             const SizedBox(height: Space.sm),
             _Option(
               icon: Icons.picture_as_pdf_outlined,
-              title: 'Choose a PDF',
+              title: l10n.captureChoosePdf,
               // Says PDF rather than "document" because that is what it
               // actually takes, and a chooser that accepts less than its label
               // promises wastes the tap it invited.
-              subtitle: 'A statement, letter or form you already have',
+              subtitle: l10n.captureChoosePdfSubtitle,
               intent: CaptureIntent.document,
             ),
             const SizedBox(height: Space.lg),
@@ -234,7 +236,7 @@ class _Option extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: '$title. $subtitle',
+      label: AppL10n.of(context).captureOptionSemantics(title, subtitle),
       child: Material(
         // Solid, not glass. The sheet itself is the glass; a translucent card
         // on a translucent sheet is two read-backs and no contrast.
@@ -319,8 +321,7 @@ class _PrivacyNote extends StatelessWidget {
         const SizedBox(width: Space.sm),
         Expanded(
           child: Text(
-            'Captures stay on this device. Nothing is analysed online until you '
-            'ask for it.',
+            AppL10n.of(context).captureFootnote,
             // Secondary, not tertiary. This is a promise the product is
             // making, not a label on something else — and a privacy claim
             // nobody can read is not a privacy claim.

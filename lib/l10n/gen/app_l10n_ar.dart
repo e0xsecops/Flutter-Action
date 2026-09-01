@@ -436,4 +436,433 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get settingsVersion => 'الإصدار';
+
+  @override
+  String get dateShortFormat => 'd MMM';
+
+  @override
+  String get dateLongFormat => 'd MMM yyyy';
+
+  @override
+  String get relativeJustNow => 'الآن';
+
+  @override
+  String relativeMinutes(int count) {
+    return 'قبل $count د';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return 'قبل $count س';
+  }
+
+  @override
+  String get relativeYesterday => 'أمس';
+
+  @override
+  String relativeDays(int count) {
+    return 'قبل $count ي';
+  }
+
+  @override
+  String get libraryTitle => 'المكتبة';
+
+  @override
+  String get librarySubtitle =>
+      'كل ما يحتفظ به Action من أجلك. وكله يبقى على هذا الجهاز.';
+
+  @override
+  String get librarySegmentActions => 'الإجراءات';
+
+  @override
+  String get librarySegmentCaptures => 'الالتقاطات';
+
+  @override
+  String get librarySegmentGoals => 'الأهداف';
+
+  @override
+  String get librarySegmentDone => 'المنجَز';
+
+  @override
+  String get libraryNewGoal => 'هدف جديد';
+
+  @override
+  String get libraryNoGoalsTitle => 'لا أهداف بعد';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      'الهدف شيء تريد أن يحدث. ويستطيع Action أن يجد ما ينقصه، وما يعوقه، وما تبدأ به.';
+
+  @override
+  String get libraryNoDoneTitle => 'لم يكتمل شيء بعد';
+
+  @override
+  String get libraryNoDoneMessage => 'الإجراءات التي تنهيها ستُحفَظ هنا.';
+
+  @override
+  String get libraryNoOpenTitle => 'لا إجراءات مفتوحة';
+
+  @override
+  String get libraryNoOpenMessage =>
+      'التقط شيئًا وسيستنتج Action ما يلزم عمله.';
+
+  @override
+  String get libraryNoCapturesTitle => 'لم يُلتقط شيء بعد';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      'الصور ولقطات الشاشة والنصوص التي تضيفها تصل إلى هنا أولًا. ولا يُحلَّل شيء حتى تطلب ذلك.';
+
+  @override
+  String get libraryGoalNoActions => 'لم يُنشأ منه شيء بعد';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count إجراء من هذا الهدف',
+      many: '$count إجراءً من هذا الهدف',
+      few: '$count إجراءات من هذا الهدف',
+      two: 'إجراءان من هذا الهدف',
+      one: 'إجراء واحد من هذا الهدف',
+      zero: 'لا إجراءات من هذا الهدف',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'ابحث في الإجراءات والالتقاطات';
+
+  @override
+  String get searchClear => 'مسح';
+
+  @override
+  String get searchPrivacyNote =>
+      'البحث يجري على هذا الجهاز. ولا يغادره شيء مما تكتبه هنا.';
+
+  @override
+  String get searchYouCanSearch => 'يمكنك البحث في';
+
+  @override
+  String get searchFieldTitles => 'العناوين';
+
+  @override
+  String get searchFieldTitlesExample => 'تجديد تأمين السيارة';
+
+  @override
+  String get searchFieldReferences => 'الأرقام المرجعية';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => 'الجهات';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'الخطوات داخل الإجراء';
+
+  @override
+  String get searchFieldStepsExample => 'ارفع النموذج';
+
+  @override
+  String get searchFieldCaptureText => 'النص المقروء من الالتقاط';
+
+  @override
+  String get searchFieldCaptureTextExample => 'إشعار التجديد';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return 'لا نتائج لـ \"$query\"';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer =>
+      'جرّب كلمات أقل، أو رقمًا مرجعيًا كما يظهر تمامًا.';
+
+  @override
+  String get searchNoMatchesClearFilters =>
+      'جرّب كلمات أقل، أو امسح عوامل التصفية.';
+
+  @override
+  String get searchFilterActive => 'نشط';
+
+  @override
+  String get searchFilterCompleted => 'مكتمل';
+
+  @override
+  String get searchFilterOverdue => 'متأخر';
+
+  @override
+  String get searchFilterThisWeek => 'هذا الأسبوع';
+
+  @override
+  String get searchFilterCritical => 'حرِج';
+
+  @override
+  String get searchFilterCreatedByYou => 'أنشأته أنت';
+
+  @override
+  String get searchFilterArchived => 'مؤرشف';
+
+  @override
+  String get searchFilterClear => 'مسح عوامل التصفية';
+
+  @override
+  String get searchIncompleteActions =>
+      'تعذّر البحث في إجراءاتك، لذا قد تكون هذه النتائج ناقصة.';
+
+  @override
+  String get searchIncompleteCaptures =>
+      'تعذّر البحث في التقاطاتك، لذا قد تكون هذه النتائج ناقصة.';
+
+  @override
+  String get searchIncompleteBoth =>
+      'تعذّر البحث في إجراءاتك أو التقاطاتك، لذا قد تكون هذه النتائج ناقصة.';
+
+  @override
+  String get searchMatchTitle => 'العنوان';
+
+  @override
+  String get searchMatchNextStep => 'الخطوة التالية';
+
+  @override
+  String get searchMatchStep => 'خطوة';
+
+  @override
+  String get searchMatchSummary => 'الملخّص';
+
+  @override
+  String get searchMatchFromCapture => 'من الالتقاط';
+
+  @override
+  String get studioSuggested => 'مقترح لآخر التقاط لديك';
+
+  @override
+  String get studioRecentlyUsed => 'استُخدم مؤخرًا';
+
+  @override
+  String get studioReady => 'جاهز';
+
+  @override
+  String get studioNotConnected => 'غير مرتبط';
+
+  @override
+  String get studioHeroTitle => 'ذكاء Action';
+
+  @override
+  String get studioConnectedBlurb =>
+      'افهم مستندًا، حسّن هدفًا، ابنِ خطة، اكتب مسودة رد، أو افحص ما تنظر إليه.';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return '$count أداة لفهم المستندات والتخطيط والكتابة. اربط حساب الذكاء الاصطناعي الخاص بك لاستخدامها — يحاسبك مزوّدك، ولا يحاسبك Action أبدًا.';
+  }
+
+  @override
+  String get studioConnectAi => 'ربط الذكاء الاصطناعي';
+
+  @override
+  String get studioHowItWorks => 'كيف يعمل';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count منها تعمل أصلًا دون أي من ذلك، على هذا الجهاز بالكامل.',
+      many: '$count منها تعمل أصلًا دون أي من ذلك، على هذا الجهاز بالكامل.',
+      few: '$count منها تعمل أصلًا دون أي من ذلك، على هذا الجهاز بالكامل.',
+      two: 'اثنتان منها تعملان أصلًا دون أي من ذلك، على هذا الجهاز بالكامل.',
+      one: 'واحدة منها تعمل أصلًا دون أي من ذلك، على هذا الجهاز بالكامل.',
+      zero: 'لا أداة منها تعمل دون ذلك.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'يعمل على هذا الجهاز';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title. $description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title. $description يعمل على هذا الجهاز.';
+  }
+
+  @override
+  String get categoryUnderstand => 'افهم';
+
+  @override
+  String get categoryUnderstandBlurb => 'استوعب ما لديك.';
+
+  @override
+  String get categoryPlan => 'خطّط';
+
+  @override
+  String get categoryPlanBlurb => 'حوّله إلى شيء يمكنك عمله.';
+
+  @override
+  String get categoryCreate => 'أنشئ';
+
+  @override
+  String get categoryCreateBlurb => 'اكتبه، حسّنه، ترجمه.';
+
+  @override
+  String get categoryExtract => 'استخرج';
+
+  @override
+  String get categoryExtractBlurb => 'استخرج التفاصيل المهمة.';
+
+  @override
+  String get categoryVerify => 'تحقّق';
+
+  @override
+  String get categoryVerifyBlurb => 'افحص ما تنظر إليه.';
+
+  @override
+  String get captureSheetTitle => 'التقاط شيء';
+
+  @override
+  String get captureSheetSubtitle =>
+      'سلّم Action أي شيء تفضّل ألا تقرأه كاملًا.';
+
+  @override
+  String get captureTakePhoto => 'التقاط صورة';
+
+  @override
+  String get captureTakePhotoSubtitle => 'رسالة أو فاتورة أو إشعار أمامك';
+
+  @override
+  String get captureChooseImage => 'اختيار صورة';
+
+  @override
+  String get captureChooseImageSubtitle =>
+      'لقطة شاشة أو صورة موجودة على هذا الجهاز';
+
+  @override
+  String get capturePasteText => 'لصق نص';
+
+  @override
+  String get capturePasteTextSubtitle => 'بريد إلكتروني أو رسالة أو إشعار';
+
+  @override
+  String get captureChoosePdf => 'اختيار ملف PDF';
+
+  @override
+  String get captureChoosePdfSubtitle =>
+      'كشف حساب أو رسالة أو نموذج لديك بالفعل';
+
+  @override
+  String get captureFootnote =>
+      'تبقى الالتقاطات على هذا الجهاز. ولا يُحلَّل شيء عبر الإنترنت حتى تطلب ذلك.';
+
+  @override
+  String get captureCouldNotOpen => 'تعذّر فتح ذلك. جرّب طريقة أخرى.';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title. $subtitle';
+  }
+
+  @override
+  String get stageReading => 'قيد القراءة';
+
+  @override
+  String get stageNeedsReview => 'يحتاج مراجعة';
+
+  @override
+  String get stageActionCreated => 'أُنشئ إجراء';
+
+  @override
+  String get stageNoText => 'لم يُعثر على نص';
+
+  @override
+  String get stageCouldNotBeRead => 'تعذّرت قراءته';
+
+  @override
+  String get stageReadingPreview => 'جارٍ قراءة النص…';
+
+  @override
+  String get stageFailedPreview => 'تعذّرت قراءة هذا على هذا الجهاز.';
+
+  @override
+  String get provenancePhoto => 'مُلتقط من صورة';
+
+  @override
+  String get provenanceImage => 'مُلتقط من صورة محفوظة';
+
+  @override
+  String get provenancePastedText => 'مُلتقط من نص ملصوق';
+
+  @override
+  String get provenanceDocument => 'أُضيف كمستند';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return 'أُنجز $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return 'متأخر · كان مستحقًا في $date';
+  }
+
+  @override
+  String get metaDueToday => 'مستحق اليوم';
+
+  @override
+  String metaDueOn(String date) {
+    return 'مستحق في $date';
+  }
+
+  @override
+  String get metaCreatedByYou => 'أنشأته أنت';
+
+  @override
+  String get categoryPayment => 'دفعة';
+
+  @override
+  String get categoryRenewal => 'تجديد';
+
+  @override
+  String get categoryAppointment => 'موعد';
+
+  @override
+  String get categoryBooking => 'حجز';
+
+  @override
+  String get categoryTravel => 'سفر';
+
+  @override
+  String get categoryDeadline => 'موعد نهائي';
+
+  @override
+  String get categoryResponse => 'يحتاج ردًا';
+
+  @override
+  String get categoryDelivery => 'تسليم';
+
+  @override
+  String get categoryDocument => 'مستند';
+
+  @override
+  String get categoryNoActionRequired => 'لا يلزم إجراء';
+
+  @override
+  String get categoryUnsure => 'غير مؤكد';
+
+  @override
+  String get errorEnterManually => 'أدخِله يدويًا';
 }

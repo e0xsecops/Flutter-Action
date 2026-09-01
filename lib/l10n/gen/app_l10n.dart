@@ -792,6 +792,738 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Version'**
   String get settingsVersion;
+
+  /// An ICU date skeleton, not prose. Day and abbreviated month. Reorder for the locale; every letter is a format token.
+  ///
+  /// In en, this message translates to:
+  /// **'d MMM'**
+  String get dateShortFormat;
+
+  /// ICU skeleton: day, abbreviated month, year.
+  ///
+  /// In en, this message translates to:
+  /// **'d MMM yyyy'**
+  String get dateLongFormat;
+
+  /// No description provided for @relativeJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get relativeJustNow;
+
+  /// No description provided for @relativeMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String relativeMinutes(int count);
+
+  /// No description provided for @relativeHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String relativeHours(int count);
+
+  /// No description provided for @relativeYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get relativeYesterday;
+
+  /// No description provided for @relativeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String relativeDays(int count);
+
+  /// No description provided for @libraryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get libraryTitle;
+
+  /// SAFETY: a data-flow claim about the Library's contents. Captures, Actions and Goals are local; it must not be softened into 'is kept private' or strengthened into a claim about everything in the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything Action is holding for you. All of it stays on this device.'**
+  String get librarySubtitle;
+
+  /// No description provided for @librarySegmentActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get librarySegmentActions;
+
+  /// No description provided for @librarySegmentCaptures.
+  ///
+  /// In en, this message translates to:
+  /// **'Captures'**
+  String get librarySegmentCaptures;
+
+  /// No description provided for @librarySegmentGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals'**
+  String get librarySegmentGoals;
+
+  /// No description provided for @librarySegmentDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get librarySegmentDone;
+
+  /// No description provided for @libraryNewGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'New goal'**
+  String get libraryNewGoal;
+
+  /// No description provided for @libraryNoGoalsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No goals yet'**
+  String get libraryNoGoalsTitle;
+
+  /// No description provided for @libraryNoGoalsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A goal is something you want to happen. Action can find what is missing, what blocks it, and what to do first.'**
+  String get libraryNoGoalsMessage;
+
+  /// No description provided for @libraryNoDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing completed yet'**
+  String get libraryNoDoneTitle;
+
+  /// No description provided for @libraryNoDoneMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions you finish will be kept here.'**
+  String get libraryNoDoneMessage;
+
+  /// No description provided for @libraryNoOpenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No open actions'**
+  String get libraryNoOpenTitle;
+
+  /// No description provided for @libraryNoOpenMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture something and Action will work out what needs doing.'**
+  String get libraryNoOpenMessage;
+
+  /// No description provided for @libraryNoCapturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing captured yet'**
+  String get libraryNoCapturesTitle;
+
+  /// SAFETY: the second sentence is the product's central promise — no analysis happens without an explicit request. It must not become 'nothing is shared' or 'analysis happens automatically'.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos, screenshots and text you add land here first. Nothing is analysed until you ask.'**
+  String get libraryNoCapturesMessage;
+
+  /// No description provided for @libraryGoalNoActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing made from it yet'**
+  String get libraryGoalNoActions;
+
+  /// No description provided for @libraryGoalActionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 action from this goal} other{{count} actions from this goal}}'**
+  String libraryGoalActionCount(int count);
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search actions and captures'**
+  String get searchHint;
+
+  /// No description provided for @searchClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get searchClear;
+
+  /// SAFETY: the strongest data-flow claim in the product and literally true — search runs against the local database and no query is logged or sent. Must stay an absolute statement about the query never leaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Searched on this device. Nothing you type here leaves it.'**
+  String get searchPrivacyNote;
+
+  /// No description provided for @searchYouCanSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'YOU CAN SEARCH'**
+  String get searchYouCanSearch;
+
+  /// No description provided for @searchFieldTitles.
+  ///
+  /// In en, this message translates to:
+  /// **'Titles'**
+  String get searchFieldTitles;
+
+  /// No description provided for @searchFieldTitlesExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Renew the car insurance'**
+  String get searchFieldTitlesExample;
+
+  /// No description provided for @searchFieldReferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference numbers'**
+  String get searchFieldReferences;
+
+  /// No description provided for @searchFieldReferencesExample.
+  ///
+  /// In en, this message translates to:
+  /// **'MTR-4471-08'**
+  String get searchFieldReferencesExample;
+
+  /// No description provided for @searchFieldOrganisations.
+  ///
+  /// In en, this message translates to:
+  /// **'Organisations'**
+  String get searchFieldOrganisations;
+
+  /// No description provided for @searchFieldOrganisationsExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Northgate'**
+  String get searchFieldOrganisationsExample;
+
+  /// No description provided for @searchFieldSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps inside an Action'**
+  String get searchFieldSteps;
+
+  /// No description provided for @searchFieldStepsExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload the form'**
+  String get searchFieldStepsExample;
+
+  /// No description provided for @searchFieldCaptureText.
+  ///
+  /// In en, this message translates to:
+  /// **'The text read from a capture'**
+  String get searchFieldCaptureText;
+
+  /// No description provided for @searchFieldCaptureTextExample.
+  ///
+  /// In en, this message translates to:
+  /// **'renewal notice'**
+  String get searchFieldCaptureTextExample;
+
+  /// No description provided for @searchNoMatchesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches for \"{query}\"'**
+  String searchNoMatchesTitle(String query);
+
+  /// No description provided for @searchNoMatchesTryFewer.
+  ///
+  /// In en, this message translates to:
+  /// **'Try fewer words, or a reference number exactly as it appears.'**
+  String get searchNoMatchesTryFewer;
+
+  /// No description provided for @searchNoMatchesClearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Try fewer words, or clear the filters.'**
+  String get searchNoMatchesClearFilters;
+
+  /// No description provided for @searchFilterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get searchFilterActive;
+
+  /// No description provided for @searchFilterCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get searchFilterCompleted;
+
+  /// No description provided for @searchFilterOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get searchFilterOverdue;
+
+  /// No description provided for @searchFilterThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get searchFilterThisWeek;
+
+  /// No description provided for @searchFilterCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get searchFilterCritical;
+
+  /// No description provided for @searchFilterCreatedByYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Created by you'**
+  String get searchFilterCreatedByYou;
+
+  /// No description provided for @searchFilterArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get searchFilterArchived;
+
+  /// No description provided for @searchFilterClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get searchFilterClear;
+
+  /// SAFETY: says the search was incomplete rather than letting an empty result read as 'nothing found'. The distinction must survive.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t search your actions, so these results may be incomplete.'**
+  String get searchIncompleteActions;
+
+  /// No description provided for @searchIncompleteCaptures.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t search your captures, so these results may be incomplete.'**
+  String get searchIncompleteCaptures;
+
+  /// No description provided for @searchIncompleteBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t search your actions or your captures, so these results may be incomplete.'**
+  String get searchIncompleteBoth;
+
+  /// No description provided for @searchMatchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get searchMatchTitle;
+
+  /// No description provided for @searchMatchNextStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Next step'**
+  String get searchMatchNextStep;
+
+  /// No description provided for @searchMatchStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step'**
+  String get searchMatchStep;
+
+  /// No description provided for @searchMatchSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get searchMatchSummary;
+
+  /// No description provided for @searchMatchFromCapture.
+  ///
+  /// In en, this message translates to:
+  /// **'From capture'**
+  String get searchMatchFromCapture;
+
+  /// No description provided for @studioSuggested.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested for your last capture'**
+  String get studioSuggested;
+
+  /// No description provided for @studioRecentlyUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently used'**
+  String get studioRecentlyUsed;
+
+  /// No description provided for @studioReady.
+  ///
+  /// In en, this message translates to:
+  /// **'READY'**
+  String get studioReady;
+
+  /// No description provided for @studioNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'NOT CONNECTED'**
+  String get studioNotConnected;
+
+  /// No description provided for @studioHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Action Intelligence'**
+  String get studioHeroTitle;
+
+  /// No description provided for @studioConnectedBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Understand a document, improve a goal, build a plan, draft a reply, or check what you are looking at.'**
+  String get studioConnectedBlurb;
+
+  /// SAFETY: the billing sentence is a commercial statement of fact — Action never bills for AI use, the user's own provider does. It must not become vague about who charges.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} tools for understanding documents, planning and writing. Connect your own AI account to use them — you are billed by your provider, never by Action.'**
+  String studioDisconnectedBlurb(int count);
+
+  /// No description provided for @studioConnectAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect AI'**
+  String get studioConnectAi;
+
+  /// No description provided for @studioHowItWorks.
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get studioHowItWorks;
+
+  /// SAFETY: 'entirely on this device' is a data-flow claim about the local tools. It is true of exactly the tools counted here.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 of them already works without any of that, entirely on this device.} other{{count} of them already work without any of that, entirely on this device.}}'**
+  String studioLocalCount(int count);
+
+  /// No description provided for @studioRunsOnThisDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs on this device'**
+  String get studioRunsOnThisDevice;
+
+  /// No description provided for @studioToolSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}. {description}'**
+  String studioToolSemantics(String title, String description);
+
+  /// No description provided for @studioToolSemanticsLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}. {description} Runs on this device.'**
+  String studioToolSemanticsLocal(String title, String description);
+
+  /// No description provided for @categoryUnderstand.
+  ///
+  /// In en, this message translates to:
+  /// **'Understand'**
+  String get categoryUnderstand;
+
+  /// No description provided for @categoryUnderstandBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sense of what you have.'**
+  String get categoryUnderstandBlurb;
+
+  /// No description provided for @categoryPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get categoryPlan;
+
+  /// No description provided for @categoryPlanBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn it into something you can do.'**
+  String get categoryPlanBlurb;
+
+  /// No description provided for @categoryCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get categoryCreate;
+
+  /// No description provided for @categoryCreateBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Write it, improve it, translate it.'**
+  String get categoryCreateBlurb;
+
+  /// No description provided for @categoryExtract.
+  ///
+  /// In en, this message translates to:
+  /// **'Extract'**
+  String get categoryExtract;
+
+  /// No description provided for @categoryExtractBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull out the details that matter.'**
+  String get categoryExtractBlurb;
+
+  /// No description provided for @categoryVerify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get categoryVerify;
+
+  /// No description provided for @categoryVerifyBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'Check what you are looking at.'**
+  String get categoryVerifyBlurb;
+
+  /// No description provided for @captureSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Capture something'**
+  String get captureSheetTitle;
+
+  /// No description provided for @captureSheetSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand Action anything you would rather not read through.'**
+  String get captureSheetSubtitle;
+
+  /// No description provided for @captureTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get captureTakePhoto;
+
+  /// No description provided for @captureTakePhotoSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A letter, bill or notice in front of you'**
+  String get captureTakePhotoSubtitle;
+
+  /// No description provided for @captureChooseImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an image'**
+  String get captureChooseImage;
+
+  /// No description provided for @captureChooseImageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A screenshot or photo already on this device'**
+  String get captureChooseImageSubtitle;
+
+  /// No description provided for @capturePasteText.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste text'**
+  String get capturePasteText;
+
+  /// No description provided for @capturePasteTextSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'An email, message or notice'**
+  String get capturePasteTextSubtitle;
+
+  /// No description provided for @captureChoosePdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a PDF'**
+  String get captureChoosePdf;
+
+  /// No description provided for @captureChoosePdfSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A statement, letter or form you already have'**
+  String get captureChoosePdfSubtitle;
+
+  /// SAFETY: two separate claims — captures are stored locally, and no network analysis happens without an explicit request. Both must survive as absolutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Captures stay on this device. Nothing is analysed online until you ask for it.'**
+  String get captureFootnote;
+
+  /// No description provided for @captureCouldNotOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open that. Try another way.'**
+  String get captureCouldNotOpen;
+
+  /// No description provided for @captureOptionSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}. {subtitle}'**
+  String captureOptionSemantics(String title, String subtitle);
+
+  /// No description provided for @stageReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get stageReading;
+
+  /// No description provided for @stageNeedsReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs review'**
+  String get stageNeedsReview;
+
+  /// No description provided for @stageActionCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Action created'**
+  String get stageActionCreated;
+
+  /// No description provided for @stageNoText.
+  ///
+  /// In en, this message translates to:
+  /// **'No text found'**
+  String get stageNoText;
+
+  /// No description provided for @stageCouldNotBeRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t be read'**
+  String get stageCouldNotBeRead;
+
+  /// No description provided for @stageReadingPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the text…'**
+  String get stageReadingPreview;
+
+  /// No description provided for @stageFailedPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'This couldn\'t be read on this device.'**
+  String get stageFailedPreview;
+
+  /// No description provided for @provenancePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Captured from photo'**
+  String get provenancePhoto;
+
+  /// No description provided for @provenanceImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Captured from image'**
+  String get provenanceImage;
+
+  /// No description provided for @provenancePastedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Captured from pasted text'**
+  String get provenancePastedText;
+
+  /// No description provided for @provenanceDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Added as a document'**
+  String get provenanceDocument;
+
+  /// No description provided for @sourceCardMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{provenance} · {when}'**
+  String sourceCardMeta(String provenance, String when);
+
+  /// No description provided for @metaDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done {when}'**
+  String metaDone(String when);
+
+  /// No description provided for @metaOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue · was due {date}'**
+  String metaOverdue(String date);
+
+  /// No description provided for @metaDueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Due today'**
+  String get metaDueToday;
+
+  /// No description provided for @metaDueOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Due {date}'**
+  String metaDueOn(String date);
+
+  /// No description provided for @metaCreatedByYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Created by you'**
+  String get metaCreatedByYou;
+
+  /// No description provided for @categoryPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get categoryPayment;
+
+  /// No description provided for @categoryRenewal.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal'**
+  String get categoryRenewal;
+
+  /// No description provided for @categoryAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment'**
+  String get categoryAppointment;
+
+  /// No description provided for @categoryBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking'**
+  String get categoryBooking;
+
+  /// No description provided for @categoryTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get categoryTravel;
+
+  /// No description provided for @categoryDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Deadline'**
+  String get categoryDeadline;
+
+  /// No description provided for @categoryResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply needed'**
+  String get categoryResponse;
+
+  /// No description provided for @categoryDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get categoryDelivery;
+
+  /// No description provided for @categoryDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Document'**
+  String get categoryDocument;
+
+  /// No description provided for @categoryNoActionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'No action needed'**
+  String get categoryNoActionRequired;
+
+  /// SAFETY: the category Action assigns when it could not tell. Must stay an admission of uncertainty, never a neutral 'other' or 'general'.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure'**
+  String get categoryUnsure;
+
+  /// No description provided for @errorEnterManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter it manually'**
+  String get errorEnterManually;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

@@ -34,6 +34,8 @@ import '../../../core/analytics/firebase_app_analytics.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../../design/tokens/typography.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../application/action_providers.dart';
 import '../application/action_triage.dart';
 import '../application/triage_labels.dart';
@@ -282,13 +284,16 @@ class ActionMetaLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final now = DateTime.now();
 
     final parts = <InlineSpan>[];
     final due = item.dueAt;
     if (item.status == ActionStatus.completed) {
       parts.add(TextSpan(
-        text: 'Done ${relativeTime(item.completedAt ?? item.updatedAt)}',
+        text: l10n.metaDone(
+          relativeTime(l10n, item.completedAt ?? item.updatedAt),
+        ),
       ));
     } else if (due != null && !suppressDue) {
       final startOfToday = DateTime(now.year, now.month, now.day);
@@ -296,10 +301,20 @@ class ActionMetaLine extends StatelessWidget {
       final dueToday = !overdue &&
           due.wallClock.isBefore(startOfToday.add(const Duration(days: 1)));
       final label = overdue
-          ? 'Overdue · was due ${DateFormat('d MMM').format(due.wallClock)}'
+          ? l10n.metaOverdue(
+              DateFormat(l10n.dateShortFormat, l10n.localeName)
+                  .format(due.wallClock),
+            )
           : dueToday
-              ? 'Due today'
-              : 'Due ${DateFormat(due.wallClock.year == now.year ? 'd MMM' : 'd MMM yyyy').format(due.wallClock)}';
+              ? l10n.metaDueToday
+              : l10n.metaDueOn(
+                  DateFormat(
+                    due.wallClock.year == now.year
+                        ? l10n.dateShortFormat
+                        : l10n.dateLongFormat,
+                    l10n.localeName,
+                  ).format(due.wallClock),
+                );
       parts.add(TextSpan(
         text: label,
         style: overdue || dueToday
@@ -317,8 +332,8 @@ class ActionMetaLine extends StatelessWidget {
       // business claiming about something the user typed themselves.
       parts.add(TextSpan(
         text: item.origin == ActionOrigin.manual
-            ? 'Created by you'
-            : item.category.label,
+            ? l10n.metaCreatedByYou
+            : item.category.labelIn(l10n),
       ));
     }
 
@@ -332,12 +347,16 @@ class ActionMetaLine extends StatelessWidget {
 }
 
 /// "Just now", "3h ago", "Yesterday", "14 Aug".
-String relativeTime(DateTime when) {
+///
+/// Takes the bundle rather than a `BuildContext` so it stays callable from
+/// anywhere that already has one, and so the date at the end is formatted for
+/// the same locale the words before it are written in.
+String relativeTime(AppL10n l10n, DateTime when) {
   final diff = DateTime.now().difference(when);
-  if (diff.inMinutes < 1) return 'Just now';
-  if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-  if (diff.inHours < 24) return '${diff.inHours}h ago';
-  if (diff.inDays == 1) return 'Yesterday';
-  if (diff.inDays < 7) return '${diff.inDays}d ago';
-  return DateFormat('d MMM').format(when);
+  if (diff.inMinutes < 1) return l10n.relativeJustNow;
+  if (diff.inMinutes < 60) return l10n.relativeMinutes(diff.inMinutes);
+  if (diff.inHours < 24) return l10n.relativeHours(diff.inHours);
+  if (diff.inDays == 1) return l10n.relativeYesterday;
+  if (diff.inDays < 7) return l10n.relativeDays(diff.inDays);
+  return DateFormat(l10n.dateShortFormat, l10n.localeName).format(when);
 }

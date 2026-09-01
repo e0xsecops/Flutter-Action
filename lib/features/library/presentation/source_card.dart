@@ -13,20 +13,24 @@ import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../actions/presentation/action_card.dart' show relativeTime;
 import '../../capture/domain/source_item.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/casing.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 /// Where a capture stands, as the user would describe it.
 ///
 /// Derived rather than stored: every input is already on the SourceItem or in
 /// the Action list, so there is no new state to keep in sync and no migration.
+/// The label lives in `lib/l10n/enum_labels.dart`; only the glyph is a
+/// property of the stage itself.
 enum CaptureStage {
-  reading('Reading', Icons.hourglass_empty_rounded),
-  needsReview('Needs review', Icons.rate_review_outlined),
-  actioned('Action created', Icons.check_circle_outline_rounded),
-  noText('No text found', Icons.text_fields_rounded),
-  failed("Couldn't be read", Icons.error_outline_rounded);
+  reading(Icons.hourglass_empty_rounded),
+  needsReview(Icons.rate_review_outlined),
+  actioned(Icons.check_circle_outline_rounded),
+  noText(Icons.text_fields_rounded),
+  failed(Icons.error_outline_rounded);
 
-  const CaptureStage(this.label, this.icon);
-  final String label;
+  const CaptureStage(this.icon);
   final IconData icon;
 }
 
@@ -60,6 +64,7 @@ class SourceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final stage = stageOf(source, hasAction: hasAction);
 
     final tone = switch (stage) {
@@ -76,10 +81,9 @@ class SourceCard extends StatelessWidget {
     // reason is a dead end, and the reason is the only thing that tells someone
     // whether to retry or type it in themselves.
     final preview = switch (stage) {
-      CaptureStage.failed =>
-        source.failureReason ?? "This couldn't be read on this device.",
-      CaptureStage.reading => 'Reading the text…',
-      CaptureStage.noText => 'No text found',
+      CaptureStage.failed => source.failureReason ?? l10n.stageFailedPreview,
+      CaptureStage.reading => l10n.stageReadingPreview,
+      CaptureStage.noText => l10n.stageNoText,
       _ => source.hasText
           ? source.analysisText.replaceAll(RegExp(r'\s+'), ' ').trim()
           : null,
@@ -112,7 +116,10 @@ class SourceCard extends StatelessWidget {
                         const SizedBox(width: Space.xs),
                         Flexible(
                           child: Text(
-                            stage.label.toUpperCase(),
+                            eyebrowCase(
+                              stage.labelIn(l10n),
+                              l10n.localeName,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: text.labelSmall?.copyWith(
@@ -129,7 +136,7 @@ class SourceCard extends StatelessWidget {
                       // The capture's own words where it has any. A preview of
                       // the actual notice tells the user which one this is;
                       // "Screenshot" does not.
-                      preview ?? source.type.provenanceLabel,
+                      preview ?? source.type.provenanceIn(l10n),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: text.bodyMedium?.copyWith(
@@ -140,8 +147,10 @@ class SourceCard extends StatelessWidget {
                     ),
                     const SizedBox(height: Space.xs),
                     Text(
-                      '${source.type.provenanceLabel} · '
-                      '${relativeTime(source.capturedAt)}',
+                      l10n.sourceCardMeta(
+                        source.type.provenanceIn(l10n),
+                        relativeTime(l10n, source.capturedAt),
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: text.bodySmall,

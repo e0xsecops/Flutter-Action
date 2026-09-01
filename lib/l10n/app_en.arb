@@ -260,5 +260,263 @@
   },
   "settingsHelp": "Help",
   "settingsHelpDescription": "How Action works, and what it will not do.",
-  "settingsVersion": "Version"
+  "settingsVersion": "Version",
+  "dateShortFormat": "d MMM",
+  "@dateShortFormat": {
+    "description": "An ICU date skeleton, not prose. Day and abbreviated month. Reorder for the locale; every letter is a format token."
+  },
+  "dateLongFormat": "d MMM yyyy",
+  "@dateLongFormat": {
+    "description": "ICU skeleton: day, abbreviated month, year."
+  },
+  "relativeJustNow": "Just now",
+  "relativeMinutes": "{count}m ago",
+  "@relativeMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHours": "{count}h ago",
+  "@relativeHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYesterday": "Yesterday",
+  "relativeDays": "{count}d ago",
+  "@relativeDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryTitle": "Library",
+  "librarySubtitle": "Everything Action is holding for you. All of it stays on this device.",
+  "@librarySubtitle": {
+    "description": "SAFETY: a data-flow claim about the Library's contents. Captures, Actions and Goals are local; it must not be softened into 'is kept private' or strengthened into a claim about everything in the app."
+  },
+  "librarySegmentActions": "Actions",
+  "librarySegmentCaptures": "Captures",
+  "librarySegmentGoals": "Goals",
+  "librarySegmentDone": "Done",
+  "libraryNewGoal": "New goal",
+  "libraryNoGoalsTitle": "No goals yet",
+  "libraryNoGoalsMessage": "A goal is something you want to happen. Action can find what is missing, what blocks it, and what to do first.",
+  "libraryNoDoneTitle": "Nothing completed yet",
+  "libraryNoDoneMessage": "Actions you finish will be kept here.",
+  "libraryNoOpenTitle": "No open actions",
+  "libraryNoOpenMessage": "Capture something and Action will work out what needs doing.",
+  "libraryNoCapturesTitle": "Nothing captured yet",
+  "libraryNoCapturesMessage": "Photos, screenshots and text you add land here first. Nothing is analysed until you ask.",
+  "@libraryNoCapturesMessage": {
+    "description": "SAFETY: the second sentence is the product's central promise — no analysis happens without an explicit request. It must not become 'nothing is shared' or 'analysis happens automatically'."
+  },
+  "libraryGoalNoActions": "Nothing made from it yet",
+  "libraryGoalActionCount": "{count, plural, =1{1 action from this goal} other{{count} actions from this goal}}",
+  "@libraryGoalActionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchHint": "Search actions and captures",
+  "searchClear": "Clear",
+  "searchPrivacyNote": "Searched on this device. Nothing you type here leaves it.",
+  "@searchPrivacyNote": {
+    "description": "SAFETY: the strongest data-flow claim in the product and literally true — search runs against the local database and no query is logged or sent. Must stay an absolute statement about the query never leaving."
+  },
+  "searchYouCanSearch": "YOU CAN SEARCH",
+  "searchFieldTitles": "Titles",
+  "searchFieldTitlesExample": "Renew the car insurance",
+  "searchFieldReferences": "Reference numbers",
+  "searchFieldReferencesExample": "MTR-4471-08",
+  "searchFieldOrganisations": "Organisations",
+  "searchFieldOrganisationsExample": "Northgate",
+  "searchFieldSteps": "Steps inside an Action",
+  "searchFieldStepsExample": "Upload the form",
+  "searchFieldCaptureText": "The text read from a capture",
+  "searchFieldCaptureTextExample": "renewal notice",
+  "searchNoMatchesTitle": "No matches for \"{query}\"",
+  "@searchNoMatchesTitle": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchNoMatchesTryFewer": "Try fewer words, or a reference number exactly as it appears.",
+  "searchNoMatchesClearFilters": "Try fewer words, or clear the filters.",
+  "searchFilterActive": "Active",
+  "searchFilterCompleted": "Completed",
+  "searchFilterOverdue": "Overdue",
+  "searchFilterThisWeek": "This week",
+  "searchFilterCritical": "Critical",
+  "searchFilterCreatedByYou": "Created by you",
+  "searchFilterArchived": "Archived",
+  "searchFilterClear": "Clear filters",
+  "searchIncompleteActions": "Couldn't search your actions, so these results may be incomplete.",
+  "@searchIncompleteActions": {
+    "description": "SAFETY: says the search was incomplete rather than letting an empty result read as 'nothing found'. The distinction must survive."
+  },
+  "searchIncompleteCaptures": "Couldn't search your captures, so these results may be incomplete.",
+  "searchIncompleteBoth": "Couldn't search your actions or your captures, so these results may be incomplete.",
+  "searchMatchTitle": "Title",
+  "searchMatchNextStep": "Next step",
+  "searchMatchStep": "Step",
+  "searchMatchSummary": "Summary",
+  "searchMatchFromCapture": "From capture",
+  "studioSuggested": "Suggested for your last capture",
+  "studioRecentlyUsed": "Recently used",
+  "studioReady": "READY",
+  "studioNotConnected": "NOT CONNECTED",
+  "studioHeroTitle": "Action Intelligence",
+  "studioConnectedBlurb": "Understand a document, improve a goal, build a plan, draft a reply, or check what you are looking at.",
+  "studioDisconnectedBlurb": "{count} tools for understanding documents, planning and writing. Connect your own AI account to use them — you are billed by your provider, never by Action.",
+  "@studioDisconnectedBlurb": {
+    "description": "SAFETY: the billing sentence is a commercial statement of fact — Action never bills for AI use, the user's own provider does. It must not become vague about who charges.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "studioConnectAi": "Connect AI",
+  "studioHowItWorks": "How it works",
+  "studioLocalCount": "{count, plural, =1{1 of them already works without any of that, entirely on this device.} other{{count} of them already work without any of that, entirely on this device.}}",
+  "@studioLocalCount": {
+    "description": "SAFETY: 'entirely on this device' is a data-flow claim about the local tools. It is true of exactly the tools counted here.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "studioRunsOnThisDevice": "Runs on this device",
+  "studioToolSemantics": "{title}. {description}",
+  "@studioToolSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "studioToolSemanticsLocal": "{title}. {description} Runs on this device.",
+  "@studioToolSemanticsLocal": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryUnderstand": "Understand",
+  "categoryUnderstandBlurb": "Make sense of what you have.",
+  "categoryPlan": "Plan",
+  "categoryPlanBlurb": "Turn it into something you can do.",
+  "categoryCreate": "Create",
+  "categoryCreateBlurb": "Write it, improve it, translate it.",
+  "categoryExtract": "Extract",
+  "categoryExtractBlurb": "Pull out the details that matter.",
+  "categoryVerify": "Verify",
+  "categoryVerifyBlurb": "Check what you are looking at.",
+  "captureSheetTitle": "Capture something",
+  "captureSheetSubtitle": "Hand Action anything you would rather not read through.",
+  "captureTakePhoto": "Take a photo",
+  "captureTakePhotoSubtitle": "A letter, bill or notice in front of you",
+  "captureChooseImage": "Choose an image",
+  "captureChooseImageSubtitle": "A screenshot or photo already on this device",
+  "capturePasteText": "Paste text",
+  "capturePasteTextSubtitle": "An email, message or notice",
+  "captureChoosePdf": "Choose a PDF",
+  "captureChoosePdfSubtitle": "A statement, letter or form you already have",
+  "captureFootnote": "Captures stay on this device. Nothing is analysed online until you ask for it.",
+  "@captureFootnote": {
+    "description": "SAFETY: two separate claims — captures are stored locally, and no network analysis happens without an explicit request. Both must survive as absolutes."
+  },
+  "captureCouldNotOpen": "Couldn't open that. Try another way.",
+  "captureOptionSemantics": "{title}. {subtitle}",
+  "@captureOptionSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "subtitle": {
+        "type": "String"
+      }
+    }
+  },
+  "stageReading": "Reading",
+  "stageNeedsReview": "Needs review",
+  "stageActionCreated": "Action created",
+  "stageNoText": "No text found",
+  "stageCouldNotBeRead": "Couldn't be read",
+  "stageReadingPreview": "Reading the text…",
+  "stageFailedPreview": "This couldn't be read on this device.",
+  "provenancePhoto": "Captured from photo",
+  "provenanceImage": "Captured from image",
+  "provenancePastedText": "Captured from pasted text",
+  "provenanceDocument": "Added as a document",
+  "sourceCardMeta": "{provenance} · {when}",
+  "@sourceCardMeta": {
+    "placeholders": {
+      "provenance": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "metaDone": "Done {when}",
+  "@metaDone": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "metaOverdue": "Overdue · was due {date}",
+  "@metaOverdue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "metaDueToday": "Due today",
+  "metaDueOn": "Due {date}",
+  "@metaDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "metaCreatedByYou": "Created by you",
+  "categoryPayment": "Payment",
+  "categoryRenewal": "Renewal",
+  "categoryAppointment": "Appointment",
+  "categoryBooking": "Booking",
+  "categoryTravel": "Travel",
+  "categoryDeadline": "Deadline",
+  "categoryResponse": "Reply needed",
+  "categoryDelivery": "Delivery",
+  "categoryDocument": "Document",
+  "categoryNoActionRequired": "No action needed",
+  "categoryUnsure": "Not sure",
+  "@categoryUnsure": {
+    "description": "SAFETY: the category Action assigns when it could not tell. Must stay an admission of uncertainty, never a neutral 'other' or 'general'."
+  },
+  "errorEnterManually": "Enter it manually"
 }

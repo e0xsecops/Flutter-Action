@@ -12,6 +12,8 @@ import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../../design/tokens/typography.dart';
 import '../../../shared/widgets/empty_view.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../../actions/domain/action_item.dart';
 import '../../extraction/domain/extraction_schema.dart';
 import '../application/search_controller.dart';
@@ -121,18 +123,42 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 class _SearchZeroState extends StatelessWidget {
   const _SearchZeroState();
 
-  static const _fields = [
-    (Icons.title_rounded, 'Titles', 'Renew the car insurance'),
-    (Icons.tag_rounded, 'Reference numbers', 'MTR-4471-08'),
-    (Icons.business_outlined, 'Organisations', 'Northgate'),
-    (Icons.checklist_rounded, 'Steps inside an Action', 'Upload the form'),
-    (Icons.notes_rounded, 'The text read from a capture', 'renewal notice'),
-  ];
+  /// Resolved at build rather than held `const`: the examples are prose and
+  /// the field names are product vocabulary, and both have to arrive in the
+  /// language the rest of the screen is written in.
+  static List<(IconData, String, String)> _fields(AppL10n l10n) => [
+        (
+          Icons.title_rounded,
+          l10n.searchFieldTitles,
+          l10n.searchFieldTitlesExample
+        ),
+        (
+          Icons.tag_rounded,
+          l10n.searchFieldReferences,
+          l10n.searchFieldReferencesExample
+        ),
+        (
+          Icons.business_outlined,
+          l10n.searchFieldOrganisations,
+          l10n.searchFieldOrganisationsExample
+        ),
+        (
+          Icons.checklist_rounded,
+          l10n.searchFieldSteps,
+          l10n.searchFieldStepsExample
+        ),
+        (
+          Icons.notes_rounded,
+          l10n.searchFieldCaptureText,
+          l10n.searchFieldCaptureTextExample
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,7 +175,7 @@ class _SearchZeroState extends StatelessWidget {
             const SizedBox(width: Space.sm),
             Expanded(
               child: Text(
-                'Searched on this device. Nothing you type here leaves it.',
+                l10n.searchPrivacyNote,
                 style: text.bodyMedium?.copyWith(
                   color: colors.confidenceConfirmed,
                 ),
@@ -159,7 +185,7 @@ class _SearchZeroState extends StatelessWidget {
         ),
         const SizedBox(height: Space.xxl),
         Text(
-          'YOU CAN SEARCH',
+          l10n.searchYouCanSearch,
           style: text.labelSmall?.copyWith(
             color: colors.textTertiary,
             letterSpacing: 1.1,
@@ -167,7 +193,7 @@ class _SearchZeroState extends StatelessWidget {
           ),
         ),
         const SizedBox(height: Space.md),
-        for (final (icon, label, example) in _fields)
+        for (final (icon, label, example) in _fields(l10n))
           Padding(
             padding: const EdgeInsets.only(bottom: Space.md),
             child: Row(
@@ -251,7 +277,7 @@ class _SearchField extends StatelessWidget {
               onChanged: onChanged,
               onSubmitted: onSubmitted,
               decoration: InputDecoration(
-                hintText: 'Search actions and captures',
+                hintText: AppL10n.of(context).searchHint,
                 border: InputBorder.none,
                 isDense: true,
                 suffixIcon: ValueListenableBuilder<TextEditingValue>(
@@ -259,7 +285,7 @@ class _SearchField extends StatelessWidget {
                   builder: (context, value, _) => value.text.isEmpty
                       ? const SizedBox.shrink()
                       : IconButton(
-                          tooltip: 'Clear',
+                          tooltip: AppL10n.of(context).searchClear,
                           icon: Icon(Icons.close, color: colors.textTertiary),
                           onPressed: onClear,
                         ),
@@ -282,6 +308,7 @@ class _FilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return SizedBox(
       height: 44,
       child: ListView(
@@ -289,46 +316,46 @@ class _FilterBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: Space.page),
         children: [
           _Chip(
-            label: 'Active',
+            label: l10n.searchFilterActive,
             selected: filters.statuses.contains(StatusFilter.active),
             onTap: () => onChanged(filters.toggleStatus(StatusFilter.active)),
           ),
           _Chip(
-            label: 'Completed',
+            label: l10n.searchFilterCompleted,
             selected: filters.statuses.contains(StatusFilter.completed),
             onTap: () =>
                 onChanged(filters.toggleStatus(StatusFilter.completed)),
           ),
           _Chip(
-            label: 'Overdue',
+            label: l10n.searchFilterOverdue,
             selected: filters.dues.contains(DueFilter.overdue),
             onTap: () => onChanged(filters.toggleDue(DueFilter.overdue)),
           ),
           _Chip(
-            label: 'This week',
+            label: l10n.searchFilterThisWeek,
             selected: filters.dues.contains(DueFilter.thisWeek),
             onTap: () => onChanged(filters.toggleDue(DueFilter.thisWeek)),
           ),
           _Chip(
-            label: 'Critical',
+            label: l10n.searchFilterCritical,
             selected: filters.urgencies.contains(ActionUrgency.critical),
             onTap: () =>
                 onChanged(filters.toggleUrgency(ActionUrgency.critical)),
           ),
           _Chip(
-            label: 'Created by you',
+            label: l10n.searchFilterCreatedByYou,
             selected: filters.origins.contains(OriginFilter.manual),
             onTap: () => onChanged(filters.toggleOrigin(OriginFilter.manual)),
           ),
           // Archived is opt-in and last: it is the least expected result.
           _Chip(
-            label: 'Archived',
+            label: l10n.searchFilterArchived,
             selected: filters.statuses.contains(StatusFilter.archived),
             onTap: () => onChanged(filters.toggleStatus(StatusFilter.archived)),
           ),
           if (!filters.isEmpty)
             _Chip(
-              label: 'Clear filters',
+              label: l10n.searchFilterClear,
               selected: false,
               onTap: () => onChanged(filters.cleared()),
             ),
@@ -419,10 +446,10 @@ class _Results extends StatelessWidget {
         ),
         child: EmptyView(
           icon: Icons.search_off,
-          title: 'No matches for "${state.query.trimmed}"',
+          title: AppL10n.of(context).searchNoMatchesTitle(state.query.trimmed),
           message: state.query.filters.isEmpty
-              ? 'Try fewer words, or a reference number exactly as it appears.'
-              : 'Try fewer words, or clear the filters.',
+              ? AppL10n.of(context).searchNoMatchesTryFewer
+              : AppL10n.of(context).searchNoMatchesClearFilters,
         ),
       );
     }
@@ -435,7 +462,7 @@ class _Results extends StatelessWidget {
         if (results.actions.isNotEmpty) ...[
           SliverToBoxAdapter(
             child: SectionHeader(
-              title: 'Actions',
+              title: AppL10n.of(context).librarySegmentActions,
               count: results.actions.length,
             ),
           ),
@@ -451,7 +478,7 @@ class _Results extends StatelessWidget {
         if (results.sources.isNotEmpty) ...[
           SliverToBoxAdapter(
             child: SectionHeader(
-              title: 'Captures',
+              title: AppL10n.of(context).librarySegmentCaptures,
               count: results.sources.length,
             ),
           ),
@@ -483,11 +510,17 @@ class _FailureNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
-    final what = results.actionsFailed && results.sourcesFailed
-        ? 'your actions or your captures'
+    final l10n = AppL10n.of(context);
+    // Three whole sentences rather than one sentence with a noun phrase
+    // slotted in. The phrase carries a possessive and a conjunction, both of
+    // which several of the twenty languages inflect against the rest of the
+    // clause — building it by substitution produces grammar no reviewer can
+    // fix without changing the code.
+    final notice = results.actionsFailed && results.sourcesFailed
+        ? l10n.searchIncompleteBoth
         : results.actionsFailed
-            ? 'your actions'
-            : 'your captures';
+            ? l10n.searchIncompleteActions
+            : l10n.searchIncompleteCaptures;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.page, Space.md, Space.page, 0),
@@ -497,7 +530,7 @@ class _FailureNotice extends StatelessWidget {
           const SizedBox(width: Space.sm),
           Expanded(
             child: Text(
-              "Couldn't search $what, so these results may be incomplete.",
+              notice,
               style: text.bodySmall?.copyWith(color: colors.textSecondary),
             ),
           ),
@@ -590,7 +623,12 @@ class _ActionResultRow extends StatelessWidget {
               if (action.dueAt != null) ...[
                 const SizedBox(height: Space.xxs),
                 Text(
-                  'Due ${DateFormat('d MMM yyyy').format(action.dueAt!.wallClock)}',
+                  AppL10n.of(context).metaDueOn(
+                    DateFormat(
+                      AppL10n.of(context).dateLongFormat,
+                      AppL10n.of(context).localeName,
+                    ).format(action.dueAt!.wallClock),
+                  ),
                   style: text.bodySmall?.copyWith(
                     color: colors.textTertiary,
                     fontFeatures: AppText.numeric,
@@ -638,12 +676,15 @@ class _SourceResultRow extends StatelessWidget {
                   const SizedBox(width: Space.sm),
                   Expanded(
                     child: Text(
-                      source.type.provenanceLabel,
+                      source.type.provenanceIn(AppL10n.of(context)),
                       style: text.titleSmall,
                     ),
                   ),
                   Text(
-                    DateFormat('d MMM').format(source.capturedAt.toLocal()),
+                    DateFormat(
+                      AppL10n.of(context).dateShortFormat,
+                      AppL10n.of(context).localeName,
+                    ).format(source.capturedAt.toLocal()),
                     style: text.bodySmall?.copyWith(color: colors.textTertiary),
                   ),
                 ],

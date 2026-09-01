@@ -415,4 +415,427 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get settingsVersion => 'Version';
+
+  @override
+  String get dateShortFormat => 'd MMM';
+
+  @override
+  String get dateLongFormat => 'd MMM yyyy';
+
+  @override
+  String get relativeJustNow => 'Just now';
+
+  @override
+  String relativeMinutes(int count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String get relativeYesterday => 'Yesterday';
+
+  @override
+  String relativeDays(int count) {
+    return '${count}d ago';
+  }
+
+  @override
+  String get libraryTitle => 'Library';
+
+  @override
+  String get librarySubtitle =>
+      'Everything Action is holding for you. All of it stays on this device.';
+
+  @override
+  String get librarySegmentActions => 'Actions';
+
+  @override
+  String get librarySegmentCaptures => 'Captures';
+
+  @override
+  String get librarySegmentGoals => 'Goals';
+
+  @override
+  String get librarySegmentDone => 'Done';
+
+  @override
+  String get libraryNewGoal => 'New goal';
+
+  @override
+  String get libraryNoGoalsTitle => 'No goals yet';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      'A goal is something you want to happen. Action can find what is missing, what blocks it, and what to do first.';
+
+  @override
+  String get libraryNoDoneTitle => 'Nothing completed yet';
+
+  @override
+  String get libraryNoDoneMessage => 'Actions you finish will be kept here.';
+
+  @override
+  String get libraryNoOpenTitle => 'No open actions';
+
+  @override
+  String get libraryNoOpenMessage =>
+      'Capture something and Action will work out what needs doing.';
+
+  @override
+  String get libraryNoCapturesTitle => 'Nothing captured yet';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      'Photos, screenshots and text you add land here first. Nothing is analysed until you ask.';
+
+  @override
+  String get libraryGoalNoActions => 'Nothing made from it yet';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count actions from this goal',
+      one: '1 action from this goal',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'Search actions and captures';
+
+  @override
+  String get searchClear => 'Clear';
+
+  @override
+  String get searchPrivacyNote =>
+      'Searched on this device. Nothing you type here leaves it.';
+
+  @override
+  String get searchYouCanSearch => 'YOU CAN SEARCH';
+
+  @override
+  String get searchFieldTitles => 'Titles';
+
+  @override
+  String get searchFieldTitlesExample => 'Renew the car insurance';
+
+  @override
+  String get searchFieldReferences => 'Reference numbers';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => 'Organisations';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'Steps inside an Action';
+
+  @override
+  String get searchFieldStepsExample => 'Upload the form';
+
+  @override
+  String get searchFieldCaptureText => 'The text read from a capture';
+
+  @override
+  String get searchFieldCaptureTextExample => 'renewal notice';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return 'No matches for \"$query\"';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer =>
+      'Try fewer words, or a reference number exactly as it appears.';
+
+  @override
+  String get searchNoMatchesClearFilters =>
+      'Try fewer words, or clear the filters.';
+
+  @override
+  String get searchFilterActive => 'Active';
+
+  @override
+  String get searchFilterCompleted => 'Completed';
+
+  @override
+  String get searchFilterOverdue => 'Overdue';
+
+  @override
+  String get searchFilterThisWeek => 'This week';
+
+  @override
+  String get searchFilterCritical => 'Critical';
+
+  @override
+  String get searchFilterCreatedByYou => 'Created by you';
+
+  @override
+  String get searchFilterArchived => 'Archived';
+
+  @override
+  String get searchFilterClear => 'Clear filters';
+
+  @override
+  String get searchIncompleteActions =>
+      'Couldn\'t search your actions, so these results may be incomplete.';
+
+  @override
+  String get searchIncompleteCaptures =>
+      'Couldn\'t search your captures, so these results may be incomplete.';
+
+  @override
+  String get searchIncompleteBoth =>
+      'Couldn\'t search your actions or your captures, so these results may be incomplete.';
+
+  @override
+  String get searchMatchTitle => 'Title';
+
+  @override
+  String get searchMatchNextStep => 'Next step';
+
+  @override
+  String get searchMatchStep => 'Step';
+
+  @override
+  String get searchMatchSummary => 'Summary';
+
+  @override
+  String get searchMatchFromCapture => 'From capture';
+
+  @override
+  String get studioSuggested => 'Suggested for your last capture';
+
+  @override
+  String get studioRecentlyUsed => 'Recently used';
+
+  @override
+  String get studioReady => 'READY';
+
+  @override
+  String get studioNotConnected => 'NOT CONNECTED';
+
+  @override
+  String get studioHeroTitle => 'Action Intelligence';
+
+  @override
+  String get studioConnectedBlurb =>
+      'Understand a document, improve a goal, build a plan, draft a reply, or check what you are looking at.';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return '$count tools for understanding documents, planning and writing. Connect your own AI account to use them — you are billed by your provider, never by Action.';
+  }
+
+  @override
+  String get studioConnectAi => 'Connect AI';
+
+  @override
+  String get studioHowItWorks => 'How it works';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count of them already work without any of that, entirely on this device.',
+      one: '1 of them already works without any of that, entirely on this device.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'Runs on this device';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title. $description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title. $description Runs on this device.';
+  }
+
+  @override
+  String get categoryUnderstand => 'Understand';
+
+  @override
+  String get categoryUnderstandBlurb => 'Make sense of what you have.';
+
+  @override
+  String get categoryPlan => 'Plan';
+
+  @override
+  String get categoryPlanBlurb => 'Turn it into something you can do.';
+
+  @override
+  String get categoryCreate => 'Create';
+
+  @override
+  String get categoryCreateBlurb => 'Write it, improve it, translate it.';
+
+  @override
+  String get categoryExtract => 'Extract';
+
+  @override
+  String get categoryExtractBlurb => 'Pull out the details that matter.';
+
+  @override
+  String get categoryVerify => 'Verify';
+
+  @override
+  String get categoryVerifyBlurb => 'Check what you are looking at.';
+
+  @override
+  String get captureSheetTitle => 'Capture something';
+
+  @override
+  String get captureSheetSubtitle =>
+      'Hand Action anything you would rather not read through.';
+
+  @override
+  String get captureTakePhoto => 'Take a photo';
+
+  @override
+  String get captureTakePhotoSubtitle =>
+      'A letter, bill or notice in front of you';
+
+  @override
+  String get captureChooseImage => 'Choose an image';
+
+  @override
+  String get captureChooseImageSubtitle =>
+      'A screenshot or photo already on this device';
+
+  @override
+  String get capturePasteText => 'Paste text';
+
+  @override
+  String get capturePasteTextSubtitle => 'An email, message or notice';
+
+  @override
+  String get captureChoosePdf => 'Choose a PDF';
+
+  @override
+  String get captureChoosePdfSubtitle =>
+      'A statement, letter or form you already have';
+
+  @override
+  String get captureFootnote =>
+      'Captures stay on this device. Nothing is analysed online until you ask for it.';
+
+  @override
+  String get captureCouldNotOpen => 'Couldn\'t open that. Try another way.';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title. $subtitle';
+  }
+
+  @override
+  String get stageReading => 'Reading';
+
+  @override
+  String get stageNeedsReview => 'Needs review';
+
+  @override
+  String get stageActionCreated => 'Action created';
+
+  @override
+  String get stageNoText => 'No text found';
+
+  @override
+  String get stageCouldNotBeRead => 'Couldn\'t be read';
+
+  @override
+  String get stageReadingPreview => 'Reading the text…';
+
+  @override
+  String get stageFailedPreview => 'This couldn\'t be read on this device.';
+
+  @override
+  String get provenancePhoto => 'Captured from photo';
+
+  @override
+  String get provenanceImage => 'Captured from image';
+
+  @override
+  String get provenancePastedText => 'Captured from pasted text';
+
+  @override
+  String get provenanceDocument => 'Added as a document';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return 'Done $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return 'Overdue · was due $date';
+  }
+
+  @override
+  String get metaDueToday => 'Due today';
+
+  @override
+  String metaDueOn(String date) {
+    return 'Due $date';
+  }
+
+  @override
+  String get metaCreatedByYou => 'Created by you';
+
+  @override
+  String get categoryPayment => 'Payment';
+
+  @override
+  String get categoryRenewal => 'Renewal';
+
+  @override
+  String get categoryAppointment => 'Appointment';
+
+  @override
+  String get categoryBooking => 'Booking';
+
+  @override
+  String get categoryTravel => 'Travel';
+
+  @override
+  String get categoryDeadline => 'Deadline';
+
+  @override
+  String get categoryResponse => 'Reply needed';
+
+  @override
+  String get categoryDelivery => 'Delivery';
+
+  @override
+  String get categoryDocument => 'Document';
+
+  @override
+  String get categoryNoActionRequired => 'No action needed';
+
+  @override
+  String get categoryUnsure => 'Not sure';
+
+  @override
+  String get errorEnterManually => 'Enter it manually';
 }
