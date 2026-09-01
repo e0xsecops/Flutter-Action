@@ -1,0 +1,264 @@
+{
+  "@@locale": "en",
+  "appName": "Action",
+  "@appName": {
+    "description": "The product name. Not translated — it is the brand and the launcher label."
+  },
+  "commonCancel": "Cancel",
+  "commonDone": "Done",
+  "commonSave": "Save",
+  "commonClose": "Close",
+  "commonBack": "Back",
+  "commonRetry": "Try again",
+  "commonDelete": "Delete",
+  "commonRemove": "Remove",
+  "commonContinue": "Continue",
+  "commonOpen": "Open",
+  "commonCopy": "Copy",
+  "commonCopied": "Copied",
+  "commonEdit": "Edit",
+  "commonAdd": "Add",
+  "commonOn": "On",
+  "commonOff": "Off",
+  "commonUnknown": "Unknown",
+  "commonChecking": "Checking…",
+  "commonSettings": "Settings",
+  "commonDismiss": "Dismiss",
+  "commonUndo": "Undo",
+  "commonSkip": "Skip",
+  "commonNotNow": "Not now",
+  "commonSomethingWentWrong": "Something went wrong.",
+  "navToday": "Today",
+  "@navToday": {
+    "description": "Bottom navigation: the daily surface. Must stay one short word."
+  },
+  "navLibrary": "Library",
+  "@navLibrary": {
+    "description": "Bottom navigation: everything captured and created. One short word."
+  },
+  "navIntelligence": "Intelligence",
+  "@navIntelligence": {
+    "description": "Bottom navigation: the AI tool workspace. Deliberately NOT 'AI' — the user's mental model is getting help understanding something, not operating a model."
+  },
+  "navSearch": "Search",
+  "@navSearch": {
+    "description": "Bottom navigation: local search. One short word."
+  },
+  "navCapture": "Capture something",
+  "@navCapture": {
+    "description": "The raised centre control. Label and tooltip for the act of adding anything to Action."
+  },
+  "todayGreetingMorning": "Good morning",
+  "todayGreetingAfternoon": "Good afternoon",
+  "todayGreetingEvening": "Good evening",
+  "todayDateFormat": "EEEE · d MMMM",
+  "@todayDateFormat": {
+    "description": "An ICU skeleton passed to DateFormat, not prose. Translators may reorder the fields for their locale but must keep only pattern characters — any letter typed here is a format token, not text."
+  },
+  "todayActionsLoadFailed": "Your actions couldn't be loaded. They are still stored on this device.",
+  "@todayActionsLoadFailed": {
+    "description": "Shown when the local database cannot be read. SAFETY: must not imply the data was lost — it says the data is still stored."
+  },
+  "todaySectionNeedsAttention": "Needs attention",
+  "todaySectionAlsoNeedsAttention": "Also needs attention",
+  "todaySectionWaitingForReview": "Waiting for review",
+  "todaySectionComingUp": "Coming up",
+  "todaySeeAllCaptures": "See all {count} captures",
+  "@todaySeeAllCaptures": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todaySeeAllInLibrary": "See all in Library",
+  "todayCompletedCount": "{count, plural, =1{1 done} other{{count} done}}",
+  "@todayCompletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayCompletedSemantics": "{count, plural, =1{1 action completed. Open the library.} other{{count} actions completed. Open the library.}}",
+  "@todayCompletedSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStartWith": "START WITH",
+  "@todayStartWith": {
+    "description": "An eyebrow label above three capture shortcuts. Rendered as typed — if the language has no uppercase, write it normally."
+  },
+  "todayQuickPhoto": "Photo",
+  "todayQuickScreenshot": "Screenshot",
+  "todayQuickText": "Text",
+  "todayQuickTools": "Check a link, or find keys in some text",
+  "@todayQuickTools": {
+    "description": "Links to the two tools that need no AI provider. Names the tools rather than saying 'explore', because it is a promise the app keeps with nothing connected."
+  },
+  "briefBadgeNeedsYou": "NEEDS YOU",
+  "briefBadgeToReview": "TO REVIEW",
+  "briefBadgeAhead": "AHEAD",
+  "briefBadgeStartHere": "START HERE",
+  "briefBadgeClear": "CLEAR",
+  "briefNext": "NEXT",
+  "@briefNext": {
+    "description": "Label before the next step of the highlighted Action."
+  },
+  "briefOpenAction": "Open {title}",
+  "@briefOpenAction": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "briefMarkDone": "Mark \"{title}\" as done",
+  "@briefMarkDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "briefHeadlineNeedsAttention": "{count, plural, =1{1 action needs your attention} other{{count} actions need your attention}}",
+  "@briefHeadlineNeedsAttention": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "briefDetailAlsoWaiting": "{count, plural, =1{1 capture is also waiting for review.} other{{count} captures are also waiting for review.}}",
+  "@briefDetailAlsoWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "briefHeadlineCapturesWaiting": "{count, plural, =1{1 capture is waiting for you} other{{count} captures are waiting for you}}",
+  "@briefHeadlineCapturesWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "briefDetailNothingOverdue": "Nothing is overdue.",
+  "briefHeadlineNothingToday": "Nothing needs you today",
+  "briefDetailComingUp": "{count, plural, =1{1 action is coming up.} other{{count} actions are coming up.}}",
+  "@briefDetailComingUp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "briefHeadlineClear": "You're clear",
+  "briefDetailClear": "Nothing is due and nothing is waiting.",
+  "briefHeadlineFirstRun": "Start with anything",
+  "@briefHeadlineFirstRun": {
+    "description": "First-run headline. SAFETY: must tell the person what to do, never describe the app's own emptiness. 'Nothing here yet' and its equivalents are banned across the product."
+  },
+  "briefDetailFirstRun": "A letter, a screenshot, a note — Action works out what it is.",
+  "settingsTitle": "Settings",
+  "settingsSectionPersonalise": "Personalise",
+  "settingsAppearance": "Appearance",
+  "settingsAppearanceDescription": "Light, dark, or whatever the device is doing.",
+  "settingsLanguageDescription": "The language Action speaks to you in.",
+  "appearanceSystem": "System",
+  "appearanceLight": "Light",
+  "appearanceDark": "Dark",
+  "appearanceSystemDescription": "Match the device setting",
+  "appearanceLightDescription": "Always light",
+  "appearanceDarkDescription": "Always dark",
+  "languageTitle": "Language",
+  "languageSubtitle": "Changes apply straight away. Nothing is sent anywhere; the choice is stored on this device.",
+  "@languageSubtitle": {
+    "description": "SAFETY: the second clause is a data-flow claim and must stay true — the language preference is written to local preferences only."
+  },
+  "languageSectionChoose": "Choose a language",
+  "languageSystem": "System",
+  "languageSystemDescription": "Follow the device's language",
+  "languageDraftNote": "English is the language Action's wording was written in. The other translations were drafted against a fixed glossary and checked automatically, and have not yet been reviewed by a native speaker. Where the exact wording matters — privacy, security, what Action will and will not claim — English remains the reference.",
+  "@languageDraftNote": {
+    "description": "SAFETY: this is the honest disclosure about translation quality. It must not be softened into a claim that the translations are professionally certified, and it must keep the sentence pointing at English as the reference for privacy and security wording."
+  },
+  "settingsIntelligenceFootnote": "Action works without AI. Connecting your own provider adds document analysis, planning and drafting tools.",
+  "@settingsIntelligenceFootnote": {
+    "description": "SAFETY: must keep the first sentence — that the product is useful with nothing connected."
+  },
+  "settingsAiProvider": "AI provider",
+  "settingsAiNotConnected": "Not connected. Use your own account and API key.",
+  "settingsAiConnected": "Connected to {provider}.",
+  "@settingsAiConnected": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSectionPrivacySecurity": "Privacy & security",
+  "settingsSecurity": "Security",
+  "settingsWhereInfoLives": "Where your information lives",
+  "settingsWhereInfoLivesDescription": "What stays on this device, and what does not.",
+  "protectionAppLock": "App Lock",
+  "protectionScreenPrivacy": "screen privacy",
+  "protectionPrivateReminders": "private reminders",
+  "protectionSummaryNone": "App Lock, screen privacy and what leaves this device.",
+  "protectionSummaryOne": "{first} is on.",
+  "@protectionSummaryOne": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      }
+    }
+  },
+  "protectionSummaryTwo": "{first} and {second} are on.",
+  "@protectionSummaryTwo": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "protectionSummaryThree": "{first}, {second} and {third} are on.",
+  "@protectionSummaryThree": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "third": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSectionReminders": "Reminders",
+  "settingsRemindersFootnote": "Android may deliver a reminder a little later than the time you set, depending on battery settings and how the device is being used.",
+  "@settingsRemindersFootnote": {
+    "description": "SAFETY: an honest limitation. Must not be reworded into a promise of on-time delivery."
+  },
+  "settingsNotifications": "Notifications",
+  "settingsNotificationsOnDescription": "Reminders you set can be shown.",
+  "settingsNotificationsOffDescription": "Turned off for Action, so reminders will not appear.",
+  "settingsNotificationsUnknown": "Could not be checked.",
+  "settingsNotificationsAllowed": "Allowed",
+  "settingsOpenSystemSettings": "Open settings",
+  "settingsActionFootnote": "Action turns messy information into clear next steps. You confirm everything before it is saved.",
+  "@settingsActionFootnote": {
+    "description": "SAFETY: the second sentence is a product guarantee — nothing is saved without the user confirming it. It must survive translation as a statement about the user confirming, not about Action checking."
+  },
+  "settingsHelp": "Help",
+  "settingsHelpDescription": "How Action works, and what it will not do.",
+  "settingsVersion": "Version"
+}

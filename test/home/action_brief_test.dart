@@ -3,6 +3,7 @@ import 'package:action_app/features/actions/domain/action_item.dart';
 import 'package:action_app/features/capture/domain/source_item.dart';
 import 'package:action_app/features/extraction/domain/extraction_schema.dart';
 import 'package:action_app/features/home/application/action_brief.dart';
+import 'package:action_app/l10n/gen/app_l10n_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../actions/support/actions_test_support.dart';
@@ -46,6 +47,11 @@ ActionBrief brief({
       sources: sources,
       actionedSourceIds: actioned,
       hasAnyAction: hasAnyAction,
+      // The English bundle, constructed directly. That is a better assertion
+      // than the literals this file used to hold: it checks the key resolves
+      // *and* that the English value is right, so a key deleted from the ARB
+      // fails here rather than at runtime.
+      l10n: AppL10nEn(),
     );
 
 void main() {

@@ -39,6 +39,8 @@ import '../../../design/tokens/colors.dart';
 import '../../../core/analytics/app_analytics.dart';
 import '../../../core/analytics/firebase_app_analytics.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/gen/app_l10n.dart';
+import '../../../l10n/casing.dart';
 import '../../../shared/widgets/error_view.dart';
 import '../../../shared/widgets/loading_view.dart';
 import '../../actions/application/action_providers.dart';
@@ -97,6 +99,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final sourcesAsync = ref.watch(sourcesProvider);
     final actionsAsync = ref.watch(actionsStreamProvider);
     final triaged = ref.watch(triagedHomeProvider);
@@ -108,9 +111,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return SafeArea(
         child: ReadableWidth.list(
           child: ErrorView(
-            message:
-                "Your actions couldn't be loaded. They are still stored "
-                'on this device.',
+            message: l10n.todayActionsLoadFailed,
             onRetry: () => ref.invalidate(actionsStreamProvider),
           ),
         ),
@@ -144,6 +145,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       sources: sources,
       actionedSourceIds: actionedSourceIds,
       hasAnyAction: actions.isNotEmpty,
+      l10n: l10n,
     );
 
     // Same rule as the brief: anything not yet turned into an Action. A
@@ -195,8 +197,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: SectionHeader(
                   title: brief.topAction != null &&
                           home.needsAttention.contains(brief.topAction)
-                      ? 'Also needs attention'
-                      : 'Needs attention',
+                      ? l10n.todaySectionAlsoNeedsAttention
+                      : l10n.todaySectionNeedsAttention,
                 ),
               ),
               _actionList(rest, home, now),
@@ -205,7 +207,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             if (awaitingReview.isNotEmpty) ...[
               SliverToBoxAdapter(
                 child: SectionHeader(
-                  title: 'Waiting for review',
+                  title: l10n.todaySectionWaitingForReview,
                   count: awaitingReview.length,
                 ),
               ),
@@ -225,7 +227,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               if (awaitingReview.length > 3)
                 SliverToBoxAdapter(
                   child: _SeeAll(
-                    label: 'See all ${awaitingReview.length} captures',
+                    label: l10n.todaySeeAllCaptures(awaitingReview.length),
                     onTap: () => context.go(Routes.library),
                   ),
                 ),
@@ -233,14 +235,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
             if (_without(home.upcoming, brief.topAction)
                 case final upcoming when upcoming.isNotEmpty) ...[
-              const SliverToBoxAdapter(
-                child: SectionHeader(title: 'Coming up'),
+              SliverToBoxAdapter(
+                child: SectionHeader(title: l10n.todaySectionComingUp),
               ),
               _actionList(upcoming.take(4).toList(), home, now),
               if (upcoming.length > 4)
                 SliverToBoxAdapter(
                   child: _SeeAll(
-                    label: 'See all in Library',
+                    label: l10n.todaySeeAllInLibrary,
                     onTap: () => context.go(Routes.library),
                   ),
                 ),
@@ -306,6 +308,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
+/// The greeting, as a function of the hour rather than of the clock.
+///
+/// Pulled out so a test can ask for the same answer the header will render.
+/// A widget test that hard-codes "Good morning" passes for eleven hours and
+/// fails for thirteen, which is not a test — it is a scheduled outage.
+String greetingForHour(AppL10n l10n, int hour) => switch (hour) {
+      < 12 => l10n.todayGreetingMorning,
+      < 17 => l10n.todayGreetingAfternoon,
+      _ => l10n.todayGreetingEvening,
+    };
+
 /// The header.
 ///
 /// The date is the eyebrow and the greeting is the title — the reverse of the
@@ -322,11 +335,8 @@ class _TodayHeader extends StatelessWidget {
     final colors = context.colors;
     final now = DateTime.now();
 
-    final greeting = switch (now.hour) {
-      < 12 => 'Good morning',
-      < 17 => 'Good afternoon',
-      _ => 'Good evening',
-    };
+    final l10n = AppL10n.of(context);
+    final greeting = greetingForHour(l10n, now.hour);
 
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
@@ -343,7 +353,11 @@ class _TodayHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  DateFormat('EEEE · d MMMM').format(now).toUpperCase(),
+                  eyebrowCase(
+                    DateFormat(l10n.todayDateFormat, l10n.localeName)
+                        .format(now),
+                    l10n.localeName,
+                  ),
                   style: text.labelSmall?.copyWith(
                     color: colors.textTertiary,
                     letterSpacing: 1.1,
@@ -356,7 +370,7 @@ class _TodayHeader extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Settings',
+            tooltip: l10n.commonSettings,
             icon: const Icon(Icons.tune_rounded),
             onPressed: () => context.push(Routes.settings),
           ),
@@ -383,6 +397,7 @@ class _BriefHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     final tone = switch (brief.tone) {
       BriefTone.attention => colors.urgencyImportant,
@@ -417,13 +432,14 @@ class _BriefHero extends StatelessWidget {
                 const SizedBox(width: Space.sm),
                 Text(
                   switch (brief.tone) {
-                    BriefTone.attention => 'NEEDS YOU',
-                    BriefTone.review => 'TO REVIEW',
-                    BriefTone.upcoming => 'AHEAD',
+                    BriefTone.attention => l10n.briefBadgeNeedsYou,
+                    BriefTone.review => l10n.briefBadgeToReview,
+                    BriefTone.upcoming => l10n.briefBadgeAhead,
                     // "CLEAR" congratulates someone who has cleared a list; it
                     // is meaningless to someone who has never had one.
-                    BriefTone.clear =>
-                      brief.isFirstRun ? 'START HERE' : 'CLEAR',
+                    BriefTone.clear => brief.isFirstRun
+                        ? l10n.briefBadgeStartHere
+                        : l10n.briefBadgeClear,
                   },
                   style: text.labelSmall?.copyWith(
                     color: tone,
@@ -482,6 +498,7 @@ class _TopAction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final next = _next;
 
     final badge = decision == null
@@ -509,7 +526,7 @@ class _TopAction extends ConsumerWidget {
         Expanded(
           child: Semantics(
             button: true,
-            label: 'Open ${item.title}',
+            label: l10n.briefOpenAction(item.title),
             child: InkWell(
               onTap: () => context.push(Routes.action(item.id)),
               borderRadius: Radii.rMd,
@@ -555,7 +572,7 @@ class _TopAction extends ConsumerWidget {
                     Row(
                       children: [
                         Text(
-                          'NEXT',
+                          l10n.briefNext,
                           style: text.labelSmall?.copyWith(
                             color: colors.textTertiary,
                             letterSpacing: 1.1,
@@ -582,7 +599,7 @@ class _TopAction extends ConsumerWidget {
         IconButton(
           // Named, so a screen reader hears which Action is about to be marked
           // rather than "Mark as done" repeated down the screen.
-          tooltip: 'Mark "${item.title}" as done',
+          tooltip: l10n.briefMarkDone(item.title),
           onPressed: () async {
             await ref
                 .read(actionRepositoryProvider)
@@ -630,14 +647,13 @@ class _CompletedSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.page, Space.lg, Space.page, 0),
       child: Semantics(
         button: true,
-        label: count == 1
-            ? '1 action completed. Open the library.'
-            : '$count actions completed. Open the library.',
+        label: l10n.todayCompletedSemantics(count),
         child: InkWell(
           onTap: () => context.go(Routes.library),
           borderRadius: Radii.rMd,
@@ -653,7 +669,7 @@ class _CompletedSummary extends StatelessWidget {
                 const SizedBox(width: Space.sm),
                 Expanded(
                   child: Text(
-                    count == 1 ? '1 done' : '$count done',
+                    l10n.todayCompletedCount(count),
                     style: text.bodyMedium?.copyWith(
                       color: colors.textSecondary,
                     ),
@@ -696,6 +712,7 @@ class QuickStart extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -710,7 +727,7 @@ class QuickStart extends ConsumerWidget {
           Semantics(
             header: true,
             child: Text(
-              'START WITH',
+              l10n.todayStartWith,
               style: text.labelSmall?.copyWith(
                 color: colors.textTertiary,
                 letterSpacing: 0.8,
@@ -723,7 +740,7 @@ class QuickStart extends ConsumerWidget {
               Expanded(
                 child: _QuickTile(
                   icon: Icons.photo_camera_rounded,
-                  label: 'Photo',
+                  label: l10n.todayQuickPhoto,
                   onTap: () => runCaptureIntent(
                     context,
                     ref,
@@ -735,7 +752,7 @@ class QuickStart extends ConsumerWidget {
               Expanded(
                 child: _QuickTile(
                   icon: Icons.image_rounded,
-                  label: 'Screenshot',
+                  label: l10n.todayQuickScreenshot,
                   onTap: () => runCaptureIntent(
                     context,
                     ref,
@@ -747,7 +764,7 @@ class QuickStart extends ConsumerWidget {
               Expanded(
                 child: _QuickTile(
                   icon: Icons.notes_rounded,
-                  label: 'Text',
+                  label: l10n.todayQuickText,
                   onTap: () => runCaptureIntent(
                     context,
                     ref,
@@ -766,7 +783,7 @@ class QuickStart extends ConsumerWidget {
             child: TextButton.icon(
               onPressed: () => context.go(Routes.studio),
               icon: const Icon(Icons.lightbulb_outline_rounded, size: 18),
-              label: const Text('Check a link, or find keys in some text'),
+              label: Text(l10n.todayQuickTools),
               style: TextButton.styleFrom(
                 minimumSize: const Size(0, 40),
                 padding: const EdgeInsets.symmetric(horizontal: Space.sm),

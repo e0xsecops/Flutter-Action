@@ -30,8 +30,14 @@ import '../design/components/readable_width.dart';
 import '../design/tokens/colors.dart';
 import '../design/tokens/dimens.dart';
 import '../features/capture/presentation/capture_sheet.dart';
+import '../l10n/gen/app_l10n.dart';
 
 /// One destination in the shell.
+///
+/// The label is resolved from the bundle at build rather than stored, so the
+/// list can stay `const` while still following a language change: switching
+/// locale rebuilds the shell, and the labels come out in the new language
+/// without anything being rebuilt or re-registered.
 class ShellDestination {
   const ShellDestination({
     required this.label,
@@ -39,7 +45,7 @@ class ShellDestination {
     required this.selectedIcon,
   });
 
-  final String label;
+  final String Function(AppL10n) label;
   final IconData icon;
   final IconData selectedIcon;
 }
@@ -47,28 +53,33 @@ class ShellDestination {
 /// The four places, in order. Capture is deliberately absent — it is an action.
 const List<ShellDestination> shellDestinations = [
   ShellDestination(
-    label: 'Today',
+    label: _today,
     icon: Icons.today_outlined,
     selectedIcon: Icons.today,
   ),
   ShellDestination(
-    label: 'Library',
+    label: _library,
     icon: Icons.inbox_outlined,
     selectedIcon: Icons.inbox,
   ),
   ShellDestination(
     // Not "AI". The user's mental model is that they are getting help
     // understanding something, not that they are operating a model.
-    label: 'Intelligence',
+    label: _intelligence,
     icon: Icons.lightbulb_outline,
     selectedIcon: Icons.lightbulb,
   ),
   ShellDestination(
-    label: 'Search',
+    label: _search,
     icon: Icons.search_outlined,
     selectedIcon: Icons.search,
   ),
 ];
+
+String _today(AppL10n l10n) => l10n.navToday;
+String _library(AppL10n l10n) => l10n.navLibrary;
+String _intelligence(AppL10n l10n) => l10n.navIntelligence;
+String _search(AppL10n l10n) => l10n.navSearch;
 
 class ActionShell extends StatelessWidget {
   const ActionShell({super.key, required this.navigationShell});
@@ -177,6 +188,7 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final label = destination.label(AppL10n.of(context));
     // Secondary, not tertiary. A navigation label is the most important small
     // text in the app — it is how someone knows where they are and where they
     // can go — and tertiary is the token for things that can afford to
@@ -190,11 +202,11 @@ class _NavItem extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      label: destination.label,
+      label: label,
       child: Tooltip(
         // Long-press reveals the label, and it gives every destination a
         // stable handle for tests and for accessibility tooling.
-        message: destination.label,
+        message: label,
         child: InkWell(
           onTap: onTap,
           borderRadius: Radii.rMd,
@@ -215,7 +227,7 @@ class _NavItem extends StatelessWidget {
                 ),
                 const SizedBox(height: Space.xxs),
                 Text(
-                  destination.label,
+                  label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -246,11 +258,12 @@ class _CaptureControl extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final capture = AppL10n.of(context).navCapture;
     return Semantics(
       button: true,
-      label: 'Capture something',
+      label: capture,
       child: Tooltip(
-        message: 'Capture something',
+        message: capture,
         child: InkWell(
           onTap: () {
             HapticFeedback.mediumImpact();

@@ -116,6 +116,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # Runs gen-l10n as part of every build, so an ARB edit cannot ship without
+  # the Dart it implies. See l10n.yaml.
+  generate: true
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

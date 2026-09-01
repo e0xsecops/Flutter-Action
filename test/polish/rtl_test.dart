@@ -17,10 +17,10 @@
 /// geometry.
 ///
 /// So the direction is set the way the framework actually sets it: a
-/// `MaterialApp` this file owns, declaring an RTL locale. Production still
-/// declares English only, because that is the only language Action's own
-/// strings exist in — declaring more would tell Android this app speaks
-/// languages it does not.
+/// `MaterialApp` this file owns, declaring an RTL locale — and now with the
+/// real delegate list and the real twenty supported locales, so the strings
+/// under test are the translated Arabic and Urdu the app actually ships
+/// rather than English rendered right to left.
 library;
 
 import 'package:action_app/design/app_theme.dart';
@@ -35,12 +35,14 @@ import 'package:action_app/features/actions/presentation/action_card.dart';
 import 'package:action_app/features/capture/application/capture_controller.dart';
 import 'package:action_app/features/capture/data/ocr_service.dart';
 import 'package:action_app/features/home/presentation/home_screen.dart';
+import 'package:action_app/l10n/gen/app_l10n.dart';
+import 'package:action_app/l10n/gen/app_l10n_ar.dart';
+import 'package:action_app/l10n/gen/app_l10n_en.dart';
 import 'package:action_app/features/library/presentation/library_screen.dart';
 import 'package:action_app/features/intelligence/presentation/studio_screen.dart';
 import 'package:action_app/features/search/presentation/search_screen.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -72,6 +74,7 @@ Future<void> pumpScreen(
   Widget screen, {
   TextDirection direction = TextDirection.rtl,
   double textScale = 1.0,
+  Locale? locale,
 }) async {
   await tester.pumpWidget(
     ProviderScope(
@@ -89,19 +92,15 @@ Future<void> pumpScreen(
       ],
       child: MaterialApp(
         theme: AppTheme.light(),
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        locale: direction == TextDirection.rtl
-            ? const Locale('ar')
-            : const Locale('en'),
-        supportedLocales: [
-          direction == TextDirection.rtl
-              ? const Locale('ar')
-              : const Locale('en'),
-        ],
+        // The real delegate list and the real twenty locales, so these tests
+        // mirror the app rather than a reduced stand-in of it. The direction
+        // still comes from the locale, which is the only way Flutter sets it.
+        localizationsDelegates: AppL10n.localizationsDelegates,
+        locale: locale ??
+            (direction == TextDirection.rtl
+                ? const Locale('ar')
+                : const Locale('en')),
+        supportedLocales: AppL10n.supportedLocales,
         home: Builder(
           builder: (context) => MediaQuery(
             data: MediaQuery.of(context)
@@ -245,10 +244,19 @@ void main() {
         const HomeScreen(),
         direction: TextDirection.ltr,
       );
-      final ltr = tester.getTopLeft(find.text('Good morning')).dx;
+      // Asked of the same function the header uses, in the bundle the
+      // header is actually rendering. Hard-coding "Good morning" made this
+      // test pass before noon and fail after it; hard-coding the English
+      // bundle would now make it pass in a tree that is rendering Arabic.
+      final hour = DateTime.now().hour;
+      final ltr = tester
+          .getTopLeft(find.text(greetingForHour(AppL10nEn(), hour)))
+          .dx;
 
       await pumpScreen(tester, const HomeScreen());
-      final rtl = tester.getTopLeft(find.text('Good morning')).dx;
+      final rtl = tester
+          .getTopLeft(find.text(greetingForHour(AppL10nAr(), hour)))
+          .dx;
 
       // Left-aligned prose in LTR starts near the left edge; mirrored, the
       // same text starts much further across.

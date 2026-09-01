@@ -11,7 +11,10 @@ import '../features/capture/domain/document_intake.dart';
 import '../features/capture/domain/shared_payload.dart';
 import '../features/capture/domain/source_item.dart';
 import '../features/capture/presentation/preview_screen.dart';
+import '../features/settings/application/locale_controller.dart';
 import '../features/settings/application/settings_providers.dart';
+import '../l10n/gen/app_l10n.dart';
+import '../l10n/supported_locales.dart';
 import 'app_lock_gate.dart';
 import 'router.dart';
 import '../core/analytics/app_analytics.dart';
@@ -197,28 +200,37 @@ class _ActionAppState extends ConsumerState<ActionApp> {
       themeMode: ref.watch(themeModeControllerProvider),
       routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
-      // Material's own strings — the text-selection menu, the date picker, the
-      // "no results" of a dropdown — plus the delegate that lets the framework
-      // resolve a locale's text direction at all.
+      // Action's own strings, then Material's — the text-selection menu, the
+      // date picker, the "no results" of a dropdown — plus the delegate that
+      // lets the framework resolve a locale's text direction at all.
       //
-      // **On the languages declared here.** Action's own copy exists in
-      // English, and that copy is not decoration: the test suite asserts exact
-      // sentences, bans specific phrases, and holds several screens to saying
-      // precisely what the code does and no more. Declaring locales whose
-      // strings do not exist would tell Android this app speaks languages it
-      // does not, and machine-translating the rest would quietly void every
-      // one of those guarantees in nineteen languages nobody could check.
-      //
-      // So: English is declared because it is what exists. The *layout* is
-      // right-to-left correct regardless — see test/polish/rtl_test.dart —
-      // which is the half that is expensive to retrofit and cheap to keep.
-      // Adding a translated locale is then a file, not a re-layout.
+      // **On the twenty languages declared here.** English is the canonical
+      // source and the one the copy tests assert against; the other nineteen
+      // were drafted against a fixed glossary and a set of meaning constraints
+      // that the safety-critical sentences of this product cannot be allowed
+      // to lose — see `docs/v2/LOCALIZATION_GLOSSARY.md` for the terms and
+      // `test/l10n/` for the assertions that hold every locale to them. Their
+      // human-review state is tracked, per locale, in
+      // `docs/v2/LOCALIZATION_REVIEW_STATUS.md`, and the product does not
+      // claim they are certified.
       localizationsDelegates: const [
+        AppL10n.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en')],
+      supportedLocales: AppLocales.locales,
+      // Null means "follow the device", which is the default. Setting it in
+      // Settings rebuilds exactly this widget, and that is the whole of live
+      // language switching: `Localizations` re-resolves below it, every
+      // `AppL10n.of(context)` returns the new bundle, and `Directionality`
+      // changes with it. No restart, nothing to reconcile.
+      locale: ref.watch(localeControllerProvider),
+      // Only for the case Flutter's own resolution cannot get right: Chinese,
+      // where the axis that matters is the script and the device sends a
+      // country. Everything else — es-MX, bn-BD, pt-BR — falls back on the
+      // language code, which the framework already does correctly.
+      localeListResolutionCallback: AppLocales.resolve,
       // Inside the router, so App Lock covers every route and every dialog on
       // the root navigator rather than only the screen that happened to be
       // showing. See app_lock_gate.dart for why it is here and not higher.

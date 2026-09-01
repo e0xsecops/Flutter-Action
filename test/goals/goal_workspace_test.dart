@@ -17,6 +17,7 @@ import 'package:action_app/features/goals/application/goal_providers.dart';
 import 'package:action_app/features/goals/data/json_goal_store.dart';
 import 'package:action_app/features/goals/domain/goal.dart';
 import 'package:action_app/features/goals/presentation/goal_workspace_screen.dart';
+import 'package:action_app/l10n/gen/app_l10n.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -270,6 +271,8 @@ void main() {
             goalStoreProvider.overrideWith((ref) async => _goals),
           ],
           child: MaterialApp(
+            localizationsDelegates: AppL10n.localizationsDelegates,
+            supportedLocales: AppL10n.supportedLocales,
             theme: AppTheme.light(),
             home: Builder(
               builder: (context) => MediaQuery(

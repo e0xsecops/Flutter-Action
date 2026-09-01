@@ -12,6 +12,7 @@ import 'package:action_app/features/capture/domain/source_item.dart';
 import 'package:action_app/features/extraction/domain/extraction_evidence.dart';
 import 'package:action_app/features/extraction/domain/extraction_schema.dart';
 import 'package:action_app/features/extraction/presentation/review_widgets.dart';
+import 'package:action_app/l10n/gen/app_l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -85,6 +86,8 @@ Future<void> _pumpTile(
 }) async {
   await tester.pumpWidget(
     MaterialApp(
+      localizationsDelegates: AppL10n.localizationsDelegates,
+      supportedLocales: AppL10n.supportedLocales,
       theme: AppTheme.light(),
       home: Scaffold(
         body: Center(
@@ -215,6 +218,8 @@ void main() {
       var expansions = 0;
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppL10n.localizationsDelegates,
+          supportedLocales: AppL10n.supportedLocales,
           theme: AppTheme.light(),
           home: Scaffold(
             body: EvidenceTile(

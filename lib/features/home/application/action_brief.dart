@@ -13,8 +13,16 @@
 /// **Why it is its own class rather than widget code.** The interesting part is
 /// the rules, and rules that live inside a `build` method cannot be tested
 /// without pumping a widget tree. This is pure and takes plain data.
+///
+/// **Why the string bundle is a parameter.** The rules decide *what is true*;
+/// the bundle decides what that reads like in the user's language. Passing it
+/// in keeps this a pure function of (data, strings) — no `BuildContext`, no
+/// widget tree, still testable by calling it — and it means a brief in Bengali
+/// goes through exactly the same branches as a brief in English rather than
+/// through a parallel path nobody exercises.
 library;
 
+import '../../../l10n/gen/app_l10n.dart';
 import '../../actions/application/action_triage.dart';
 import '../../actions/domain/action_item.dart';
 import '../../capture/domain/source_item.dart';
@@ -90,6 +98,7 @@ class ActionBrief {
     required List<SourceItem> sources,
     required Set<String> actionedSourceIds,
     required bool hasAnyAction,
+    required AppL10n l10n,
   }) {
     // Every capture that has not become an Action yet — including one still
     // being read, and one that failed.
@@ -112,10 +121,8 @@ class ActionBrief {
     if (needsAttention > 0) {
       return ActionBrief(
         tone: BriefTone.attention,
-        headline: needsAttention == 1
-            ? '1 action needs your attention'
-            : '$needsAttention actions need your attention',
-        detail: _reviewDetail(awaitingReview),
+        headline: l10n.briefHeadlineNeedsAttention(needsAttention),
+        detail: _reviewDetail(l10n, awaitingReview),
         topAction: top,
         topDecision: decision,
         needsAttentionCount: needsAttention,
@@ -128,10 +135,8 @@ class ActionBrief {
     if (awaitingReview > 0) {
       return ActionBrief(
         tone: BriefTone.review,
-        headline: awaitingReview == 1
-            ? '1 capture is waiting for you'
-            : '$awaitingReview captures are waiting for you',
-        detail: 'Nothing is overdue.',
+        headline: l10n.briefHeadlineCapturesWaiting(awaitingReview),
+        detail: l10n.briefDetailNothingOverdue,
         topAction: top,
         topDecision: decision,
         awaitingReviewCount: awaitingReview,
@@ -143,10 +148,8 @@ class ActionBrief {
     if (upcoming > 0) {
       return ActionBrief(
         tone: BriefTone.upcoming,
-        headline: 'Nothing needs you today',
-        detail: upcoming == 1
-            ? '1 action is coming up.'
-            : '$upcoming actions are coming up.',
+        headline: l10n.briefHeadlineNothingToday,
+        detail: l10n.briefDetailComingUp(upcoming),
         topAction: top,
         topDecision: decision,
         upcomingCount: upcoming,
@@ -162,18 +165,18 @@ class ActionBrief {
       // NOT "Nothing here yet". Day 15 banned that phrasing outright, and the
       // ban is right: it describes the app's state rather than telling the
       // person what to do, which is the whole job of a first-run screen.
-      headline: hasAnyAction ? "You're clear" : 'Start with anything',
+      headline: hasAnyAction
+          ? l10n.briefHeadlineClear
+          : l10n.briefHeadlineFirstRun,
       detail: hasAnyAction
-          ? 'Nothing is due and nothing is waiting.'
-          : 'A letter, a screenshot, a note — Action works out what it is.',
+          ? l10n.briefDetailClear
+          : l10n.briefDetailFirstRun,
       hasEverHadAction: hasAnyAction,
     );
   }
 
-  static String? _reviewDetail(int awaitingReview) {
+  static String? _reviewDetail(AppL10n l10n, int awaitingReview) {
     if (awaitingReview == 0) return null;
-    return awaitingReview == 1
-        ? '1 capture is also waiting for review.'
-        : '$awaitingReview captures are also waiting for review.';
+    return l10n.briefDetailAlsoWaiting(awaitingReview);
   }
 }

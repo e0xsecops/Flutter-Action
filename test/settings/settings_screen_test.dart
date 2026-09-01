@@ -15,6 +15,8 @@ import 'package:action_app/features/settings/application/settings_providers.dart
 import 'package:action_app/features/settings/data/system_settings_launcher.dart';
 import 'package:action_app/features/settings/presentation/help_screen.dart';
 import 'package:action_app/features/settings/presentation/privacy_screen.dart';
+import 'package:action_app/design/components/app_sheet.dart';
+import 'package:action_app/features/settings/presentation/settings_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -119,6 +121,28 @@ Future<void> openSettings(WidgetTester tester) async {
 String _privacyText() =>
     privacyDataMap.expand((g) => g.lines).join(' ');
 
+/// The value shown on the right of a named settings row.
+///
+/// Rows are label/value pairs and several rows can carry the same value —
+/// Appearance and Language both read "System" on a fresh install. Asserting
+/// on the value alone therefore says nothing about which row it belongs to,
+/// and breaks the first time an unrelated row acquires the same word.
+String valueOfRow(WidgetTester tester, String label) {
+  final row = tester.widget<SettingsRow>(
+    find.ancestor(of: find.text(label), matching: find.byType(SettingsRow)),
+  );
+  return row.value ?? '';
+}
+
+/// Text inside the open bottom sheet rather than on the page behind it.
+///
+/// The appearance chooser repeats the words that are already on the row it
+/// was opened from, so an unqualified finder matches both.
+Finder inSheet(String text) => find.descendant(
+      of: find.byType(AppSheet),
+      matching: find.text(text),
+    );
+
 /// The data controls sit below the data map, which is the right order for
 /// reading and means a test has to scroll to reach them.
 Future<void> scrollTo(WidgetTester tester, Finder target) async {
@@ -179,7 +203,12 @@ void main() {
       await pumpApp(tester, onboardedPreferences());
       await openSettings(tester);
 
-      expect(find.text('System'), findsOneWidget);
+      // Two rows read "System" now — Appearance and Language, both following
+      // the device by default — so this asserts on the row rather than on the
+      // word. A bare find.text here passed for one reason and then failed for
+      // an unrelated correct change, which is the definition of a brittle
+      // assertion.
+      expect(valueOfRow(tester, 'Appearance'), 'System');
     });
 
     settingsTest('choosing dark applies immediately', (tester) async {
@@ -189,7 +218,7 @@ void main() {
 
       await tester.tap(find.text('Appearance'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Dark'));
+      await tester.tap(inSheet('Dark'));
       await tester.pumpAndSettle();
 
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -203,7 +232,7 @@ void main() {
       await openSettings(tester);
       await tester.tap(find.text('Appearance'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Dark'));
+      await tester.tap(inSheet('Dark'));
       await tester.pumpAndSettle();
 
       await tester.pumpWidget(const SizedBox.shrink());
@@ -222,11 +251,11 @@ void main() {
       });
       await pumpApp(tester, prefs);
       await openSettings(tester);
-      expect(find.text('Dark'), findsOneWidget);
+      expect(valueOfRow(tester, 'Appearance'), 'Dark');
 
       await tester.tap(find.text('Appearance'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('System'));
+      await tester.tap(inSheet('System'));
       await tester.pumpAndSettle();
 
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));

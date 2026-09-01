@@ -23,6 +23,8 @@ import '../../../app/action_shell.dart';
 import '../../../design/ambient/ambient_background.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/casing.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 /// The page frame.
 ///
@@ -153,7 +155,7 @@ class SettingsSection extends StatelessWidget {
                   child: Semantics(
                     header: true,
                     child: Text(
-                      title.toUpperCase(),
+                      eyebrowCase(title, AppL10n.of(context).localeName),
                       style: text.labelSmall?.copyWith(
                         color: colors.textTertiary,
                         letterSpacing: 0.8,
