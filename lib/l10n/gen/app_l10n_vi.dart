@@ -1355,6 +1355,290 @@ class AppL10nVi extends AppL10n {
   String get reviewSavedOnDevice => 'Đã lưu trên thiết bị này.';
 
   @override
+  String get detailLoadFailed =>
+      'Không tải được việc này. Nó vẫn được lưu trên thiết bị này.';
+
+  @override
+  String get detailNotFoundTitle => 'Việc đó không còn ở đây nữa';
+
+  @override
+  String get detailNotFoundMessage => 'Có thể nó đã bị xoá trên thiết bị này.';
+
+  @override
+  String get detailGoBack => 'Quay lại';
+
+  @override
+  String get detailMore => 'Thêm';
+
+  @override
+  String get detailChangeUrgency => 'Đổi mức gấp';
+
+  @override
+  String get detailAddRecommendedStep => 'Thêm bước được gợi ý';
+
+  @override
+  String get detailEditRecommendedStep => 'Sửa bước được gợi ý';
+
+  @override
+  String get detailArchiveTitle => 'Lưu trữ việc này?';
+
+  @override
+  String get detailArchiveBody =>
+      'Nó rời khỏi danh sách của bạn nhưng không bị xoá, và bản thu nhận sinh ra nó vẫn được giữ.';
+
+  @override
+  String get detailArchiveConfirm => 'Lưu trữ';
+
+  @override
+  String get detailArchived => 'Đã lưu trữ';
+
+  @override
+  String detailCompletedOn(String date) {
+    return 'Hoàn thành ngày $date';
+  }
+
+  @override
+  String get detailSectionDetails => 'Chi tiết';
+
+  @override
+  String get detailSectionReminders => 'Nhắc nhở';
+
+  @override
+  String get detailAllStepsDone => 'Đã xong mọi bước';
+
+  @override
+  String get detailNextEyebrow => 'Tiếp theo';
+
+  @override
+  String get detailCompleteQuestion => 'Hoàn thành việc này?';
+
+  @override
+  String get detailMarkStepDone => 'Đánh dấu bước đã xong';
+
+  @override
+  String get detailCompleteAction => 'Hoàn thành việc này';
+
+  @override
+  String get detailAddDeadline => 'Thêm hạn chót';
+
+  @override
+  String get detailAddAmount => 'Thêm số tiền';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return 'Xong $completed trên $total';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'Chưa có bước nào';
+
+  @override
+  String get detailNoStepsMessage =>
+      'Hãy chia việc này thành những động tác bạn thật sự phải làm.';
+
+  @override
+  String get detailAddFirstStep => 'Thêm bước đầu tiên';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'Bước đã hoàn thành: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'Bước tiếp theo: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'Bước: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return 'Đánh dấu “$title” là đã xong';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return 'Đánh dấu “$title” là chưa xong';
+  }
+
+  @override
+  String get detailStepOptions => 'Tuỳ chọn của bước';
+
+  @override
+  String get detailMoveUp => 'Chuyển lên';
+
+  @override
+  String get detailMoveDown => 'Chuyển xuống';
+
+  @override
+  String get detailDeleteStep => 'Xoá bước';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'Xoá bước này?';
+
+  @override
+  String get stepDeleteKeep => 'Giữ lại';
+
+  @override
+  String get detailNoRemindersYet => 'Chưa có nhắc nhở nào.';
+
+  @override
+  String get detailReminderLimit =>
+      'Đó là số nhắc nhở tối đa cho một việc. Hãy bỏ bớt một cái để thêm cái khác.';
+
+  @override
+  String get detailAddReminder => 'Thêm nhắc nhở';
+
+  @override
+  String get detailChangeReminder => 'Đổi nhắc nhở';
+
+  @override
+  String get detailRemoveReminder => 'Bỏ nhắc nhở';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM, HH:mm';
+
+  @override
+  String get reminderStatePending => 'Chưa thiết lập xong';
+
+  @override
+  String get reminderStateNotificationsOff =>
+      'Đã lưu, nhưng thông báo đang tắt';
+
+  @override
+  String get reminderStateFailed => 'Không đặt lịch được';
+
+  @override
+  String get reminderStateRemoving => 'Đang bỏ…';
+
+  @override
+  String get reminderSetConfirmation =>
+      'Đã đặt nhắc nhở. Chúng tôi sẽ nhắc bạn.';
+
+  @override
+  String get reminderUpdatedConfirmation => 'Đã cập nhật nhắc nhở.';
+
+  @override
+  String get reminderNeedsPermission =>
+      'Thông báo đang tắt, nên nhắc nhở này đã được lưu nhưng chưa thể báo cho bạn.';
+
+  @override
+  String get reminderScheduleFailed =>
+      'Nhắc nhở này đã được lưu, nhưng Android không chịu đặt lịch cho nó.';
+
+  @override
+  String get reminderLimitReached => 'Việc đó đã có số nhắc nhở tối đa rồi.';
+
+  @override
+  String get reminderTimeInPast => 'Thời điểm đó đã trôi qua.';
+
+  @override
+  String get reminderAddTitle => 'Thêm một nhắc nhở';
+
+  @override
+  String get reminderChangeTitle => 'Đổi nhắc nhở này';
+
+  @override
+  String get reminderDateLabel => 'Ngày';
+
+  @override
+  String get reminderTimeLabel => 'Giờ';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE, d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM, HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'Bạn sẽ được nhắc vào $date lúc $time.';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'Thời điểm đó đã trôi qua. Hãy chọn giờ muộn hơn.';
+
+  @override
+  String get reminderSet => 'Đặt nhắc nhở';
+
+  @override
+  String get reminderPresetInHour => 'Sau 1 giờ nữa';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'Sáng mai';
+
+  @override
+  String get reminderPresetNextWeek => 'Tuần sau';
+
+  @override
+  String get reminderPresetOnTheDay => 'Đúng ngày';
+
+  @override
+  String get reminderPresetDayBefore => 'Trước 1 ngày';
+
+  @override
+  String get reminderPresetWeekBefore => 'Trước 1 tuần';
+
+  @override
+  String get reminderPresetAtDeadline => 'Đúng hạn chót';
+
+  @override
+  String get reminderPresetHourBefore => 'Trước 1 giờ';
+
+  @override
+  String get editNextStepTitle => 'Bước tiếp theo được gợi ý';
+
+  @override
+  String get editNextStepSubtitle =>
+      'Một câu ngắn về động tác hữu ích tiếp theo.';
+
+  @override
+  String get editNextStepHint => 'Động tác hữu ích tiếp theo là gì?';
+
+  @override
+  String get editRemoveSuggestion => 'Bỏ gợi ý';
+
+  @override
+  String get editUrgencyTitle => 'Việc này gấp đến mức nào?';
+
+  @override
+  String get editStepHint => 'Một việc cụ thể cần làm';
+
+  @override
+  String get editAddStep => 'Thêm bước';
+
+  @override
+  String get editDateHint => 'NNNN-TT-NN';
+
+  @override
+  String get editRemoveDeadline => 'Bỏ hạn chót';
+
+  @override
+  String get editAmountHint => '96,40';
+
+  @override
+  String get editSaveAmount => 'Lưu số tiền';
+
+  @override
+  String get editRemoveAmount => 'Bỏ số tiền';
+
+  @override
   String get evidenceTitle => 'Chỗ này lấy từ đâu';
 
   @override

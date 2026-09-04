@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../l10n/gen/app_l10n.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/casing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -97,8 +100,7 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
             child: switch (async) {
               AsyncLoading() => const LoadingView(),
               AsyncError() => ErrorView(
-                  message: 'This action could not be loaded. It is still '
-                      'stored on this device.',
+                  message: AppL10n.of(context).detailLoadFailed,
                 ),
             AsyncData(:final value) => value == null
                   ? _NotFound(onBack: () => _leave(context))
@@ -162,16 +164,16 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete this step?'),
+        title: Text(AppL10n.of(dialogContext).stepDeleteTitle),
         content: Text(step.title),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Keep it'),
+            child: Text(AppL10n.of(dialogContext).stepDeleteKeep),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Delete'),
+            child: Text(AppL10n.of(dialogContext).commonDelete),
           ),
         ],
       ),
@@ -254,17 +256,15 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
   /// Says exactly what happened. "Saved" and "you will be alerted" are
   /// different promises, and the difference is the user's to know.
   void _reportReminder(ReminderOutcome outcome, {bool updated = false}) {
+    final l10n = AppL10n.of(context);
     final message = switch (outcome) {
-      ReminderScheduled() =>
-        updated ? 'Reminder updated.' : "Reminder set. We'll nudge you.",
-      ReminderNeedsPermission() =>
-        'Notifications are off, so this reminder is saved but cannot alert '
-            'you yet.',
-      ReminderFailed() =>
-        "This reminder is saved, but Android wouldn't schedule it.",
-      ReminderLimitReached() =>
-        'That action already has the maximum number of reminders.',
-      ReminderTimeInPast() => 'That time has already passed.',
+      ReminderScheduled() => updated
+          ? l10n.reminderUpdatedConfirmation
+          : l10n.reminderSetConfirmation,
+      ReminderNeedsPermission() => l10n.reminderNeedsPermission,
+      ReminderFailed() => l10n.reminderScheduleFailed,
+      ReminderLimitReached() => l10n.reminderLimitReached,
+      ReminderTimeInPast() => l10n.reminderTimeInPast,
     };
     switch (outcome) {
       case ReminderScheduled():
@@ -307,19 +307,16 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Archive this action?'),
-        content: const Text(
-          'It leaves your list but is not deleted, and the capture it came '
-          'from is kept.',
-        ),
+        title: Text(AppL10n.of(dialogContext).detailArchiveTitle),
+        content: Text(AppL10n.of(dialogContext).detailArchiveBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppL10n.of(dialogContext).commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Archive'),
+            child: Text(AppL10n.of(dialogContext).detailArchiveConfirm),
           ),
         ],
       ),
@@ -495,18 +492,19 @@ class _DetailBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.xs, Space.xs, Space.xs, 0),
       child: Row(
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back),
-            tooltip: 'Back',
+            tooltip: l10n.commonBack,
             onPressed: () => state._leave(context),
           ),
           const Spacer(),
           PopupMenuButton<String>(
-            tooltip: 'More',
+            tooltip: l10n.detailMore,
             onSelected: (value) => switch (value) {
               'title' => state._editTitle(action),
               'urgency' => state._editUrgency(action),
@@ -515,16 +513,25 @@ class _DetailBar extends StatelessWidget {
               _ => null,
             },
             itemBuilder: (_) => [
-              const PopupMenuItem(value: 'title', child: Text('Edit title')),
-              const PopupMenuItem(value: 'urgency', child: Text('Change urgency')),
+              PopupMenuItem(
+                value: 'title',
+                child: Text(l10n.reviewEditTitle),
+              ),
+              PopupMenuItem(
+                value: 'urgency',
+                child: Text(l10n.detailChangeUrgency),
+              ),
               PopupMenuItem(
                 value: 'next',
                 child: Text(action.recommendedNextStep == null
-                    ? 'Add a recommended step'
-                    : 'Edit recommended step'),
+                    ? l10n.detailAddRecommendedStep
+                    : l10n.detailEditRecommendedStep),
               ),
               if (action.status != ActionStatus.archived)
-                const PopupMenuItem(value: 'archive', child: Text('Archive')),
+                PopupMenuItem(
+                  value: 'archive',
+                  child: Text(l10n.detailArchiveConfirm),
+                ),
             ],
           ),
         ],
@@ -540,6 +547,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final completed = action.status == ActionStatus.completed;
@@ -565,7 +573,8 @@ class _Header extends StatelessWidget {
                     size: 18, color: colors.success),
                 const SizedBox(width: Space.sm),
                 Text(
-                  'Completed ${_friendlyDate(action.completedAt!.toLocal())}',
+                  l10n.detailCompletedOn(
+                      _friendlyDate(action.completedAt!.toLocal(), l10n)),
                   style: text.bodySmall?.copyWith(color: colors.textSecondary),
                 ),
               ],
@@ -586,15 +595,18 @@ class _MetaLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
     // Provenance is NOT repeated here — it has its own section further down,
     // and saying "Created by you" twice on one calm page is noise.
     final parts = <String>[
-      if (action.status == ActionStatus.archived) 'Archived',
-      if (action.urgency != ActionUrgency.unknown) action.urgency.label,
-      if (action.category != ActionCategory.unknown) action.category.label,
+      if (action.status == ActionStatus.archived) l10n.detailArchived,
+      if (action.urgency != ActionUrgency.unknown)
+        action.urgency.labelIn(l10n),
+      if (action.category != ActionCategory.unknown)
+        action.category.labelIn(l10n),
     ];
     if (parts.isEmpty) return const SizedBox.shrink();
 
@@ -638,6 +650,7 @@ class _NextBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final next = nextBestAction(action);
@@ -658,8 +671,9 @@ class _NextBlock extends StatelessWidget {
           children: [
             Text(
               switch (next) {
-                ChainFinished() => 'ALL STEPS DONE',
-                _ => 'NEXT',
+                ChainFinished() =>
+                  eyebrowCase(l10n.detailAllStepsDone, l10n.localeName),
+                _ => eyebrowCase(l10n.detailNextEyebrow, l10n.localeName),
               },
               style: text.labelSmall?.copyWith(
                 color: colors.textTertiary,
@@ -671,7 +685,7 @@ class _NextBlock extends StatelessWidget {
               switch (next) {
                 NextStep(:final step) => step.title,
                 NextSuggestion(:final text) => text,
-                ChainFinished() => 'Complete this action?',
+                ChainFinished() => l10n.detailCompleteQuestion,
                 NothingProposed() => '',
               },
               style: text.titleMedium,
@@ -682,14 +696,14 @@ class _NextBlock extends StatelessWidget {
                   alignment: AlignmentDirectional.centerStart,
                   child: FilledButton.tonal(
                     onPressed: () => state._toggleStep(action, step),
-                    child: const Text('Mark step done'),
+                    child: Text(l10n.detailMarkStepDone),
                   ),
                 ),
               ChainFinished() => Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: FilledButton.tonal(
                     onPressed: () => state._completeAction(action),
-                    child: const Text('Complete this action'),
+                    child: Text(l10n.detailCompleteAction),
                   ),
                 ),
               _ => const SizedBox.shrink(),
@@ -709,6 +723,7 @@ class _KeyFacts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -716,17 +731,17 @@ class _KeyFacts extends StatelessWidget {
     // says "none".
     final rows = <Widget>[
       _FactLine(
-        label: 'Deadline',
+        label: l10n.reviewDeadline,
         value: action.dueAt == null
-            ? 'Add a deadline'
-            : _friendlyDate(action.dueAt!.wallClock),
+            ? l10n.detailAddDeadline
+            : _friendlyDate(action.dueAt!.wallClock, l10n),
         muted: action.dueAt == null,
         onTap: () => state._editDeadline(action),
       ),
       if (action.amount != null || action.category == ActionCategory.payment)
         _FactLine(
-          label: 'Amount',
-          value: action.amount?.toString() ?? 'Add an amount',
+          label: l10n.reviewAmount,
+          value: action.amount?.toString() ?? l10n.detailAddAmount,
           muted: action.amount == null,
           numeric: action.amount != null,
           onTap: () => state._editAmount(action),
@@ -747,7 +762,7 @@ class _KeyFacts extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'DETAILS',
+            eyebrowCase(l10n.detailSectionDetails, l10n.localeName),
             style: text.labelSmall?.copyWith(
               color: colors.textTertiary,
               letterSpacing: 1.0,
@@ -828,6 +843,7 @@ class _ChainHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -836,7 +852,7 @@ class _ChainHeader extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'STEPS',
+            eyebrowCase(l10n.reviewSteps, l10n.localeName),
             style: text.labelSmall?.copyWith(
               color: colors.textTertiary,
               letterSpacing: 1.0,
@@ -846,7 +862,7 @@ class _ChainHeader extends StatelessWidget {
           // No progress line for an empty chain: "0 of 0" is noise.
           if (progress != null)
             Text(
-              '${progress!.completed} of ${progress!.total} done',
+              l10n.detailStepsProgress(progress!.completed, progress!.total),
               style: text.labelSmall?.copyWith(
                 color: colors.textTertiary,
                 fontFeatures: AppText.numeric,
@@ -865,16 +881,17 @@ class _EmptyChain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Space.page),
       child: EmptyView(
         compact: true,
         icon: Icons.checklist_rtl,
-        title: 'No steps yet',
-        message: 'Break this into the moves you actually have to make.',
+        title: l10n.detailNoStepsTitle,
+        message: l10n.detailNoStepsMessage,
         action: FilledButton.tonal(
           onPressed: onAdd,
-          child: const Text('Add first step'),
+          child: Text(l10n.detailAddFirstStep),
         ),
       ),
     );
@@ -905,6 +922,7 @@ class _StepRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -913,10 +931,10 @@ class _StepRow extends StatelessWidget {
       child: Semantics(
         // The status is in the semantics, not only in the strikethrough.
         label: step.isCompleted
-            ? 'Completed step: ${step.title}'
+            ? l10n.detailStepCompletedSemantics(step.title)
             : isNext
-                ? 'Next step: ${step.title}'
-                : 'Step: ${step.title}',
+                ? l10n.detailStepNextSemantics(step.title)
+                : l10n.detailStepSemantics(step.title),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -927,8 +945,8 @@ class _StepRow extends StatelessWidget {
               button: true,
               checked: step.isCompleted,
               label: step.isCompleted
-                  ? 'Mark "${step.title}" as not done'
-                  : 'Mark "${step.title}" as done',
+                  ? l10n.detailMarkNotDone(step.title)
+                  : l10n.detailMarkDone(step.title),
               child: InkWell(
                 onTap: onToggle,
                 borderRadius: BorderRadius.circular(Radii.pill),
@@ -967,7 +985,7 @@ class _StepRow extends StatelessWidget {
               ),
             ),
             PopupMenuButton<String>(
-              tooltip: 'Step options',
+              tooltip: l10n.detailStepOptions,
               onSelected: (value) => switch (value) {
                 'rename' => onRename(),
                 'up' => onMoveUp?.call(),
@@ -976,13 +994,24 @@ class _StepRow extends StatelessWidget {
                 _ => null,
               },
               itemBuilder: (_) => [
-                const PopupMenuItem(value: 'rename', child: Text('Edit step')),
+                PopupMenuItem(
+                  value: 'rename',
+                  child: Text(l10n.reviewEditStep),
+                ),
                 if (onMoveUp != null)
-                  const PopupMenuItem(value: 'up', child: Text('Move up')),
+                  PopupMenuItem(
+                    value: 'up',
+                    child: Text(l10n.detailMoveUp),
+                  ),
                 if (onMoveDown != null)
-                  const PopupMenuItem(value: 'down', child: Text('Move down')),
-                const PopupMenuItem(
-                    value: 'delete', child: Text('Delete step')),
+                  PopupMenuItem(
+                    value: 'down',
+                    child: Text(l10n.detailMoveDown),
+                  ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Text(l10n.detailDeleteStep),
+                ),
               ],
             ),
             // Only the handle drags, so checking a step never starts a move.
@@ -1008,6 +1037,7 @@ class _AddStepButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(Space.page, Space.sm, Space.page, 0),
       child: Align(
@@ -1015,7 +1045,7 @@ class _AddStepButton extends StatelessWidget {
         child: TextButton.icon(
           onPressed: onAdd,
           icon: const Icon(Icons.add, size: 18),
-          label: const Text('Add a step'),
+          label: Text(l10n.reviewAddStep),
         ),
       ),
     );
@@ -1034,6 +1064,7 @@ class _Reminders extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final async = ref.watch(remindersForActionProvider(action.id));
@@ -1052,7 +1083,7 @@ class _Reminders extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'REMINDERS',
+            eyebrowCase(l10n.detailSectionReminders, l10n.localeName),
             style: text.labelSmall?.copyWith(
               color: colors.textTertiary,
               letterSpacing: 1.0,
@@ -1061,7 +1092,7 @@ class _Reminders extends ConsumerWidget {
           const SizedBox(height: Space.sm),
           if (reminders.isEmpty)
             Text(
-              'No reminders yet.',
+              l10n.detailNoRemindersYet,
               style: text.bodyMedium?.copyWith(color: colors.textTertiary),
             )
           else
@@ -1074,8 +1105,7 @@ class _Reminders extends ConsumerWidget {
           const SizedBox(height: Space.xs),
           if (atLimit)
             Text(
-              'That is the most reminders one action can have. Remove one to '
-              'add another.',
+              l10n.detailReminderLimit,
               style: text.bodySmall?.copyWith(color: colors.textTertiary),
             )
           else if (action.status == ActionStatus.active)
@@ -1084,7 +1114,7 @@ class _Reminders extends ConsumerWidget {
               child: TextButton.icon(
                 onPressed: () => state._addReminder(action),
                 icon: const Icon(Icons.alarm_add_outlined, size: 18),
-                label: const Text('Add reminder'),
+                label: Text(l10n.detailAddReminder),
               ),
             ),
         ],
@@ -1106,6 +1136,7 @@ class _ReminderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final local = reminder.scheduledAt.toLocal();
@@ -1114,16 +1145,22 @@ class _ReminderRow extends StatelessWidget {
     // working, and even that promises delivery "around" the time.
     final (String note, Color noteColor) = switch (reminder.state) {
       ReminderState.scheduled => ('', colors.textTertiary),
-      ReminderState.pendingSchedule => ('Not set up yet', colors.textTertiary),
+      ReminderState.pendingSchedule => (
+          l10n.reminderStatePending,
+          colors.textTertiary,
+        ),
       ReminderState.needsPermission => (
-          'Saved, but notifications are off',
+          l10n.reminderStateNotificationsOff,
           colors.urgencyImportant,
         ),
       ReminderState.scheduleFailed => (
-          "Couldn't be scheduled",
+          l10n.reminderStateFailed,
           colors.danger,
         ),
-      ReminderState.cancelPending => ('Removing…', colors.textTertiary),
+      ReminderState.cancelPending => (
+          l10n.reminderStateRemoving,
+          colors.textTertiary,
+        ),
     };
 
     return Padding(
@@ -1143,7 +1180,8 @@ class _ReminderRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  DateFormat('EEE d MMM, h:mm a').format(local),
+                  DateFormat(l10n.detailReminderFormat, l10n.localeName)
+                      .format(local),
                   style: text.bodyMedium?.copyWith(
                     fontFeatures: AppText.numeric,
                   ),
@@ -1157,12 +1195,12 @@ class _ReminderRow extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Change reminder',
+            tooltip: l10n.detailChangeReminder,
             onPressed: onEdit,
             icon: Icon(Icons.edit_outlined, size: 18, color: colors.textTertiary),
           ),
           IconButton(
-            tooltip: 'Remove reminder',
+            tooltip: l10n.detailRemoveReminder,
             onPressed: onRemove,
             icon: Icon(Icons.close, size: 18, color: colors.textTertiary),
           ),
@@ -1179,6 +1217,7 @@ class _WhyThisMatters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final why = action.whyThisMatters?.trim();
     final summary = action.summary?.trim();
     final body = (why != null && why.isNotEmpty)
@@ -1196,7 +1235,7 @@ class _WhyThisMatters extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'WHY THIS MATTERS',
+            eyebrowCase(l10n.reviewWhyThisMatters, l10n.localeName),
             style: text.labelSmall?.copyWith(
               color: colors.textTertiary,
               letterSpacing: 1.0,
@@ -1288,6 +1327,7 @@ class _SourceLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     return InkWell(
@@ -1305,7 +1345,7 @@ class _SourceLink extends StatelessWidget {
                 children: [
                   Text(item.type.provenanceLabel, style: text.bodyMedium),
                   Text(
-                    _friendlyDate(item.capturedAt.toLocal()),
+                    _friendlyDate(item.capturedAt.toLocal(), l10n),
                     style: text.bodySmall?.copyWith(color: colors.textTertiary),
                   ),
                 ],
@@ -1377,18 +1417,23 @@ class _NotFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return EmptyView(
       icon: Icons.search_off,
-      title: 'That action is no longer here',
-      message: 'It may have been deleted on this device.',
-      action: FilledButton(onPressed: onBack, child: const Text('Go back')),
+      title: l10n.detailNotFoundTitle,
+      message: l10n.detailNotFoundMessage,
+      action: FilledButton(onPressed: onBack, child: Text(l10n.detailGoBack)),
     );
   }
 }
 
-String _friendlyDate(DateTime value) {
+String _friendlyDate(DateTime value, AppL10n l10n) {
   final now = DateTime.now();
-  return DateFormat(value.year == now.year ? 'd MMM' : 'd MMM yyyy')
+  return DateFormat(
+          value.year == now.year
+              ? l10n.detailDateFormat
+              : l10n.detailDateFormatWithYear,
+          l10n.localeName)
       .format(value);
 }
 

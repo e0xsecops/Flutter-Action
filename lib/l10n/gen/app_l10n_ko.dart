@@ -1319,6 +1319,282 @@ class AppL10nKo extends AppL10n {
   String get reviewSavedOnDevice => '이 기기에 저장했습니다.';
 
   @override
+  String get detailLoadFailed => '이 할 일을 불러오지 못했습니다. 이 기기에는 그대로 저장되어 있습니다.';
+
+  @override
+  String get detailNotFoundTitle => '그 할 일은 더 이상 없습니다';
+
+  @override
+  String get detailNotFoundMessage => '이 기기에서 삭제되었을 수 있습니다.';
+
+  @override
+  String get detailGoBack => '돌아가기';
+
+  @override
+  String get detailMore => '더 보기';
+
+  @override
+  String get detailChangeUrgency => '긴급도 바꾸기';
+
+  @override
+  String get detailAddRecommendedStep => '추천 단계 추가';
+
+  @override
+  String get detailEditRecommendedStep => '추천 단계 수정';
+
+  @override
+  String get detailArchiveTitle => '이 할 일을 보관할까요?';
+
+  @override
+  String get detailArchiveBody => '목록에서는 빠지지만 삭제되지는 않고, 이것이 나온 캡처도 그대로 남습니다.';
+
+  @override
+  String get detailArchiveConfirm => '보관';
+
+  @override
+  String get detailArchived => '보관됨';
+
+  @override
+  String detailCompletedOn(String date) {
+    return '$date에 완료';
+  }
+
+  @override
+  String get detailSectionDetails => '세부 정보';
+
+  @override
+  String get detailSectionReminders => '알림';
+
+  @override
+  String get detailAllStepsDone => '모든 단계 완료';
+
+  @override
+  String get detailNextEyebrow => '다음';
+
+  @override
+  String get detailCompleteQuestion => '이 할 일을 완료할까요?';
+
+  @override
+  String get detailMarkStepDone => '단계를 완료로 표시';
+
+  @override
+  String get detailCompleteAction => '이 할 일 완료하기';
+
+  @override
+  String get detailAddDeadline => '기한 추가';
+
+  @override
+  String get detailAddAmount => '금액 추가';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$total개 중 $completed개 완료';
+  }
+
+  @override
+  String get detailNoStepsTitle => '아직 단계가 없습니다';
+
+  @override
+  String get detailNoStepsMessage => '실제로 해야 하는 움직임으로 쪼개 보세요.';
+
+  @override
+  String get detailAddFirstStep => '첫 단계 추가';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return '완료된 단계: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return '다음 단계: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return '단계: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return '“$title”을(를) 완료로 표시';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return '“$title”을(를) 미완료로 표시';
+  }
+
+  @override
+  String get detailStepOptions => '단계 옵션';
+
+  @override
+  String get detailMoveUp => '위로';
+
+  @override
+  String get detailMoveDown => '아래로';
+
+  @override
+  String get detailDeleteStep => '단계 삭제';
+
+  @override
+  String get detailDateFormat => 'M월 d일';
+
+  @override
+  String get detailDateFormatWithYear => 'yyyy년 M월 d일';
+
+  @override
+  String get stepDeleteTitle => '이 단계를 삭제할까요?';
+
+  @override
+  String get stepDeleteKeep => '그대로 두기';
+
+  @override
+  String get detailNoRemindersYet => '아직 알림이 없습니다.';
+
+  @override
+  String get detailReminderLimit =>
+      '할 일 하나에 둘 수 있는 알림은 이것이 최대입니다. 하나를 지워야 새로 추가할 수 있습니다.';
+
+  @override
+  String get detailAddReminder => '알림 추가';
+
+  @override
+  String get detailChangeReminder => '알림 바꾸기';
+
+  @override
+  String get detailRemoveReminder => '알림 지우기';
+
+  @override
+  String get detailReminderFormat => 'M월 d일 (EEE) HH:mm';
+
+  @override
+  String get reminderStatePending => '아직 설정되지 않음';
+
+  @override
+  String get reminderStateNotificationsOff => '저장됨, 하지만 알림이 꺼져 있음';
+
+  @override
+  String get reminderStateFailed => '예약하지 못했습니다';
+
+  @override
+  String get reminderStateRemoving => '지우는 중…';
+
+  @override
+  String get reminderSetConfirmation => '알림을 설정했습니다. 저희가 알려 드릴게요.';
+
+  @override
+  String get reminderUpdatedConfirmation => '알림을 수정했습니다.';
+
+  @override
+  String get reminderNeedsPermission =>
+      '알림이 꺼져 있어 이 알림은 저장되었지만 아직 알려 드릴 수 없습니다.';
+
+  @override
+  String get reminderScheduleFailed => '이 알림은 저장되었지만 Android가 예약해 주지 않았습니다.';
+
+  @override
+  String get reminderLimitReached => '그 할 일에는 이미 최대 개수의 알림이 있습니다.';
+
+  @override
+  String get reminderTimeInPast => '그 시각은 이미 지났습니다.';
+
+  @override
+  String get reminderAddTitle => '알림 추가';
+
+  @override
+  String get reminderChangeTitle => '이 알림 바꾸기';
+
+  @override
+  String get reminderDateLabel => '날짜';
+
+  @override
+  String get reminderTimeLabel => '시각';
+
+  @override
+  String get reminderFieldDateFormat => 'yyyy년 M월 d일 (EEE)';
+
+  @override
+  String get reminderFieldTimeFormat => 'a h:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'M월 d일 EEEE';
+
+  @override
+  String get reminderPresetFormat => 'M월 d일 a h:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return '$date $time에 알려 드립니다.';
+  }
+
+  @override
+  String get reminderTimePastError => '그 시각은 이미 지났습니다. 더 늦은 시각을 고르세요.';
+
+  @override
+  String get reminderSet => '알림 설정';
+
+  @override
+  String get reminderPresetInHour => '1시간 뒤';
+
+  @override
+  String get reminderPresetTomorrowMorning => '내일 아침';
+
+  @override
+  String get reminderPresetNextWeek => '다음 주';
+
+  @override
+  String get reminderPresetOnTheDay => '당일';
+
+  @override
+  String get reminderPresetDayBefore => '1일 전';
+
+  @override
+  String get reminderPresetWeekBefore => '1주 전';
+
+  @override
+  String get reminderPresetAtDeadline => '기한에';
+
+  @override
+  String get reminderPresetHourBefore => '1시간 전';
+
+  @override
+  String get editNextStepTitle => '추천하는 다음 단계';
+
+  @override
+  String get editNextStepSubtitle => '다음에 하면 좋은 일을 한 문장으로.';
+
+  @override
+  String get editNextStepHint => '다음에 하면 좋은 일은 무엇인가요?';
+
+  @override
+  String get editRemoveSuggestion => '제안 지우기';
+
+  @override
+  String get editUrgencyTitle => '얼마나 급한가요?';
+
+  @override
+  String get editStepHint => '구체적으로 할 일 한 가지';
+
+  @override
+  String get editAddStep => '단계 추가';
+
+  @override
+  String get editDateHint => 'YYYY-MM-DD';
+
+  @override
+  String get editRemoveDeadline => '기한 지우기';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => '금액 저장';
+
+  @override
+  String get editRemoveAmount => '금액 지우기';
+
+  @override
   String get evidenceTitle => '이건 어디서 왔나';
 
   @override

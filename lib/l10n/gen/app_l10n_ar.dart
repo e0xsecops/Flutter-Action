@@ -1406,6 +1406,287 @@ class AppL10nAr extends AppL10n {
   String get reviewSavedOnDevice => 'محفوظ على هذا الجهاز.';
 
   @override
+  String get detailLoadFailed =>
+      'تعذّر تحميل هذا الإجراء. وهو ما يزال محفوظًا على هذا الجهاز.';
+
+  @override
+  String get detailNotFoundTitle => 'ذلك الإجراء لم يعد هنا';
+
+  @override
+  String get detailNotFoundMessage => 'ربما حُذف على هذا الجهاز.';
+
+  @override
+  String get detailGoBack => 'رجوع';
+
+  @override
+  String get detailMore => 'المزيد';
+
+  @override
+  String get detailChangeUrgency => 'تغيير الأولوية';
+
+  @override
+  String get detailAddRecommendedStep => 'إضافة خطوة مقترحة';
+
+  @override
+  String get detailEditRecommendedStep => 'تعديل الخطوة المقترحة';
+
+  @override
+  String get detailArchiveTitle => 'أرشفة هذا الإجراء؟';
+
+  @override
+  String get detailArchiveBody =>
+      'يخرج من قائمتك لكنه لا يُحذف، ويبقى الالتقاط الذي جاء منه محفوظًا.';
+
+  @override
+  String get detailArchiveConfirm => 'أرشفة';
+
+  @override
+  String get detailArchived => 'مؤرشف';
+
+  @override
+  String detailCompletedOn(String date) {
+    return 'اكتمل في $date';
+  }
+
+  @override
+  String get detailSectionDetails => 'التفاصيل';
+
+  @override
+  String get detailSectionReminders => 'التذكيرات';
+
+  @override
+  String get detailAllStepsDone => 'كل الخطوات تمّت';
+
+  @override
+  String get detailNextEyebrow => 'التالي';
+
+  @override
+  String get detailCompleteQuestion => 'إتمام هذا الإجراء؟';
+
+  @override
+  String get detailMarkStepDone => 'وضع علامة تمّت على الخطوة';
+
+  @override
+  String get detailCompleteAction => 'إتمام هذا الإجراء';
+
+  @override
+  String get detailAddDeadline => 'إضافة موعد نهائي';
+
+  @override
+  String get detailAddAmount => 'إضافة مبلغ';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$completed من $total تمّت';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'لا خطوات بعد';
+
+  @override
+  String get detailNoStepsMessage =>
+      'قسّم هذا إلى الخطوات التي عليك فعلها بالفعل.';
+
+  @override
+  String get detailAddFirstStep => 'إضافة أول خطوة';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'خطوة مكتملة: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'الخطوة التالية: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'خطوة: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return 'وضع علامة تمّت على «$title»';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return 'وضع علامة لم تتم على «$title»';
+  }
+
+  @override
+  String get detailStepOptions => 'خيارات الخطوة';
+
+  @override
+  String get detailMoveUp => 'تحريك لأعلى';
+
+  @override
+  String get detailMoveDown => 'تحريك لأسفل';
+
+  @override
+  String get detailDeleteStep => 'حذف الخطوة';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'حذف هذه الخطوة؟';
+
+  @override
+  String get stepDeleteKeep => 'إبقاؤها';
+
+  @override
+  String get detailNoRemindersYet => 'لا تذكيرات بعد.';
+
+  @override
+  String get detailReminderLimit =>
+      'هذا أقصى عدد من التذكيرات لإجراء واحد. أزل واحدًا لإضافة آخر.';
+
+  @override
+  String get detailAddReminder => 'إضافة تذكير';
+
+  @override
+  String get detailChangeReminder => 'تغيير التذكير';
+
+  @override
+  String get detailRemoveReminder => 'إزالة التذكير';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM، h:mm a';
+
+  @override
+  String get reminderStatePending => 'لم يُضبط بعد';
+
+  @override
+  String get reminderStateNotificationsOff => 'محفوظ، لكن الإشعارات مغلقة';
+
+  @override
+  String get reminderStateFailed => 'تعذّرت جدولته';
+
+  @override
+  String get reminderStateRemoving => 'جارٍ الإزالة…';
+
+  @override
+  String get reminderSetConfirmation => 'ضُبط التذكير. سننبّهك.';
+
+  @override
+  String get reminderUpdatedConfirmation => 'حُدّث التذكير.';
+
+  @override
+  String get reminderNeedsPermission =>
+      'الإشعارات مغلقة، فهذا التذكير محفوظ لكنه لا يستطيع تنبيهك بعد.';
+
+  @override
+  String get reminderScheduleFailed =>
+      'هذا التذكير محفوظ، لكن أندرويد لم يجدوله.';
+
+  @override
+  String get reminderLimitReached =>
+      'ذلك الإجراء لديه بالفعل أقصى عدد من التذكيرات.';
+
+  @override
+  String get reminderTimeInPast => 'ذلك الوقت قد مضى.';
+
+  @override
+  String get reminderAddTitle => 'إضافة تذكير';
+
+  @override
+  String get reminderChangeTitle => 'تغيير هذا التذكير';
+
+  @override
+  String get reminderDateLabel => 'التاريخ';
+
+  @override
+  String get reminderTimeLabel => 'الوقت';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'h:mm a';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM، h:mm a';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'سيصلك تذكير في $date الساعة $time.';
+  }
+
+  @override
+  String get reminderTimePastError => 'ذلك الوقت قد مضى. اختر وقتًا لاحقًا.';
+
+  @override
+  String get reminderSet => 'ضبط التذكير';
+
+  @override
+  String get reminderPresetInHour => 'بعد ساعة';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'صباح الغد';
+
+  @override
+  String get reminderPresetNextWeek => 'الأسبوع القادم';
+
+  @override
+  String get reminderPresetOnTheDay => 'في اليوم نفسه';
+
+  @override
+  String get reminderPresetDayBefore => 'قبل يوم واحد';
+
+  @override
+  String get reminderPresetWeekBefore => 'قبل أسبوع واحد';
+
+  @override
+  String get reminderPresetAtDeadline => 'عند الموعد النهائي';
+
+  @override
+  String get reminderPresetHourBefore => 'قبل ساعة واحدة';
+
+  @override
+  String get editNextStepTitle => 'الخطوة التالية المقترحة';
+
+  @override
+  String get editNextStepSubtitle => 'جملة قصيرة عن الخطوة المفيدة التالية.';
+
+  @override
+  String get editNextStepHint => 'ما الخطوة المفيدة التالية؟';
+
+  @override
+  String get editRemoveSuggestion => 'إزالة الاقتراح';
+
+  @override
+  String get editUrgencyTitle => 'ما مدى إلحاح هذا؟';
+
+  @override
+  String get editStepHint => 'شيء واحد ملموس لفعله';
+
+  @override
+  String get editAddStep => 'إضافة خطوة';
+
+  @override
+  String get editDateHint => 'سسسس-شش-يي';
+
+  @override
+  String get editRemoveDeadline => 'إزالة الموعد النهائي';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => 'حفظ المبلغ';
+
+  @override
+  String get editRemoveAmount => 'إزالة المبلغ';
+
+  @override
   String get evidenceTitle => 'من أين جاء هذا';
 
   @override

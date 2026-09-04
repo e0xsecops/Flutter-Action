@@ -1366,6 +1366,290 @@ class AppL10nTr extends AppL10n {
   String get reviewSavedOnDevice => 'Bu cihaza kaydedildi.';
 
   @override
+  String get detailLoadFailed =>
+      'Bu görev yüklenemedi. Yine de bu cihazda saklı duruyor.';
+
+  @override
+  String get detailNotFoundTitle => 'O görev artık burada değil';
+
+  @override
+  String get detailNotFoundMessage => 'Bu cihazda silinmiş olabilir.';
+
+  @override
+  String get detailGoBack => 'Geri dön';
+
+  @override
+  String get detailMore => 'Daha fazla';
+
+  @override
+  String get detailChangeUrgency => 'Aciliyeti değiştir';
+
+  @override
+  String get detailAddRecommendedStep => 'Önerilen adım ekle';
+
+  @override
+  String get detailEditRecommendedStep => 'Önerilen adımı düzenle';
+
+  @override
+  String get detailArchiveTitle => 'Bu görev arşivlensin mi?';
+
+  @override
+  String get detailArchiveBody =>
+      'Listenizden çıkar ama silinmez, ve geldiği yakalama saklı kalır.';
+
+  @override
+  String get detailArchiveConfirm => 'Arşivle';
+
+  @override
+  String get detailArchived => 'Arşivlendi';
+
+  @override
+  String detailCompletedOn(String date) {
+    return '$date tarihinde tamamlandı';
+  }
+
+  @override
+  String get detailSectionDetails => 'Ayrıntılar';
+
+  @override
+  String get detailSectionReminders => 'Hatırlatıcılar';
+
+  @override
+  String get detailAllStepsDone => 'Bütün adımlar bitti';
+
+  @override
+  String get detailNextEyebrow => 'Sırada';
+
+  @override
+  String get detailCompleteQuestion => 'Bu görev tamamlansın mı?';
+
+  @override
+  String get detailMarkStepDone => 'Adımı bitti olarak işaretle';
+
+  @override
+  String get detailCompleteAction => 'Bu görevi tamamla';
+
+  @override
+  String get detailAddDeadline => 'Son tarih ekle';
+
+  @override
+  String get detailAddAmount => 'Tutar ekle';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$total adımdan $completed tanesi bitti';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'Henüz adım yok';
+
+  @override
+  String get detailNoStepsMessage =>
+      'Bunu gerçekten yapmanız gereken hamlelere bölün.';
+
+  @override
+  String get detailAddFirstStep => 'İlk adımı ekle';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'Tamamlanan adım: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'Sonraki adım: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'Adım: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return '“$title” adımını bitti olarak işaretle';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return '“$title” adımını bitmedi olarak işaretle';
+  }
+
+  @override
+  String get detailStepOptions => 'Adım seçenekleri';
+
+  @override
+  String get detailMoveUp => 'Yukarı taşı';
+
+  @override
+  String get detailMoveDown => 'Aşağı taşı';
+
+  @override
+  String get detailDeleteStep => 'Adımı sil';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'Bu adım silinsin mi?';
+
+  @override
+  String get stepDeleteKeep => 'Kalsın';
+
+  @override
+  String get detailNoRemindersYet => 'Henüz hatırlatıcı yok.';
+
+  @override
+  String get detailReminderLimit =>
+      'Bir görevin alabileceği en fazla hatırlatıcı sayısı bu. Başka eklemek için birini kaldırın.';
+
+  @override
+  String get detailAddReminder => 'Hatırlatıcı ekle';
+
+  @override
+  String get detailChangeReminder => 'Hatırlatıcıyı değiştir';
+
+  @override
+  String get detailRemoveReminder => 'Hatırlatıcıyı kaldır';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM, HH:mm';
+
+  @override
+  String get reminderStatePending => 'Henüz kurulmadı';
+
+  @override
+  String get reminderStateNotificationsOff =>
+      'Kaydedildi ama bildirimler kapalı';
+
+  @override
+  String get reminderStateFailed => 'Zamanlanamadı';
+
+  @override
+  String get reminderStateRemoving => 'Kaldırılıyor…';
+
+  @override
+  String get reminderSetConfirmation => 'Hatırlatıcı kuruldu. Size dürteceğiz.';
+
+  @override
+  String get reminderUpdatedConfirmation => 'Hatırlatıcı güncellendi.';
+
+  @override
+  String get reminderNeedsPermission =>
+      'Bildirimler kapalı, bu yüzden bu hatırlatıcı kaydedildi ama sizi henüz uyaramaz.';
+
+  @override
+  String get reminderScheduleFailed =>
+      'Bu hatırlatıcı kaydedildi ama Android onu zamanlamak istemedi.';
+
+  @override
+  String get reminderLimitReached =>
+      'O görev zaten alabileceği en fazla hatırlatıcıya sahip.';
+
+  @override
+  String get reminderTimeInPast => 'O saat çoktan geçti.';
+
+  @override
+  String get reminderAddTitle => 'Hatırlatıcı ekle';
+
+  @override
+  String get reminderChangeTitle => 'Bu hatırlatıcıyı değiştir';
+
+  @override
+  String get reminderDateLabel => 'Tarih';
+
+  @override
+  String get reminderTimeLabel => 'Saat';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'd MMMM EEEE';
+
+  @override
+  String get reminderPresetFormat => 'd MMM, HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'Size $date günü saat $time hatırlatılacak.';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'O saat çoktan geçti. Daha ileri bir saat seçin.';
+
+  @override
+  String get reminderSet => 'Hatırlatıcıyı kur';
+
+  @override
+  String get reminderPresetInHour => '1 saat sonra';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'Yarın sabah';
+
+  @override
+  String get reminderPresetNextWeek => 'Gelecek hafta';
+
+  @override
+  String get reminderPresetOnTheDay => 'Aynı gün';
+
+  @override
+  String get reminderPresetDayBefore => '1 gün önce';
+
+  @override
+  String get reminderPresetWeekBefore => '1 hafta önce';
+
+  @override
+  String get reminderPresetAtDeadline => 'Son tarihte';
+
+  @override
+  String get reminderPresetHourBefore => '1 saat önce';
+
+  @override
+  String get editNextStepTitle => 'Önerilen sonraki adım';
+
+  @override
+  String get editNextStepSubtitle =>
+      'Sonraki işe yarar hamle hakkında kısa bir cümle.';
+
+  @override
+  String get editNextStepHint => 'Sonraki işe yarar hamle nedir?';
+
+  @override
+  String get editRemoveSuggestion => 'Öneriyi kaldır';
+
+  @override
+  String get editUrgencyTitle => 'Bu ne kadar acil?';
+
+  @override
+  String get editStepHint => 'Yapılacak somut bir şey';
+
+  @override
+  String get editAddStep => 'Adım ekle';
+
+  @override
+  String get editDateHint => 'YYYY-AA-GG';
+
+  @override
+  String get editRemoveDeadline => 'Son tarihi kaldır';
+
+  @override
+  String get editAmountHint => '96,40';
+
+  @override
+  String get editSaveAmount => 'Tutarı kaydet';
+
+  @override
+  String get editRemoveAmount => 'Tutarı kaldır';
+
+  @override
   String get evidenceTitle => 'Bunun geldiği yer';
 
   @override

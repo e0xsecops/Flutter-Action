@@ -13,6 +13,8 @@
 /// `ActionCategory.unknown.labelIn(l10n)` is what a person reads.
 library;
 
+import '../features/actions/application/reminder_presets.dart';
+
 import '../features/capture/domain/ocr_script.dart';
 import '../features/capture/domain/source_item.dart';
 import '../features/extraction/domain/extraction_schema.dart';
@@ -116,5 +118,19 @@ extension OcrScriptL10n on OcrScript {
         OcrScript.devanagari => l10n.ocrScriptDevanagariDescription,
         OcrScript.japanese => l10n.ocrScriptJapaneseDescription,
         OcrScript.korean => l10n.ocrScriptKoreanDescription,
+      };
+}
+
+extension ReminderPresetKindL10n on ReminderPresetKind {
+  String labelIn(AppL10n l10n) => switch (this) {
+        ReminderPresetKind.inOneHour => l10n.reminderPresetInHour,
+        ReminderPresetKind.tomorrowMorning =>
+          l10n.reminderPresetTomorrowMorning,
+        ReminderPresetKind.nextWeek => l10n.reminderPresetNextWeek,
+        ReminderPresetKind.onTheDay => l10n.reminderPresetOnTheDay,
+        ReminderPresetKind.oneDayBefore => l10n.reminderPresetDayBefore,
+        ReminderPresetKind.oneWeekBefore => l10n.reminderPresetWeekBefore,
+        ReminderPresetKind.atTheDeadline => l10n.reminderPresetAtDeadline,
+        ReminderPresetKind.oneHourBefore => l10n.reminderPresetHourBefore,
       };
 }

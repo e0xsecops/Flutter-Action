@@ -2395,6 +2395,522 @@ abstract class AppL10n {
   /// **'Saved on this device.'**
   String get reviewSavedOnDevice;
 
+  /// SAFETY: keeps the reassurance that matters - the failure is in loading, not in storing. Dropping the second clause turns a display problem into apparent data loss.
+  ///
+  /// In en, this message translates to:
+  /// **'This action could not be loaded. It is still stored on this device.'**
+  String get detailLoadFailed;
+
+  /// No description provided for @detailNotFoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'That action is no longer here'**
+  String get detailNotFoundTitle;
+
+  /// No description provided for @detailNotFoundMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'It may have been deleted on this device.'**
+  String get detailNotFoundMessage;
+
+  /// No description provided for @detailGoBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get detailGoBack;
+
+  /// No description provided for @detailMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get detailMore;
+
+  /// No description provided for @detailChangeUrgency.
+  ///
+  /// In en, this message translates to:
+  /// **'Change urgency'**
+  String get detailChangeUrgency;
+
+  /// No description provided for @detailAddRecommendedStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a recommended step'**
+  String get detailAddRecommendedStep;
+
+  /// No description provided for @detailEditRecommendedStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit recommended step'**
+  String get detailEditRecommendedStep;
+
+  /// No description provided for @detailArchiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive this action?'**
+  String get detailArchiveTitle;
+
+  /// SAFETY: two claims that must both survive - the action is not deleted, and the capture is kept. This is the sentence someone reads before deciding, and half of it is worse than none of it.
+  ///
+  /// In en, this message translates to:
+  /// **'It leaves your list but is not deleted, and the capture it came from is kept.'**
+  String get detailArchiveBody;
+
+  /// No description provided for @detailArchiveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get detailArchiveConfirm;
+
+  /// No description provided for @detailArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get detailArchived;
+
+  /// No description provided for @detailCompletedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed {date}'**
+  String detailCompletedOn(String date);
+
+  /// No description provided for @detailSectionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get detailSectionDetails;
+
+  /// No description provided for @detailSectionReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get detailSectionReminders;
+
+  /// No description provided for @detailAllStepsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All steps done'**
+  String get detailAllStepsDone;
+
+  /// No description provided for @detailNextEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get detailNextEyebrow;
+
+  /// No description provided for @detailCompleteQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete this action?'**
+  String get detailCompleteQuestion;
+
+  /// No description provided for @detailMarkStepDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark step done'**
+  String get detailMarkStepDone;
+
+  /// No description provided for @detailCompleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete this action'**
+  String get detailCompleteAction;
+
+  /// No description provided for @detailAddDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a deadline'**
+  String get detailAddDeadline;
+
+  /// No description provided for @detailAddAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an amount'**
+  String get detailAddAmount;
+
+  /// No description provided for @detailStepsProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed} of {total} done'**
+  String detailStepsProgress(int completed, int total);
+
+  /// No description provided for @detailNoStepsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No steps yet'**
+  String get detailNoStepsTitle;
+
+  /// No description provided for @detailNoStepsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Break this into the moves you actually have to make.'**
+  String get detailNoStepsMessage;
+
+  /// No description provided for @detailAddFirstStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add first step'**
+  String get detailAddFirstStep;
+
+  /// No description provided for @detailStepCompletedSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed step: {title}'**
+  String detailStepCompletedSemantics(String title);
+
+  /// No description provided for @detailStepNextSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Next step: {title}'**
+  String detailStepNextSemantics(String title);
+
+  /// No description provided for @detailStepSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Step: {title}'**
+  String detailStepSemantics(String title);
+
+  /// No description provided for @detailMarkDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark \"{title}\" as done'**
+  String detailMarkDone(String title);
+
+  /// No description provided for @detailMarkNotDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark \"{title}\" as not done'**
+  String detailMarkNotDone(String title);
+
+  /// No description provided for @detailStepOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Step options'**
+  String get detailStepOptions;
+
+  /// No description provided for @detailMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get detailMoveUp;
+
+  /// No description provided for @detailMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get detailMoveDown;
+
+  /// No description provided for @detailDeleteStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete step'**
+  String get detailDeleteStep;
+
+  /// An intl date pattern, not prose. Pattern letters (d, M, y) are syntax; only their arrangement and any literal separators should change.
+  ///
+  /// In en, this message translates to:
+  /// **'d MMM'**
+  String get detailDateFormat;
+
+  /// An intl date pattern, not prose. See detailDateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'d MMM yyyy'**
+  String get detailDateFormatWithYear;
+
+  /// No description provided for @stepDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this step?'**
+  String get stepDeleteTitle;
+
+  /// No description provided for @stepDeleteKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it'**
+  String get stepDeleteKeep;
+
+  /// No description provided for @detailNoRemindersYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders yet.'**
+  String get detailNoRemindersYet;
+
+  /// No description provided for @detailReminderLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'That is the most reminders one action can have. Remove one to add another.'**
+  String get detailReminderLimit;
+
+  /// No description provided for @detailAddReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reminder'**
+  String get detailAddReminder;
+
+  /// No description provided for @detailChangeReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Change reminder'**
+  String get detailChangeReminder;
+
+  /// No description provided for @detailRemoveReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove reminder'**
+  String get detailRemoveReminder;
+
+  /// An intl date pattern, not prose. See detailDateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'EEE d MMM, h:mm a'**
+  String get detailReminderFormat;
+
+  /// No description provided for @reminderStatePending.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set up yet'**
+  String get reminderStatePending;
+
+  /// SAFETY: the reminder exists and will not fire. Both halves are required; 'saved' alone reads as working.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved, but notifications are off'**
+  String get reminderStateNotificationsOff;
+
+  /// No description provided for @reminderStateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t be scheduled'**
+  String get reminderStateFailed;
+
+  /// No description provided for @reminderStateRemoving.
+  ///
+  /// In en, this message translates to:
+  /// **'Removing…'**
+  String get reminderStateRemoving;
+
+  /// No description provided for @reminderSetConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder set. We\'ll nudge you.'**
+  String get reminderSetConfirmation;
+
+  /// No description provided for @reminderUpdatedConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder updated.'**
+  String get reminderUpdatedConfirmation;
+
+  /// SAFETY: saved and will-alert are different promises. The sentence must keep both - that it was stored, and that it cannot notify.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off, so this reminder is saved but cannot alert you yet.'**
+  String get reminderNeedsPermission;
+
+  /// SAFETY: same rule as reminderNeedsPermission: stored is not the same as working, and the user is owed both facts.
+  ///
+  /// In en, this message translates to:
+  /// **'This reminder is saved, but Android wouldn\'t schedule it.'**
+  String get reminderScheduleFailed;
+
+  /// No description provided for @reminderLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'That action already has the maximum number of reminders.'**
+  String get reminderLimitReached;
+
+  /// No description provided for @reminderTimeInPast.
+  ///
+  /// In en, this message translates to:
+  /// **'That time has already passed.'**
+  String get reminderTimeInPast;
+
+  /// No description provided for @reminderAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a reminder'**
+  String get reminderAddTitle;
+
+  /// No description provided for @reminderChangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change this reminder'**
+  String get reminderChangeTitle;
+
+  /// No description provided for @reminderDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get reminderDateLabel;
+
+  /// No description provided for @reminderTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get reminderTimeLabel;
+
+  /// An intl date pattern, not prose. See detailDateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'EEE d MMM yyyy'**
+  String get reminderFieldDateFormat;
+
+  /// An intl time pattern, not prose. A locale that uses a 24-hour clock should say HH:mm and drop the a.
+  ///
+  /// In en, this message translates to:
+  /// **'h:mm a'**
+  String get reminderFieldTimeFormat;
+
+  /// An intl date pattern, not prose. See detailDateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'EEEE d MMMM'**
+  String get reminderSummaryDateFormat;
+
+  /// An intl date pattern, not prose. See detailDateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'d MMM, h:mm a'**
+  String get reminderPresetFormat;
+
+  /// SAFETY: the whole promise, spelled out before anything is created. The date and the time must both remain, because a relative phrase alone hides which hour was chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be reminded on {date} at {time}.'**
+  String reminderSummary(String date, String time);
+
+  /// No description provided for @reminderTimePastError.
+  ///
+  /// In en, this message translates to:
+  /// **'That time has already passed. Choose a later one.'**
+  String get reminderTimePastError;
+
+  /// No description provided for @reminderSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set reminder'**
+  String get reminderSet;
+
+  /// No description provided for @reminderPresetInHour.
+  ///
+  /// In en, this message translates to:
+  /// **'In 1 hour'**
+  String get reminderPresetInHour;
+
+  /// No description provided for @reminderPresetTomorrowMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow morning'**
+  String get reminderPresetTomorrowMorning;
+
+  /// No description provided for @reminderPresetNextWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get reminderPresetNextWeek;
+
+  /// No description provided for @reminderPresetOnTheDay.
+  ///
+  /// In en, this message translates to:
+  /// **'On the day'**
+  String get reminderPresetOnTheDay;
+
+  /// No description provided for @reminderPresetDayBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'1 day before'**
+  String get reminderPresetDayBefore;
+
+  /// No description provided for @reminderPresetWeekBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'1 week before'**
+  String get reminderPresetWeekBefore;
+
+  /// No description provided for @reminderPresetAtDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'At the deadline'**
+  String get reminderPresetAtDeadline;
+
+  /// No description provided for @reminderPresetHourBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour before'**
+  String get reminderPresetHourBefore;
+
+  /// No description provided for @editNextStepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended next step'**
+  String get editNextStepTitle;
+
+  /// No description provided for @editNextStepSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A short sentence about the next useful move.'**
+  String get editNextStepSubtitle;
+
+  /// No description provided for @editNextStepHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the next useful move?'**
+  String get editNextStepHint;
+
+  /// No description provided for @editRemoveSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the suggestion'**
+  String get editRemoveSuggestion;
+
+  /// No description provided for @editUrgencyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How urgent is this?'**
+  String get editUrgencyTitle;
+
+  /// No description provided for @editStepHint.
+  ///
+  /// In en, this message translates to:
+  /// **'One concrete thing to do'**
+  String get editStepHint;
+
+  /// No description provided for @editAddStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add step'**
+  String get editAddStep;
+
+  /// The shape of the date the field accepts, shown as a hint. The letters stand for year, month and day and should be the letters a reader of this language would expect.
+  ///
+  /// In en, this message translates to:
+  /// **'YYYY-MM-DD'**
+  String get editDateHint;
+
+  /// No description provided for @editRemoveDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the deadline'**
+  String get editRemoveDeadline;
+
+  /// An example amount shown as a hint. Use the decimal separator this locale actually writes.
+  ///
+  /// In en, this message translates to:
+  /// **'96.40'**
+  String get editAmountHint;
+
+  /// No description provided for @editSaveAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Save amount'**
+  String get editSaveAmount;
+
+  /// No description provided for @editRemoveAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the amount'**
+  String get editRemoveAmount;
+
   /// No description provided for @evidenceTitle.
   ///
   /// In en, this message translates to:

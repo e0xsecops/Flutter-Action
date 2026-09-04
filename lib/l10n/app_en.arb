@@ -859,6 +859,197 @@
     }
   },
   "reviewSavedOnDevice": "Saved on this device.",
+  "detailLoadFailed": "This action could not be loaded. It is still stored on this device.",
+  "@detailLoadFailed": {
+    "description": "SAFETY: keeps the reassurance that matters - the failure is in loading, not in storing. Dropping the second clause turns a display problem into apparent data loss."
+  },
+  "detailNotFoundTitle": "That action is no longer here",
+  "detailNotFoundMessage": "It may have been deleted on this device.",
+  "detailGoBack": "Go back",
+  "detailMore": "More",
+  "detailChangeUrgency": "Change urgency",
+  "detailAddRecommendedStep": "Add a recommended step",
+  "detailEditRecommendedStep": "Edit recommended step",
+  "detailArchiveTitle": "Archive this action?",
+  "detailArchiveBody": "It leaves your list but is not deleted, and the capture it came from is kept.",
+  "@detailArchiveBody": {
+    "description": "SAFETY: two claims that must both survive - the action is not deleted, and the capture is kept. This is the sentence someone reads before deciding, and half of it is worse than none of it."
+  },
+  "detailArchiveConfirm": "Archive",
+  "detailArchived": "Archived",
+  "detailCompletedOn": "Completed {date}",
+  "@detailCompletedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "detailSectionDetails": "Details",
+  "detailSectionReminders": "Reminders",
+  "detailAllStepsDone": "All steps done",
+  "detailNextEyebrow": "Next",
+  "detailCompleteQuestion": "Complete this action?",
+  "detailMarkStepDone": "Mark step done",
+  "detailCompleteAction": "Complete this action",
+  "detailAddDeadline": "Add a deadline",
+  "detailAddAmount": "Add an amount",
+  "detailStepsProgress": "{completed} of {total} done",
+  "@detailStepsProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "detailNoStepsTitle": "No steps yet",
+  "detailNoStepsMessage": "Break this into the moves you actually have to make.",
+  "detailAddFirstStep": "Add first step",
+  "detailStepCompletedSemantics": "Completed step: {title}",
+  "@detailStepCompletedSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailStepNextSemantics": "Next step: {title}",
+  "@detailStepNextSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailStepSemantics": "Step: {title}",
+  "@detailStepSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailMarkDone": "Mark \"{title}\" as done",
+  "@detailMarkDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailMarkNotDone": "Mark \"{title}\" as not done",
+  "@detailMarkNotDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailStepOptions": "Step options",
+  "detailMoveUp": "Move up",
+  "detailMoveDown": "Move down",
+  "detailDeleteStep": "Delete step",
+  "detailDateFormat": "d MMM",
+  "@detailDateFormat": {
+    "description": "An intl date pattern, not prose. Pattern letters (d, M, y) are syntax; only their arrangement and any literal separators should change."
+  },
+  "detailDateFormatWithYear": "d MMM yyyy",
+  "@detailDateFormatWithYear": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "stepDeleteTitle": "Delete this step?",
+  "stepDeleteKeep": "Keep it",
+  "detailNoRemindersYet": "No reminders yet.",
+  "detailReminderLimit": "That is the most reminders one action can have. Remove one to add another.",
+  "detailAddReminder": "Add reminder",
+  "detailChangeReminder": "Change reminder",
+  "detailRemoveReminder": "Remove reminder",
+  "detailReminderFormat": "EEE d MMM, h:mm a",
+  "@detailReminderFormat": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "reminderStatePending": "Not set up yet",
+  "reminderStateNotificationsOff": "Saved, but notifications are off",
+  "@reminderStateNotificationsOff": {
+    "description": "SAFETY: the reminder exists and will not fire. Both halves are required; 'saved' alone reads as working."
+  },
+  "reminderStateFailed": "Couldn't be scheduled",
+  "reminderStateRemoving": "Removing…",
+  "reminderSetConfirmation": "Reminder set. We'll nudge you.",
+  "reminderUpdatedConfirmation": "Reminder updated.",
+  "reminderNeedsPermission": "Notifications are off, so this reminder is saved but cannot alert you yet.",
+  "@reminderNeedsPermission": {
+    "description": "SAFETY: saved and will-alert are different promises. The sentence must keep both - that it was stored, and that it cannot notify."
+  },
+  "reminderScheduleFailed": "This reminder is saved, but Android wouldn't schedule it.",
+  "@reminderScheduleFailed": {
+    "description": "SAFETY: same rule as reminderNeedsPermission: stored is not the same as working, and the user is owed both facts."
+  },
+  "reminderLimitReached": "That action already has the maximum number of reminders.",
+  "reminderTimeInPast": "That time has already passed.",
+  "reminderAddTitle": "Add a reminder",
+  "reminderChangeTitle": "Change this reminder",
+  "reminderDateLabel": "Date",
+  "reminderTimeLabel": "Time",
+  "reminderFieldDateFormat": "EEE d MMM yyyy",
+  "@reminderFieldDateFormat": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "reminderFieldTimeFormat": "h:mm a",
+  "@reminderFieldTimeFormat": {
+    "description": "An intl time pattern, not prose. A locale that uses a 24-hour clock should say HH:mm and drop the a."
+  },
+  "reminderSummaryDateFormat": "EEEE d MMMM",
+  "@reminderSummaryDateFormat": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "reminderPresetFormat": "d MMM, h:mm a",
+  "@reminderPresetFormat": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "reminderSummary": "You will be reminded on {date} at {time}.",
+  "@reminderSummary": {
+    "description": "SAFETY: the whole promise, spelled out before anything is created. The date and the time must both remain, because a relative phrase alone hides which hour was chosen.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderTimePastError": "That time has already passed. Choose a later one.",
+  "reminderSet": "Set reminder",
+  "reminderPresetInHour": "In 1 hour",
+  "reminderPresetTomorrowMorning": "Tomorrow morning",
+  "reminderPresetNextWeek": "Next week",
+  "reminderPresetOnTheDay": "On the day",
+  "reminderPresetDayBefore": "1 day before",
+  "reminderPresetWeekBefore": "1 week before",
+  "reminderPresetAtDeadline": "At the deadline",
+  "reminderPresetHourBefore": "1 hour before",
+  "editNextStepTitle": "Recommended next step",
+  "editNextStepSubtitle": "A short sentence about the next useful move.",
+  "editNextStepHint": "What is the next useful move?",
+  "editRemoveSuggestion": "Remove the suggestion",
+  "editUrgencyTitle": "How urgent is this?",
+  "editStepHint": "One concrete thing to do",
+  "editAddStep": "Add step",
+  "editDateHint": "YYYY-MM-DD",
+  "@editDateHint": {
+    "description": "The shape of the date the field accepts, shown as a hint. The letters stand for year, month and day and should be the letters a reader of this language would expect."
+  },
+  "editRemoveDeadline": "Remove the deadline",
+  "editAmountHint": "96.40",
+  "@editAmountHint": {
+    "description": "An example amount shown as a hint. Use the decimal separator this locale actually writes."
+  },
+  "editSaveAmount": "Save amount",
+  "editRemoveAmount": "Remove the amount",
   "evidenceTitle": "Where this came from",
   "evidenceUnverified": "Action could not find these words in the text it read, so this value has not been verified. Check it against the original before you rely on it.",
   "@evidenceUnverified": {

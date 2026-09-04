@@ -1402,6 +1402,292 @@ class AppL10nRu extends AppL10n {
   String get reviewSavedOnDevice => 'Сохранена на этом устройстве.';
 
   @override
+  String get detailLoadFailed =>
+      'Не удалось загрузить эту задачу. Она по-прежнему хранится на этом устройстве.';
+
+  @override
+  String get detailNotFoundTitle => 'Этой задачи здесь больше нет';
+
+  @override
+  String get detailNotFoundMessage =>
+      'Возможно, она была удалена на этом устройстве.';
+
+  @override
+  String get detailGoBack => 'Назад';
+
+  @override
+  String get detailMore => 'Ещё';
+
+  @override
+  String get detailChangeUrgency => 'Изменить срочность';
+
+  @override
+  String get detailAddRecommendedStep => 'Добавить рекомендованный шаг';
+
+  @override
+  String get detailEditRecommendedStep => 'Изменить рекомендованный шаг';
+
+  @override
+  String get detailArchiveTitle => 'Отправить эту задачу в архив?';
+
+  @override
+  String get detailArchiveBody =>
+      'Она уходит из списка, но не удаляется, а добавленное, из которого она возникла, сохраняется.';
+
+  @override
+  String get detailArchiveConfirm => 'В архив';
+
+  @override
+  String get detailArchived => 'В архиве';
+
+  @override
+  String detailCompletedOn(String date) {
+    return 'Выполнена $date';
+  }
+
+  @override
+  String get detailSectionDetails => 'Подробности';
+
+  @override
+  String get detailSectionReminders => 'Напоминания';
+
+  @override
+  String get detailAllStepsDone => 'Все шаги сделаны';
+
+  @override
+  String get detailNextEyebrow => 'Дальше';
+
+  @override
+  String get detailCompleteQuestion => 'Завершить эту задачу?';
+
+  @override
+  String get detailMarkStepDone => 'Отметить шаг сделанным';
+
+  @override
+  String get detailCompleteAction => 'Завершить эту задачу';
+
+  @override
+  String get detailAddDeadline => 'Добавить срок';
+
+  @override
+  String get detailAddAmount => 'Добавить сумму';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$completed из $total сделано';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'Шагов пока нет';
+
+  @override
+  String get detailNoStepsMessage =>
+      'Разложите это на действия, которые вам действительно предстоит сделать.';
+
+  @override
+  String get detailAddFirstStep => 'Добавить первый шаг';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'Шаг выполнен: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'Следующий шаг: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'Шаг: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return 'Отметить «$title» как сделанное';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return 'Отметить «$title» как несделанное';
+  }
+
+  @override
+  String get detailStepOptions => 'Действия с шагом';
+
+  @override
+  String get detailMoveUp => 'Выше';
+
+  @override
+  String get detailMoveDown => 'Ниже';
+
+  @override
+  String get detailDeleteStep => 'Удалить шаг';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'Удалить этот шаг?';
+
+  @override
+  String get stepDeleteKeep => 'Оставить';
+
+  @override
+  String get detailNoRemindersYet => 'Напоминаний пока нет.';
+
+  @override
+  String get detailReminderLimit =>
+      'Больше напоминаний у одной задачи быть не может. Удалите одно, чтобы добавить другое.';
+
+  @override
+  String get detailAddReminder => 'Добавить напоминание';
+
+  @override
+  String get detailChangeReminder => 'Изменить напоминание';
+
+  @override
+  String get detailRemoveReminder => 'Удалить напоминание';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM, HH:mm';
+
+  @override
+  String get reminderStatePending => 'Ещё не настроено';
+
+  @override
+  String get reminderStateNotificationsOff =>
+      'Сохранено, но уведомления выключены';
+
+  @override
+  String get reminderStateFailed => 'Не удалось запланировать';
+
+  @override
+  String get reminderStateRemoving => 'Удаление…';
+
+  @override
+  String get reminderSetConfirmation =>
+      'Напоминание поставлено. Мы вас подтолкнём.';
+
+  @override
+  String get reminderUpdatedConfirmation => 'Напоминание обновлено.';
+
+  @override
+  String get reminderNeedsPermission =>
+      'Уведомления выключены, поэтому это напоминание сохранено, но пока не может вас известить.';
+
+  @override
+  String get reminderScheduleFailed =>
+      'Это напоминание сохранено, но Android не стал его планировать.';
+
+  @override
+  String get reminderLimitReached =>
+      'У этой задачи уже максимальное число напоминаний.';
+
+  @override
+  String get reminderTimeInPast => 'Это время уже прошло.';
+
+  @override
+  String get reminderAddTitle => 'Добавить напоминание';
+
+  @override
+  String get reminderChangeTitle => 'Изменить это напоминание';
+
+  @override
+  String get reminderDateLabel => 'Дата';
+
+  @override
+  String get reminderTimeLabel => 'Время';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE, d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM, HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'Мы напомним вам $date в $time.';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'Это время уже прошло. Выберите более позднее.';
+
+  @override
+  String get reminderSet => 'Поставить напоминание';
+
+  @override
+  String get reminderPresetInHour => 'Через 1 час';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'Завтра утром';
+
+  @override
+  String get reminderPresetNextWeek => 'На следующей неделе';
+
+  @override
+  String get reminderPresetOnTheDay => 'В тот же день';
+
+  @override
+  String get reminderPresetDayBefore => 'За 1 день';
+
+  @override
+  String get reminderPresetWeekBefore => 'За 1 неделю';
+
+  @override
+  String get reminderPresetAtDeadline => 'В момент срока';
+
+  @override
+  String get reminderPresetHourBefore => 'За 1 час';
+
+  @override
+  String get editNextStepTitle => 'Рекомендованный следующий шаг';
+
+  @override
+  String get editNextStepSubtitle =>
+      'Одно короткое предложение о следующем полезном действии.';
+
+  @override
+  String get editNextStepHint => 'Какое следующее полезное действие?';
+
+  @override
+  String get editRemoveSuggestion => 'Убрать предложение';
+
+  @override
+  String get editUrgencyTitle => 'Насколько это срочно?';
+
+  @override
+  String get editStepHint => 'Одно конкретное дело';
+
+  @override
+  String get editAddStep => 'Добавить шаг';
+
+  @override
+  String get editDateHint => 'ГГГГ-ММ-ДД';
+
+  @override
+  String get editRemoveDeadline => 'Убрать срок';
+
+  @override
+  String get editAmountHint => '96,40';
+
+  @override
+  String get editSaveAmount => 'Сохранить сумму';
+
+  @override
+  String get editRemoveAmount => 'Убрать сумму';
+
+  @override
   String get evidenceTitle => 'Откуда это взято';
 
   @override

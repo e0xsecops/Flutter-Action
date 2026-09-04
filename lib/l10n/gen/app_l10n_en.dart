@@ -1367,6 +1367,291 @@ class AppL10nEn extends AppL10n {
   String get reviewSavedOnDevice => 'Saved on this device.';
 
   @override
+  String get detailLoadFailed =>
+      'This action could not be loaded. It is still stored on this device.';
+
+  @override
+  String get detailNotFoundTitle => 'That action is no longer here';
+
+  @override
+  String get detailNotFoundMessage =>
+      'It may have been deleted on this device.';
+
+  @override
+  String get detailGoBack => 'Go back';
+
+  @override
+  String get detailMore => 'More';
+
+  @override
+  String get detailChangeUrgency => 'Change urgency';
+
+  @override
+  String get detailAddRecommendedStep => 'Add a recommended step';
+
+  @override
+  String get detailEditRecommendedStep => 'Edit recommended step';
+
+  @override
+  String get detailArchiveTitle => 'Archive this action?';
+
+  @override
+  String get detailArchiveBody =>
+      'It leaves your list but is not deleted, and the capture it came from is kept.';
+
+  @override
+  String get detailArchiveConfirm => 'Archive';
+
+  @override
+  String get detailArchived => 'Archived';
+
+  @override
+  String detailCompletedOn(String date) {
+    return 'Completed $date';
+  }
+
+  @override
+  String get detailSectionDetails => 'Details';
+
+  @override
+  String get detailSectionReminders => 'Reminders';
+
+  @override
+  String get detailAllStepsDone => 'All steps done';
+
+  @override
+  String get detailNextEyebrow => 'Next';
+
+  @override
+  String get detailCompleteQuestion => 'Complete this action?';
+
+  @override
+  String get detailMarkStepDone => 'Mark step done';
+
+  @override
+  String get detailCompleteAction => 'Complete this action';
+
+  @override
+  String get detailAddDeadline => 'Add a deadline';
+
+  @override
+  String get detailAddAmount => 'Add an amount';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$completed of $total done';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'No steps yet';
+
+  @override
+  String get detailNoStepsMessage =>
+      'Break this into the moves you actually have to make.';
+
+  @override
+  String get detailAddFirstStep => 'Add first step';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'Completed step: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'Next step: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'Step: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return 'Mark \"$title\" as done';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return 'Mark \"$title\" as not done';
+  }
+
+  @override
+  String get detailStepOptions => 'Step options';
+
+  @override
+  String get detailMoveUp => 'Move up';
+
+  @override
+  String get detailMoveDown => 'Move down';
+
+  @override
+  String get detailDeleteStep => 'Delete step';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'Delete this step?';
+
+  @override
+  String get stepDeleteKeep => 'Keep it';
+
+  @override
+  String get detailNoRemindersYet => 'No reminders yet.';
+
+  @override
+  String get detailReminderLimit =>
+      'That is the most reminders one action can have. Remove one to add another.';
+
+  @override
+  String get detailAddReminder => 'Add reminder';
+
+  @override
+  String get detailChangeReminder => 'Change reminder';
+
+  @override
+  String get detailRemoveReminder => 'Remove reminder';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM, h:mm a';
+
+  @override
+  String get reminderStatePending => 'Not set up yet';
+
+  @override
+  String get reminderStateNotificationsOff =>
+      'Saved, but notifications are off';
+
+  @override
+  String get reminderStateFailed => 'Couldn\'t be scheduled';
+
+  @override
+  String get reminderStateRemoving => 'Removing…';
+
+  @override
+  String get reminderSetConfirmation => 'Reminder set. We\'ll nudge you.';
+
+  @override
+  String get reminderUpdatedConfirmation => 'Reminder updated.';
+
+  @override
+  String get reminderNeedsPermission =>
+      'Notifications are off, so this reminder is saved but cannot alert you yet.';
+
+  @override
+  String get reminderScheduleFailed =>
+      'This reminder is saved, but Android wouldn\'t schedule it.';
+
+  @override
+  String get reminderLimitReached =>
+      'That action already has the maximum number of reminders.';
+
+  @override
+  String get reminderTimeInPast => 'That time has already passed.';
+
+  @override
+  String get reminderAddTitle => 'Add a reminder';
+
+  @override
+  String get reminderChangeTitle => 'Change this reminder';
+
+  @override
+  String get reminderDateLabel => 'Date';
+
+  @override
+  String get reminderTimeLabel => 'Time';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'h:mm a';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM, h:mm a';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'You will be reminded on $date at $time.';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'That time has already passed. Choose a later one.';
+
+  @override
+  String get reminderSet => 'Set reminder';
+
+  @override
+  String get reminderPresetInHour => 'In 1 hour';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'Tomorrow morning';
+
+  @override
+  String get reminderPresetNextWeek => 'Next week';
+
+  @override
+  String get reminderPresetOnTheDay => 'On the day';
+
+  @override
+  String get reminderPresetDayBefore => '1 day before';
+
+  @override
+  String get reminderPresetWeekBefore => '1 week before';
+
+  @override
+  String get reminderPresetAtDeadline => 'At the deadline';
+
+  @override
+  String get reminderPresetHourBefore => '1 hour before';
+
+  @override
+  String get editNextStepTitle => 'Recommended next step';
+
+  @override
+  String get editNextStepSubtitle =>
+      'A short sentence about the next useful move.';
+
+  @override
+  String get editNextStepHint => 'What is the next useful move?';
+
+  @override
+  String get editRemoveSuggestion => 'Remove the suggestion';
+
+  @override
+  String get editUrgencyTitle => 'How urgent is this?';
+
+  @override
+  String get editStepHint => 'One concrete thing to do';
+
+  @override
+  String get editAddStep => 'Add step';
+
+  @override
+  String get editDateHint => 'YYYY-MM-DD';
+
+  @override
+  String get editRemoveDeadline => 'Remove the deadline';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => 'Save amount';
+
+  @override
+  String get editRemoveAmount => 'Remove the amount';
+
+  @override
   String get evidenceTitle => 'Where this came from';
 
   @override

@@ -1368,6 +1368,289 @@ class AppL10nHi extends AppL10n {
   String get reviewSavedOnDevice => 'इसी डिवाइस पर सहेजा गया।';
 
   @override
+  String get detailLoadFailed =>
+      'यह काम लोड नहीं हो सका। यह अब भी इसी डिवाइस पर सहेजा हुआ है।';
+
+  @override
+  String get detailNotFoundTitle => 'वह काम अब यहाँ नहीं है';
+
+  @override
+  String get detailNotFoundMessage => 'शायद इसे इसी डिवाइस पर हटा दिया गया हो।';
+
+  @override
+  String get detailGoBack => 'वापस जाएँ';
+
+  @override
+  String get detailMore => 'और';
+
+  @override
+  String get detailChangeUrgency => 'ज़रूरत का स्तर बदलें';
+
+  @override
+  String get detailAddRecommendedStep => 'सुझाया गया कदम जोड़ें';
+
+  @override
+  String get detailEditRecommendedStep => 'सुझाया गया कदम बदलें';
+
+  @override
+  String get detailArchiveTitle => 'यह काम संग्रह में डालें?';
+
+  @override
+  String get detailArchiveBody =>
+      'यह आपकी सूची से हट जाता है पर मिटता नहीं, और जिस कैप्चर से यह बना वह भी रखा रहता है।';
+
+  @override
+  String get detailArchiveConfirm => 'संग्रह में डालें';
+
+  @override
+  String get detailArchived => 'संग्रह में';
+
+  @override
+  String detailCompletedOn(String date) {
+    return '$date को पूरा हुआ';
+  }
+
+  @override
+  String get detailSectionDetails => 'ब्योरा';
+
+  @override
+  String get detailSectionReminders => 'याद दिलाने वाले';
+
+  @override
+  String get detailAllStepsDone => 'सारे कदम पूरे';
+
+  @override
+  String get detailNextEyebrow => 'आगे';
+
+  @override
+  String get detailCompleteQuestion => 'यह काम पूरा करें?';
+
+  @override
+  String get detailMarkStepDone => 'कदम पूरा बताएँ';
+
+  @override
+  String get detailCompleteAction => 'यह काम पूरा करें';
+
+  @override
+  String get detailAddDeadline => 'समय-सीमा जोड़ें';
+
+  @override
+  String get detailAddAmount => 'रकम जोड़ें';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$total में से $completed पूरे';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'अभी कोई कदम नहीं';
+
+  @override
+  String get detailNoStepsMessage =>
+      'इसे उन कामों में बाँटें जो आपको सचमुच करने हैं।';
+
+  @override
+  String get detailAddFirstStep => 'पहला कदम जोड़ें';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'पूरा हुआ कदम: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'अगला कदम: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'कदम: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return '“$title” को पूरा बताएँ';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return '“$title” को अधूरा बताएँ';
+  }
+
+  @override
+  String get detailStepOptions => 'कदम के विकल्प';
+
+  @override
+  String get detailMoveUp => 'ऊपर ले जाएँ';
+
+  @override
+  String get detailMoveDown => 'नीचे ले जाएँ';
+
+  @override
+  String get detailDeleteStep => 'कदम हटाएँ';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'यह कदम हटाएँ?';
+
+  @override
+  String get stepDeleteKeep => 'रहने दें';
+
+  @override
+  String get detailNoRemindersYet => 'अभी कोई याद दिलाने वाला नहीं।';
+
+  @override
+  String get detailReminderLimit =>
+      'एक काम में इससे ज़्यादा याद दिलाने वाले नहीं हो सकते। दूसरा जोड़ने के लिए एक हटाएँ।';
+
+  @override
+  String get detailAddReminder => 'याद दिलाने वाला जोड़ें';
+
+  @override
+  String get detailChangeReminder => 'याद दिलाने वाला बदलें';
+
+  @override
+  String get detailRemoveReminder => 'याद दिलाने वाला हटाएँ';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM, h:mm a';
+
+  @override
+  String get reminderStatePending => 'अभी सेट नहीं हुआ';
+
+  @override
+  String get reminderStateNotificationsOff => 'सहेजा गया, पर सूचनाएँ बंद हैं';
+
+  @override
+  String get reminderStateFailed => 'शेड्यूल नहीं हो सका';
+
+  @override
+  String get reminderStateRemoving => 'हटाया जा रहा है…';
+
+  @override
+  String get reminderSetConfirmation =>
+      'याद दिलाने वाला सेट हो गया। हम टोक देंगे।';
+
+  @override
+  String get reminderUpdatedConfirmation => 'याद दिलाने वाला बदल गया।';
+
+  @override
+  String get reminderNeedsPermission =>
+      'सूचनाएँ बंद हैं, इसलिए यह याद दिलाने वाला सहेजा तो गया है पर अभी आपको बता नहीं सकता।';
+
+  @override
+  String get reminderScheduleFailed =>
+      'यह याद दिलाने वाला सहेजा गया है, पर Android ने इसे शेड्यूल नहीं किया।';
+
+  @override
+  String get reminderLimitReached =>
+      'उस काम में पहले से ही अधिकतम याद दिलाने वाले हैं।';
+
+  @override
+  String get reminderTimeInPast => 'वह समय बीत चुका है।';
+
+  @override
+  String get reminderAddTitle => 'याद दिलाने वाला जोड़ें';
+
+  @override
+  String get reminderChangeTitle => 'यह याद दिलाने वाला बदलें';
+
+  @override
+  String get reminderDateLabel => 'तारीख़';
+
+  @override
+  String get reminderTimeLabel => 'समय';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'h:mm a';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM, h:mm a';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'आपको $date को $time बजे याद दिलाया जाएगा।';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'वह समय बीत चुका है। कोई बाद का समय चुनें।';
+
+  @override
+  String get reminderSet => 'याद दिलाने वाला सेट करें';
+
+  @override
+  String get reminderPresetInHour => '1 घंटे में';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'कल सुबह';
+
+  @override
+  String get reminderPresetNextWeek => 'अगले हफ़्ते';
+
+  @override
+  String get reminderPresetOnTheDay => 'उसी दिन';
+
+  @override
+  String get reminderPresetDayBefore => '1 दिन पहले';
+
+  @override
+  String get reminderPresetWeekBefore => '1 हफ़्ता पहले';
+
+  @override
+  String get reminderPresetAtDeadline => 'समय-सीमा पर';
+
+  @override
+  String get reminderPresetHourBefore => '1 घंटा पहले';
+
+  @override
+  String get editNextStepTitle => 'सुझाया गया अगला कदम';
+
+  @override
+  String get editNextStepSubtitle => 'अगले काम के बारे में एक छोटा वाक्य।';
+
+  @override
+  String get editNextStepHint => 'अगला काम की बात क्या है?';
+
+  @override
+  String get editRemoveSuggestion => 'सुझाव हटाएँ';
+
+  @override
+  String get editUrgencyTitle => 'यह कितना ज़रूरी है?';
+
+  @override
+  String get editStepHint => 'करने लायक एक ठोस चीज़';
+
+  @override
+  String get editAddStep => 'कदम जोड़ें';
+
+  @override
+  String get editDateHint => 'वववव-मम-दद';
+
+  @override
+  String get editRemoveDeadline => 'समय-सीमा हटाएँ';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => 'रकम सहेजें';
+
+  @override
+  String get editRemoveAmount => 'रकम हटाएँ';
+
+  @override
   String get evidenceTitle => 'यह कहाँ से आया';
 
   @override

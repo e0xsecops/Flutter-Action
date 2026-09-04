@@ -1349,6 +1349,288 @@ class AppL10nTh extends AppL10n {
   String get reviewSavedOnDevice => 'บันทึกไว้บนเครื่องนี้';
 
   @override
+  String get detailLoadFailed =>
+      'โหลดงานนี้ไม่ได้ งานยังถูกเก็บไว้บนเครื่องนี้';
+
+  @override
+  String get detailNotFoundTitle => 'งานนั้นไม่อยู่ที่นี่แล้ว';
+
+  @override
+  String get detailNotFoundMessage => 'อาจถูกลบไปแล้วบนเครื่องนี้';
+
+  @override
+  String get detailGoBack => 'ย้อนกลับ';
+
+  @override
+  String get detailMore => 'เพิ่มเติม';
+
+  @override
+  String get detailChangeUrgency => 'เปลี่ยนความเร่งด่วน';
+
+  @override
+  String get detailAddRecommendedStep => 'เพิ่มขั้นตอนที่แนะนำ';
+
+  @override
+  String get detailEditRecommendedStep => 'แก้ขั้นตอนที่แนะนำ';
+
+  @override
+  String get detailArchiveTitle => 'เก็บงานนี้เข้าคลังไหม';
+
+  @override
+  String get detailArchiveBody =>
+      'งานจะออกจากรายการของคุณแต่ไม่ถูกลบ และสิ่งที่บันทึกไว้ซึ่งเป็นที่มาของงานก็ยังถูกเก็บไว้';
+
+  @override
+  String get detailArchiveConfirm => 'เก็บเข้าคลัง';
+
+  @override
+  String get detailArchived => 'เก็บเข้าคลังแล้ว';
+
+  @override
+  String detailCompletedOn(String date) {
+    return 'เสร็จเมื่อ $date';
+  }
+
+  @override
+  String get detailSectionDetails => 'รายละเอียด';
+
+  @override
+  String get detailSectionReminders => 'การเตือน';
+
+  @override
+  String get detailAllStepsDone => 'ครบทุกขั้นตอนแล้ว';
+
+  @override
+  String get detailNextEyebrow => 'ถัดไป';
+
+  @override
+  String get detailCompleteQuestion => 'ทำงานนี้ให้เสร็จไหม';
+
+  @override
+  String get detailMarkStepDone => 'ทำเครื่องหมายว่าขั้นตอนเสร็จ';
+
+  @override
+  String get detailCompleteAction => 'ทำงานนี้ให้เสร็จ';
+
+  @override
+  String get detailAddDeadline => 'เพิ่มกำหนดส่ง';
+
+  @override
+  String get detailAddAmount => 'เพิ่มจำนวนเงิน';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return 'เสร็จ $completed จาก $total';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'ยังไม่มีขั้นตอน';
+
+  @override
+  String get detailNoStepsMessage =>
+      'แบ่งสิ่งนี้ออกเป็นสิ่งที่คุณต้องลงมือทำจริง ๆ';
+
+  @override
+  String get detailAddFirstStep => 'เพิ่มขั้นตอนแรก';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'ขั้นตอนที่เสร็จแล้ว: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'ขั้นตอนถัดไป: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'ขั้นตอน: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return 'ทำเครื่องหมายว่า “$title” เสร็จแล้ว';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return 'ทำเครื่องหมายว่า “$title” ยังไม่เสร็จ';
+  }
+
+  @override
+  String get detailStepOptions => 'ตัวเลือกของขั้นตอน';
+
+  @override
+  String get detailMoveUp => 'เลื่อนขึ้น';
+
+  @override
+  String get detailMoveDown => 'เลื่อนลง';
+
+  @override
+  String get detailDeleteStep => 'ลบขั้นตอน';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'ลบขั้นตอนนี้ไหม';
+
+  @override
+  String get stepDeleteKeep => 'เก็บไว้';
+
+  @override
+  String get detailNoRemindersYet => 'ยังไม่มีการเตือน';
+
+  @override
+  String get detailReminderLimit =>
+      'นี่คือจำนวนการเตือนมากที่สุดที่งานหนึ่งมีได้ นำออกหนึ่งรายการเพื่อเพิ่มรายการใหม่';
+
+  @override
+  String get detailAddReminder => 'เพิ่มการเตือน';
+
+  @override
+  String get detailChangeReminder => 'เปลี่ยนการเตือน';
+
+  @override
+  String get detailRemoveReminder => 'นำการเตือนออก';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM HH:mm';
+
+  @override
+  String get reminderStatePending => 'ยังไม่ได้ตั้ง';
+
+  @override
+  String get reminderStateNotificationsOff =>
+      'บันทึกแล้ว แต่การแจ้งเตือนปิดอยู่';
+
+  @override
+  String get reminderStateFailed => 'ตั้งเวลาไม่ได้';
+
+  @override
+  String get reminderStateRemoving => 'กำลังนำออก…';
+
+  @override
+  String get reminderSetConfirmation => 'ตั้งการเตือนแล้ว เราจะสะกิดคุณ';
+
+  @override
+  String get reminderUpdatedConfirmation => 'อัปเดตการเตือนแล้ว';
+
+  @override
+  String get reminderNeedsPermission =>
+      'การแจ้งเตือนปิดอยู่ การเตือนนี้จึงถูกบันทึกไว้แต่ยังเตือนคุณไม่ได้';
+
+  @override
+  String get reminderScheduleFailed =>
+      'การเตือนนี้ถูกบันทึกไว้แล้ว แต่ Android ไม่ยอมตั้งเวลาให้';
+
+  @override
+  String get reminderLimitReached => 'งานนั้นมีการเตือนครบจำนวนสูงสุดแล้ว';
+
+  @override
+  String get reminderTimeInPast => 'เวลานั้นผ่านไปแล้ว';
+
+  @override
+  String get reminderAddTitle => 'เพิ่มการเตือน';
+
+  @override
+  String get reminderChangeTitle => 'เปลี่ยนการเตือนนี้';
+
+  @override
+  String get reminderDateLabel => 'วันที่';
+
+  @override
+  String get reminderTimeLabel => 'เวลา';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'จะเตือนคุณวันที่ $date เวลา $time';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'เวลานั้นผ่านไปแล้ว เลือกเวลาที่หลังกว่านี้';
+
+  @override
+  String get reminderSet => 'ตั้งการเตือน';
+
+  @override
+  String get reminderPresetInHour => 'อีก 1 ชั่วโมง';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'พรุ่งนี้เช้า';
+
+  @override
+  String get reminderPresetNextWeek => 'สัปดาห์หน้า';
+
+  @override
+  String get reminderPresetOnTheDay => 'ในวันนั้น';
+
+  @override
+  String get reminderPresetDayBefore => 'ก่อน 1 วัน';
+
+  @override
+  String get reminderPresetWeekBefore => 'ก่อน 1 สัปดาห์';
+
+  @override
+  String get reminderPresetAtDeadline => 'ตอนถึงกำหนดส่ง';
+
+  @override
+  String get reminderPresetHourBefore => 'ก่อน 1 ชั่วโมง';
+
+  @override
+  String get editNextStepTitle => 'ขั้นตอนถัดไปที่แนะนำ';
+
+  @override
+  String get editNextStepSubtitle => 'ประโยคสั้น ๆ เกี่ยวกับสิ่งที่ควรทำต่อไป';
+
+  @override
+  String get editNextStepHint => 'สิ่งที่ควรทำต่อไปคืออะไร';
+
+  @override
+  String get editRemoveSuggestion => 'นำคำแนะนำออก';
+
+  @override
+  String get editUrgencyTitle => 'เรื่องนี้เร่งด่วนแค่ไหน';
+
+  @override
+  String get editStepHint => 'สิ่งที่ต้องทำอย่างเป็นรูปธรรมหนึ่งอย่าง';
+
+  @override
+  String get editAddStep => 'เพิ่มขั้นตอน';
+
+  @override
+  String get editDateHint => 'ปปปป-ดด-วว';
+
+  @override
+  String get editRemoveDeadline => 'นำกำหนดส่งออก';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => 'บันทึกจำนวนเงิน';
+
+  @override
+  String get editRemoveAmount => 'นำจำนวนเงินออก';
+
+  @override
   String get evidenceTitle => 'สิ่งนี้มาจากไหน';
 
   @override

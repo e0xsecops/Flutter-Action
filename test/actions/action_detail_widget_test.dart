@@ -647,7 +647,15 @@ void main() {
     await tester.tap(find.text('Use this date'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('not a real date'), findsOneWidget);
+    // The deadline editor and the extraction review screen now share one
+    // sentence for a date that is not a date (reviewBadDate), rather than
+    // wording the same refusal twice. Matched case-insensitively so the
+    // assertion is about the refusal rather than about where the sentence
+    // happens to start.
+    expect(
+      find.textContaining(RegExp('not a real date', caseSensitive: false)),
+      findsOneWidget,
+    );
     expect(
       (await _repo.getById('a1'))!.dueAt,
       isNull,

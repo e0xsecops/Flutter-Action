@@ -1365,6 +1365,290 @@ class AppL10nId extends AppL10n {
   String get reviewSavedOnDevice => 'Disimpan di perangkat ini.';
 
   @override
+  String get detailLoadFailed =>
+      'Tugas ini tidak bisa dimuat. Tugas ini tetap tersimpan di perangkat ini.';
+
+  @override
+  String get detailNotFoundTitle => 'Tugas itu sudah tidak ada di sini';
+
+  @override
+  String get detailNotFoundMessage => 'Mungkin sudah dihapus di perangkat ini.';
+
+  @override
+  String get detailGoBack => 'Kembali';
+
+  @override
+  String get detailMore => 'Lainnya';
+
+  @override
+  String get detailChangeUrgency => 'Ubah tingkat mendesak';
+
+  @override
+  String get detailAddRecommendedStep => 'Tambah langkah yang disarankan';
+
+  @override
+  String get detailEditRecommendedStep => 'Ubah langkah yang disarankan';
+
+  @override
+  String get detailArchiveTitle => 'Arsipkan tugas ini?';
+
+  @override
+  String get detailArchiveBody =>
+      'Tugas keluar dari daftar Anda tetapi tidak dihapus, dan tangkapan asalnya tetap disimpan.';
+
+  @override
+  String get detailArchiveConfirm => 'Arsipkan';
+
+  @override
+  String get detailArchived => 'Diarsipkan';
+
+  @override
+  String detailCompletedOn(String date) {
+    return 'Selesai pada $date';
+  }
+
+  @override
+  String get detailSectionDetails => 'Rincian';
+
+  @override
+  String get detailSectionReminders => 'Pengingat';
+
+  @override
+  String get detailAllStepsDone => 'Semua langkah selesai';
+
+  @override
+  String get detailNextEyebrow => 'Berikutnya';
+
+  @override
+  String get detailCompleteQuestion => 'Selesaikan tugas ini?';
+
+  @override
+  String get detailMarkStepDone => 'Tandai langkah selesai';
+
+  @override
+  String get detailCompleteAction => 'Selesaikan tugas ini';
+
+  @override
+  String get detailAddDeadline => 'Tambah tenggat';
+
+  @override
+  String get detailAddAmount => 'Tambah jumlah';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$completed dari $total selesai';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'Belum ada langkah';
+
+  @override
+  String get detailNoStepsMessage =>
+      'Pecah ini menjadi gerakan yang memang harus Anda lakukan.';
+
+  @override
+  String get detailAddFirstStep => 'Tambah langkah pertama';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'Langkah selesai: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'Langkah berikutnya: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'Langkah: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return 'Tandai “$title” sebagai selesai';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return 'Tandai “$title” sebagai belum selesai';
+  }
+
+  @override
+  String get detailStepOptions => 'Opsi langkah';
+
+  @override
+  String get detailMoveUp => 'Naikkan';
+
+  @override
+  String get detailMoveDown => 'Turunkan';
+
+  @override
+  String get detailDeleteStep => 'Hapus langkah';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'Hapus langkah ini?';
+
+  @override
+  String get stepDeleteKeep => 'Biarkan saja';
+
+  @override
+  String get detailNoRemindersYet => 'Belum ada pengingat.';
+
+  @override
+  String get detailReminderLimit =>
+      'Itu jumlah pengingat terbanyak untuk satu tugas. Hapus satu untuk menambah yang lain.';
+
+  @override
+  String get detailAddReminder => 'Tambah pengingat';
+
+  @override
+  String get detailChangeReminder => 'Ubah pengingat';
+
+  @override
+  String get detailRemoveReminder => 'Hapus pengingat';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM, HH:mm';
+
+  @override
+  String get reminderStatePending => 'Belum disiapkan';
+
+  @override
+  String get reminderStateNotificationsOff =>
+      'Tersimpan, tetapi notifikasi mati';
+
+  @override
+  String get reminderStateFailed => 'Tidak bisa dijadwalkan';
+
+  @override
+  String get reminderStateRemoving => 'Menghapus…';
+
+  @override
+  String get reminderSetConfirmation => 'Pengingat dipasang. Nanti kami colek.';
+
+  @override
+  String get reminderUpdatedConfirmation => 'Pengingat diperbarui.';
+
+  @override
+  String get reminderNeedsPermission =>
+      'Notifikasi mati, jadi pengingat ini tersimpan tetapi belum bisa memberi tahu Anda.';
+
+  @override
+  String get reminderScheduleFailed =>
+      'Pengingat ini tersimpan, tetapi Android tidak mau menjadwalkannya.';
+
+  @override
+  String get reminderLimitReached =>
+      'Tugas itu sudah punya pengingat sebanyak batas maksimum.';
+
+  @override
+  String get reminderTimeInPast => 'Waktu itu sudah lewat.';
+
+  @override
+  String get reminderAddTitle => 'Tambah pengingat';
+
+  @override
+  String get reminderChangeTitle => 'Ubah pengingat ini';
+
+  @override
+  String get reminderDateLabel => 'Tanggal';
+
+  @override
+  String get reminderTimeLabel => 'Waktu';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM, HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'Anda akan diingatkan pada $date pukul $time.';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'Waktu itu sudah lewat. Pilih yang lebih akhir.';
+
+  @override
+  String get reminderSet => 'Pasang pengingat';
+
+  @override
+  String get reminderPresetInHour => '1 jam lagi';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'Besok pagi';
+
+  @override
+  String get reminderPresetNextWeek => 'Minggu depan';
+
+  @override
+  String get reminderPresetOnTheDay => 'Pada hari itu';
+
+  @override
+  String get reminderPresetDayBefore => '1 hari sebelumnya';
+
+  @override
+  String get reminderPresetWeekBefore => '1 minggu sebelumnya';
+
+  @override
+  String get reminderPresetAtDeadline => 'Saat tenggat';
+
+  @override
+  String get reminderPresetHourBefore => '1 jam sebelumnya';
+
+  @override
+  String get editNextStepTitle => 'Langkah berikutnya yang disarankan';
+
+  @override
+  String get editNextStepSubtitle =>
+      'Satu kalimat pendek tentang gerakan berguna berikutnya.';
+
+  @override
+  String get editNextStepHint => 'Apa gerakan berguna berikutnya?';
+
+  @override
+  String get editRemoveSuggestion => 'Hapus saran';
+
+  @override
+  String get editUrgencyTitle => 'Seberapa mendesak ini?';
+
+  @override
+  String get editStepHint => 'Satu hal konkret untuk dikerjakan';
+
+  @override
+  String get editAddStep => 'Tambah langkah';
+
+  @override
+  String get editDateHint => 'TTTT-BB-HH';
+
+  @override
+  String get editRemoveDeadline => 'Hapus tenggat';
+
+  @override
+  String get editAmountHint => '96,40';
+
+  @override
+  String get editSaveAmount => 'Simpan jumlah';
+
+  @override
+  String get editRemoveAmount => 'Hapus jumlah';
+
+  @override
   String get evidenceTitle => 'Asal muasalnya';
 
   @override

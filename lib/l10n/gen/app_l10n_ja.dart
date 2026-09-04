@@ -1316,6 +1316,283 @@ class AppL10nJa extends AppL10n {
   String get reviewSavedOnDevice => 'この端末に保存しました。';
 
   @override
+  String get detailLoadFailed => 'このタスクを読み込めませんでした。この端末には引き続き保存されています。';
+
+  @override
+  String get detailNotFoundTitle => 'そのタスクはもうありません';
+
+  @override
+  String get detailNotFoundMessage => 'この端末で削除されたのかもしれません。';
+
+  @override
+  String get detailGoBack => '戻る';
+
+  @override
+  String get detailMore => 'その他';
+
+  @override
+  String get detailChangeUrgency => '緊急度を変更';
+
+  @override
+  String get detailAddRecommendedStep => 'おすすめの手順を追加';
+
+  @override
+  String get detailEditRecommendedStep => 'おすすめの手順を編集';
+
+  @override
+  String get detailArchiveTitle => 'このタスクをアーカイブしますか？';
+
+  @override
+  String get detailArchiveBody => '一覧からは外れますが削除はされず、元になった取り込みもそのまま残ります。';
+
+  @override
+  String get detailArchiveConfirm => 'アーカイブ';
+
+  @override
+  String get detailArchived => 'アーカイブ済み';
+
+  @override
+  String detailCompletedOn(String date) {
+    return '$dateに完了';
+  }
+
+  @override
+  String get detailSectionDetails => '詳細';
+
+  @override
+  String get detailSectionReminders => 'リマインダー';
+
+  @override
+  String get detailAllStepsDone => 'すべての手順が完了';
+
+  @override
+  String get detailNextEyebrow => '次';
+
+  @override
+  String get detailCompleteQuestion => 'このタスクを完了しますか？';
+
+  @override
+  String get detailMarkStepDone => '手順を完了にする';
+
+  @override
+  String get detailCompleteAction => 'このタスクを完了する';
+
+  @override
+  String get detailAddDeadline => '期限を追加';
+
+  @override
+  String get detailAddAmount => '金額を追加';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$total件中$completed件完了';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'まだ手順はありません';
+
+  @override
+  String get detailNoStepsMessage => '実際にやることに分けてみてください。';
+
+  @override
+  String get detailAddFirstStep => '最初の手順を追加';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return '完了した手順: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return '次の手順: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return '手順: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return '「$title」を完了にする';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return '「$title」を未完了にする';
+  }
+
+  @override
+  String get detailStepOptions => '手順の操作';
+
+  @override
+  String get detailMoveUp => '上へ';
+
+  @override
+  String get detailMoveDown => '下へ';
+
+  @override
+  String get detailDeleteStep => '手順を削除';
+
+  @override
+  String get detailDateFormat => 'M月d日';
+
+  @override
+  String get detailDateFormatWithYear => 'yyyy年M月d日';
+
+  @override
+  String get stepDeleteTitle => 'この手順を削除しますか？';
+
+  @override
+  String get stepDeleteKeep => '残す';
+
+  @override
+  String get detailNoRemindersYet => 'リマインダーはまだありません。';
+
+  @override
+  String get detailReminderLimit =>
+      '1つのタスクに設定できるリマインダーはこれが上限です。追加するには1つ削除してください。';
+
+  @override
+  String get detailAddReminder => 'リマインダーを追加';
+
+  @override
+  String get detailChangeReminder => 'リマインダーを変更';
+
+  @override
+  String get detailRemoveReminder => 'リマインダーを削除';
+
+  @override
+  String get detailReminderFormat => 'M月d日(EEE) HH:mm';
+
+  @override
+  String get reminderStatePending => 'まだ設定されていません';
+
+  @override
+  String get reminderStateNotificationsOff => '保存済みですが通知はオフです';
+
+  @override
+  String get reminderStateFailed => '予定に入れられませんでした';
+
+  @override
+  String get reminderStateRemoving => '削除中…';
+
+  @override
+  String get reminderSetConfirmation => 'リマインダーを設定しました。お知らせします。';
+
+  @override
+  String get reminderUpdatedConfirmation => 'リマインダーを更新しました。';
+
+  @override
+  String get reminderNeedsPermission =>
+      '通知がオフのため、このリマインダーは保存されましたがまだお知らせできません。';
+
+  @override
+  String get reminderScheduleFailed =>
+      'このリマインダーは保存されましたが、Android が予定に入れませんでした。';
+
+  @override
+  String get reminderLimitReached => 'そのタスクにはすでに上限までリマインダーがあります。';
+
+  @override
+  String get reminderTimeInPast => 'その時刻はすでに過ぎています。';
+
+  @override
+  String get reminderAddTitle => 'リマインダーを追加';
+
+  @override
+  String get reminderChangeTitle => 'このリマインダーを変更';
+
+  @override
+  String get reminderDateLabel => '日付';
+
+  @override
+  String get reminderTimeLabel => '時刻';
+
+  @override
+  String get reminderFieldDateFormat => 'yyyy年M月d日(EEE)';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'M月d日EEEE';
+
+  @override
+  String get reminderPresetFormat => 'M月d日 HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return '$dateの$timeにお知らせします。';
+  }
+
+  @override
+  String get reminderTimePastError => 'その時刻はすでに過ぎています。あとの時刻を選んでください。';
+
+  @override
+  String get reminderSet => 'リマインダーを設定';
+
+  @override
+  String get reminderPresetInHour => '1時間後';
+
+  @override
+  String get reminderPresetTomorrowMorning => '明日の朝';
+
+  @override
+  String get reminderPresetNextWeek => '来週';
+
+  @override
+  String get reminderPresetOnTheDay => '当日';
+
+  @override
+  String get reminderPresetDayBefore => '1日前';
+
+  @override
+  String get reminderPresetWeekBefore => '1週間前';
+
+  @override
+  String get reminderPresetAtDeadline => '期限のとき';
+
+  @override
+  String get reminderPresetHourBefore => '1時間前';
+
+  @override
+  String get editNextStepTitle => 'おすすめの次の手順';
+
+  @override
+  String get editNextStepSubtitle => '次にやると良いことを一文で。';
+
+  @override
+  String get editNextStepHint => '次にやると良いことは何ですか？';
+
+  @override
+  String get editRemoveSuggestion => '提案を削除';
+
+  @override
+  String get editUrgencyTitle => 'どれくらい急ぎですか？';
+
+  @override
+  String get editStepHint => '具体的にやること1つ';
+
+  @override
+  String get editAddStep => '手順を追加';
+
+  @override
+  String get editDateHint => 'YYYY-MM-DD';
+
+  @override
+  String get editRemoveDeadline => '期限を削除';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => '金額を保存';
+
+  @override
+  String get editRemoveAmount => '金額を削除';
+
+  @override
   String get evidenceTitle => 'この出どころ';
 
   @override

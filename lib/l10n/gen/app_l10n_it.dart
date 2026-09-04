@@ -1373,6 +1373,292 @@ class AppL10nIt extends AppL10n {
   String get reviewSavedOnDevice => 'Salvata su questo dispositivo.';
 
   @override
+  String get detailLoadFailed =>
+      'Non è stato possibile caricare questa attività. Resta salvata su questo dispositivo.';
+
+  @override
+  String get detailNotFoundTitle => 'Quell\'attività non c\'è più';
+
+  @override
+  String get detailNotFoundMessage =>
+      'Potrebbe essere stata eliminata su questo dispositivo.';
+
+  @override
+  String get detailGoBack => 'Indietro';
+
+  @override
+  String get detailMore => 'Altro';
+
+  @override
+  String get detailChangeUrgency => 'Cambia l\'urgenza';
+
+  @override
+  String get detailAddRecommendedStep => 'Aggiungi un passo consigliato';
+
+  @override
+  String get detailEditRecommendedStep => 'Modifica il passo consigliato';
+
+  @override
+  String get detailArchiveTitle => 'Archiviare questa attività?';
+
+  @override
+  String get detailArchiveBody =>
+      'Esce dalla tua lista ma non viene eliminata, e l\'acquisizione da cui è nata viene conservata.';
+
+  @override
+  String get detailArchiveConfirm => 'Archivia';
+
+  @override
+  String get detailArchived => 'Archiviata';
+
+  @override
+  String detailCompletedOn(String date) {
+    return 'Completata il $date';
+  }
+
+  @override
+  String get detailSectionDetails => 'Dettagli';
+
+  @override
+  String get detailSectionReminders => 'Promemoria';
+
+  @override
+  String get detailAllStepsDone => 'Tutti i passi fatti';
+
+  @override
+  String get detailNextEyebrow => 'Prossimo';
+
+  @override
+  String get detailCompleteQuestion => 'Completare questa attività?';
+
+  @override
+  String get detailMarkStepDone => 'Segna il passo come fatto';
+
+  @override
+  String get detailCompleteAction => 'Completa questa attività';
+
+  @override
+  String get detailAddDeadline => 'Aggiungi una scadenza';
+
+  @override
+  String get detailAddAmount => 'Aggiungi un importo';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$completed di $total fatti';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'Ancora nessun passo';
+
+  @override
+  String get detailNoStepsMessage =>
+      'Spezza questo nelle mosse che devi davvero fare.';
+
+  @override
+  String get detailAddFirstStep => 'Aggiungi il primo passo';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'Passo completato: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'Passo successivo: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'Passo: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return 'Segna «$title» come fatto';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return 'Segna «$title» come non fatto';
+  }
+
+  @override
+  String get detailStepOptions => 'Opzioni del passo';
+
+  @override
+  String get detailMoveUp => 'Sposta su';
+
+  @override
+  String get detailMoveDown => 'Sposta giù';
+
+  @override
+  String get detailDeleteStep => 'Elimina il passo';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'Eliminare questo passo?';
+
+  @override
+  String get stepDeleteKeep => 'Tienilo';
+
+  @override
+  String get detailNoRemindersYet => 'Ancora nessun promemoria.';
+
+  @override
+  String get detailReminderLimit =>
+      'È il massimo dei promemoria che un\'attività può avere. Rimuovine uno per aggiungerne un altro.';
+
+  @override
+  String get detailAddReminder => 'Aggiungi promemoria';
+
+  @override
+  String get detailChangeReminder => 'Cambia il promemoria';
+
+  @override
+  String get detailRemoveReminder => 'Rimuovi il promemoria';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM, HH:mm';
+
+  @override
+  String get reminderStatePending => 'Non ancora impostato';
+
+  @override
+  String get reminderStateNotificationsOff =>
+      'Salvato, ma le notifiche sono spente';
+
+  @override
+  String get reminderStateFailed => 'Non è stato possibile programmarlo';
+
+  @override
+  String get reminderStateRemoving => 'Rimozione…';
+
+  @override
+  String get reminderSetConfirmation =>
+      'Promemoria impostato. Ti daremo una spinta.';
+
+  @override
+  String get reminderUpdatedConfirmation => 'Promemoria aggiornato.';
+
+  @override
+  String get reminderNeedsPermission =>
+      'Le notifiche sono spente, quindi questo promemoria è salvato ma non può ancora avvisarti.';
+
+  @override
+  String get reminderScheduleFailed =>
+      'Questo promemoria è salvato, ma Android non ha voluto programmarlo.';
+
+  @override
+  String get reminderLimitReached =>
+      'Quell\'attività ha già il numero massimo di promemoria.';
+
+  @override
+  String get reminderTimeInPast => 'Quell\'ora è già passata.';
+
+  @override
+  String get reminderAddTitle => 'Aggiungi un promemoria';
+
+  @override
+  String get reminderChangeTitle => 'Cambia questo promemoria';
+
+  @override
+  String get reminderDateLabel => 'Data';
+
+  @override
+  String get reminderTimeLabel => 'Ora';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM, HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'Ti avviseremo il $date alle $time.';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'Quell\'ora è già passata. Scegline una più tardi.';
+
+  @override
+  String get reminderSet => 'Imposta il promemoria';
+
+  @override
+  String get reminderPresetInHour => 'Tra 1 ora';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'Domani mattina';
+
+  @override
+  String get reminderPresetNextWeek => 'La settimana prossima';
+
+  @override
+  String get reminderPresetOnTheDay => 'Il giorno stesso';
+
+  @override
+  String get reminderPresetDayBefore => '1 giorno prima';
+
+  @override
+  String get reminderPresetWeekBefore => '1 settimana prima';
+
+  @override
+  String get reminderPresetAtDeadline => 'Alla scadenza';
+
+  @override
+  String get reminderPresetHourBefore => '1 ora prima';
+
+  @override
+  String get editNextStepTitle => 'Prossimo passo consigliato';
+
+  @override
+  String get editNextStepSubtitle =>
+      'Una frase breve sulla prossima mossa utile.';
+
+  @override
+  String get editNextStepHint => 'Qual è la prossima mossa utile?';
+
+  @override
+  String get editRemoveSuggestion => 'Rimuovi il suggerimento';
+
+  @override
+  String get editUrgencyTitle => 'Quanto è urgente?';
+
+  @override
+  String get editStepHint => 'Una cosa concreta da fare';
+
+  @override
+  String get editAddStep => 'Aggiungi passo';
+
+  @override
+  String get editDateHint => 'AAAA-MM-GG';
+
+  @override
+  String get editRemoveDeadline => 'Rimuovi la scadenza';
+
+  @override
+  String get editAmountHint => '96,40';
+
+  @override
+  String get editSaveAmount => 'Salva l\'importo';
+
+  @override
+  String get editRemoveAmount => 'Rimuovi l\'importo';
+
+  @override
   String get evidenceTitle => 'Da dove viene';
 
   @override

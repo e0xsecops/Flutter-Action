@@ -1306,6 +1306,280 @@ class AppL10nZh extends AppL10n {
   String get reviewSavedOnDevice => '已保存在本机。';
 
   @override
+  String get detailLoadFailed => '这项待办加载不出来。它仍然保存在本机。';
+
+  @override
+  String get detailNotFoundTitle => '那项待办已经不在了';
+
+  @override
+  String get detailNotFoundMessage => '可能已在本机删除。';
+
+  @override
+  String get detailGoBack => '返回';
+
+  @override
+  String get detailMore => '更多';
+
+  @override
+  String get detailChangeUrgency => '更改紧急程度';
+
+  @override
+  String get detailAddRecommendedStep => '添加建议的步骤';
+
+  @override
+  String get detailEditRecommendedStep => '编辑建议的步骤';
+
+  @override
+  String get detailArchiveTitle => '归档这项待办？';
+
+  @override
+  String get detailArchiveBody => '它会离开你的列表，但不会被删除，采集它的那份内容也会保留。';
+
+  @override
+  String get detailArchiveConfirm => '归档';
+
+  @override
+  String get detailArchived => '已归档';
+
+  @override
+  String detailCompletedOn(String date) {
+    return '$date 完成';
+  }
+
+  @override
+  String get detailSectionDetails => '详情';
+
+  @override
+  String get detailSectionReminders => '提醒';
+
+  @override
+  String get detailAllStepsDone => '所有步骤已完成';
+
+  @override
+  String get detailNextEyebrow => '接下来';
+
+  @override
+  String get detailCompleteQuestion => '完成这项待办？';
+
+  @override
+  String get detailMarkStepDone => '把步骤标为已完成';
+
+  @override
+  String get detailCompleteAction => '完成这项待办';
+
+  @override
+  String get detailAddDeadline => '添加期限';
+
+  @override
+  String get detailAddAmount => '添加金额';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '已完成 $completed/$total';
+  }
+
+  @override
+  String get detailNoStepsTitle => '还没有步骤';
+
+  @override
+  String get detailNoStepsMessage => '把它拆成你真正要做的动作。';
+
+  @override
+  String get detailAddFirstStep => '添加第一个步骤';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return '已完成的步骤：$title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return '下一个步骤：$title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return '步骤：$title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return '把“$title”标为已完成';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return '把“$title”标为未完成';
+  }
+
+  @override
+  String get detailStepOptions => '步骤选项';
+
+  @override
+  String get detailMoveUp => '上移';
+
+  @override
+  String get detailMoveDown => '下移';
+
+  @override
+  String get detailDeleteStep => '删除步骤';
+
+  @override
+  String get detailDateFormat => 'M月d日';
+
+  @override
+  String get detailDateFormatWithYear => 'yyyy年M月d日';
+
+  @override
+  String get stepDeleteTitle => '删除这个步骤？';
+
+  @override
+  String get stepDeleteKeep => '保留';
+
+  @override
+  String get detailNoRemindersYet => '还没有提醒。';
+
+  @override
+  String get detailReminderLimit => '一项待办最多只能有这么多提醒。删掉一个才能再加一个。';
+
+  @override
+  String get detailAddReminder => '添加提醒';
+
+  @override
+  String get detailChangeReminder => '更改提醒';
+
+  @override
+  String get detailRemoveReminder => '删除提醒';
+
+  @override
+  String get detailReminderFormat => 'M月d日 EEE HH:mm';
+
+  @override
+  String get reminderStatePending => '还未设置';
+
+  @override
+  String get reminderStateNotificationsOff => '已保存，但通知是关闭的';
+
+  @override
+  String get reminderStateFailed => '没能排上时间';
+
+  @override
+  String get reminderStateRemoving => '正在删除…';
+
+  @override
+  String get reminderSetConfirmation => '提醒已设置。到时会提醒你。';
+
+  @override
+  String get reminderUpdatedConfirmation => '提醒已更新。';
+
+  @override
+  String get reminderNeedsPermission => '通知已关闭，所以这条提醒已保存，但还不能通知你。';
+
+  @override
+  String get reminderScheduleFailed => '这条提醒已保存，但 Android 没有为它排上时间。';
+
+  @override
+  String get reminderLimitReached => '那项待办的提醒数量已经到上限了。';
+
+  @override
+  String get reminderTimeInPast => '那个时间已经过去了。';
+
+  @override
+  String get reminderAddTitle => '添加提醒';
+
+  @override
+  String get reminderChangeTitle => '更改这条提醒';
+
+  @override
+  String get reminderDateLabel => '日期';
+
+  @override
+  String get reminderTimeLabel => '时间';
+
+  @override
+  String get reminderFieldDateFormat => 'yyyy年M月d日 EEE';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'M月d日EEEE';
+
+  @override
+  String get reminderPresetFormat => 'M月d日 HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return '将在 $date $time 提醒你。';
+  }
+
+  @override
+  String get reminderTimePastError => '那个时间已经过去了。选一个更晚的。';
+
+  @override
+  String get reminderSet => '设置提醒';
+
+  @override
+  String get reminderPresetInHour => '1 小时后';
+
+  @override
+  String get reminderPresetTomorrowMorning => '明天早上';
+
+  @override
+  String get reminderPresetNextWeek => '下周';
+
+  @override
+  String get reminderPresetOnTheDay => '当天';
+
+  @override
+  String get reminderPresetDayBefore => '提前 1 天';
+
+  @override
+  String get reminderPresetWeekBefore => '提前 1 周';
+
+  @override
+  String get reminderPresetAtDeadline => '到期时';
+
+  @override
+  String get reminderPresetHourBefore => '提前 1 小时';
+
+  @override
+  String get editNextStepTitle => '建议的下一步';
+
+  @override
+  String get editNextStepSubtitle => '用一句话说清下一步该做什么。';
+
+  @override
+  String get editNextStepHint => '下一步做什么最有用？';
+
+  @override
+  String get editRemoveSuggestion => '删除建议';
+
+  @override
+  String get editUrgencyTitle => '这件事有多急？';
+
+  @override
+  String get editStepHint => '一件具体要做的事';
+
+  @override
+  String get editAddStep => '添加步骤';
+
+  @override
+  String get editDateHint => 'YYYY-MM-DD';
+
+  @override
+  String get editRemoveDeadline => '删除期限';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => '保存金额';
+
+  @override
+  String get editRemoveAmount => '删除金额';
+
+  @override
   String get evidenceTitle => '这是哪儿来的';
 
   @override
@@ -2640,6 +2914,280 @@ class AppL10nZhHans extends AppL10nZh {
 
   @override
   String get reviewSavedOnDevice => '已保存在本机。';
+
+  @override
+  String get detailLoadFailed => '这项待办加载不出来。它仍然保存在本机。';
+
+  @override
+  String get detailNotFoundTitle => '那项待办已经不在了';
+
+  @override
+  String get detailNotFoundMessage => '可能已在本机删除。';
+
+  @override
+  String get detailGoBack => '返回';
+
+  @override
+  String get detailMore => '更多';
+
+  @override
+  String get detailChangeUrgency => '更改紧急程度';
+
+  @override
+  String get detailAddRecommendedStep => '添加建议的步骤';
+
+  @override
+  String get detailEditRecommendedStep => '编辑建议的步骤';
+
+  @override
+  String get detailArchiveTitle => '归档这项待办？';
+
+  @override
+  String get detailArchiveBody => '它会离开你的列表，但不会被删除，采集它的那份内容也会保留。';
+
+  @override
+  String get detailArchiveConfirm => '归档';
+
+  @override
+  String get detailArchived => '已归档';
+
+  @override
+  String detailCompletedOn(String date) {
+    return '$date 完成';
+  }
+
+  @override
+  String get detailSectionDetails => '详情';
+
+  @override
+  String get detailSectionReminders => '提醒';
+
+  @override
+  String get detailAllStepsDone => '所有步骤已完成';
+
+  @override
+  String get detailNextEyebrow => '接下来';
+
+  @override
+  String get detailCompleteQuestion => '完成这项待办？';
+
+  @override
+  String get detailMarkStepDone => '把步骤标为已完成';
+
+  @override
+  String get detailCompleteAction => '完成这项待办';
+
+  @override
+  String get detailAddDeadline => '添加期限';
+
+  @override
+  String get detailAddAmount => '添加金额';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '已完成 $completed/$total';
+  }
+
+  @override
+  String get detailNoStepsTitle => '还没有步骤';
+
+  @override
+  String get detailNoStepsMessage => '把它拆成你真正要做的动作。';
+
+  @override
+  String get detailAddFirstStep => '添加第一个步骤';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return '已完成的步骤：$title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return '下一个步骤：$title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return '步骤：$title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return '把“$title”标为已完成';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return '把“$title”标为未完成';
+  }
+
+  @override
+  String get detailStepOptions => '步骤选项';
+
+  @override
+  String get detailMoveUp => '上移';
+
+  @override
+  String get detailMoveDown => '下移';
+
+  @override
+  String get detailDeleteStep => '删除步骤';
+
+  @override
+  String get detailDateFormat => 'M月d日';
+
+  @override
+  String get detailDateFormatWithYear => 'yyyy年M月d日';
+
+  @override
+  String get stepDeleteTitle => '删除这个步骤？';
+
+  @override
+  String get stepDeleteKeep => '保留';
+
+  @override
+  String get detailNoRemindersYet => '还没有提醒。';
+
+  @override
+  String get detailReminderLimit => '一项待办最多只能有这么多提醒。删掉一个才能再加一个。';
+
+  @override
+  String get detailAddReminder => '添加提醒';
+
+  @override
+  String get detailChangeReminder => '更改提醒';
+
+  @override
+  String get detailRemoveReminder => '删除提醒';
+
+  @override
+  String get detailReminderFormat => 'M月d日 EEE HH:mm';
+
+  @override
+  String get reminderStatePending => '还未设置';
+
+  @override
+  String get reminderStateNotificationsOff => '已保存，但通知是关闭的';
+
+  @override
+  String get reminderStateFailed => '没能排上时间';
+
+  @override
+  String get reminderStateRemoving => '正在删除…';
+
+  @override
+  String get reminderSetConfirmation => '提醒已设置。到时会提醒你。';
+
+  @override
+  String get reminderUpdatedConfirmation => '提醒已更新。';
+
+  @override
+  String get reminderNeedsPermission => '通知已关闭，所以这条提醒已保存，但还不能通知你。';
+
+  @override
+  String get reminderScheduleFailed => '这条提醒已保存，但 Android 没有为它排上时间。';
+
+  @override
+  String get reminderLimitReached => '那项待办的提醒数量已经到上限了。';
+
+  @override
+  String get reminderTimeInPast => '那个时间已经过去了。';
+
+  @override
+  String get reminderAddTitle => '添加提醒';
+
+  @override
+  String get reminderChangeTitle => '更改这条提醒';
+
+  @override
+  String get reminderDateLabel => '日期';
+
+  @override
+  String get reminderTimeLabel => '时间';
+
+  @override
+  String get reminderFieldDateFormat => 'yyyy年M月d日 EEE';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'M月d日EEEE';
+
+  @override
+  String get reminderPresetFormat => 'M月d日 HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return '将在 $date $time 提醒你。';
+  }
+
+  @override
+  String get reminderTimePastError => '那个时间已经过去了。选一个更晚的。';
+
+  @override
+  String get reminderSet => '设置提醒';
+
+  @override
+  String get reminderPresetInHour => '1 小时后';
+
+  @override
+  String get reminderPresetTomorrowMorning => '明天早上';
+
+  @override
+  String get reminderPresetNextWeek => '下周';
+
+  @override
+  String get reminderPresetOnTheDay => '当天';
+
+  @override
+  String get reminderPresetDayBefore => '提前 1 天';
+
+  @override
+  String get reminderPresetWeekBefore => '提前 1 周';
+
+  @override
+  String get reminderPresetAtDeadline => '到期时';
+
+  @override
+  String get reminderPresetHourBefore => '提前 1 小时';
+
+  @override
+  String get editNextStepTitle => '建议的下一步';
+
+  @override
+  String get editNextStepSubtitle => '用一句话说清下一步该做什么。';
+
+  @override
+  String get editNextStepHint => '下一步做什么最有用？';
+
+  @override
+  String get editRemoveSuggestion => '删除建议';
+
+  @override
+  String get editUrgencyTitle => '这件事有多急？';
+
+  @override
+  String get editStepHint => '一件具体要做的事';
+
+  @override
+  String get editAddStep => '添加步骤';
+
+  @override
+  String get editDateHint => 'YYYY-MM-DD';
+
+  @override
+  String get editRemoveDeadline => '删除期限';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => '保存金额';
+
+  @override
+  String get editRemoveAmount => '删除金额';
 
   @override
   String get evidenceTitle => '这是哪儿来的';
@@ -3977,6 +4525,280 @@ class AppL10nZhHant extends AppL10nZh {
 
   @override
   String get reviewSavedOnDevice => '已儲存在本機。';
+
+  @override
+  String get detailLoadFailed => '這項待辦載入不出來。它仍然儲存在本機。';
+
+  @override
+  String get detailNotFoundTitle => '那項待辦已經不在了';
+
+  @override
+  String get detailNotFoundMessage => '可能已在本機刪除。';
+
+  @override
+  String get detailGoBack => '返回';
+
+  @override
+  String get detailMore => '更多';
+
+  @override
+  String get detailChangeUrgency => '變更緊急程度';
+
+  @override
+  String get detailAddRecommendedStep => '新增建議的步驟';
+
+  @override
+  String get detailEditRecommendedStep => '編輯建議的步驟';
+
+  @override
+  String get detailArchiveTitle => '封存這項待辦？';
+
+  @override
+  String get detailArchiveBody => '它會離開你的清單，但不會被刪除，擷取它的那份內容也會保留。';
+
+  @override
+  String get detailArchiveConfirm => '封存';
+
+  @override
+  String get detailArchived => '已封存';
+
+  @override
+  String detailCompletedOn(String date) {
+    return '$date 完成';
+  }
+
+  @override
+  String get detailSectionDetails => '詳細資料';
+
+  @override
+  String get detailSectionReminders => '提醒';
+
+  @override
+  String get detailAllStepsDone => '所有步驟已完成';
+
+  @override
+  String get detailNextEyebrow => '接下來';
+
+  @override
+  String get detailCompleteQuestion => '完成這項待辦？';
+
+  @override
+  String get detailMarkStepDone => '把步驟標為已完成';
+
+  @override
+  String get detailCompleteAction => '完成這項待辦';
+
+  @override
+  String get detailAddDeadline => '新增期限';
+
+  @override
+  String get detailAddAmount => '新增金額';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '已完成 $completed/$total';
+  }
+
+  @override
+  String get detailNoStepsTitle => '還沒有步驟';
+
+  @override
+  String get detailNoStepsMessage => '把它拆成你真正要做的動作。';
+
+  @override
+  String get detailAddFirstStep => '新增第一個步驟';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return '已完成的步驟：$title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return '下一個步驟：$title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return '步驟：$title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return '把「$title」標為已完成';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return '把「$title」標為未完成';
+  }
+
+  @override
+  String get detailStepOptions => '步驟選項';
+
+  @override
+  String get detailMoveUp => '上移';
+
+  @override
+  String get detailMoveDown => '下移';
+
+  @override
+  String get detailDeleteStep => '刪除步驟';
+
+  @override
+  String get detailDateFormat => 'M月d日';
+
+  @override
+  String get detailDateFormatWithYear => 'yyyy年M月d日';
+
+  @override
+  String get stepDeleteTitle => '刪除這個步驟？';
+
+  @override
+  String get stepDeleteKeep => '保留';
+
+  @override
+  String get detailNoRemindersYet => '還沒有提醒。';
+
+  @override
+  String get detailReminderLimit => '一項待辦最多只能有這麼多提醒。刪掉一個才能再加一個。';
+
+  @override
+  String get detailAddReminder => '新增提醒';
+
+  @override
+  String get detailChangeReminder => '變更提醒';
+
+  @override
+  String get detailRemoveReminder => '刪除提醒';
+
+  @override
+  String get detailReminderFormat => 'M月d日 EEE HH:mm';
+
+  @override
+  String get reminderStatePending => '還未設定';
+
+  @override
+  String get reminderStateNotificationsOff => '已儲存，但通知是關閉的';
+
+  @override
+  String get reminderStateFailed => '沒能排上時間';
+
+  @override
+  String get reminderStateRemoving => '正在刪除…';
+
+  @override
+  String get reminderSetConfirmation => '提醒已設定。到時會提醒你。';
+
+  @override
+  String get reminderUpdatedConfirmation => '提醒已更新。';
+
+  @override
+  String get reminderNeedsPermission => '通知已關閉，所以這則提醒已儲存，但還不能通知你。';
+
+  @override
+  String get reminderScheduleFailed => '這則提醒已儲存，但 Android 沒有為它排上時間。';
+
+  @override
+  String get reminderLimitReached => '那項待辦的提醒數量已經到上限了。';
+
+  @override
+  String get reminderTimeInPast => '那個時間已經過去了。';
+
+  @override
+  String get reminderAddTitle => '新增提醒';
+
+  @override
+  String get reminderChangeTitle => '變更這則提醒';
+
+  @override
+  String get reminderDateLabel => '日期';
+
+  @override
+  String get reminderTimeLabel => '時間';
+
+  @override
+  String get reminderFieldDateFormat => 'yyyy年M月d日 EEE';
+
+  @override
+  String get reminderFieldTimeFormat => 'HH:mm';
+
+  @override
+  String get reminderSummaryDateFormat => 'M月d日EEEE';
+
+  @override
+  String get reminderPresetFormat => 'M月d日 HH:mm';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return '將在 $date $time 提醒你。';
+  }
+
+  @override
+  String get reminderTimePastError => '那個時間已經過去了。選一個更晚的。';
+
+  @override
+  String get reminderSet => '設定提醒';
+
+  @override
+  String get reminderPresetInHour => '1 小時後';
+
+  @override
+  String get reminderPresetTomorrowMorning => '明天早上';
+
+  @override
+  String get reminderPresetNextWeek => '下週';
+
+  @override
+  String get reminderPresetOnTheDay => '當天';
+
+  @override
+  String get reminderPresetDayBefore => '提前 1 天';
+
+  @override
+  String get reminderPresetWeekBefore => '提前 1 週';
+
+  @override
+  String get reminderPresetAtDeadline => '到期時';
+
+  @override
+  String get reminderPresetHourBefore => '提前 1 小時';
+
+  @override
+  String get editNextStepTitle => '建議的下一步';
+
+  @override
+  String get editNextStepSubtitle => '用一句話說清下一步該做什麼。';
+
+  @override
+  String get editNextStepHint => '下一步做什麼最有用？';
+
+  @override
+  String get editRemoveSuggestion => '刪除建議';
+
+  @override
+  String get editUrgencyTitle => '這件事有多急？';
+
+  @override
+  String get editStepHint => '一件具體要做的事';
+
+  @override
+  String get editAddStep => '新增步驟';
+
+  @override
+  String get editDateHint => 'YYYY-MM-DD';
+
+  @override
+  String get editRemoveDeadline => '刪除期限';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => '儲存金額';
+
+  @override
+  String get editRemoveAmount => '刪除金額';
 
   @override
   String get evidenceTitle => '這是哪來的';
