@@ -264,6 +264,15 @@ const privacyDataMap = <({String title, List<String> lines})>[
       'Actions, their steps, facts and reminders.',
       'Search. Your searches run here, are never sent anywhere, and are not '
           'kept after you close the screen.',
+      // V2. Added when the normalizer was found to be storing EXIF verbatim:
+      // a phone photo carries the coordinates of wherever it was taken, and
+      // Action was keeping them and forwarding them with the image. Both
+      // halves of this sentence are asserted in
+      // test/capture/image_metadata_test.dart.
+      'Photos are stored without their location. The coordinates, time and '
+          'camera details a phone writes into a picture are removed before '
+          'the capture is saved, so they are not kept here and not included '
+          'when you send a capture to your AI provider.',
     ],
   ),
   (

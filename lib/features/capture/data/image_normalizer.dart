@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 
 import 'image_format.dart';
+import 'image_metadata.dart';
 
 /// Thrown when bytes cannot be decoded into an image at all.
 ///
@@ -41,6 +42,7 @@ class NormalizedImage {
     required this.height,
     required this.originalByteSize,
     required this.wasResized,
+    required this.metadataBytesRemoved,
   });
 
   final Uint8List bytes;
@@ -62,6 +64,14 @@ class NormalizedImage {
   final int height;
   final int originalByteSize;
   final bool wasResized;
+
+  /// How many bytes of EXIF, XMP, IPTC or PNG text chunks were discarded.
+  ///
+  /// Zero is the ordinary result for an image that never had any — a drawn
+  /// PNG, or a screenshot from a tool that writes none. It is not a signal
+  /// that stripping was skipped; [stripImageMetadata] is applied to every
+  /// capture on every path.
+  final int metadataBytesRemoved;
 
   int get processedByteSize => bytes.length;
 
@@ -153,15 +163,28 @@ NormalizedImage normalizeImageSync(NormalizeRequest request) {
       !needsRotate &&
       (detected == DetectedImageFormat.jpeg ||
           detected == DetectedImageFormat.png)) {
-    return NormalizedImage(
-      bytes: request.bytes,
-      format: detected,
-      originalFormat: detected,
-      width: upright.width,
-      height: upright.height,
-      originalByteSize: request.bytes.length,
-      wasResized: false,
-    );
+    // Metadata is still removed here, and this is the path where it matters
+    // most: an in-spec upright photo straight from the camera roll takes it,
+    // and that is exactly the file carrying the GPS fix. The strip is a
+    // container edit — the compressed pixels are copied across untouched —
+    // so the "no second generation of artefacts" argument above survives it.
+    final strip = stripImageMetadata(request.bytes);
+    if (strip.stripped) {
+      return NormalizedImage(
+        bytes: strip.bytes,
+        format: detected,
+        originalFormat: detected,
+        width: upright.width,
+        height: upright.height,
+        originalByteSize: request.bytes.length,
+        wasResized: false,
+        metadataBytesRemoved: strip.bytesRemoved,
+      );
+    }
+    // The container could not be walked safely. Rather than store a file whose
+    // metadata we have not accounted for, fall through and re-encode from the
+    // pixels, which drops it by construction. One generation of artefacts is a
+    // fair price for a guarantee; silently keeping the coordinates is not.
   }
 
   // Only ever downscale. Enlarging a small capture invents detail and makes
@@ -174,6 +197,12 @@ NormalizedImage normalizeImageSync(NormalizeRequest request) {
           interpolation: img.Interpolation.average,
         )
       : upright;
+
+  // The encoder writes `image.exif` into the file it produces, so a resize
+  // alone would have carried the GPS fix straight through into the new JPEG.
+  // Clearing it here means the re-encode paths drop metadata by construction
+  // rather than by a later edit.
+  sized.exif = img.ExifData();
 
   final jpeg = img.encodeJpg(sized, quality: request.quality);
 
@@ -199,24 +228,37 @@ NormalizedImage normalizeImageSync(NormalizeRequest request) {
   // yields and the original is kept. An oversized capture is a minor cost; a
   // capture we made bigger is a defect.
   if (!needsRotate && bytes.length >= request.bytes.length) {
-    return NormalizedImage(
-      bytes: request.bytes,
-      format: detected,
-      originalFormat: detected,
-      width: upright.width,
-      height: upright.height,
-      originalByteSize: request.bytes.length,
-      wasResized: false,
-    );
+    // Keeping the original still means keeping it stripped. If the container
+    // cannot be walked the re-encoded bytes win instead, however large: the
+    // one thing that must not happen is storing the metadata.
+    final strip = stripImageMetadata(request.bytes);
+    if (strip.stripped) {
+      return NormalizedImage(
+        bytes: strip.bytes,
+        format: detected,
+        originalFormat: detected,
+        width: upright.width,
+        height: upright.height,
+        originalByteSize: request.bytes.length,
+        wasResized: false,
+        metadataBytesRemoved: strip.bytesRemoved,
+      );
+    }
   }
 
+  // Belt and braces over the cleared `sized.exif`: the encoder is not the only
+  // thing that can write a segment, and this is the last point where anything
+  // can be removed.
+  final finalStrip = stripImageMetadata(bytes);
+
   return NormalizedImage(
-    bytes: bytes,
+    bytes: finalStrip.stripped ? finalStrip.bytes : bytes,
     format: format,
     originalFormat: detected,
     width: sized.width,
     height: sized.height,
     originalByteSize: request.bytes.length,
     wasResized: needsResize,
+    metadataBytesRemoved: finalStrip.bytesRemoved,
   );
 }

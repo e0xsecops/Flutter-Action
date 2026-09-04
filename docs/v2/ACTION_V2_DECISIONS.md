@@ -148,6 +148,34 @@ plus a Security centre that states the limit rather than papering over it.
 **Why better.** It closes the gap that exists rather than the one that sounds
 more impressive.
 
+### 9. Metadata stripping deferred until there was a share flow
+
+**Recorded blocker.** Item 24 said the EXIF cleaner was "straightforward with
+the `image` package already present; needs a share flow to hang off."
+
+**Why it was weak.** It framed metadata as an *export* problem, and there is no
+export in this app. The consequence was that the item sat deferred behind a
+feature that does not exist, while the actual exposure went unexamined: the
+normalizer had two paths that returned the original bytes verbatim, and the
+encoder on the third carried `image.exif` across. So every stored photo kept
+its GPS fix, its capture time and its device make and model — and because a
+capture is handed to the user's AI provider whenever a tool needs to read it,
+those coordinates left the device attached to the picture. The privacy screen's
+account of what leaves this device did not mention them.
+
+**Built instead.** Stripping at *intake*, in `image_metadata.dart`, applied on
+every path through the normalizer. It is a container edit — JPEG `APP1`,
+`APP13` and `COM` segments, PNG `tEXt`/`zTXt`/`iTXt`/`eXIf`/`tIME` chunks — so
+the compressed pixels come out bit-identical and the small text OCR depends on
+is never re-quantized. `APP0` (JFIF density) and `APP2` (ICC profile) are kept,
+because those change how the image is displayed rather than describing it.
+Where the container cannot be walked safely the strip refuses and the caller
+re-encodes instead, so a claim is never made that did not happen.
+
+**Why better.** It closes the exposure at the only point where Action controls
+it, needs no feature that does not exist, and makes the privacy screen's
+account of what leaves the device true.
+
 ---
 
 ## Part 2 — Opportunities, scored
@@ -170,6 +198,12 @@ order proposed.
 | 8 | **Evidence Lens** | The strongest trust feature in the product. The data had been resolved and unused since day 5. |
 | 9 | **Evidence in the conflict chooser** | The exact moment where seeing the page decides the answer. |
 | 10 | **Settings 3.0 / Security centre** | The brief's criticism was correct; the screens looked like another app's. |
+| 18 | **PDF / document input** | Built. Three doors — picker, share sheet, capture sheet — with signature and MIME validation and an app-private copy, and no PDF library. |
+| 19 | **Android Share-In** | Built, including cold and warm start, untrusted-URI handling and duplicate-intent suppression. |
+| 21 | **Goals** | Built: the local domain, the workspace, and the plan-to-Action path that had been declared and never wired. |
+| 24 | **Metadata cleaner (EXIF strip)** | Built — see deviation 9. The recorded blocker was wrong. |
+| 26 | **Twenty languages and RTL** | Built. Twenty locales complete, with the safety meanings held by tests rather than by hope. See `LOCALIZATION_REVIEW_STATUS.md`. |
+| 27 | **Text recognition per writing system** | Built. The recogniser follows the app language, and the five scripts ML Kit cannot read are named rather than failing silently. |
 
 ### Rejected
 
@@ -187,13 +221,9 @@ order proposed.
 
 | # | Opportunity | Blocked on |
 |---|---|---|
-| 18 | **PDF / document input** | Needs a picker, MIME and signature validation, an app-private copy, page counting, and size limits chosen by profiling. The provider adapters already accept `AiDocumentPart`; this is the missing front end. Largest single unlock remaining. |
-| 19 | **Android Share-In** | Needs untrusted-URI handling: scheme, MIME, size, availability, duplicate-intent suppression, and an app-owned copy. Cold and warm start both. |
 | 20 | **Voice capture** | Needs an explicit-record UI and an honest answer about where transcription happens. Not started rather than half-started. |
-| 21 | **Goals** | A local domain plus a workspace plus its own intelligence surface. Real feature, not a small one. |
 | 22 | **Collections and pinning** | Cheap individually, but Library 3.0 should be designed once with them in it. |
 | 23 | **C2PA / Content Credentials** | No Flutter binding exists — only a Kotlin AAR over the Rust SDK. `ProvenanceVerifier` is the seam. Until then Action reports that provenance was *not checked*, never that it was absent. |
-| 24 | **Metadata cleaner (EXIF strip)** | Straightforward with the `image` package already present; needs a share flow to hang off. |
 | 25 | **Encrypted local vault** | See deviation 8. |
 
 ---
