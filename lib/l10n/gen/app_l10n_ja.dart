@@ -1593,6 +1593,480 @@ class AppL10nJa extends AppL10n {
   String get editRemoveAmount => '金額を削除';
 
   @override
+  String get securityTitle => 'セキュリティとプライバシー';
+
+  @override
+  String get securitySectionProtection => '保護';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'アプリロックにはこの端末の画面ロックが必要です。まず端末の設定で PIN、パターン、パスワード、指紋のいずれかを設定してください。';
+
+  @override
+  String get securityAppLockOn => 'Action は、本人かどうかの確認を端末に任せます。';
+
+  @override
+  String get securityAppLockOff => 'Action を開くのに指紋・顔・端末の PIN を求めます。';
+
+  @override
+  String get securityAskAgain => '再度たずねる';
+
+  @override
+  String get securityAskAgainDescription =>
+      'ロックがかかるまで Action がバックグラウンドにいられる時間。';
+
+  @override
+  String get securityScreenPrivacy => '画面のプライバシー';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'スクリーンショットと画面録画をブロックし、アプリ切り替え画面で Action を隠すよう Android に求めます。';
+
+  @override
+  String get securityPrivateReminders => '非公開のリマインダー';
+
+  @override
+  String get securityPrivateRemindersOn => 'リマインダーは「何かがある」とだけ伝えます。';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'リマインダーにはタスク名が出ます。ロック画面に出したくないときはこれをオンにしてください。';
+
+  @override
+  String get securityLockNow => '今すぐロック';
+
+  @override
+  String get securityLockNowDescription => '待たずに戸締まりをします。';
+
+  @override
+  String get securitySectionStorage => 'データの保存のしかた';
+
+  @override
+  String get securityStorageDataLabel => 'あなたのタスク・取り込み・設定';
+
+  @override
+  String get securityStorageDataDetail =>
+      'これらはこのアプリ自身の非公開ストレージにあり、他のアプリからは読めず、Android が端末の暗号化の一部として暗号化します。Action がその上に独自の二層目を重ねることはありません。';
+
+  @override
+  String get securityStorageKeyLabel => 'AI プロバイダーの鍵';
+
+  @override
+  String get securityStorageKeyDetail =>
+      '他のものと一緒ではなく Android Keystore に保管され、保存後は二度と表示されません。';
+
+  @override
+  String get securityStorageGapLabel => 'これで守られないこと';
+
+  @override
+  String get securityStorageGapDetail =>
+      'いずれもロック解除された端末を他人が使う場合の防御にはなりませんし、改造や root 化された環境は通常より多くを読み取れます。その最初の場合に効くのがアプリロックです。';
+
+  @override
+  String get securitySectionInformation => 'あなたの情報';
+
+  @override
+  String get securityWhereInfoDescription => 'データが通りうるすべての経路と、この端末を出ていく二つ。';
+
+  @override
+  String get securityAppLockRefused => '確認されなかったため、何も変わっていません。';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'この端末には画面ロックが設定されていません。端末の設定で PIN、パターン、パスワード、指紋のいずれかを追加してから、もう一度お試しください。';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'この端末は画面のプライバシーを適用しなかったため、オンと表示するのではなくオフのままにしてあります。';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '予定済みのリマインダー$count件が伝える内容を減らしました。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '予定済みのリマインダー$count件を更新しました。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'すぐに';
+
+  @override
+  String get appLockDelayOneMinute => '1 分後';
+
+  @override
+  String get appLockDelayFiveMinutes => '5 分後';
+
+  @override
+  String get securityDelayImmediatelyDescription => 'Action が画面から離れるたび';
+
+  @override
+  String get securityDelayOneMinuteDescription => 'メッセージに返信できるくらい';
+
+  @override
+  String get securityDelayFiveMinutesDescription => '電話に出られるくらい';
+
+  @override
+  String get securityHeroProtected => '保護中';
+
+  @override
+  String get securityHeroNothingOn => '何もオンになっていません';
+
+  @override
+  String get securityHeroFootnote =>
+      'ここにあるものはすべてこの端末で動きます。これらの設定はどこにも送信されず、遠隔から変更されることもありません。';
+
+  @override
+  String get securityHeadlineNone => '三つの保護が使えます';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first がオン';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first と $second がオン';
+  }
+
+  @override
+  String get securityHeadlineAll => '三つの保護がすべてオン';
+
+  @override
+  String get securityTransfersTitle => 'この端末から出ていったもの';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'AI プロバイダーが接続されていないため、解析のために送られているものは何もありません。';
+
+  @override
+  String get securityTransfersDescription =>
+      '何かが送信された瞬間に、返ってきたかどうかに関係なくここへ記録します。記録するのはツール、プロバイダー、サイズだけ — 中身は決して残しません。この端末に90日間保存され、どこにも送信されません。';
+
+  @override
+  String get securityClear => '消去';
+
+  @override
+  String get securityNothingSent => 'まだ何も送信されていません';
+
+  @override
+  String get securityNothingSentDescription => 'AI プロバイダーを使うツールを実行すると、ここに並びます。';
+
+  @override
+  String get securityClearHistoryTitle => 'この履歴を消去しますか？';
+
+  @override
+  String get securityClearHistoryBody =>
+      '何を送ったかの記録がこの端末から削除されます。すでに送信されたものが取り消されるわけではありません。';
+
+  @override
+  String get securityUnnamedTool => 'Intelligence のツール';
+
+  @override
+  String get securityYourProvider => 'あなたの AI プロバイダー';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countページ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countファイル',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => '短い文章';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count千文字';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return '$provider に送信しました。';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return '$provider に送信しました · $size。';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count週間前';
+  }
+
+  @override
+  String get helpTitle => 'ヘルプ';
+
+  @override
+  String get helpAddQuestion => '何を追加できますか？';
+
+  @override
+  String get helpAddAnswer =>
+      'スクリーンショット、手紙や請求書の写真、貼り付けた文章。日付・金額・依頼が入っているものがいちばん向いています。';
+
+  @override
+  String get helpReviewQuestion => 'Action はなぜ確認を求めるのですか？';
+
+  @override
+  String get helpReviewAnswer =>
+      '文書を読む機械は読み違えることがあり、静かに間違った期限は期限がないことより悪いからです。Action は見つけたものと、その元になった語を示します。そして、あなたが確認するまで何も保存されません。';
+
+  @override
+  String get helpVaryQuestion => 'もう一度試すと結果が変わるのはなぜですか？';
+
+  @override
+  String get helpVaryAnswer =>
+      '文書を読むサービスは決定的ではないため、同じ取り込みでも少し違って返ってくることがあります。確認の手順があるのはそのためでもあります — 変わらない部分はあなたです。';
+
+  @override
+  String get helpLateQuestion => 'リマインダーが遅れたのはなぜですか？';
+
+  @override
+  String get helpLateAnswer =>
+      'リマインダーは Android を通して予約され、いつ届けるかを決めるのは Android です。バッテリー節約、Doze、メーカーの電源設定はいずれも遅延の原因になります。Action は分単位のリマインダーを約束しません。';
+
+  @override
+  String get helpDataQuestion => '私のデータはどこにありますか？';
+
+  @override
+  String get helpDataAnswer =>
+      'ほとんどはこの端末にあります。取り込み、タスク、手順、リマインダー、検索です。例外は二つ — Action に読ませるよう頼んだ内容は、それを読む AI サービスに送られます。そして確定したタスクの短い記録が、この端末の匿名 ID のもとでクラウドに保存されることがあります。設定の「プライバシーとデータ」に、その記録の中身が正確に書かれています。';
+
+  @override
+  String get helpBackupQuestion => 'これはバックアップですか？';
+
+  @override
+  String get helpBackupAnswer =>
+      'いいえ。クラウドの記録を新しい端末に復元することはできず、ログインするアカウントもありません。Action を削除したりこの端末をなくしたりすると、そこにあったデータはなくなります。';
+
+  @override
+  String get helpCorrectQuestion => 'タスクはどう直しますか？';
+
+  @override
+  String get helpCorrectAnswer =>
+      '開いて好きな項目を編集してください — 名称、期限、金額、提案された次の手順。手順はいつでも追加・並べ替え・完了・削除ができます。タスクの編集で AI サービスに何かを問い合わせることはありません。';
+
+  @override
+  String get privacyTitle => 'プライバシーとデータ';
+
+  @override
+  String get privacyIntro => 'Action はできるかぎりをこの端末に留めます。例外は二つで、どちらも下に挙げてあります。';
+
+  @override
+  String get privacyGroupOnDevice => 'この端末の中';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      '取り込み — 追加したスクリーンショット・写真・文章と、そこから読み取った文字。';
+
+  @override
+  String get privacyOnDeviceActions => 'タスクと、その手順・項目・リマインダー。';
+
+  @override
+  String get privacyOnDeviceSearch => '検索。検索はここで動き、どこにも送られず、画面を閉じたあとは残りません。';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      '写真は位置情報なしで保存されます。撮影地の座標・時刻・カメラの機種情報は、取り込みが保存される前に取り除かれるため、ここにも残らず、取り込みを AI プロバイダーへ送るときにも含まれません。';
+
+  @override
+  String get privacyGroupSentToRead => '読み取りのために送られるもの';
+
+  @override
+  String get privacySentToReadWhat =>
+      '取り込みの解釈を Action に頼むと、その内容は読み取る AI サービスへ送られます。これは端末内で動く AI ではありません。';
+
+  @override
+  String get privacySentToReadWhen => '送られるのは選んだ取り込みだけで、送られるのは頼んだときだけです。';
+
+  @override
+  String get privacyGroupYourProvider => 'あなた自身の AI プロバイダーへ送られるもの';
+
+  @override
+  String get privacyProviderWhat =>
+      '設定で AI プロバイダーを接続すると、Intelligence のツールはあなたが選んだ内容をそのプロバイダー — OpenAI、Anthropic、Google、または選んだ endpoint — へ、あなた自身の API キーで送ります。';
+
+  @override
+  String get privacyProviderDirect =>
+      '送り先は直接そこです。Action に属するサーバーを経由することはありません。';
+
+  @override
+  String get privacyProviderScope =>
+      '送られるのはツールのために選んだものだけ、しかも実行したときだけです。ほかのタスク・取り込み・ソースが含まれることはなく、バックグラウンドで何かが送られることもありません。';
+
+  @override
+  String get privacyProviderKey =>
+      'API キーはこの端末の安全な保管領域に置かれ、そのキーが属するプロバイダーにだけ送られます。安全な保管領域は、ロック解除された端末を手にした相手に対する実際の障壁ですが、絶対ではありません。Action はそれ以上のことを主張しません。';
+
+  @override
+  String get privacyProviderLocalTools =>
+      '何も送らないツールが二つあります。機微な情報を隠すことと、ファイルの出どころを調べることです。どちらも完全にこの端末で動きます。';
+
+  @override
+  String get privacyProviderAgreement =>
+      '送ったものをプロバイダーがどう扱うかは、Action ではなく、あなたと相手との取り決めによります。';
+
+  @override
+  String get privacyGroupCloud => 'クラウドに保存されるもの';
+
+  @override
+  String get privacyCloudWhat =>
+      'タスクを確定すると、その短い記録がこのインストールの匿名 ID のもとで保存されることがあります。名称、状態、緊急度、分類、期限、金額、提案された次の手順、そして時刻です。';
+
+  @override
+  String get privacyCloudNotSent => '取り込み、そこから読み取った文字、タスクの手順と項目、リマインダーは送られません。';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'これはバックアップではありません。新しい端末に復元する方法はなく、このインストールを失えば匿名 ID も一緒に失われます。';
+
+  @override
+  String get privacyGroupDiagnostics => '診断';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action はアプリ内で何が起きたかを匿名の件数として記録します — 取り込みが始まったこと、抽出が成功したかどうか、検索が何も見つけなかったこと、タスクが完了したこと。';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'これは件数であって中身ではありません。名称・金額・期限・参照番号・取り込んだ文章・検索語が含まれることはなく、匿名 ID も、タスクや取り込みの識別子も含まれません。';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'アプリが落ちた場合、直せるようにエラーと発生箇所が報告されます。Action がその報告にあなたのデータを添えることはありません。';
+
+  @override
+  String get privacySectionYourData => 'あなたのデータ';
+
+  @override
+  String get privacyYourDataFootnote =>
+      '取り込みを消してもタスクはそのまま残ります。取り込みがなくなったタスクも動きます。何から生まれたかを示さなくなるだけです。';
+
+  @override
+  String get privacyClearCaptures => '取り込みを消去';
+
+  @override
+  String get privacyClearCapturesDescription => 'すべての取り込みと画像ファイルを削除します。';
+
+  @override
+  String get privacyDeleteAll => 'データをすべて削除';
+
+  @override
+  String get privacyDeleteAllDescription => 'タスク、手順、リマインダー、取り込み、そして上のクラウド記録。';
+
+  @override
+  String get privacyClearCapturesTitle => '取り込みを消去しますか？';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'すべての取り込みとその画像がこの端末から削除されます。タスクはそのままの形で残ります。';
+
+  @override
+  String get privacyCapturesDeleted => '取り込みを削除しました。';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      '一部の取り込みは削除できませんでした。ほかには何も変更していません。';
+
+  @override
+  String get privacyDeleteAllTitle => 'データをすべて削除しますか？';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'この端末のすべてのタスク・手順・リマインダー・取り込みと、上に挙げたクラウド記録を削除します。取り消すことはできず、復元できるバックアップもありません。';
+
+  @override
+  String get privacyDeleteEverything => 'すべて削除';
+
+  @override
+  String get privacyDeletedAll => 'すべて削除しました。';
+
+  @override
+  String get privacyDeleteFailed => 'データを削除できませんでした。';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'この端末のものはすべて削除しました。Action はクラウドに接続して何も残っていないことを確認できなかったため、あらためて確認します。';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return '$leftoversを除いて削除しました。';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action はもう一度試します。';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action はクラウドの確認を終えられなかったため、もう一度試します。';
+
+  @override
+  String get privacyLeftoverCaptures => '一部の取り込み';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'クラウド記録$count件',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$firstと$second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'クラウドの記録を削除しました。';
+
+  @override
+  String get privacyCloudUnreachable => 'やはり接続できませんでした。Action はもう一度試します。';
+
+  @override
+  String get privacyPendingTitle => 'まだ削除できていないもの';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '前回はクラウド記録$count件に接続できませんでした。Action が自動でもう一度試しますし、いますぐ再試行することもできます。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'もう一度試す';
+
+  @override
   String get evidenceTitle => 'この出どころ';
 
   @override

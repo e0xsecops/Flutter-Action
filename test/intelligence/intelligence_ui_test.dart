@@ -23,6 +23,7 @@ import 'package:action_app/features/settings/data/system_settings_launcher.dart'
 import 'package:action_app/features/settings/presentation/privacy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:action_app/l10n/gen/app_l10n_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../actions/support/actions_test_support.dart';
@@ -719,7 +720,7 @@ void main() {
 
   group('privacy copy tells the truth about the BYOK route', () {
     test('names the provider route explicitly', () {
-      final all = privacyDataMap.expand((g) => g.lines).join(' ');
+      final all = privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ');
       expect(all, contains('your own API key'));
       expect(all, contains('does not pass through any server'));
       expect(all, contains('nothing is ever sent in the background'));
@@ -728,20 +729,20 @@ void main() {
     test('does not promise the key cannot be extracted', () {
       // OS-backed storage is a real obstacle, not an absolute one, and the
       // copy has to say so rather than reassure.
-      final all = privacyDataMap.expand((g) => g.lines).join(' ');
+      final all = privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ');
       expect(all, contains('it is not absolute'));
       expect(all.toLowerCase(), isNot(contains('cannot be extracted')));
       expect(all.toLowerCase(), isNot(contains('impossible')));
     });
 
     test('still never claims everything stays on the device', () {
-      final all = privacyDataMap.expand((g) => g.lines).join(' ').toLowerCase();
+      final all = privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ').toLowerCase();
       expect(all, isNot(contains('everything stays on')));
       expect(all, isNot(contains('never leaves your device')));
     });
 
     test('says which tools genuinely stay local', () {
-      final all = privacyDataMap.expand((g) => g.lines).join(' ');
+      final all = privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ');
       expect(all, contains('Two tools never send anything'));
     });
   });

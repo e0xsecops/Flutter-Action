@@ -1595,6 +1595,482 @@ class AppL10nKo extends AppL10n {
   String get editRemoveAmount => '금액 지우기';
 
   @override
+  String get securityTitle => '보안과 개인정보';
+
+  @override
+  String get securitySectionProtection => '보호';
+
+  @override
+  String get securityAppLockUnavailable =>
+      '앱 잠금에는 이 기기의 화면 잠금이 필요합니다. 기기 설정에서 PIN, 패턴, 비밀번호 또는 지문을 먼저 설정하세요.';
+
+  @override
+  String get securityAppLockOn => 'Action은 본인이 맞는지 기기에 확인을 맡깁니다.';
+
+  @override
+  String get securityAppLockOff => 'Action을 열 때 지문, 얼굴 또는 기기 PIN을 요구합니다.';
+
+  @override
+  String get securityAskAgain => '다시 묻기';
+
+  @override
+  String get securityAskAgainDescription => '잠기기까지 Action이 백그라운드에 머물 수 있는 시간.';
+
+  @override
+  String get securityScreenPrivacy => '화면 보호';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      '화면 캡처와 화면 녹화를 막고, 앱 전환기에서 Action을 숨기도록 Android에 요청합니다.';
+
+  @override
+  String get securityPrivateReminders => '비공개 알림';
+
+  @override
+  String get securityPrivateRemindersOn => '알림은 무언가가 기다린다는 것만 말합니다.';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      '알림에 할 일의 제목이 보입니다. 잠금 화면에 뜨지 않게 하려면 이걸 켜세요.';
+
+  @override
+  String get securityLockNow => '지금 잠그기';
+
+  @override
+  String get securityLockNowDescription => '기다리지 않고 문을 닫습니다.';
+
+  @override
+  String get securitySectionStorage => '데이터가 저장되는 방식';
+
+  @override
+  String get securityStorageDataLabel => '당신의 할 일, 캡처, 설정';
+
+  @override
+  String get securityStorageDataDetail =>
+      '이 앱 자신의 비공개 저장소에 있으며, 다른 앱은 읽을 수 없고 Android가 기기 암호화의 일부로 암호화합니다. Action이 그 위에 자체적인 두 번째 층을 더하지는 않습니다.';
+
+  @override
+  String get securityStorageKeyLabel => '당신의 AI 제공자 키';
+
+  @override
+  String get securityStorageKeyDetail =>
+      '나머지와 함께 두지 않고 Android Keystore에 보관하며, 저장한 뒤에는 다시 보여 주지 않습니다.';
+
+  @override
+  String get securityStorageGapLabel => '이것으로 덮이지 않는 것';
+
+  @override
+  String get securityStorageGapDetail =>
+      '그중 어느 것도 잠금이 풀린 당신의 기기를 누가 쓰는 상황을 막지는 못하며, 변조되거나 루팅된 시스템은 보통보다 더 많이 읽을 수 있습니다. 앱 잠금이 그중 첫 번째에 도움이 되는 설정입니다.';
+
+  @override
+  String get securitySectionInformation => '당신의 정보';
+
+  @override
+  String get securityWhereInfoDescription =>
+      '당신의 데이터가 갈 수 있는 모든 경로와, 이 기기를 떠나는 두 가지.';
+
+  @override
+  String get securityAppLockRefused => '확인되지 않아 아무것도 바뀌지 않았습니다.';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      '이 기기에는 화면 잠금이 설정되어 있지 않습니다. 기기 설정에서 PIN, 패턴, 비밀번호 또는 지문을 추가한 뒤 다시 시도하세요.';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      '이 기기가 화면 보호를 적용하지 않아, 켜진 것으로 표시하는 대신 꺼진 채로 두었습니다.';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '예약된 알림 $count개가 이제 덜 말합니다.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '예약된 알림 $count개를 수정했습니다.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => '즉시';
+
+  @override
+  String get appLockDelayOneMinute => '1분 뒤';
+
+  @override
+  String get appLockDelayFiveMinutes => '5분 뒤';
+
+  @override
+  String get securityDelayImmediatelyDescription => 'Action이 화면에서 벗어날 때마다';
+
+  @override
+  String get securityDelayOneMinuteDescription => '메시지 하나에 답할 만큼';
+
+  @override
+  String get securityDelayFiveMinutesDescription => '전화 한 통을 받을 만큼';
+
+  @override
+  String get securityHeroProtected => '보호 중';
+
+  @override
+  String get securityHeroNothingOn => '켜진 것이 없음';
+
+  @override
+  String get securityHeroFootnote =>
+      '여기 있는 모든 것은 이 기기에서 작동합니다. 이 설정들은 어디로도 전송되지 않고, 원격으로 바뀔 수도 없습니다.';
+
+  @override
+  String get securityHeadlineNone => '세 가지 보호를 쓸 수 있습니다';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first 켜짐';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first과(와) $second 켜짐';
+  }
+
+  @override
+  String get securityHeadlineAll => '세 가지 보호가 모두 켜짐';
+
+  @override
+  String get securityTransfersTitle => '이 기기를 떠난 것';
+
+  @override
+  String get securityTransfersNoProvider =>
+      '연결된 AI 제공자가 없어서 분석을 위해 보내지는 것이 전혀 없습니다.';
+
+  @override
+  String get securityTransfersDescription =>
+      '무언가 전송되는 순간에, 응답이 돌아왔는지와 상관없이 여기에 기록됩니다. 도구와 제공자와 크기만 — 안에 무엇이 있었는지는 절대 남기지 않습니다. 이 기기에 90일 보관되며 어디로도 보내지 않습니다.';
+
+  @override
+  String get securityClear => '지우기';
+
+  @override
+  String get securityNothingSent => '보낸 것이 없습니다';
+
+  @override
+  String get securityNothingSentDescription => 'AI 제공자를 쓰는 도구를 실행하면 여기에 표시됩니다.';
+
+  @override
+  String get securityClearHistoryTitle => '이 기록을 지울까요?';
+
+  @override
+  String get securityClearHistoryBody =>
+      '무엇을 보냈는지에 대한 기록이 이 기기에서 삭제됩니다. 이미 보낸 것을 되돌리지는 않습니다.';
+
+  @override
+  String get securityUnnamedTool => 'Intelligence 도구';
+
+  @override
+  String get securityYourProvider => '당신의 AI 제공자';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count쪽',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '파일 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => '짧은 글';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count천 자';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return '$provider(으)로 보냈습니다.';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return '$provider(으)로 보냈습니다 · $size.';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count주 전';
+  }
+
+  @override
+  String get helpTitle => '도움말';
+
+  @override
+  String get helpAddQuestion => '무엇을 추가할 수 있나요?';
+
+  @override
+  String get helpAddAnswer =>
+      '스크린숏, 편지나 청구서 사진, 또는 붙여넣은 글. 날짜, 금액, 요청이 들어 있는 것이 가장 잘 맞습니다.';
+
+  @override
+  String get helpReviewQuestion => 'Action은 왜 검토하라고 하나요?';
+
+  @override
+  String get helpReviewAnswer =>
+      '문서를 읽는 기계는 잘못 읽을 수 있고, 조용히 틀린 기한은 기한이 아예 없는 것보다 나쁘기 때문입니다. Action은 무엇을 찾았고 어떤 단어에서 나왔는지 보여 주며, 당신이 확인하기 전에는 아무것도 저장하지 않습니다.';
+
+  @override
+  String get helpVaryQuestion => '다시 시도하면 결과가 왜 달라지나요?';
+
+  @override
+  String get helpVaryAnswer =>
+      '문서를 읽는 서비스는 결정적이지 않아서, 같은 캡처라도 조금 다르게 돌아올 수 있습니다. 검토 단계가 있는 이유이기도 합니다 — 변하지 않는 쪽은 당신입니다.';
+
+  @override
+  String get helpLateQuestion => '알림이 왜 늦게 왔나요?';
+
+  @override
+  String get helpLateAnswer =>
+      '알림은 Android를 통해 예약되고, 정확히 언제 전달할지는 Android가 정합니다. 배터리 절약, Doze, 제조사의 전원 설정이 모두 알림을 늦출 수 있습니다. Action은 분 단위로 알림을 약속하지 않습니다.';
+
+  @override
+  String get helpDataQuestion => '제 데이터는 어디에 있나요?';
+
+  @override
+  String get helpDataAnswer =>
+      '거의 모두 이 기기에 있습니다. 캡처, 할 일, 단계, 알림, 검색이 그렇습니다. 예외가 둘 — Action에게 읽어 달라고 한 내용은 그것을 읽는 AI 서비스로 전송되고, 확인된 할 일의 짧은 기록이 익명 식별자 아래 클라우드에 저장될 수 있습니다. 설정의 개인정보와 데이터에 그 기록에 무엇이 들어가는지 정확히 적혀 있습니다.';
+
+  @override
+  String get helpBackupQuestion => '이게 백업인가요?';
+
+  @override
+  String get helpBackupAnswer =>
+      '아닙니다. 클라우드 기록은 새 기기로 복원할 수 없고, 로그인할 계정도 없습니다. Action을 지우거나 이 기기를 잃어버리면 거기 있던 데이터는 사라집니다.';
+
+  @override
+  String get helpCorrectQuestion => '할 일을 어떻게 고치나요?';
+
+  @override
+  String get helpCorrectAnswer =>
+      '그 할 일을 열고 어떤 항목이든 수정하세요 — 제목, 기한, 금액, 제안된 다음 단계. 단계는 언제든 추가하고 순서를 바꾸고 완료하고 지울 수 있습니다. 할 일을 수정하는 것은 AI 서비스에 아무것도 묻지 않습니다.';
+
+  @override
+  String get privacyTitle => '개인정보와 데이터';
+
+  @override
+  String get privacyIntro =>
+      'Action은 가능한 만큼을 이 기기에 둡니다. 두 가지가 예외이고, 둘 다 아래에 적어 두었습니다.';
+
+  @override
+  String get privacyGroupOnDevice => '이 기기 안';
+
+  @override
+  String get privacyOnDeviceCaptures => '캡처 — 당신이 추가한 스크린숏, 사진, 글과 거기서 읽어 낸 글.';
+
+  @override
+  String get privacyOnDeviceActions => '할 일과 그 단계, 항목, 알림.';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      '검색. 검색은 여기서 돌아가고, 어디로도 보내지지 않으며, 화면을 닫은 뒤에는 남지 않습니다.';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      '사진은 위치 없이 저장됩니다. 휴대전화가 사진 안에 적어 넣는 좌표, 시각, 카메라 정보는 캡처가 저장되기 전에 제거되므로 여기에도 남지 않고, 캡처를 AI 제공자에게 보낼 때도 함께 가지 않습니다.';
+
+  @override
+  String get privacyGroupSentToRead => '읽히기 위해 전송되는 것';
+
+  @override
+  String get privacySentToReadWhat =>
+      '캡처를 해석해 달라고 Action에 요청하면 그 내용은 그것을 읽는 AI 서비스로 전송됩니다. 이것은 기기에서 도는 AI가 아닙니다.';
+
+  @override
+  String get privacySentToReadWhen => '당신이 고른 캡처만, 그리고 요청했을 때만 전송됩니다.';
+
+  @override
+  String get privacyGroupYourProvider => '당신 자신의 AI 제공자로 전송되는 것';
+
+  @override
+  String get privacyProviderWhat =>
+      '설정에서 AI 제공자를 연결하면, Intelligence 도구는 당신이 선택한 내용을 그 제공자에게 — OpenAI, Anthropic, Google 또는 당신이 고른 endpoint — 당신 자신의 API 키로 보냅니다.';
+
+  @override
+  String get privacyProviderDirect =>
+      '그들에게 곧바로 갑니다. Action에 속한 어떤 서버도 거치지 않습니다.';
+
+  @override
+  String get privacyProviderScope =>
+      '도구를 위해 고른 것만, 그리고 실행할 때만 전송됩니다. 다른 할 일과 캡처와 원본은 절대 포함되지 않고, 백그라운드에서 무언가 전송되는 일도 없습니다.';
+
+  @override
+  String get privacyProviderKey =>
+      '당신의 API 키는 이 기기의 보안 저장소에 보관되며 그 키가 속한 제공자에게만 전송됩니다. 보안 저장소는 잠금이 풀린 당신의 기기를 손에 넣은 사람에게 실제 장애물이지만 절대적이지는 않으며, Action은 그렇지 않은 척하지 않습니다.';
+
+  @override
+  String get privacyProviderLocalTools =>
+      '아무것도 보내지 않는 도구가 둘 있습니다. 민감한 내용을 가리는 것과, 파일이 어디서 왔는지 확인하는 것입니다. 둘 다 전부 이 기기에서 돕니다.';
+
+  @override
+  String get privacyProviderAgreement =>
+      '당신이 보낸 것을 제공자가 어떻게 다루는지는 Action이 아니라 그들과의 약정이 정합니다.';
+
+  @override
+  String get privacyGroupCloud => '클라우드에 저장되는 것';
+
+  @override
+  String get privacyCloudWhat =>
+      '할 일을 확인하면 그 짧은 기록이 이 설치본의 익명 식별자 아래 저장될 수 있습니다. 제목, 상태, 긴급도, 분류, 기한, 금액, 제안된 다음 단계, 그리고 시각입니다.';
+
+  @override
+  String get privacyCloudNotSent =>
+      '당신의 캡처, 거기서 읽어 낸 글, 할 일의 단계와 항목, 그리고 알림은 전송되지 않습니다.';
+
+  @override
+  String get privacyCloudNotBackup =>
+      '이것은 백업이 아닙니다. 새 기기로 복원할 방법이 없고, 이 설치본을 잃으면 익명 식별자도 함께 사라집니다.';
+
+  @override
+  String get privacyGroupDiagnostics => '진단';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action은 앱에서 무슨 일이 일어났는지를 익명 횟수로 기록합니다 — 캡처가 시작되었다는 것, 추출이 됐는지 안 됐는지, 검색이 아무것도 못 찾았다는 것, 할 일이 완료되었다는 것.';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      '이것은 횟수이지 내용이 아닙니다. 제목, 금액, 기한, 참조번호, 캡처한 글, 검색어는 결코 들어가지 않으며, 익명 식별자나 할 일 또는 캡처의 어떤 식별자도 들어가지 않습니다.';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      '앱이 멈추면 고칠 수 있도록 오류와 발생한 위치가 보고됩니다. Action은 그 보고에 당신의 데이터를 붙이지 않습니다.';
+
+  @override
+  String get privacySectionYourData => '당신의 데이터';
+
+  @override
+  String get privacyYourDataFootnote =>
+      '캡처를 지워도 할 일은 그대로 남습니다. 캡처가 사라진 할 일도 여전히 작동합니다. 다만 무엇에서 나왔는지를 더는 보여 주지 않을 뿐입니다.';
+
+  @override
+  String get privacyClearCaptures => '캡처 지우기';
+
+  @override
+  String get privacyClearCapturesDescription => '모든 캡처와 그 이미지 파일을 삭제합니다.';
+
+  @override
+  String get privacyDeleteAll => '내 데이터 전부 삭제';
+
+  @override
+  String get privacyDeleteAllDescription => '할 일, 단계, 알림, 캡처, 그리고 위의 클라우드 기록.';
+
+  @override
+  String get privacyClearCapturesTitle => '캡처를 지울까요?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      '모든 캡처와 그 이미지가 이 기기에서 삭제됩니다. 할 일은 지금 그대로 남습니다.';
+
+  @override
+  String get privacyCapturesDeleted => '캡처를 삭제했습니다.';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      '일부 캡처는 삭제하지 못했습니다. 다른 것은 아무것도 바뀌지 않았습니다.';
+
+  @override
+  String get privacyDeleteAllTitle => '데이터를 전부 삭제할까요?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      '이 기기의 모든 할 일, 단계, 알림, 캡처와 위에 적은 클라우드 기록을 삭제합니다. 되돌릴 수 없고, 복원할 백업도 없습니다.';
+
+  @override
+  String get privacyDeleteEverything => '전부 삭제';
+
+  @override
+  String get privacyDeletedAll => '전부 삭제했습니다.';
+
+  @override
+  String get privacyDeleteFailed => '데이터를 삭제하지 못했습니다.';
+
+  @override
+  String get privacyDeletedUnverified =>
+      '이 기기의 모든 것을 삭제했습니다. Action이 클라우드에 연결해 거기 남은 것이 없는지 확인하지 못했고, 다시 확인할 것입니다.';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return '$leftovers을(를) 빼고 삭제했습니다.';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action이 다시 시도합니다.';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action이 클라우드 확인을 끝내지 못했고, 다시 시도합니다.';
+
+  @override
+  String get privacyLeftoverCaptures => '일부 캡처';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '클라우드 기록 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first과(와) $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => '클라우드 기록을 삭제했습니다.';
+
+  @override
+  String get privacyCloudUnreachable => '여전히 연결하지 못했습니다. Action이 다시 시도합니다.';
+
+  @override
+  String get privacyPendingTitle => '아직 삭제할 것';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '지난번에 클라우드 기록 $count개에 연결하지 못했습니다. Action이 알아서 다시 시도하며, 지금 직접 다시 시도할 수도 있습니다.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => '다시 시도';
+
+  @override
   String get evidenceTitle => '이건 어디서 왔나';
 
   @override

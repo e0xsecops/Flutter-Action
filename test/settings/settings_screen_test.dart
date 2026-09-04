@@ -19,6 +19,7 @@ import 'package:action_app/design/components/app_sheet.dart';
 import 'package:action_app/features/settings/presentation/settings_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:action_app/l10n/gen/app_l10n_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../actions/support/actions_test_support.dart';
@@ -119,7 +120,7 @@ Future<void> openSettings(WidgetTester tester) async {
 }
 
 String _privacyText() =>
-    privacyDataMap.expand((g) => g.lines).join(' ');
+    privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ');
 
 /// The value shown on the right of a named settings row.
 ///
@@ -340,7 +341,7 @@ void main() {
     // The list builds lazily, so these read the copy itself rather than the
     // handful of entries that happen to fit on screen.
     test('answers the questions people actually ask', () {
-      final questions = helpEntries.map((e) => e.question).toList();
+      final questions = helpEntriesIn(AppL10nEn()).map((e) => e.question).toList();
       expect(questions, contains('Is this a backup?'));
       expect(questions, contains('Why was my reminder late?'));
       expect(questions, contains('Where is my data?'));
@@ -348,7 +349,7 @@ void main() {
     });
 
     test('invents no support channel anywhere in it', () {
-      for (final entry in helpEntries) {
+      for (final entry in helpEntriesIn(AppL10nEn())) {
         final text = '${entry.question} ${entry.answer}';
         expect(text, isNot(contains('@')));
         expect(text.toLowerCase(), isNot(contains('contact us')));
@@ -357,7 +358,7 @@ void main() {
     });
 
     test('does not promise what the architecture cannot deliver', () {
-      final all = helpEntries.map((e) => e.answer).join(' ').toLowerCase();
+      final all = helpEntriesIn(AppL10nEn()).map((e) => e.answer).join(' ').toLowerCase();
       expect(all, isNot(contains('guaranteed')));
       expect(all, isNot(contains('cloud backup')));
       expect(all, isNot(contains('syncs across')));
@@ -417,7 +418,7 @@ void main() {
     });
 
     test('names exactly what the mirror carries', () {
-      final cloud = privacyDataMap
+      final cloud = privacyDataMapIn(AppL10nEn())
           .firstWhere((g) => g.title == 'Stored in the cloud')
           .lines
           .join(' ');

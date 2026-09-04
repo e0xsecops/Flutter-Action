@@ -1646,6 +1646,501 @@ class AppL10nBn extends AppL10n {
   String get editRemoveAmount => 'পরিমাণ সরান';
 
   @override
+  String get securityTitle => 'নিরাপত্তা ও গোপনীয়তা';
+
+  @override
+  String get securitySectionProtection => 'সুরক্ষা';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'অ্যাপ লকের জন্য এই ডিভাইসে স্ক্রিন লক দরকার। আগে ডিভাইস সেটিংসে একটি পিন, প্যাটার্ন, পাসওয়ার্ড বা আঙুলের ছাপ ঠিক করুন।';
+
+  @override
+  String get securityAppLockOn =>
+      'Action আপনার ডিভাইসকে বলে নিশ্চিত করতে যে এটি আপনিই।';
+
+  @override
+  String get securityAppLockOff =>
+      'Action খুলতে আপনার আঙুলের ছাপ, মুখ বা ডিভাইসের পিন লাগবে।';
+
+  @override
+  String get securityAskAgain => 'আবার জিজ্ঞেস করুন';
+
+  @override
+  String get securityAskAgainDescription =>
+      'লক হওয়ার আগে Action কতক্ষণ পেছনে থাকতে পারবে।';
+
+  @override
+  String get securityScreenPrivacy => 'স্ক্রিন গোপনীয়তা';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'Android-কে বলুন স্ক্রিনশট ও স্ক্রিন রেকর্ডিং আটকাতে, আর অ্যাপ সুইচারে Action লুকিয়ে রাখতে।';
+
+  @override
+  String get securityPrivateReminders => 'ব্যক্তিগত মনে করিয়ে দেওয়া';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'মনে করিয়ে দেওয়া শুধু বলে যে কিছু একটা আপনার অপেক্ষায়।';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'মনে করিয়ে দেওয়ায় কাজের শিরোনাম দেখায়। সেটি লক স্ক্রিনে না আসতে দিতে এটি চালু করুন।';
+
+  @override
+  String get securityLockNow => 'এখনই লক করুন';
+
+  @override
+  String get securityLockNowDescription => 'অপেক্ষা না করে দরজা বন্ধ করুন।';
+
+  @override
+  String get securitySectionStorage => 'আপনার তথ্য কীভাবে রাখা হয়';
+
+  @override
+  String get securityStorageDataLabel => 'আপনার কাজ, ক্যাপচার ও সেটিংস';
+
+  @override
+  String get securityStorageDataDetail =>
+      'এগুলো এই অ্যাপের নিজস্ব ব্যক্তিগত সংরক্ষণে থাকে, যা অন্য অ্যাপ পড়তে পারে না এবং যা Android ডিভাইস এনক্রিপশনের অংশ হিসেবে এনক্রিপ্ট করে। Action এর উপরে নিজের দ্বিতীয় কোনো স্তর যোগ করে না।';
+
+  @override
+  String get securityStorageKeyLabel => 'আপনার AI সরবরাহকারীর চাবি';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'বাকি সবের সঙ্গে নয়, Android Keystore-এ রাখা হয়, আর সেভ করার পর আর কখনো দেখানো হয় না।';
+
+  @override
+  String get securityStorageGapLabel => 'এটি যা ঢাকে না';
+
+  @override
+  String get securityStorageGapDetail =>
+      'এর কোনোটিই এমন কারো থেকে রক্ষা করে না যে আপনার আনলক করা ডিভাইস ব্যবহার করছে, আর বদলে ফেলা বা রুট করা সিস্টেম সাধারণের চেয়ে বেশি পড়তে পারে। অ্যাপ লক সেই ব্যবস্থাটি যা প্রথমটিতে সাহায্য করে।';
+
+  @override
+  String get securitySectionInformation => 'আপনার তথ্য';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'আপনার তথ্যের প্রতিটি পথ, আর যে দুটি এই ডিভাইস ছেড়ে যায়।';
+
+  @override
+  String get securityAppLockRefused => 'নিশ্চিত করা হয়নি, তাই কিছুই বদলায়নি।';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'এই ডিভাইসে কোনো স্ক্রিন লক ঠিক করা নেই। ডিভাইস সেটিংসে একটি পিন, প্যাটার্ন, পাসওয়ার্ড বা আঙুলের ছাপ যোগ করে আবার চেষ্টা করুন।';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'এই ডিভাইস স্ক্রিন গোপনীয়তা প্রয়োগ করতে চায়নি, তাই চালু দেখানোর বদলে সেটি বন্ধই রাখা হয়েছে।';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি নির্ধারিত মনে করিয়ে দেওয়া এখন কম বলে।',
+      one: '১টি নির্ধারিত মনে করিয়ে দেওয়া এখন কম বলে।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি নির্ধারিত মনে করিয়ে দেওয়া হালনাগাদ হয়েছে।',
+      one: '১টি নির্ধারিত মনে করিয়ে দেওয়া হালনাগাদ হয়েছে।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'সঙ্গে সঙ্গে';
+
+  @override
+  String get appLockDelayOneMinute => '১ মিনিট পরে';
+
+  @override
+  String get appLockDelayFiveMinutes => '৫ মিনিট পরে';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'যতবার Action পর্দা ছেড়ে যায়';
+
+  @override
+  String get securityDelayOneMinuteDescription =>
+      'একটি বার্তার উত্তর দেওয়ার মতো সময়';
+
+  @override
+  String get securityDelayFiveMinutesDescription => 'একটি ফোন ধরার মতো সময়';
+
+  @override
+  String get securityHeroProtected => 'সুরক্ষিত রাখা';
+
+  @override
+  String get securityHeroNothingOn => 'কিছুই চালু নেই';
+
+  @override
+  String get securityHeroFootnote =>
+      'এখানকার সবকিছু এই ডিভাইসেই কাজ করে। এই সেটিংসের কোনোটিই কোথাও পাঠানো হয় না, আর কোনোটিই দূর থেকে বদলানো যায় না।';
+
+  @override
+  String get securityHeadlineNone => 'তিনটি সুরক্ষা রয়েছে';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first চালু';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first এবং $second চালু';
+  }
+
+  @override
+  String get securityHeadlineAll => 'তিনটি সুরক্ষাই চালু';
+
+  @override
+  String get securityTransfersTitle => 'এই ডিভাইস থেকে কী গেছে';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'কোনো AI সরবরাহকারী যুক্ত নেই, তাই বিশ্লেষণের জন্য কিছুই পাঠানো হচ্ছে না।';
+
+  @override
+  String get securityTransfersDescription =>
+      'যে মুহূর্তে কিছু পাঠানো হয় সেই মুহূর্তেই এখানে লেখা হয়, উত্তর ফিরুক বা না ফিরুক। শুধু সরঞ্জাম, সরবরাহকারী আর আকার — ভেতরে কী ছিল তা কখনোই নয়। এই ডিভাইসে ৯০ দিন রাখা হয় এবং কোথাও পাঠানো হয় না।';
+
+  @override
+  String get securityClear => 'মুছুন';
+
+  @override
+  String get securityNothingSent => 'কিছুই পাঠানো হয়নি';
+
+  @override
+  String get securityNothingSentDescription =>
+      'আপনি যখন এমন সরঞ্জাম চালাবেন যা আপনার AI সরবরাহকারী ব্যবহার করে, সেটি এখানে থাকবে।';
+
+  @override
+  String get securityClearHistoryTitle => 'এই ইতিহাস মুছবেন?';
+
+  @override
+  String get securityClearHistoryBody =>
+      'কী পাঠানো হয়েছিল তার নথি এই ডিভাইস থেকে মুছে যাবে। যা আগেই পাঠানো হয়ে গেছে তা এটি ফিরিয়ে আনে না।';
+
+  @override
+  String get securityUnnamedTool => 'একটি Intelligence সরঞ্জাম';
+
+  @override
+  String get securityYourProvider => 'আপনার AI সরবরাহকারীর কাছে';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count পৃষ্ঠা',
+      one: '১ পৃষ্ঠা',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ফাইল',
+      one: '১টি ফাইল',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'ছোট একটুকরো লেখা';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count হাজার অক্ষর';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return '$provider-কে পাঠানো হয়েছে।';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return '$provider-কে পাঠানো হয়েছে · $size।';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count সপ্তাহ আগে';
+  }
+
+  @override
+  String get helpTitle => 'সহায়তা';
+
+  @override
+  String get helpAddQuestion => 'আমি কী যোগ করতে পারি?';
+
+  @override
+  String get helpAddAnswer =>
+      'একটি স্ক্রিনশট, কোনো চিঠি বা বিলের ছবি, বা আপনার পেস্ট করা লেখা। যাতে তারিখ, অঙ্ক বা কোনো অনুরোধ আছে তা সবচেয়ে ভালো চলে।';
+
+  @override
+  String get helpReviewQuestion => 'Action কেন আমাকে পর্যালোচনা করতে বলে?';
+
+  @override
+  String get helpReviewAnswer =>
+      'কারণ নথি পড়া যন্ত্র সেটি ভুল পড়তে পারে, আর চুপচাপ ভুল হয়ে থাকা সময়সীমা কোনো সময়সীমা না থাকার চেয়েও খারাপ। Action দেখায় সে কী পেয়েছে আর কোন শব্দ থেকে পেয়েছে, আর আপনি নিশ্চিত না করা পর্যন্ত কিছুই সেভ হয় না।';
+
+  @override
+  String get helpVaryQuestion => 'আবার চেষ্টা করলে ফল বদলে যায় কেন?';
+
+  @override
+  String get helpVaryAnswer =>
+      'আপনার নথি যে সেবা পড়ে সেটি নির্ধারিত নয়, তাই একই ক্যাপচার একটু আলাদা হয়ে ফিরতে পারে। পর্যালোচনার ধাপটি সে কারণেও আছে — আপনিই সেই অংশ যা বদলায় না।';
+
+  @override
+  String get helpLateQuestion => 'আমার মনে করিয়ে দেওয়া দেরিতে এল কেন?';
+
+  @override
+  String get helpLateAnswer =>
+      'মনে করিয়ে দেওয়া Android দিয়ে নির্ধারিত হয়, আর ঠিক কখন পৌঁছে দেবে তা Android ঠিক করে। ব্যাটারি সাশ্রয়, Doze আর নির্মাতার পাওয়ার সেটিংস যেকোনো একটিকে দেরি করাতে পারে। Action কখনোই মিনিট ধরে মনে করিয়ে দেওয়ার প্রতিশ্রুতি দেয় না।';
+
+  @override
+  String get helpDataQuestion => 'আমার তথ্য কোথায়?';
+
+  @override
+  String get helpDataAnswer =>
+      'প্রায় সবই এই ডিভাইসে: আপনার ক্যাপচার, কাজ, ধাপ, মনে করিয়ে দেওয়া আর খোঁজ। দুটি ব্যতিক্রম — আপনি Action-কে যে লেখা পড়তে বলেন তা যে AI সেবা পড়ে তার কাছে যায়, আর নিশ্চিত করা কাজের একটি সংক্ষিপ্ত নথি বেনামি পরিচয়ে ক্লাউডে রাখা হতে পারে। সেটিংসে গোপনীয়তা ও ডেটা ঠিক কী কী সেই নথিতে থাকে তা বলে দেয়।';
+
+  @override
+  String get helpBackupQuestion => 'এটি কি ব্যাকআপ?';
+
+  @override
+  String get helpBackupAnswer =>
+      'না। ক্লাউডের নথি নতুন ডিভাইসে ফিরিয়ে আনা যায় না, আর লগ ইন করার মতো কোনো অ্যাকাউন্টও নেই। আপনি Action মুছে ফেললে বা এই ডিভাইস হারালে, এতে থাকা তথ্য চলে যায়।';
+
+  @override
+  String get helpCorrectQuestion => 'আমি কোনো কাজ কীভাবে ঠিক করব?';
+
+  @override
+  String get helpCorrectAnswer =>
+      'সেটি খুলে যেকোনো ঘর বদলান — শিরোনাম, সময়সীমা, পরিমাণ বা প্রস্তাবিত পরের ধাপ। ধাপ যেকোনো সময় যোগ, সাজানো, শেষ ও মুছে ফেলা যায়। কোনো কাজ বদলানো AI সেবাকে কখনো কিছু জিজ্ঞেস করে না।';
+
+  @override
+  String get privacyTitle => 'গোপনীয়তা ও ডেটা';
+
+  @override
+  String get privacyIntro =>
+      'Action যতটা পারে ততটা এই ডিভাইসেই রাখে। দুটি জিনিস ব্যতিক্রম, আর দুটিই নিচে দেওয়া আছে।';
+
+  @override
+  String get privacyGroupOnDevice => 'এই ডিভাইসে';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'ক্যাপচার — আপনার যোগ করা স্ক্রিনশট, ছবি ও লেখা, আর সেগুলো থেকে পড়া লেখা।';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'কাজ, তাদের ধাপ, তথ্য ও মনে করিয়ে দেওয়া।';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'খোঁজ। আপনার খোঁজ এখানেই চলে, কোথাও পাঠানো হয় না, আর পর্দা বন্ধ করার পর রাখা হয় না।';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'ছবি তার অবস্থান ছাড়াই রাখা হয়। ফোন ছবির ভেতরে যে স্থানাঙ্ক, সময় ও ক্যামেরার বিবরণ লেখে তা ক্যাপচার সেভ হওয়ার আগেই সরিয়ে ফেলা হয়, তাই সেগুলো এখানে থাকে না এবং আপনি কোনো ক্যাপচার আপনার AI সরবরাহকারীকে পাঠালে সেগুলোও যায় না।';
+
+  @override
+  String get privacyGroupSentToRead => 'পড়ার জন্য পাঠানো';
+
+  @override
+  String get privacySentToReadWhat =>
+      'আপনি যখন Action-কে কোনো ক্যাপচার বুঝতে বলেন, সেই লেখা যে AI সেবা পড়ে তার কাছে পাঠানো হয়। এটি ডিভাইসে চলা AI নয়।';
+
+  @override
+  String get privacySentToReadWhen =>
+      'আপনি যে ক্যাপচারটি বেছেছেন কেবল সেটিই পাঠানো হয়, আর কেবল যখন আপনি বলেন।';
+
+  @override
+  String get privacyGroupYourProvider => 'আপনার নিজের AI সরবরাহকারীকে পাঠানো';
+
+  @override
+  String get privacyProviderWhat =>
+      'আপনি সেটিংসে কোনো AI সরবরাহকারী যুক্ত করলে, Intelligence সরঞ্জামগুলো আপনার বেছে নেওয়া লেখা সেই সরবরাহকারীকে পাঠায় — OpenAI, Anthropic, Google বা আপনার বেছে নেওয়া কোনো endpoint — আপনার নিজের API চাবি দিয়ে।';
+
+  @override
+  String get privacyProviderDirect =>
+      'এটি সরাসরি তাদের কাছেই যায়। Action-এর কোনো সার্ভারের ভেতর দিয়ে যায় না।';
+
+  @override
+  String get privacyProviderScope =>
+      'কোনো সরঞ্জামের জন্য আপনি যা বাছেন কেবল তাই পাঠানো হয়, আর কেবল যখন আপনি সেটি চালান। আপনার অন্য কাজ, ক্যাপচার ও উৎস কখনো যুক্ত হয় না, আর পেছনে কখনো কিছু পাঠানো হয় না।';
+
+  @override
+  String get privacyProviderKey =>
+      'আপনার API চাবি এই ডিভাইসের নিরাপদ সংরক্ষণে রাখা হয় এবং কেবল যে সরবরাহকারীর সেটি, তার কাছেই পাঠানো হয়। নিরাপদ সংরক্ষণ আপনার আনলক করা ডিভাইস হাতে পাওয়া কারো জন্য সত্যিকারের বাধা, কিন্তু তা চূড়ান্ত নয়, আর Action এর উল্টো কিছু দাবি করবে না।';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'দুটি সরঞ্জাম কখনোই কিছু পাঠায় না: স্পর্শকাতর বিবরণ আড়াল করা, আর কোনো ফাইল কোথা থেকে এসেছে তা যাচাই করা। দুটিই পুরোপুরি এই ডিভাইসে চলে।';
+
+  @override
+  String get privacyProviderAgreement =>
+      'আপনি যা পাঠান তা নিয়ে আপনার সরবরাহকারী কী করে তা তাদের সঙ্গে আপনার চুক্তিতে ঠিক হয়, Action-এ নয়।';
+
+  @override
+  String get privacyGroupCloud => 'ক্লাউডে রাখা';
+
+  @override
+  String get privacyCloudWhat =>
+      'আপনি কোনো কাজ নিশ্চিত করলে তার একটি সংক্ষিপ্ত নথি এই ইনস্টলেশনের বেনামি পরিচয়ে রাখা হতে পারে: শিরোনাম, অবস্থা, জরুরি মাত্রা, শ্রেণি, সময়সীমা, পরিমাণ, প্রস্তাবিত পরের ধাপ এবং সময়ের ছাপ।';
+
+  @override
+  String get privacyCloudNotSent =>
+      'আপনার ক্যাপচার, সেগুলো থেকে পড়া লেখা, কোনো কাজের ধাপ ও তথ্য, আর আপনার মনে করিয়ে দেওয়া পাঠানো হয় না।';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'এটি ব্যাকআপ নয়। নতুন ডিভাইসে এটি ফিরিয়ে আনার উপায় নেই, আর এই ইনস্টলেশন হারালে বেনামি পরিচয়ও সঙ্গে চলে যায়।';
+
+  @override
+  String get privacyGroupDiagnostics => 'ডায়াগনস্টিকস';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action অ্যাপে কী ঘটছে তার বেনামি গণনা রাখে — যে একটি ক্যাপচার শুরু হয়েছে, যে একটি নিষ্কাশন কাজ করেছে বা করেনি, যে একটি খোঁজে কিছু মেলেনি, যে একটি কাজ শেষ হয়েছে।';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'এগুলো গণনা, বিষয়বস্তু নয়। কোনো শিরোনাম, পরিমাণ, সময়সীমা, নির্দেশ সংখ্যা, ক্যাপচার করা লেখা বা খোঁজের শব্দ কখনো যায় না, বেনামি পরিচয় বা কোনো কাজ বা ক্যাপচারের কোনো শনাক্তকারীও নয়।';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'অ্যাপ ক্র্যাশ করলে ত্রুটি আর সেটি কোথায় ঘটেছে তা জানানো হয় যাতে ঠিক করা যায়। Action ওই প্রতিবেদনের সঙ্গে আপনার তথ্য জুড়ে দেয় না।';
+
+  @override
+  String get privacySectionYourData => 'আপনার ডেটা';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'ক্যাপচার মুছলে আপনার কাজ জায়গামতোই থাকে। যে কাজের ক্যাপচার আর নেই সেটিও চলে; কেবল আর দেখায় না যে সেটি কী থেকে এসেছিল।';
+
+  @override
+  String get privacyClearCaptures => 'ক্যাপচার মুছুন';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'প্রতিটি ক্যাপচার ও তার ছবির ফাইল মুছে দেয়।';
+
+  @override
+  String get privacyDeleteAll => 'আমার সব ডেটা মুছুন';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'কাজ, ধাপ, মনে করিয়ে দেওয়া, ক্যাপচার আর উপরের ক্লাউড নথি।';
+
+  @override
+  String get privacyClearCapturesTitle => 'ক্যাপচার মুছবেন?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'প্রতিটি ক্যাপচার আর তার ছবি এই ডিভাইস থেকে মুছে যাবে। আপনার কাজ ঠিক যেমন আছে তেমনই থাকে।';
+
+  @override
+  String get privacyCapturesDeleted => 'ক্যাপচার মুছে ফেলা হয়েছে।';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'কিছু ক্যাপচার মোছা যায়নি। আর কিছুই বদলানো হয়নি।';
+
+  @override
+  String get privacyDeleteAllTitle => 'আপনার সব ডেটা মুছবেন?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'এটি এই ডিভাইসের প্রতিটি কাজ, ধাপ, মনে করিয়ে দেওয়া ও ক্যাপচার এবং উপরে দেওয়া ক্লাউড নথি মুছে দেয়। এটি ফেরানো যায় না, আর ফিরিয়ে আনার মতো কোনো ব্যাকআপও নেই।';
+
+  @override
+  String get privacyDeleteEverything => 'সবকিছু মুছুন';
+
+  @override
+  String get privacyDeletedAll => 'সবকিছু মুছে ফেলা হয়েছে।';
+
+  @override
+  String get privacyDeleteFailed => 'আপনার ডেটা মোছা যায়নি।';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'এই ডিভাইসের সবকিছু মুছে ফেলা হয়েছে। সেখানে কিছু বাকি নেই তা নিশ্চিত করতে Action ক্লাউডে পৌঁছাতে পারেনি, আর আবার দেখবে।';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return '$leftovers ছাড়া মুছে ফেলা হয়েছে।';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action আবার চেষ্টা করবে।';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action ক্লাউড যাচাই শেষ করতে পারেনি, আর আবার চেষ্টা করবে।';
+
+  @override
+  String get privacyLeftoverCaptures => 'কিছু ক্যাপচার';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ক্লাউড নথি',
+      one: '১টি ক্লাউড নথি',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first এবং $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'ক্লাউড নথি মুছে ফেলা হয়েছে।';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'এখনো তাদের কাছে পৌঁছানো যায়নি। Action আবার চেষ্টা করবে।';
+
+  @override
+  String get privacyPendingTitle => 'এখনো মুছতে বাকি';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'গতবার $countটি ক্লাউড নথির কাছে পৌঁছানো যায়নি। Action নিজেই আবার চেষ্টা করবে, অথবা আপনি এখনই চেষ্টা করতে পারেন।',
+      one: 'গতবার ১টি ক্লাউড নথির কাছে পৌঁছানো যায়নি। Action নিজেই আবার চেষ্টা করবে, অথবা আপনি এখনই চেষ্টা করতে পারেন।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'আবার চেষ্টা করুন';
+
+  @override
   String get evidenceTitle => 'এটি কোথা থেকে এসেছে';
 
   @override

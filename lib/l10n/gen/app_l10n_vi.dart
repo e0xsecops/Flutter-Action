@@ -1639,6 +1639,497 @@ class AppL10nVi extends AppL10n {
   String get editRemoveAmount => 'Bỏ số tiền';
 
   @override
+  String get securityTitle => 'Bảo mật và riêng tư';
+
+  @override
+  String get securitySectionProtection => 'Bảo vệ';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'Khoá ứng dụng cần có khoá màn hình trên thiết bị này. Hãy đặt mã PIN, hình mở khoá, mật khẩu hoặc vân tay trong cài đặt thiết bị trước.';
+
+  @override
+  String get securityAppLockOn =>
+      'Action nhờ thiết bị của bạn xác nhận đúng là bạn.';
+
+  @override
+  String get securityAppLockOff =>
+      'Yêu cầu vân tay, khuôn mặt hoặc mã PIN thiết bị để mở Action.';
+
+  @override
+  String get securityAskAgain => 'Hỏi lại';
+
+  @override
+  String get securityAskAgainDescription =>
+      'Action được ở nền bao lâu trước khi khoá lại.';
+
+  @override
+  String get securityScreenPrivacy => 'Riêng tư màn hình';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'Nhờ Android chặn chụp và quay màn hình, và ẩn Action trong trình chuyển ứng dụng.';
+
+  @override
+  String get securityPrivateReminders => 'Nhắc nhở riêng tư';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'Nhắc nhở chỉ nói rằng có việc đang chờ bạn.';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'Nhắc nhở hiện tên của việc. Hãy bật cái này để tên đó không xuất hiện trên màn hình khoá.';
+
+  @override
+  String get securityLockNow => 'Khoá ngay';
+
+  @override
+  String get securityLockNowDescription => 'Đóng cửa mà không cần chờ.';
+
+  @override
+  String get securitySectionStorage => 'Dữ liệu của bạn được lưu thế nào';
+
+  @override
+  String get securityStorageDataLabel =>
+      'Việc, bản thu nhận và cài đặt của bạn';
+
+  @override
+  String get securityStorageDataDetail =>
+      'Chúng nằm trong vùng lưu trữ riêng của chính ứng dụng này, nơi các ứng dụng khác không đọc được và được Android mã hoá như một phần của việc mã hoá thiết bị. Action không thêm một lớp thứ hai của riêng nó lên trên.';
+
+  @override
+  String get securityStorageKeyLabel => 'Khoá nhà cung cấp AI của bạn';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'Được giữ trong Android Keystore chứ không nằm chung với phần còn lại, và không bao giờ hiện lại sau khi bạn lưu.';
+
+  @override
+  String get securityStorageGapLabel => 'Những gì điều đó không bao gồm';
+
+  @override
+  String get securityStorageGapDetail =>
+      'Không điều nào trong đó chống được người dùng thiết bị của bạn khi nó đang mở khoá, và một hệ thống đã bị sửa đổi hoặc root có thể đọc được nhiều hơn hệ thống bình thường. Khoá ứng dụng là thiết lập giúp cho trường hợp thứ nhất.';
+
+  @override
+  String get securitySectionInformation => 'Thông tin của bạn';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'Mọi đường mà dữ liệu của bạn có thể đi, và hai đường rời khỏi thiết bị này.';
+
+  @override
+  String get securityAppLockRefused =>
+      'Chưa xác nhận, nên không có gì thay đổi.';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'Thiết bị này chưa đặt khoá màn hình. Hãy thêm mã PIN, hình mở khoá, mật khẩu hoặc vân tay trong cài đặt thiết bị rồi thử lại.';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'Thiết bị này không chịu áp dụng riêng tư màn hình, nên nó được để tắt thay vì hiển thị là đang bật.';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nhắc nhở đã lên lịch giờ nói ít hơn.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Đã cập nhật $count nhắc nhở đã lên lịch.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'Ngay lập tức';
+
+  @override
+  String get appLockDelayOneMinute => 'Sau 1 phút';
+
+  @override
+  String get appLockDelayFiveMinutes => 'Sau 5 phút';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'Mỗi lần Action rời khỏi màn hình';
+
+  @override
+  String get securityDelayOneMinuteDescription => 'Đủ để trả lời một tin nhắn';
+
+  @override
+  String get securityDelayFiveMinutesDescription => 'Đủ để nghe một cuộc gọi';
+
+  @override
+  String get securityHeroProtected => 'Đang được bảo vệ';
+
+  @override
+  String get securityHeroNothingOn => 'Chưa bật gì cả';
+
+  @override
+  String get securityHeroFootnote =>
+      'Mọi thứ ở đây đều chạy trên thiết bị này. Không thiết lập nào trong số này được gửi đi đâu, và không cái nào có thể bị đổi từ xa.';
+
+  @override
+  String get securityHeadlineNone => 'Có ba lớp bảo vệ sẵn sàng';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first đang bật';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first và $second đang bật';
+  }
+
+  @override
+  String get securityHeadlineAll => 'Cả ba lớp bảo vệ đều đang bật';
+
+  @override
+  String get securityTransfersTitle => 'Những gì đã rời khỏi thiết bị này';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'Chưa kết nối nhà cung cấp AI nào, nên không có gì đang được gửi đi để phân tích cả.';
+
+  @override
+  String get securityTransfersDescription =>
+      'Được ghi ở đây ngay lúc có thứ gì đó được gửi đi, dù có nhận lại được hay không. Chỉ công cụ, nhà cung cấp và dung lượng — không bao giờ là nội dung bên trong. Giữ 90 ngày trên thiết bị này và không gửi đi đâu.';
+
+  @override
+  String get securityClear => 'Xoá';
+
+  @override
+  String get securityNothingSent => 'Chưa gửi đi thứ gì';
+
+  @override
+  String get securityNothingSentDescription =>
+      'Khi bạn chạy một công cụ dùng nhà cung cấp AI của bạn, nó sẽ được liệt kê ở đây.';
+
+  @override
+  String get securityClearHistoryTitle => 'Xoá lịch sử này?';
+
+  @override
+  String get securityClearHistoryBody =>
+      'Bản ghi về những gì đã gửi sẽ bị xoá khỏi thiết bị này. Việc đó không thu hồi bất cứ thứ gì đã được gửi đi.';
+
+  @override
+  String get securityUnnamedTool => 'Một công cụ Intelligence';
+
+  @override
+  String get securityYourProvider => 'nhà cung cấp AI của bạn';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count trang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tệp',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'một đoạn chữ ngắn';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count nghìn ký tự';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return 'Đã gửi tới $provider.';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return 'Đã gửi tới $provider · $size.';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count tuần trước';
+  }
+
+  @override
+  String get helpTitle => 'Trợ giúp';
+
+  @override
+  String get helpAddQuestion => 'Tôi có thể thêm những gì?';
+
+  @override
+  String get helpAddAnswer =>
+      'Một ảnh chụp màn hình, một tấm ảnh chụp lá thư hay hoá đơn, hoặc chữ bạn dán vào. Hợp nhất là bất cứ thứ gì có ngày tháng, số tiền hoặc một yêu cầu.';
+
+  @override
+  String get helpReviewQuestion => 'Vì sao Action bảo tôi xem lại?';
+
+  @override
+  String get helpReviewAnswer =>
+      'Vì một cỗ máy đọc tài liệu có thể đọc sai, và một hạn chót sai một cách lặng lẽ còn tệ hơn là không có hạn chót nào. Action cho thấy nó tìm được gì và từ những chữ nào, và không có gì được lưu cho đến khi bạn xác nhận.';
+
+  @override
+  String get helpVaryQuestion => 'Vì sao kết quả đổi khác khi tôi thử lại?';
+
+  @override
+  String get helpVaryAnswer =>
+      'Dịch vụ đọc tài liệu của bạn không tất định, nên cùng một bản thu nhận có thể trả về hơi khác. Đó cũng là lý do bước xem lại tồn tại — bạn là phần không thay đổi.';
+
+  @override
+  String get helpLateQuestion => 'Vì sao nhắc nhở của tôi đến muộn?';
+
+  @override
+  String get helpLateAnswer =>
+      'Nhắc nhở được đặt lịch qua Android, và Android quyết định chính xác lúc nào gửi. Tiết kiệm pin, Doze và các thiết lập nguồn của nhà sản xuất đều có thể làm chậm một nhắc nhở. Action không bao giờ hứa một nhắc nhở đúng đến từng phút.';
+
+  @override
+  String get helpDataQuestion => 'Dữ liệu của tôi ở đâu?';
+
+  @override
+  String get helpDataAnswer =>
+      'Gần như tất cả đều nằm trên thiết bị này: các bản thu nhận, việc, bước, nhắc nhở và tìm kiếm của bạn. Hai ngoại lệ — nội dung bạn nhờ Action đọc sẽ được gửi tới dịch vụ AI đọc nó, và một bản ghi ngắn của một việc đã xác nhận có thể được lưu trên đám mây dưới một mã định danh ẩn danh. Mục Riêng tư và dữ liệu trong Cài đặt liệt kê chính xác bản ghi đó chứa những gì.';
+
+  @override
+  String get helpBackupQuestion => 'Đây có phải bản sao lưu không?';
+
+  @override
+  String get helpBackupAnswer =>
+      'Không. Bản ghi trên đám mây không thể khôi phục sang thiết bị mới, và cũng không có tài khoản nào để đăng nhập. Nếu bạn gỡ Action hoặc mất thiết bị này, dữ liệu trên đó là mất.';
+
+  @override
+  String get helpCorrectQuestion => 'Tôi sửa một việc thế nào?';
+
+  @override
+  String get helpCorrectAnswer =>
+      'Mở nó ra và sửa bất kỳ ô nào — tên, hạn chót, số tiền hoặc bước tiếp theo được gợi ý. Bạn có thể thêm, sắp xếp lại, hoàn thành và xoá các bước bất cứ lúc nào. Sửa một việc không bao giờ hỏi dịch vụ AI điều gì.';
+
+  @override
+  String get privacyTitle => 'Riêng tư và dữ liệu';
+
+  @override
+  String get privacyIntro =>
+      'Action giữ trên thiết bị này nhiều nhất có thể. Hai thứ là ngoại lệ, và cả hai đều được liệt kê bên dưới.';
+
+  @override
+  String get privacyGroupOnDevice => 'Trên thiết bị này';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'Bản thu nhận — ảnh chụp màn hình, ảnh và chữ bạn thêm vào, cùng phần chữ đọc được từ chúng.';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'Việc, cùng các bước, thông tin và nhắc nhở của chúng.';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'Tìm kiếm. Các tìm kiếm của bạn chạy ở đây, không bao giờ được gửi đi đâu, và không được giữ lại sau khi bạn đóng màn hình.';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'Ảnh được lưu mà không kèm vị trí. Toạ độ, thời gian và thông tin máy ảnh mà điện thoại ghi vào trong một tấm ảnh đều bị gỡ trước khi bản thu nhận được lưu, nên chúng không được giữ ở đây và cũng không đi kèm khi bạn gửi một bản thu nhận tới nhà cung cấp AI của bạn.';
+
+  @override
+  String get privacyGroupSentToRead => 'Gửi đi để được đọc';
+
+  @override
+  String get privacySentToReadWhat =>
+      'Khi bạn nhờ Action diễn giải một bản thu nhận, nội dung đó được gửi tới dịch vụ AI đọc nó. Đây không phải AI chạy trên thiết bị.';
+
+  @override
+  String get privacySentToReadWhen =>
+      'Chỉ bản thu nhận bạn chọn mới được gửi, và chỉ khi bạn yêu cầu.';
+
+  @override
+  String get privacyGroupYourProvider =>
+      'Gửi tới nhà cung cấp AI của chính bạn';
+
+  @override
+  String get privacyProviderWhat =>
+      'Nếu bạn kết nối một nhà cung cấp AI trong Cài đặt, các công cụ Intelligence sẽ gửi nội dung bạn chọn tới nhà cung cấp đó — OpenAI, Anthropic, Google hoặc một endpoint bạn đã chọn — bằng khoá API của chính bạn.';
+
+  @override
+  String get privacyProviderDirect =>
+      'Nó đi thẳng tới họ. Nó không đi qua bất kỳ máy chủ nào thuộc về Action.';
+
+  @override
+  String get privacyProviderScope =>
+      'Chỉ những gì bạn chọn cho một công cụ mới được gửi, và chỉ khi bạn chạy nó. Những việc, bản thu nhận và nguồn khác của bạn không bao giờ được kèm theo, và không bao giờ có gì được gửi ngầm ở nền.';
+
+  @override
+  String get privacyProviderKey =>
+      'Khoá API của bạn được giữ trong vùng lưu trữ an toàn của thiết bị này và chỉ được gửi tới nhà cung cấp mà nó thuộc về. Vùng lưu trữ an toàn là một trở ngại thật sự với người cầm thiết bị đang mở khoá của bạn, nhưng nó không tuyệt đối, và Action sẽ không nói ngược lại.';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'Hai công cụ không bao giờ gửi đi thứ gì: che thông tin nhạy cảm, và kiểm tra một tệp đến từ đâu. Cả hai chạy hoàn toàn trên thiết bị này.';
+
+  @override
+  String get privacyProviderAgreement =>
+      'Nhà cung cấp của bạn làm gì với những gì bạn gửi là do thoả thuận của bạn với họ quy định, không phải Action.';
+
+  @override
+  String get privacyGroupCloud => 'Lưu trên đám mây';
+
+  @override
+  String get privacyCloudWhat =>
+      'Khi bạn xác nhận một việc, một bản ghi ngắn của nó có thể được lưu dưới một mã định danh ẩn danh thuộc về bản cài đặt này: tên, trạng thái, mức gấp, phân loại, hạn chót, số tiền, bước tiếp theo được gợi ý và các mốc thời gian.';
+
+  @override
+  String get privacyCloudNotSent =>
+      'Các bản thu nhận của bạn, phần chữ đọc được từ chúng, các bước và thông tin của một việc, cùng các nhắc nhở của bạn đều không được gửi đi.';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'Đây không phải bản sao lưu. Không có cách nào khôi phục nó sang thiết bị mới, và mất bản cài đặt này thì mất luôn mã định danh ẩn danh.';
+
+  @override
+  String get privacyGroupDiagnostics => 'Chẩn đoán';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action ghi lại các con số ẩn danh về những gì diễn ra trong ứng dụng — rằng một bản thu nhận đã bắt đầu, rằng một lần trích xuất thành công hay không, rằng một tìm kiếm không thấy gì, rằng một việc đã hoàn thành.';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'Đó là các con số đếm, không phải nội dung. Không bao giờ có tên, số tiền, hạn chót, số tham chiếu, chữ đã thu nhận hay từ khoá tìm kiếm nào được kèm theo, mã định danh ẩn danh hay bất kỳ mã nào của một việc hoặc một bản thu nhận cũng vậy.';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'Nếu ứng dụng gặp sự cố, lỗi và nơi nó xảy ra được báo về để có thể sửa. Action không đính kèm dữ liệu của bạn vào các báo cáo đó.';
+
+  @override
+  String get privacySectionYourData => 'Dữ liệu của bạn';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'Xoá các bản thu nhận vẫn để nguyên các việc của bạn. Một việc mà bản thu nhận đã mất thì vẫn dùng được; chỉ là nó không còn cho thấy nó đến từ đâu.';
+
+  @override
+  String get privacyClearCaptures => 'Xoá các bản thu nhận';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'Xoá mọi bản thu nhận và tệp ảnh của nó.';
+
+  @override
+  String get privacyDeleteAll => 'Xoá toàn bộ dữ liệu của tôi';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'Việc, bước, nhắc nhở, bản thu nhận và các bản ghi đám mây ở trên.';
+
+  @override
+  String get privacyClearCapturesTitle => 'Xoá các bản thu nhận?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'Mọi bản thu nhận và ảnh của nó sẽ bị xoá khỏi thiết bị này. Các việc của bạn vẫn y nguyên như cũ.';
+
+  @override
+  String get privacyCapturesDeleted => 'Đã xoá các bản thu nhận.';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'Một số bản thu nhận không xoá được. Không có gì khác bị thay đổi.';
+
+  @override
+  String get privacyDeleteAllTitle => 'Xoá toàn bộ dữ liệu của bạn?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'Việc này xoá mọi việc, bước, nhắc nhở và bản thu nhận trên thiết bị này, cùng các bản ghi đám mây liệt kê ở trên. Không thể hoàn tác, và cũng không có bản sao lưu nào để khôi phục.';
+
+  @override
+  String get privacyDeleteEverything => 'Xoá tất cả';
+
+  @override
+  String get privacyDeletedAll => 'Mọi thứ đã bị xoá.';
+
+  @override
+  String get privacyDeleteFailed => 'Không xoá được dữ liệu của bạn.';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'Mọi thứ trên thiết bị này đã bị xoá. Action không liên lạc được với đám mây để xác nhận rằng ở đó không còn gì, và sẽ kiểm tra lại.';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return 'Đã xoá, trừ $leftovers.';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action sẽ thử lại.';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action không kiểm tra xong đám mây, và sẽ thử lại.';
+
+  @override
+  String get privacyLeftoverCaptures => 'một số bản thu nhận';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bản ghi đám mây',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first và $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'Các bản ghi đám mây đã bị xoá.';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'Vẫn chưa liên lạc được với chúng. Action sẽ thử lại.';
+
+  @override
+  String get privacyPendingTitle => 'Vẫn còn phải xoá';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Lần trước không liên lạc được với $count bản ghi đám mây. Action sẽ tự thử lại, hoặc bạn có thể thử ngay bây giờ.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'Thử lại';
+
+  @override
   String get evidenceTitle => 'Chỗ này lấy từ đâu';
 
   @override

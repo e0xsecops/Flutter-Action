@@ -1688,6 +1688,518 @@ class AppL10nRu extends AppL10n {
   String get editRemoveAmount => 'Убрать сумму';
 
   @override
+  String get securityTitle => 'Безопасность и приватность';
+
+  @override
+  String get securitySectionProtection => 'Защита';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'Блокировке приложения нужна блокировка экрана на этом устройстве. Сначала задайте PIN-код, графический ключ, пароль или отпечаток в настройках устройства.';
+
+  @override
+  String get securityAppLockOn =>
+      'Action просит ваше устройство подтвердить, что это вы.';
+
+  @override
+  String get securityAppLockOff =>
+      'Требовать отпечаток, лицо или PIN-код устройства, чтобы открыть Action.';
+
+  @override
+  String get securityAskAgain => 'Спрашивать снова';
+
+  @override
+  String get securityAskAgainDescription =>
+      'Сколько Action может быть в фоне, прежде чем заблокируется.';
+
+  @override
+  String get securityScreenPrivacy => 'Приватность экрана';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'Попросить Android блокировать снимки и запись экрана и скрывать Action в списке приложений.';
+
+  @override
+  String get securityPrivateReminders => 'Приватные напоминания';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'Напоминания говорят только, что что-то вас ждёт.';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'Напоминания показывают название задачи. Включите это, чтобы оно не попадало на экран блокировки.';
+
+  @override
+  String get securityLockNow => 'Заблокировать сейчас';
+
+  @override
+  String get securityLockNowDescription => 'Закрыть дверь, не дожидаясь.';
+
+  @override
+  String get securitySectionStorage => 'Как хранятся ваши данные';
+
+  @override
+  String get securityStorageDataLabel => 'Ваши задачи, добавленное и настройки';
+
+  @override
+  String get securityStorageDataDetail =>
+      'Они лежат в собственном приватном хранилище этого приложения, которое другие приложения прочитать не могут и которое Android шифрует в рамках шифрования устройства. Action не добавляет поверх второй собственный слой.';
+
+  @override
+  String get securityStorageKeyLabel => 'Ваш ключ поставщика ИИ';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'Хранится в Android Keystore, а не вместе со всем остальным, и после сохранения больше не показывается.';
+
+  @override
+  String get securityStorageGapLabel => 'Что это не покрывает';
+
+  @override
+  String get securityStorageGapDetail =>
+      'Ничто из этого не защищает от того, кто пользуется вашим разблокированным устройством, а изменённая или рутованная система может прочитать больше обычной. Блокировка приложения — та настройка, которая помогает с первым случаем.';
+
+  @override
+  String get securitySectionInformation => 'Ваши сведения';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'Все пути, которыми могут пойти ваши данные, и два из них покидают это устройство.';
+
+  @override
+  String get securityAppLockRefused =>
+      'Не подтверждено, поэтому ничего не изменилось.';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'На этом устройстве не настроена блокировка экрана. Добавьте PIN-код, графический ключ, пароль или отпечаток в настройках устройства и попробуйте снова.';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'Это устройство не стало применять приватность экрана, поэтому она оставлена выключенной, а не показана как включённая.';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count запланированных напоминаний теперь говорят меньше.',
+      many: '$count запланированных напоминаний теперь говорят меньше.',
+      few: '$count запланированных напоминания теперь говорят меньше.',
+      one: '1 запланированное напоминание теперь говорит меньше.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Обновлено $count запланированных напоминаний.',
+      many: 'Обновлено $count запланированных напоминаний.',
+      few: 'Обновлено $count запланированных напоминания.',
+      one: 'Обновлено 1 запланированное напоминание.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'Сразу';
+
+  @override
+  String get appLockDelayOneMinute => 'Через 1 минуту';
+
+  @override
+  String get appLockDelayFiveMinutes => 'Через 5 минут';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'Каждый раз, когда Action уходит с экрана';
+
+  @override
+  String get securityDelayOneMinuteDescription =>
+      'Достаточно, чтобы ответить на сообщение';
+
+  @override
+  String get securityDelayFiveMinutesDescription =>
+      'Достаточно, чтобы поговорить по телефону';
+
+  @override
+  String get securityHeroProtected => 'Под защитой';
+
+  @override
+  String get securityHeroNothingOn => 'Ничего не включено';
+
+  @override
+  String get securityHeroFootnote =>
+      'Всё здесь работает на этом устройстве. Ни одна из этих настроек никуда не отправляется, и ни одну нельзя изменить удалённо.';
+
+  @override
+  String get securityHeadlineNone => 'Доступны три вида защиты';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first включена';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first и $second включены';
+  }
+
+  @override
+  String get securityHeadlineAll => 'Все три вида защиты включены';
+
+  @override
+  String get securityTransfersTitle => 'Что покинуло это устройство';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'Поставщик ИИ не подключён, поэтому на анализ вообще ничего не отправляется.';
+
+  @override
+  String get securityTransfersDescription =>
+      'Записывается здесь в момент отправки, независимо от того, пришёл ответ или нет. Только инструмент, поставщик и размер — никогда содержимое. Хранится 90 дней на этом устройстве и никуда не отправляется.';
+
+  @override
+  String get securityClear => 'Очистить';
+
+  @override
+  String get securityNothingSent => 'Ничего не отправлялось';
+
+  @override
+  String get securityNothingSentDescription =>
+      'Когда вы запустите инструмент, который использует вашего поставщика ИИ, он появится здесь.';
+
+  @override
+  String get securityClearHistoryTitle => 'Очистить эту историю?';
+
+  @override
+  String get securityClearHistoryBody =>
+      'Запись о том, что было отправлено, будет удалена с этого устройства. Она не отменяет ничего из уже отправленного.';
+
+  @override
+  String get securityUnnamedTool => 'Инструмент Intelligence';
+
+  @override
+  String get securityYourProvider => 'вашему поставщику ИИ';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count страницы',
+      many: '$count страниц',
+      few: '$count страницы',
+      one: '1 страница',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count файла',
+      many: '$count файлов',
+      few: '$count файла',
+      one: '1 файл',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'короткий текст';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count тыс. символов';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return 'Отправлено: $provider.';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return 'Отправлено: $provider · $size.';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count нед. назад';
+  }
+
+  @override
+  String get helpTitle => 'Справка';
+
+  @override
+  String get helpAddQuestion => 'Что я могу добавить?';
+
+  @override
+  String get helpAddAnswer =>
+      'Скриншот, фотографию письма или счёта либо текст, который вы вставите. Лучше всего подходит всё, где есть дата, сумма или просьба.';
+
+  @override
+  String get helpReviewQuestion => 'Почему Action просит меня проверить?';
+
+  @override
+  String get helpReviewAnswer =>
+      'Потому что машина, читающая документ, может прочитать его неверно, а срок, который тихо оказался неправильным, хуже, чем отсутствие срока. Action показывает, что нашла и из каких слов, и ничего не сохраняется, пока вы не подтвердите.';
+
+  @override
+  String get helpVaryQuestion =>
+      'Почему результаты меняются, если попробовать ещё раз?';
+
+  @override
+  String get helpVaryAnswer =>
+      'Сервис, который читает ваш документ, недетерминирован, поэтому одно и то же добавленное может вернуться немного другим. Именно поэтому существует шаг проверки — вы та часть, которая не меняется.';
+
+  @override
+  String get helpLateQuestion => 'Почему напоминание пришло с опозданием?';
+
+  @override
+  String get helpLateAnswer =>
+      'Напоминания планируются через Android, и именно Android решает, когда именно их доставить. Энергосбережение, Doze и настройки питания производителя могут задержать любое из них. Action никогда не обещает напоминание минута в минуту.';
+
+  @override
+  String get helpDataQuestion => 'Где мои данные?';
+
+  @override
+  String get helpDataAnswer =>
+      'Почти всё — на этом устройстве: ваше добавленное, задачи, шаги, напоминания и поиски. Два исключения — содержимое, которое вы просите Action прочитать, отправляется сервису ИИ, который его читает, и короткая запись о подтверждённой задаче может храниться в облаке под анонимным идентификатором. Раздел «Приватность и данные» в настройках перечисляет, что именно входит в эту запись.';
+
+  @override
+  String get helpBackupQuestion => 'Это резервная копия?';
+
+  @override
+  String get helpBackupAnswer =>
+      'Нет. Облачную запись нельзя восстановить на новом устройстве, и нет учётной записи, в которую можно войти. Если вы удалите Action или потеряете это устройство, данные на нём пропадут.';
+
+  @override
+  String get helpCorrectQuestion => 'Как исправить задачу?';
+
+  @override
+  String get helpCorrectAnswer =>
+      'Откройте её и измените любое поле — название, срок, сумму или предложенный следующий шаг. Шаги можно добавлять, переставлять, завершать и удалять в любой момент. Правка задачи никогда ни о чём не спрашивает сервис ИИ.';
+
+  @override
+  String get privacyTitle => 'Приватность и данные';
+
+  @override
+  String get privacyIntro =>
+      'Action держит на этом устройстве всё, что может. Два исключения, и оба перечислены ниже.';
+
+  @override
+  String get privacyGroupOnDevice => 'На этом устройстве';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'Добавленное — скриншоты, фотографии и тексты, которые вы добавляете, и прочитанный из них текст.';
+
+  @override
+  String get privacyOnDeviceActions => 'Задачи, их шаги, данные и напоминания.';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'Поиск. Ваши поиски выполняются здесь, никуда не отправляются и не сохраняются после того, как вы закроете экран.';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'Фотографии хранятся без их местоположения. Координаты, время и данные камеры, которые телефон записывает внутрь снимка, удаляются до сохранения добавленного, поэтому они не остаются здесь и не попадают вашему поставщику ИИ вместе со снимком.';
+
+  @override
+  String get privacyGroupSentToRead => 'Отправляется, чтобы быть прочитанным';
+
+  @override
+  String get privacySentToReadWhat =>
+      'Когда вы просите Action истолковать добавленное, это содержимое отправляется сервису ИИ, который его читает. Это не ИИ на устройстве.';
+
+  @override
+  String get privacySentToReadWhen =>
+      'Отправляется только то добавленное, которое вы выбрали, и только когда вы об этом просите.';
+
+  @override
+  String get privacyGroupYourProvider =>
+      'Отправляется вашему собственному поставщику ИИ';
+
+  @override
+  String get privacyProviderWhat =>
+      'Если вы подключите поставщика ИИ в настройках, инструменты Intelligence отправят выбранное вами содержимое этому поставщику — OpenAI, Anthropic, Google или выбранному вами endpoint — с вашим собственным ключом API.';
+
+  @override
+  String get privacyProviderDirect =>
+      'Оно уходит прямо к ним. Оно не проходит ни через один сервер, принадлежащий Action.';
+
+  @override
+  String get privacyProviderScope =>
+      'Отправляется только то, что вы выбрали для инструмента, и только когда вы его запускаете. Ваши другие задачи, добавленное и источники никогда не включаются, и в фоне никогда ничего не отправляется.';
+
+  @override
+  String get privacyProviderKey =>
+      'Ваш ключ API хранится в защищённом хранилище этого устройства и отправляется только тому поставщику, которому принадлежит. Защищённое хранилище — реальное препятствие для того, у кого ваше разблокированное устройство, но оно не абсолютно, и Action не станет утверждать обратное.';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'Два инструмента не отправляют ничего и никогда: скрытие чувствительных сведений и проверка того, откуда взялся файл. Оба работают целиком на этом устройстве.';
+
+  @override
+  String get privacyProviderAgreement =>
+      'Что ваш поставщик делает с тем, что вы отправляете, определяется вашим соглашением с ним, а не Action.';
+
+  @override
+  String get privacyGroupCloud => 'Хранится в облаке';
+
+  @override
+  String get privacyCloudWhat =>
+      'Когда вы подтверждаете задачу, её короткая запись может сохраниться под анонимным идентификатором этой установки: название, статус, срочность, категория, срок, сумма, предложенный следующий шаг и отметки времени.';
+
+  @override
+  String get privacyCloudNotSent =>
+      'Ваше добавленное, прочитанный из него текст, шаги и данные задачи, а также ваши напоминания не отправляются.';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'Это не резервная копия. Восстановить её на новом устройстве невозможно, а потеря этой установки уносит с собой и анонимный идентификатор.';
+
+  @override
+  String get privacyGroupDiagnostics => 'Диагностика';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action ведёт анонимный подсчёт того, что происходит в приложении — что добавление началось, что разбор сработал или нет, что поиск ничего не нашёл, что задача завершена.';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'Это счётчики, а не содержимое. Туда никогда не попадают ни название, ни сумма, ни срок, ни номер, ни добавленный текст, ни поисковый запрос — как и анонимный идентификатор или любой идентификатор задачи либо добавленного.';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'Если приложение падает, ошибка и место, где это произошло, отправляются, чтобы это можно было исправить. Action не прикладывает к таким отчётам ваши данные.';
+
+  @override
+  String get privacySectionYourData => 'Ваши данные';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'Очистка добавленного оставляет ваши задачи на месте. Задача, чьё добавленное исчезло, продолжает работать; она просто больше не показывает, из чего возникла.';
+
+  @override
+  String get privacyClearCaptures => 'Очистить добавленное';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'Удаляет всё добавленное и файлы его изображений.';
+
+  @override
+  String get privacyDeleteAll => 'Удалить все мои данные';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'Задачи, шаги, напоминания, добавленное и облачные записи выше.';
+
+  @override
+  String get privacyClearCapturesTitle => 'Очистить добавленное?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'Всё добавленное и его изображения будут удалены с этого устройства. Ваши задачи останутся ровно такими, какие есть.';
+
+  @override
+  String get privacyCapturesDeleted => 'Добавленное удалено.';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'Часть добавленного удалить не удалось. Больше ничего не изменилось.';
+
+  @override
+  String get privacyDeleteAllTitle => 'Удалить все ваши данные?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'Это удаляет каждую задачу, шаг, напоминание и добавленное на этом устройстве, а также перечисленные выше облачные записи. Отменить это нельзя, и нет резервной копии, из которой можно восстановить.';
+
+  @override
+  String get privacyDeleteEverything => 'Удалить всё';
+
+  @override
+  String get privacyDeletedAll => 'Всё удалено.';
+
+  @override
+  String get privacyDeleteFailed => 'Ваши данные не удалось удалить.';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'Всё на этом устройстве удалено. Action не смогла связаться с облаком, чтобы подтвердить, что там ничего не осталось, и проверит ещё раз.';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return 'Удалено, кроме: $leftovers.';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action попробует ещё раз.';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action не смогла закончить проверку облака и попробует ещё раз.';
+
+  @override
+  String get privacyLeftoverCaptures => 'часть добавленного';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count облачной записи',
+      many: '$count облачных записей',
+      few: '$count облачные записи',
+      one: '1 облачная запись',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first и $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'Облачные записи удалены.';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'Связаться с ними по-прежнему не вышло. Action попробует ещё раз.';
+
+  @override
+  String get privacyPendingTitle => 'Осталось удалить';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'В прошлый раз не удалось связаться с $count облачными записями. Action попробует сама, или вы можете повторить сейчас.',
+      many:
+          'В прошлый раз не удалось связаться с $count облачными записями. Action попробует сама, или вы можете повторить сейчас.',
+      few:
+          'В прошлый раз не удалось связаться с $count облачными записями. Action попробует сама, или вы можете повторить сейчас.',
+      one: 'В прошлый раз не удалось связаться с 1 облачной записью. Action попробует сама, или вы можете повторить сейчас.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'Повторить';
+
+  @override
   String get evidenceTitle => 'Откуда это взято';
 
   @override

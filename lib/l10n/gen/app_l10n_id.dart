@@ -1649,6 +1649,499 @@ class AppL10nId extends AppL10n {
   String get editRemoveAmount => 'Hapus jumlah';
 
   @override
+  String get securityTitle => 'Keamanan & privasi';
+
+  @override
+  String get securitySectionProtection => 'Perlindungan';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'Kunci Aplikasi memerlukan kunci layar di perangkat ini. Atur dulu PIN, pola, sandi, atau sidik jari di pengaturan perangkat Anda.';
+
+  @override
+  String get securityAppLockOn =>
+      'Action meminta perangkat Anda memastikan bahwa itu memang Anda.';
+
+  @override
+  String get securityAppLockOff =>
+      'Wajibkan sidik jari, wajah, atau PIN perangkat untuk membuka Action.';
+
+  @override
+  String get securityAskAgain => 'Tanya lagi';
+
+  @override
+  String get securityAskAgainDescription =>
+      'Berapa lama Action boleh berada di latar belakang sebelum terkunci.';
+
+  @override
+  String get securityScreenPrivacy => 'Privasi layar';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'Meminta Android memblokir tangkapan layar dan perekaman layar, serta menyembunyikan Action di pengalih aplikasi.';
+
+  @override
+  String get securityPrivateReminders => 'Pengingat privat';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'Pengingat hanya menyebut bahwa ada yang menunggu Anda.';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'Pengingat menampilkan judul tugas. Nyalakan ini agar judul itu tidak muncul di layar kunci.';
+
+  @override
+  String get securityLockNow => 'Kunci sekarang';
+
+  @override
+  String get securityLockNowDescription => 'Menutup pintu tanpa menunggu.';
+
+  @override
+  String get securitySectionStorage => 'Cara data Anda disimpan';
+
+  @override
+  String get securityStorageDataLabel =>
+      'Tugas, tangkapan, dan pengaturan Anda';
+
+  @override
+  String get securityStorageDataDetail =>
+      'Semuanya berada di penyimpanan privat milik aplikasi ini, yang tidak bisa dibaca aplikasi lain dan yang dienkripsi Android sebagai bagian dari enkripsi perangkat. Action tidak menambahkan lapisan kedua miliknya sendiri di atasnya.';
+
+  @override
+  String get securityStorageKeyLabel => 'Kunci penyedia AI Anda';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'Disimpan di Android Keystore, terpisah dari yang lain, dan tidak pernah ditampilkan lagi setelah Anda menyimpannya.';
+
+  @override
+  String get securityStorageGapLabel => 'Yang tidak tercakup';
+
+  @override
+  String get securityStorageGapDetail =>
+      'Tidak satu pun dari itu melindungi dari orang yang memakai perangkat Anda dalam keadaan tidak terkunci, dan sistem yang dimodifikasi atau di-root bisa membaca lebih banyak daripada yang normal. Kunci Aplikasi adalah kendali yang membantu untuk hal pertama.';
+
+  @override
+  String get securitySectionInformation => 'Informasi Anda';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'Setiap jalur yang bisa ditempuh data Anda, dan dua yang keluar dari perangkat ini.';
+
+  @override
+  String get securityAppLockRefused =>
+      'Tidak dikonfirmasi, jadi tidak ada yang berubah.';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'Perangkat ini belum punya kunci layar. Tambahkan PIN, pola, sandi, atau sidik jari di pengaturan perangkat, lalu coba lagi.';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'Perangkat ini tidak mau menerapkan privasi layar, jadi fitur itu dibiarkan mati alih-alih ditampilkan sebagai menyala.';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pengingat terjadwal kini menyebut lebih sedikit.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pengingat terjadwal diperbarui.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'Langsung';
+
+  @override
+  String get appLockDelayOneMinute => 'Setelah 1 menit';
+
+  @override
+  String get appLockDelayFiveMinutes => 'Setelah 5 menit';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'Setiap kali Action meninggalkan layar';
+
+  @override
+  String get securityDelayOneMinuteDescription =>
+      'Cukup untuk membalas satu pesan';
+
+  @override
+  String get securityDelayFiveMinutesDescription =>
+      'Cukup untuk menerima satu telepon';
+
+  @override
+  String get securityHeroProtected => 'Terlindungi';
+
+  @override
+  String get securityHeroNothingOn => 'Belum ada yang menyala';
+
+  @override
+  String get securityHeroFootnote =>
+      'Semua di sini bekerja di perangkat ini. Tidak ada satu pun pengaturan ini yang dikirim ke mana pun, dan tidak ada yang bisa diubah dari jarak jauh.';
+
+  @override
+  String get securityHeadlineNone => 'Ada tiga perlindungan yang tersedia';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first menyala';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first dan $second menyala';
+  }
+
+  @override
+  String get securityHeadlineAll => 'Ketiga perlindungan menyala';
+
+  @override
+  String get securityTransfersTitle => 'Yang sudah keluar dari perangkat ini';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'Tidak ada penyedia AI yang terhubung, jadi tidak ada apa pun yang sedang dikirim untuk dianalisis.';
+
+  @override
+  String get securityTransfersDescription =>
+      'Dicatat di sini pada saat sesuatu dikirim, terlepas dari ada tidaknya balasan. Hanya alatnya, penyedianya, dan ukurannya — tidak pernah isinya. Disimpan 90 hari di perangkat ini dan tidak dikirim ke mana pun.';
+
+  @override
+  String get securityClear => 'Hapus';
+
+  @override
+  String get securityNothingSent => 'Belum ada yang dikirim';
+
+  @override
+  String get securityNothingSentDescription =>
+      'Saat Anda menjalankan alat yang memakai penyedia AI Anda, alat itu akan tercantum di sini.';
+
+  @override
+  String get securityClearHistoryTitle => 'Hapus riwayat ini?';
+
+  @override
+  String get securityClearHistoryBody =>
+      'Catatan tentang apa yang dikirim akan dihapus dari perangkat ini. Itu tidak membatalkan apa pun yang sudah terkirim.';
+
+  @override
+  String get securityUnnamedTool => 'Sebuah alat Intelligence';
+
+  @override
+  String get securityYourProvider => 'penyedia AI Anda';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count halaman',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count berkas',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'sepotong teks pendek';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count ribu karakter';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return 'Dikirim ke $provider.';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return 'Dikirim ke $provider · $size.';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count mgg lalu';
+  }
+
+  @override
+  String get helpTitle => 'Bantuan';
+
+  @override
+  String get helpAddQuestion => 'Apa yang bisa saya tambahkan?';
+
+  @override
+  String get helpAddAnswer =>
+      'Tangkapan layar, foto surat atau tagihan, atau teks yang Anda tempel. Yang paling cocok adalah apa pun yang memuat tanggal, jumlah, atau permintaan.';
+
+  @override
+  String get helpReviewQuestion => 'Kenapa Action meminta saya memeriksa?';
+
+  @override
+  String get helpReviewAnswer =>
+      'Karena mesin yang membaca dokumen bisa salah baca, dan tenggat yang diam-diam keliru lebih buruk daripada tidak ada tenggat sama sekali. Action menunjukkan apa yang ditemukannya dan dari kata-kata mana, dan tidak ada yang disimpan sampai Anda menyetujuinya.';
+
+  @override
+  String get helpVaryQuestion =>
+      'Kenapa hasilnya berubah kalau saya coba lagi?';
+
+  @override
+  String get helpVaryAnswer =>
+      'Layanan yang membaca dokumen Anda tidak deterministik, jadi tangkapan yang sama bisa kembali sedikit berbeda. Itu juga sebabnya langkah pemeriksaan ada — Andalah bagian yang tidak berubah.';
+
+  @override
+  String get helpLateQuestion => 'Kenapa pengingat saya terlambat?';
+
+  @override
+  String get helpLateAnswer =>
+      'Pengingat dijadwalkan lewat Android, dan Android yang menentukan kapan tepatnya mengirimkannya. Penghemat baterai, Doze, dan pengaturan daya dari pabrikan semuanya bisa menundanya. Action tidak pernah menjanjikan pengingat yang tepat ke menit.';
+
+  @override
+  String get helpDataQuestion => 'Di mana data saya?';
+
+  @override
+  String get helpDataAnswer =>
+      'Hampir semuanya ada di perangkat ini: tangkapan, tugas, langkah, pengingat, dan pencarian Anda. Dua pengecualian — isi yang Anda minta dibaca Action dikirim ke layanan AI yang membacanya, dan catatan singkat sebuah tugas yang sudah dipastikan bisa disimpan di awan di bawah identitas anonim. Privasi & data di Pengaturan merinci persis apa isi catatan itu.';
+
+  @override
+  String get helpBackupQuestion => 'Apakah ini cadangan?';
+
+  @override
+  String get helpBackupAnswer =>
+      'Tidak. Catatan di awan tidak bisa dipulihkan ke perangkat baru, dan tidak ada akun untuk masuk. Kalau Anda mencopot Action atau kehilangan perangkat ini, data di dalamnya hilang.';
+
+  @override
+  String get helpCorrectQuestion => 'Bagaimana saya membetulkan sebuah tugas?';
+
+  @override
+  String get helpCorrectAnswer =>
+      'Buka tugas itu lalu ubah kolom mana pun — judul, tenggat, jumlah, atau langkah berikutnya yang disarankan. Anda bisa menambah, menyusun ulang, menyelesaikan, dan menghapus langkah kapan saja. Mengubah sebuah tugas tidak pernah menanyakan apa pun ke layanan AI.';
+
+  @override
+  String get privacyTitle => 'Privasi & data';
+
+  @override
+  String get privacyIntro =>
+      'Action menyimpan sebanyak mungkin di perangkat ini. Dua hal adalah pengecualian, dan keduanya tercantum di bawah.';
+
+  @override
+  String get privacyGroupOnDevice => 'Di perangkat ini';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'Tangkapan — tangkapan layar, foto, dan teks yang Anda tambahkan, serta teks yang dibaca darinya.';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'Tugas, beserta langkah, faktanya, dan pengingatnya.';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'Pencarian. Pencarian Anda berjalan di sini, tidak pernah dikirim ke mana pun, dan tidak disimpan setelah Anda menutup layarnya.';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'Foto disimpan tanpa lokasinya. Koordinat, waktu, dan detail kamera yang ditulis ponsel ke dalam sebuah gambar dihapus sebelum tangkapan disimpan, jadi semua itu tidak tersimpan di sini dan tidak ikut terkirim saat Anda mengirim tangkapan ke penyedia AI Anda.';
+
+  @override
+  String get privacyGroupSentToRead => 'Dikirim untuk dibaca';
+
+  @override
+  String get privacySentToReadWhat =>
+      'Saat Anda meminta Action menafsirkan sebuah tangkapan, isi itu dikirim ke layanan AI yang membacanya. Ini bukan AI di perangkat.';
+
+  @override
+  String get privacySentToReadWhen =>
+      'Yang dikirim hanya tangkapan yang Anda pilih, dan hanya ketika Anda memintanya.';
+
+  @override
+  String get privacyGroupYourProvider => 'Dikirim ke penyedia AI Anda sendiri';
+
+  @override
+  String get privacyProviderWhat =>
+      'Kalau Anda menghubungkan penyedia AI di Pengaturan, alat-alat Intelligence mengirim isi yang Anda pilih ke penyedia itu — OpenAI, Anthropic, Google, atau endpoint yang Anda pilih — memakai kunci API Anda sendiri.';
+
+  @override
+  String get privacyProviderDirect =>
+      'Kiriman itu langsung ke mereka. Tidak melewati server mana pun milik Action.';
+
+  @override
+  String get privacyProviderScope =>
+      'Yang dikirim hanya yang Anda pilih untuk sebuah alat, dan hanya ketika Anda menjalankannya. Tugas, tangkapan, dan sumber Anda yang lain tidak pernah ikut, dan tidak pernah ada yang dikirim di latar belakang.';
+
+  @override
+  String get privacyProviderKey =>
+      'Kunci API Anda disimpan di penyimpanan aman perangkat ini dan hanya dikirim ke penyedia pemiliknya. Penyimpanan aman adalah penghalang nyata bagi siapa pun yang memegang perangkat Anda dalam keadaan tidak terkunci, tetapi tidak mutlak, dan Action tidak akan mengatakan sebaliknya.';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'Dua alat tidak pernah mengirim apa pun: menyembunyikan detail sensitif, dan memeriksa dari mana sebuah berkas berasal. Keduanya berjalan sepenuhnya di perangkat ini.';
+
+  @override
+  String get privacyProviderAgreement =>
+      'Apa yang penyedia Anda lakukan dengan yang Anda kirim diatur oleh kesepakatan Anda dengan mereka, bukan oleh Action.';
+
+  @override
+  String get privacyGroupCloud => 'Disimpan di awan';
+
+  @override
+  String get privacyCloudWhat =>
+      'Saat Anda memastikan sebuah tugas, catatan singkatnya bisa disimpan di bawah identitas anonim milik pemasangan ini: judul, status, tingkat mendesak, kategori, tenggat, jumlah, saran langkah berikutnya, dan penanda waktu.';
+
+  @override
+  String get privacyCloudNotSent =>
+      'Tangkapan Anda, teks yang dibaca darinya, langkah dan fakta sebuah tugas, serta pengingat Anda tidak dikirim.';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'Ini bukan cadangan. Tidak ada cara memulihkannya ke perangkat baru, dan kehilangan pemasangan ini berarti kehilangan identitas anonimnya juga.';
+
+  @override
+  String get privacyGroupDiagnostics => 'Diagnostik';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action mencatat hitungan anonim tentang apa yang terjadi di aplikasi — bahwa sebuah tangkapan dimulai, bahwa sebuah ekstraksi berhasil atau tidak, bahwa sebuah pencarian tidak menemukan apa-apa, bahwa sebuah tugas diselesaikan.';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'Itu hitungan, bukan isi. Tidak pernah ada judul, jumlah, tenggat, nomor rujukan, teks tangkapan, atau kata pencarian yang ikut, begitu pula identitas anonim atau pengenal apa pun untuk sebuah tugas atau tangkapan.';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'Kalau aplikasi berhenti mendadak, galat dan tempat terjadinya dilaporkan supaya bisa diperbaiki. Action tidak melampirkan data Anda ke laporan itu.';
+
+  @override
+  String get privacySectionYourData => 'Data Anda';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'Menghapus tangkapan membiarkan tugas Anda tetap ada. Sebuah tugas yang tangkapannya sudah hilang tetap berfungsi; hanya saja ia tidak lagi menunjukkan asalnya.';
+
+  @override
+  String get privacyClearCaptures => 'Hapus tangkapan';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'Menghapus setiap tangkapan beserta berkas gambarnya.';
+
+  @override
+  String get privacyDeleteAll => 'Hapus semua data saya';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'Tugas, langkah, pengingat, tangkapan, dan catatan awan di atas.';
+
+  @override
+  String get privacyClearCapturesTitle => 'Hapus tangkapan?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'Setiap tangkapan dan gambarnya akan dihapus dari perangkat ini. Tugas Anda tetap persis seperti sekarang.';
+
+  @override
+  String get privacyCapturesDeleted => 'Tangkapan dihapus.';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'Sebagian tangkapan tidak bisa dihapus. Tidak ada hal lain yang diubah.';
+
+  @override
+  String get privacyDeleteAllTitle => 'Hapus semua data Anda?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'Ini menghapus setiap tugas, langkah, pengingat, dan tangkapan di perangkat ini, beserta catatan awan yang tercantum di atas. Tindakan ini tidak bisa dibatalkan, dan tidak ada cadangan untuk memulihkannya.';
+
+  @override
+  String get privacyDeleteEverything => 'Hapus semuanya';
+
+  @override
+  String get privacyDeletedAll => 'Semuanya sudah dihapus.';
+
+  @override
+  String get privacyDeleteFailed => 'Data Anda tidak bisa dihapus.';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'Semua yang ada di perangkat ini sudah dihapus. Action tidak bisa menjangkau awan untuk memastikan tidak ada yang tersisa di sana, dan akan memeriksa lagi.';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return 'Terhapus, kecuali $leftovers.';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action akan mencoba lagi.';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action tidak bisa menyelesaikan pemeriksaan awan, dan akan mencoba lagi.';
+
+  @override
+  String get privacyLeftoverCaptures => 'sebagian tangkapan';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count catatan awan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first dan $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'Catatan awan sudah dihapus.';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'Masih belum bisa dijangkau. Action akan mencoba lagi.';
+
+  @override
+  String get privacyPendingTitle => 'Masih harus dihapus';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count catatan awan tidak bisa dijangkau terakhir kali. Action akan mencoba sendiri, atau Anda bisa mencoba sekarang.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'Coba lagi';
+
+  @override
   String get evidenceTitle => 'Asal muasalnya';
 
   @override

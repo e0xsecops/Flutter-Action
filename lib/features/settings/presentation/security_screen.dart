@@ -14,6 +14,9 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../../l10n/gen/app_l10n.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/casing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -38,6 +41,7 @@ class SecurityScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final protection = ref.watch(protectionSettingsProvider);
     final available = ref.watch(appLockAvailableProvider);
@@ -45,27 +49,24 @@ class SecurityScreen extends ConsumerWidget {
     final transfers = ref.watch(dataTransfersProvider);
 
     return SettingsPage(
-      title: 'Security & privacy',
+      title: l10n.securityTitle,
       slivers: [
         SliverToBoxAdapter(child: _StatusHero(protection: protection)),
         SettingsSection(
-          title: 'Protection',
+          title: l10n.securitySectionProtection,
           children: [
             SettingsRow(
-              label: 'App Lock',
+              label: l10n.protectionAppLock,
               icon: Icons.lock_outline_rounded,
               tint: colors.confidenceConfirmed,
               // The unavailable explanation belongs to this row, not to the
               // section. As a footnote under all three it read as though a
               // missing screen lock disabled every protection on the page.
               description: switch (available.value) {
-                false => 'App Lock needs a screen lock on this device. Set a '
-                    'PIN, pattern, password or fingerprint in your device '
-                    'settings first.',
+                false => l10n.securityAppLockUnavailable,
                 _ => protection.appLockEnabled
-                    ? 'Action asks your device to confirm it is you.'
-                    : 'Require your fingerprint, face or device PIN to open '
-                        'Action.',
+                    ? l10n.securityAppLockOn
+                    : l10n.securityAppLockOff,
               },
               trailing: Switch(
                 value: protection.appLockEnabled,
@@ -78,33 +79,30 @@ class SecurityScreen extends ConsumerWidget {
             ),
             if (protection.appLockEnabled)
               SettingsRow(
-                label: 'Ask again',
+                label: l10n.securityAskAgain,
                 icon: Icons.timer_outlined,
                 tint: colors.confidenceConfirmed,
-                value: describeAppLockDelay(protection.appLockDelay),
-                description: 'How long Action may be in the background before '
-                    'it locks.',
+                value: protection.appLockDelay.labelIn(l10n),
+                description: l10n.securityAskAgainDescription,
                 onTap: () => _chooseDelay(context, ref, protection.appLockDelay),
               ),
             SettingsRow(
-              label: 'Screen privacy',
+              label: l10n.securityScreenPrivacy,
               icon: Icons.visibility_off_outlined,
               tint: colors.confidenceReview,
-              description: 'Ask Android to block screenshots and screen '
-                  'recording, and to hide Action in the app switcher.',
+              description: l10n.securityScreenPrivacyDescription,
               trailing: Switch(
                 value: protection.screenPrivacyEnabled,
                 onChanged: (want) => _toggleScreenPrivacy(context, ref, want),
               ),
             ),
             SettingsRow(
-              label: 'Private reminders',
+              label: l10n.securityPrivateReminders,
               icon: Icons.notifications_off_outlined,
               tint: colors.urgencyImportant,
               description: protection.privateNotifications
-                  ? 'Reminders say only that something needs you.'
-                  : 'Reminders show the Action title. Turn this on to keep it '
-                      'off your lock screen.',
+                  ? l10n.securityPrivateRemindersOn
+                  : l10n.securityPrivateRemindersOff,
               trailing: Switch(
                 value: protection.privateNotifications,
                 onChanged: (want) =>
@@ -113,10 +111,10 @@ class SecurityScreen extends ConsumerWidget {
             ),
             if (protection.appLockEnabled)
               SettingsRow(
-                label: 'Lock now',
+                label: l10n.securityLockNow,
                 icon: Icons.lock_clock_outlined,
                 tint: colors.confidenceConfirmed,
-                description: 'Close the door without waiting.',
+                description: l10n.securityLockNowDescription,
                 onTap: () {
                   ref.read(appLockedProvider.notifier).lockNow();
                 },
@@ -129,38 +127,30 @@ class SecurityScreen extends ConsumerWidget {
           now: ref.watch(appClockProvider)(),
         ),
         SettingsSection(
-          title: 'How your data is stored',
-          children: const [
+          title: l10n.securitySectionStorage,
+          children: [
             _StorageFact(
-              label: 'Your Actions, captures and settings',
-              detail: 'They sit in this app\'s own private storage, which '
-                  'other apps cannot read and which Android encrypts as part '
-                  'of the device\'s encryption. Action does not add a second '
-                  'layer of its own on top.',
+              label: l10n.securityStorageDataLabel,
+              detail: l10n.securityStorageDataDetail,
             ),
             _StorageFact(
-              label: 'Your AI provider key',
-              detail: 'Held in the Android Keystore rather than with '
-                  'everything else, and never shown again after you save it.',
+              label: l10n.securityStorageKeyLabel,
+              detail: l10n.securityStorageKeyDetail,
             ),
             _StorageFact(
-              label: 'What that does not cover',
-              detail: 'None of it is a defence against someone using your '
-                  'unlocked device, and a modified or rooted system can read '
-                  'more than a normal one. App Lock is the control that helps '
-                  'with the first of those.',
+              label: l10n.securityStorageGapLabel,
+              detail: l10n.securityStorageGapDetail,
             ),
           ],
         ),
         SettingsSection(
-          title: 'Your information',
+          title: l10n.securitySectionInformation,
           children: [
             SettingsRow(
-              label: 'Where your information lives',
+              label: l10n.settingsWhereInfoLives,
               icon: Icons.travel_explore_outlined,
               tint: colors.confidenceReview,
-              description: 'Every route your data can take, and the two that '
-                  'leave this device.',
+              description: l10n.securityWhereInfoDescription,
               onTap: () => context.push(Routes.settingsPrivacy),
             ),
           ],
@@ -180,13 +170,11 @@ class SecurityScreen extends ConsumerWidget {
 
     // Each outcome gets its own sentence; "that didn't work" would leave
     // someone with no screen lock guessing forever.
+    final l10n = AppL10n.of(context);
     final message = switch (result) {
       AppLockChangeResult.changed || AppLockChangeResult.unchanged => null,
-      AppLockChangeResult.refused =>
-        'Not confirmed, so nothing changed.',
-      AppLockChangeResult.unavailable =>
-        'This device has no screen lock set up. Add a PIN, pattern, password '
-            'or fingerprint in your device settings, then try again.',
+      AppLockChangeResult.refused => l10n.securityAppLockRefused,
+      AppLockChangeResult.unavailable => l10n.securityAppLockUnavailableToast,
     };
     if (message != null) _say(context, message);
   }
@@ -202,8 +190,7 @@ class SecurityScreen extends ConsumerWidget {
     if (!context.mounted || applied) return;
     _say(
       context,
-      'This device would not apply screen privacy, so it has been left off '
-      'rather than shown as on.',
+      AppL10n.of(context).securityScreenPrivacyRefused,
     );
   }
 
@@ -226,8 +213,9 @@ class SecurityScreen extends ConsumerWidget {
       _say(
         context,
         want
-            ? '${report.restored} scheduled ${report.restored == 1 ? 'reminder' : 'reminders'} updated to say less.'
-            : '${report.restored} scheduled ${report.restored == 1 ? 'reminder' : 'reminders'} updated.',
+            ? AppL10n.of(context)
+                .securityRemindersUpdatedQuiet(report.restored)
+            : AppL10n.of(context).securityRemindersUpdated(report.restored),
       );
     }
   }
@@ -241,7 +229,7 @@ class SecurityScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       builder: (sheetContext) => AppSheet(
-        title: 'Ask again',
+        title: AppL10n.of(sheetContext).securityAskAgain,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: Space.md),
           child: Column(
@@ -249,14 +237,14 @@ class SecurityScreen extends ConsumerWidget {
             children: [
               for (final delay in AppLockDelay.values)
                 _DelayOption(
-                  label: describeAppLockDelay(delay),
+                  label: delay.labelIn(AppL10n.of(sheetContext)),
                   description: switch (delay) {
-                    AppLockDelay.immediately =>
-                      'Every time Action leaves the screen',
-                    AppLockDelay.afterOneMinute =>
-                      'Long enough to answer a message',
-                    AppLockDelay.afterFiveMinutes =>
-                      'Long enough to take a call',
+                    AppLockDelay.immediately => AppL10n.of(sheetContext)
+                        .securityDelayImmediatelyDescription,
+                    AppLockDelay.afterOneMinute => AppL10n.of(sheetContext)
+                        .securityDelayOneMinuteDescription,
+                    AppLockDelay.afterFiveMinutes => AppL10n.of(sheetContext)
+                        .securityDelayFiveMinutesDescription,
                   },
                   selected: delay == current,
                   onTap: () => Navigator.of(sheetContext).pop(delay),
@@ -289,6 +277,7 @@ class _StatusHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final active = protection.activeCount;
@@ -317,7 +306,12 @@ class _StatusHero extends StatelessWidget {
                   // the hero, and an eyebrow is not worth an overflow.
                   Flexible(
                     child: Text(
-                      active > 0 ? 'PROTECTED' : 'NOTHING TURNED ON',
+                      eyebrowCase(
+                        active > 0
+                            ? l10n.securityHeroProtected
+                            : l10n.securityHeroNothingOn,
+                        l10n.localeName,
+                      ),
                       overflow: TextOverflow.ellipsis,
                       style: text.labelSmall?.copyWith(
                         color: colors.confidenceConfirmed,
@@ -328,11 +322,10 @@ class _StatusHero extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: Space.md),
-              Text(_headline(protection), style: text.titleLarge),
+              Text(_headline(protection, l10n), style: text.titleLarge),
               const SizedBox(height: Space.sm),
               Text(
-                'Everything here works on this device. None of these settings '
-                'is sent anywhere, and none of them can be changed remotely.',
+                l10n.securityHeroFootnote,
                 style: text.bodyMedium?.copyWith(color: colors.textSecondary),
               ),
             ],
@@ -342,17 +335,17 @@ class _StatusHero extends StatelessWidget {
     );
   }
 
-  static String _headline(ProtectionSettings protection) {
+  static String _headline(ProtectionSettings protection, AppL10n l10n) {
     final on = <String>[
-      if (protection.appLockEnabled) 'App Lock',
-      if (protection.screenPrivacyEnabled) 'Screen privacy',
-      if (protection.privateNotifications) 'Private reminders',
+      if (protection.appLockEnabled) l10n.protectionAppLock,
+      if (protection.screenPrivacyEnabled) l10n.securityScreenPrivacy,
+      if (protection.privateNotifications) l10n.securityPrivateReminders,
     ];
     return switch (on.length) {
-      0 => 'Three protections are available',
-      1 => '${on.single} is on',
-      2 => '${on.first} and ${on.last} are on',
-      _ => 'All three protections are on',
+      0 => l10n.securityHeadlineNone,
+      1 => l10n.securityHeadlineOne(on.single),
+      2 => l10n.securityHeadlineTwo(on.first, on.last),
+      _ => l10n.securityHeadlineAll,
     };
   }
 }
@@ -374,33 +367,29 @@ class _TransferSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final entries = transfers.value ?? const <ActivityEntry>[];
     final shown = entries.take(6).toList();
 
     return SettingsSection(
-      title: 'What left this device',
+      title: l10n.securityTransfersTitle,
       footnote: aiConfig == null
-          ? 'No AI provider is connected, so nothing is being sent for '
-              'analysis at all.'
-          : 'Recorded here the moment something is sent, whether or not it '
-              'came back. Only the tool, the provider and the size — never '
-              'what was in it. Kept for 90 days on this device and sent '
-              'nowhere.',
+          ? l10n.securityTransfersNoProvider
+          : l10n.securityTransfersDescription,
       trailing: entries.isEmpty
           ? null
           : TextButton(
               onPressed: () => _confirmClear(context, ref),
-              child: const Text('Clear'),
+              child: Text(l10n.securityClear),
             ),
       children: [
         if (shown.isEmpty)
           SettingsRow(
-            label: 'Nothing has been sent',
+            label: l10n.securityNothingSent,
             icon: Icons.cloud_off_outlined,
             tint: colors.textTertiary,
-            description: 'When you run a tool that uses your AI provider, it '
-                'will be listed here.',
+            description: l10n.securityNothingSentDescription,
           )
         else
           for (final entry in shown) _TransferRow(entry: entry, now: now),
@@ -412,19 +401,18 @@ class _TransferSection extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Clear this history?'),
-        content: const Text(
-          'The record of what was sent will be deleted from this device. It '
-          'does not undo anything that was already sent.',
+        title: Text(AppL10n.of(dialogContext).securityClearHistoryTitle),
+        content: Text(
+          AppL10n.of(dialogContext).securityClearHistoryBody,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppL10n.of(dialogContext).commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Clear'),
+            child: Text(AppL10n.of(dialogContext).securityClear),
           ),
         ],
       ),
@@ -442,6 +430,7 @@ class _TransferRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
 
     // Ids are resolved to names here rather than stored as names. The journal
@@ -454,40 +443,45 @@ class _TransferRow extends StatelessWidget {
         : AiProviderKind.fromId(entry.providerId!)?.label;
 
     return SettingsRow(
-      label: tool ?? 'An Intelligence tool',
+      label: tool ?? l10n.securityUnnamedTool,
       icon: Icons.north_east_rounded,
       tint: colors.confidenceReview,
-      description: _describe(entry, provider),
-      value: _relative(entry.at, now),
+      description: _describe(entry, provider, l10n),
+      value: _relative(entry.at, now, l10n),
     );
   }
 
-  static String _describe(ActivityEntry entry, String? provider) {
+  static String _describe(
+    ActivityEntry entry,
+    String? provider,
+    AppL10n l10n,
+  ) {
     final size = <String>[
-      if (entry.pages > 0) '${entry.pages} ${entry.pages == 1 ? 'page' : 'pages'}',
+      if (entry.pages > 0) l10n.securityTransferPages(entry.pages),
       if (entry.attachments > 0 && entry.pages == 0)
-        '${entry.attachments} ${entry.attachments == 1 ? 'file' : 'files'}',
-      if (entry.textCharacters > 0) _characters(entry.textCharacters),
+        l10n.securityTransferFiles(entry.attachments),
+      if (entry.textCharacters > 0)
+        _characters(entry.textCharacters, l10n),
     ];
-    final to = provider ?? 'your AI provider';
-    if (size.isEmpty) return 'Sent to $to.';
-    return 'Sent to $to · ${size.join(' · ')}.';
+    final to = provider ?? l10n.securityYourProvider;
+    if (size.isEmpty) return l10n.securitySentTo(to);
+    return l10n.securitySentToWithSize(to, size.join(' · '));
   }
 
   /// Rounded, because the exact character count of a document is closer to
   /// being a fingerprint of it than the reader needs.
-  static String _characters(int count) {
-    if (count < 1000) return 'a short piece of text';
-    return '${(count / 1000).round()}k characters';
+  static String _characters(int count, AppL10n l10n) {
+    if (count < 1000) return l10n.securityTransferShortText;
+    return l10n.securityTransferCharacters((count / 1000).round());
   }
 
-  static String _relative(DateTime at, DateTime now) {
+  static String _relative(DateTime at, DateTime now, AppL10n l10n) {
     final difference = now.difference(at);
-    if (difference.inMinutes < 1) return 'Just now';
-    if (difference.inHours < 1) return '${difference.inMinutes}m ago';
-    if (difference.inDays < 1) return '${difference.inHours}h ago';
-    if (difference.inDays < 7) return '${difference.inDays}d ago';
-    return '${(difference.inDays / 7).floor()}w ago';
+    if (difference.inMinutes < 1) return l10n.relativeJustNow;
+    if (difference.inHours < 1) return l10n.relativeMinutes(difference.inMinutes);
+    if (difference.inDays < 1) return l10n.relativeHours(difference.inHours);
+    if (difference.inDays < 7) return l10n.relativeDays(difference.inDays);
+    return l10n.relativeWeeks((difference.inDays / 7).floor());
   }
 }
 

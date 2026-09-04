@@ -1652,6 +1652,502 @@ class AppL10nEn extends AppL10n {
   String get editRemoveAmount => 'Remove the amount';
 
   @override
+  String get securityTitle => 'Security & privacy';
+
+  @override
+  String get securitySectionProtection => 'Protection';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'App Lock needs a screen lock on this device. Set a PIN, pattern, password or fingerprint in your device settings first.';
+
+  @override
+  String get securityAppLockOn =>
+      'Action asks your device to confirm it is you.';
+
+  @override
+  String get securityAppLockOff =>
+      'Require your fingerprint, face or device PIN to open Action.';
+
+  @override
+  String get securityAskAgain => 'Ask again';
+
+  @override
+  String get securityAskAgainDescription =>
+      'How long Action may be in the background before it locks.';
+
+  @override
+  String get securityScreenPrivacy => 'Screen privacy';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'Ask Android to block screenshots and screen recording, and to hide Action in the app switcher.';
+
+  @override
+  String get securityPrivateReminders => 'Private reminders';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'Reminders say only that something needs you.';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'Reminders show the Action title. Turn this on to keep it off your lock screen.';
+
+  @override
+  String get securityLockNow => 'Lock now';
+
+  @override
+  String get securityLockNowDescription => 'Close the door without waiting.';
+
+  @override
+  String get securitySectionStorage => 'How your data is stored';
+
+  @override
+  String get securityStorageDataLabel => 'Your Actions, captures and settings';
+
+  @override
+  String get securityStorageDataDetail =>
+      'They sit in this app\'s own private storage, which other apps cannot read and which Android encrypts as part of the device\'s encryption. Action does not add a second layer of its own on top.';
+
+  @override
+  String get securityStorageKeyLabel => 'Your AI provider key';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'Held in the Android Keystore rather than with everything else, and never shown again after you save it.';
+
+  @override
+  String get securityStorageGapLabel => 'What that does not cover';
+
+  @override
+  String get securityStorageGapDetail =>
+      'None of it is a defence against someone using your unlocked device, and a modified or rooted system can read more than a normal one. App Lock is the control that helps with the first of those.';
+
+  @override
+  String get securitySectionInformation => 'Your information';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'Every route your data can take, and the two that leave this device.';
+
+  @override
+  String get securityAppLockRefused => 'Not confirmed, so nothing changed.';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'This device has no screen lock set up. Add a PIN, pattern, password or fingerprint in your device settings, then try again.';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'This device would not apply screen privacy, so it has been left off rather than shown as on.';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count scheduled reminders updated to say less.',
+      one: '1 scheduled reminder updated to say less.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count scheduled reminders updated.',
+      one: '1 scheduled reminder updated.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'Immediately';
+
+  @override
+  String get appLockDelayOneMinute => 'After 1 minute';
+
+  @override
+  String get appLockDelayFiveMinutes => 'After 5 minutes';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'Every time Action leaves the screen';
+
+  @override
+  String get securityDelayOneMinuteDescription =>
+      'Long enough to answer a message';
+
+  @override
+  String get securityDelayFiveMinutesDescription =>
+      'Long enough to take a call';
+
+  @override
+  String get securityHeroProtected => 'Protected';
+
+  @override
+  String get securityHeroNothingOn => 'Nothing turned on';
+
+  @override
+  String get securityHeroFootnote =>
+      'Everything here works on this device. None of these settings is sent anywhere, and none of them can be changed remotely.';
+
+  @override
+  String get securityHeadlineNone => 'Three protections are available';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first is on';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first and $second are on';
+  }
+
+  @override
+  String get securityHeadlineAll => 'All three protections are on';
+
+  @override
+  String get securityTransfersTitle => 'What left this device';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'No AI provider is connected, so nothing is being sent for analysis at all.';
+
+  @override
+  String get securityTransfersDescription =>
+      'Recorded here the moment something is sent, whether or not it came back. Only the tool, the provider and the size — never what was in it. Kept for 90 days on this device and sent nowhere.';
+
+  @override
+  String get securityClear => 'Clear';
+
+  @override
+  String get securityNothingSent => 'Nothing has been sent';
+
+  @override
+  String get securityNothingSentDescription =>
+      'When you run a tool that uses your AI provider, it will be listed here.';
+
+  @override
+  String get securityClearHistoryTitle => 'Clear this history?';
+
+  @override
+  String get securityClearHistoryBody =>
+      'The record of what was sent will be deleted from this device. It does not undo anything that was already sent.';
+
+  @override
+  String get securityUnnamedTool => 'An Intelligence tool';
+
+  @override
+  String get securityYourProvider => 'your AI provider';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count files',
+      one: '1 file',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'a short piece of text';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '${count}k characters';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return 'Sent to $provider.';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return 'Sent to $provider · $size.';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '${count}w ago';
+  }
+
+  @override
+  String get helpTitle => 'Help';
+
+  @override
+  String get helpAddQuestion => 'What can I add?';
+
+  @override
+  String get helpAddAnswer =>
+      'A screenshot, a photo of a letter or bill, or text you paste in. Anything with a date, an amount or a request works best.';
+
+  @override
+  String get helpReviewQuestion => 'Why does Action ask me to review?';
+
+  @override
+  String get helpReviewAnswer =>
+      'Because a machine reading a document can misread it, and a deadline that is quietly wrong is worse than no deadline at all. Action shows what it found and the words it came from, and nothing is saved until you confirm it.';
+
+  @override
+  String get helpVaryQuestion => 'Why do the results change if I try again?';
+
+  @override
+  String get helpVaryAnswer =>
+      'The service that reads your document is not deterministic, so the same capture can come back slightly differently. That is also why the review step exists — you are the part that does not change.';
+
+  @override
+  String get helpLateQuestion => 'Why was my reminder late?';
+
+  @override
+  String get helpLateAnswer =>
+      'Reminders are scheduled with Android, and Android decides exactly when to deliver them. Battery saving, Doze and manufacturer power settings can all delay one. Action never promises a reminder to the minute.';
+
+  @override
+  String get helpDataQuestion => 'Where is my data?';
+
+  @override
+  String get helpDataAnswer =>
+      'Almost all of it is on this device: your captures, Actions, steps, reminders and searches. Two exceptions — the content you ask Action to read is sent to the AI service that reads it, and a short record of a confirmed Action may be stored in the cloud under an anonymous ID. Privacy & data in Settings lists exactly what that record contains.';
+
+  @override
+  String get helpBackupQuestion => 'Is this a backup?';
+
+  @override
+  String get helpBackupAnswer =>
+      'No. The cloud record cannot be restored to a new device, and there is no account to sign in to. If you uninstall Action or lose this device, the data on it is gone.';
+
+  @override
+  String get helpCorrectQuestion => 'How do I correct an Action?';
+
+  @override
+  String get helpCorrectAnswer =>
+      'Open it and edit any field — the title, the deadline, the amount or the suggested next step. You can add, reorder, complete and delete steps at any time. Editing an Action never asks the AI service anything.';
+
+  @override
+  String get privacyTitle => 'Privacy & data';
+
+  @override
+  String get privacyIntro =>
+      'Action keeps as much as it can on this device. Two things are exceptions, and they are both listed below.';
+
+  @override
+  String get privacyGroupOnDevice => 'On this device';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'Captures — the screenshots, photos and text you add, and the text read out of them.';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'Actions, their steps, facts and reminders.';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'Search. Your searches run here, are never sent anywhere, and are not kept after you close the screen.';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'Photos are stored without their location. The coordinates, time and camera details a phone writes into a picture are removed before the capture is saved, so they are not kept here and not included when you send a capture to your AI provider.';
+
+  @override
+  String get privacyGroupSentToRead => 'Sent to be read';
+
+  @override
+  String get privacySentToReadWhat =>
+      'When you ask Action to interpret a capture, that content is sent to the AI service that reads it. This is not on-device AI.';
+
+  @override
+  String get privacySentToReadWhen =>
+      'It is sent only for the capture you chose, and only when you ask for it.';
+
+  @override
+  String get privacyGroupYourProvider => 'Sent to your own AI provider';
+
+  @override
+  String get privacyProviderWhat =>
+      'If you connect an AI provider in Settings, the Intelligence tools send the content you select to that provider — OpenAI, Anthropic, Google or an endpoint you chose — using your own API key.';
+
+  @override
+  String get privacyProviderDirect =>
+      'It goes to them directly. It does not pass through any server belonging to Action.';
+
+  @override
+  String get privacyProviderScope =>
+      'Only what you pick for a tool is sent, and only when you run it. Your other Actions, captures and sources are never included, and nothing is ever sent in the background.';
+
+  @override
+  String get privacyProviderKey =>
+      'Your API key is kept in this device’s secure storage and is sent only to the provider it belongs to. Secure storage is a real obstacle to anyone with your unlocked device, but it is not absolute, and Action will not claim otherwise.';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'Two tools never send anything: hiding sensitive details, and checking where a file came from. Both run entirely on this device.';
+
+  @override
+  String get privacyProviderAgreement =>
+      'What your provider does with what you send is governed by your agreement with them, not by Action.';
+
+  @override
+  String get privacyGroupCloud => 'Stored in the cloud';
+
+  @override
+  String get privacyCloudWhat =>
+      'When you confirm an Action, a short record of it may be saved under an anonymous ID belonging to this installation: its title, status, urgency, category, deadline, amount, suggested next step and timestamps.';
+
+  @override
+  String get privacyCloudNotSent =>
+      'Your captures, the text read from them, an Action’s steps and facts, and your reminders are not sent.';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'This is not a backup. There is no way to restore it to a new device, and losing this installation loses the anonymous ID with it.';
+
+  @override
+  String get privacyGroupDiagnostics => 'Diagnostics';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action records anonymous counts of what happens in the app — that a capture was started, that an extraction worked or did not, that a search found nothing, that an Action was completed.';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'These are counts, not contents. No title, amount, deadline, reference, captured text or search term is ever included, and neither is the anonymous ID or any identifier for an Action or capture.';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'If the app crashes, the error and where it happened are reported so it can be fixed. Action does not attach your data to those reports.';
+
+  @override
+  String get privacySectionYourData => 'Your data';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'Clearing captures leaves your Actions in place. An Action whose capture is gone still works; it simply no longer shows what it came from.';
+
+  @override
+  String get privacyClearCaptures => 'Clear captures';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'Deletes every capture and its image file.';
+
+  @override
+  String get privacyDeleteAll => 'Delete all my data';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'Actions, steps, reminders, captures and the cloud records above.';
+
+  @override
+  String get privacyClearCapturesTitle => 'Clear captures?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'Every capture and its image will be deleted from this device. Your Actions stay exactly as they are.';
+
+  @override
+  String get privacyCapturesDeleted => 'Captures deleted.';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'Some captures could not be deleted. Nothing else was changed.';
+
+  @override
+  String get privacyDeleteAllTitle => 'Delete all your data?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'This deletes every Action, step, reminder and capture on this device, and the cloud records listed above. It cannot be undone, and there is no backup to restore from.';
+
+  @override
+  String get privacyDeleteEverything => 'Delete everything';
+
+  @override
+  String get privacyDeletedAll => 'Everything has been deleted.';
+
+  @override
+  String get privacyDeleteFailed => 'Your data could not be deleted.';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'Everything on this device has been deleted. Action could not reach the cloud to confirm nothing is left there, and will check again.';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return 'Deleted, apart from $leftovers.';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action will try again.';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action could not finish checking the cloud, and will try again.';
+
+  @override
+  String get privacyLeftoverCaptures => 'some captures';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cloud records',
+      one: '1 cloud record',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first and $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'The cloud records have been deleted.';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'Still could not reach them. Action will try again.';
+
+  @override
+  String get privacyPendingTitle => 'Still to delete';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count cloud records could not be reached last time. Action will try again on its own, or you can retry now.',
+      one: '1 cloud record could not be reached last time. Action will try again on its own, or you can retry now.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'Try again';
+
+  @override
   String get evidenceTitle => 'Where this came from';
 
   @override

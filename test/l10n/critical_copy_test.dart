@@ -150,6 +150,13 @@ const _preservedTokens = [
 /// coverage. Here a forgotten entry cannot: the first test in the group asserts
 /// that every key whose English contains `Action` appears in exactly one of
 /// these two sets, so a new string fails loudly until someone classifies it.
+///
+/// **A sentence can contain both.** `privacyDiagnosticsWhat` opens with the
+/// product as its subject and ends by counting the things a user made. Those
+/// are classified as brand keys: the brand use is the one that must survive
+/// untranslated, and requiring the token to be present is the check that
+/// enforces it. The noun inside such a sentence is left to the translator,
+/// which is the same latitude every untested sentence already has.
 const _brandKeys = {
   'appName',
   'briefDetailFirstRun',
@@ -157,6 +164,11 @@ const _brandKeys = {
   'evidenceHighlighted',
   'evidenceNoRegion',
   'evidenceUnverified',
+  'helpBackupAnswer',
+  'helpDataAnswer',
+  'helpLateAnswer',
+  'helpReviewAnswer',
+  'helpReviewQuestion',
   'languageDraftNote',
   'libraryNoGoalsMessage',
   'libraryNoOpenMessage',
@@ -164,10 +176,28 @@ const _brandKeys = {
   'ocrScriptNoTextHint',
   'ocrScriptSubtitle',
   'ocrScriptUnreadableTitle',
+  'privacyCloudCheckIncomplete',
+  'privacyCloudUnreachable',
+  'privacyDeletedUnverified',
+  'privacyDiagnosticsCrash',
+  'privacyDiagnosticsWhat',
+  'privacyIntro',
+  'privacyPendingBody',
+  'privacyProviderAgreement',
+  'privacyProviderDirect',
+  'privacyProviderKey',
+  'privacySentToReadWhat',
+  'privacyWillTryAgain',
   'reviewInjectionNotice',
   'reviewMultipleAmounts',
   'reviewMultipleDates',
   'reviewNotUnderstood',
+  'securityAppLockOff',
+  'securityAppLockOn',
+  'securityAskAgainDescription',
+  'securityDelayImmediatelyDescription',
+  'securityScreenPrivacyDescription',
+  'securityStorageDataDetail',
   'settingsActionFootnote',
   'settingsHelpDescription',
   'settingsIntelligenceFootnote',
@@ -188,8 +218,16 @@ const _brandKeys = {
 /// confirmed` are the only places the app capitalises the common noun, and all
 /// three do it because a label or a sentence began.
 const _domainNounKeys = {
+  'helpCorrectAnswer',
+  'helpCorrectQuestion',
+  'privacyCloudNotSent',
+  'privacyCloudWhat',
+  'privacyDeleteAllBody',
+  'privacyDiagnosticsCounts',
+  'privacyYourDataFootnote',
   'reviewActionConfirmed',
   'searchFieldSteps',
+  'securityPrivateRemindersOff',
   'stageActionCreated',
 };
 

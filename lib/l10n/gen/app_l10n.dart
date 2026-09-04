@@ -2911,6 +2911,756 @@ abstract class AppL10n {
   /// **'Remove the amount'**
   String get editRemoveAmount;
 
+  /// No description provided for @securityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Security & privacy'**
+  String get securityTitle;
+
+  /// No description provided for @securitySectionProtection.
+  ///
+  /// In en, this message translates to:
+  /// **'Protection'**
+  String get securitySectionProtection;
+
+  /// SAFETY: says why the control is unavailable and how to make it available. Both halves are needed; without the second the user is told no and left with nowhere to go.
+  ///
+  /// In en, this message translates to:
+  /// **'App Lock needs a screen lock on this device. Set a PIN, pattern, password or fingerprint in your device settings first.'**
+  String get securityAppLockUnavailable;
+
+  /// SAFETY: states who does the confirming. Action never sees a biometric, and the sentence must not drift into implying that it does.
+  ///
+  /// In en, this message translates to:
+  /// **'Action asks your device to confirm it is you.'**
+  String get securityAppLockOn;
+
+  /// No description provided for @securityAppLockOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Require your fingerprint, face or device PIN to open Action.'**
+  String get securityAppLockOff;
+
+  /// No description provided for @securityAskAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask again'**
+  String get securityAskAgain;
+
+  /// No description provided for @securityAskAgainDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'How long Action may be in the background before it locks.'**
+  String get securityAskAgainDescription;
+
+  /// No description provided for @securityScreenPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen privacy'**
+  String get securityScreenPrivacy;
+
+  /// SAFETY: the verb is 'ask'. Android may refuse, and the copy must not promise a block this app cannot enforce.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Android to block screenshots and screen recording, and to hide Action in the app switcher.'**
+  String get securityScreenPrivacyDescription;
+
+  /// No description provided for @securityPrivateReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Private reminders'**
+  String get securityPrivateReminders;
+
+  /// No description provided for @securityPrivateRemindersOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders say only that something needs you.'**
+  String get securityPrivateRemindersOn;
+
+  /// No description provided for @securityPrivateRemindersOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders show the Action title. Turn this on to keep it off your lock screen.'**
+  String get securityPrivateRemindersOff;
+
+  /// No description provided for @securityLockNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock now'**
+  String get securityLockNow;
+
+  /// No description provided for @securityLockNowDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Close the door without waiting.'**
+  String get securityLockNowDescription;
+
+  /// No description provided for @securitySectionStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'How your data is stored'**
+  String get securitySectionStorage;
+
+  /// No description provided for @securityStorageDataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Actions, captures and settings'**
+  String get securityStorageDataLabel;
+
+  /// SAFETY: three claims, and the third is the one that must never be dropped: Action adds no encryption of its own. Losing it turns an honest description into a claim of an encrypted vault that does not exist.
+  ///
+  /// In en, this message translates to:
+  /// **'They sit in this app\'s own private storage, which other apps cannot read and which Android encrypts as part of the device\'s encryption. Action does not add a second layer of its own on top.'**
+  String get securityStorageDataDetail;
+
+  /// No description provided for @securityStorageKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your AI provider key'**
+  String get securityStorageKeyLabel;
+
+  /// SAFETY: names the mechanism rather than calling the key safe. Keep both facts: where it is held, and that it is never displayed again.
+  ///
+  /// In en, this message translates to:
+  /// **'Held in the Android Keystore rather than with everything else, and never shown again after you save it.'**
+  String get securityStorageKeyDetail;
+
+  /// No description provided for @securityStorageGapLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What that does not cover'**
+  String get securityStorageGapLabel;
+
+  /// SAFETY: the limits of the protection, stated plainly. All three parts are required - the unlocked device, the rooted system, and which control addresses which. This paragraph exists so the page cannot be read as a promise.
+  ///
+  /// In en, this message translates to:
+  /// **'None of it is a defence against someone using your unlocked device, and a modified or rooted system can read more than a normal one. App Lock is the control that helps with the first of those.'**
+  String get securityStorageGapDetail;
+
+  /// No description provided for @securitySectionInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Your information'**
+  String get securitySectionInformation;
+
+  /// No description provided for @securityWhereInfoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Every route your data can take, and the two that leave this device.'**
+  String get securityWhereInfoDescription;
+
+  /// No description provided for @securityAppLockRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'Not confirmed, so nothing changed.'**
+  String get securityAppLockRefused;
+
+  /// SAFETY: same rule as securityAppLockUnavailable: the refusal and the remedy travel together.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no screen lock set up. Add a PIN, pattern, password or fingerprint in your device settings, then try again.'**
+  String get securityAppLockUnavailableToast;
+
+  /// SAFETY: the switch stays off when the platform refuses. Both halves are required - that the device declined, and that the app did not pretend otherwise.
+  ///
+  /// In en, this message translates to:
+  /// **'This device would not apply screen privacy, so it has been left off rather than shown as on.'**
+  String get securityScreenPrivacyRefused;
+
+  /// No description provided for @securityRemindersUpdatedQuiet.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 scheduled reminder updated to say less.} other{{count} scheduled reminders updated to say less.}}'**
+  String securityRemindersUpdatedQuiet(int count);
+
+  /// No description provided for @securityRemindersUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 scheduled reminder updated.} other{{count} scheduled reminders updated.}}'**
+  String securityRemindersUpdated(int count);
+
+  /// No description provided for @appLockDelayImmediately.
+  ///
+  /// In en, this message translates to:
+  /// **'Immediately'**
+  String get appLockDelayImmediately;
+
+  /// No description provided for @appLockDelayOneMinute.
+  ///
+  /// In en, this message translates to:
+  /// **'After 1 minute'**
+  String get appLockDelayOneMinute;
+
+  /// No description provided for @appLockDelayFiveMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'After 5 minutes'**
+  String get appLockDelayFiveMinutes;
+
+  /// No description provided for @securityDelayImmediatelyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Every time Action leaves the screen'**
+  String get securityDelayImmediatelyDescription;
+
+  /// No description provided for @securityDelayOneMinuteDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Long enough to answer a message'**
+  String get securityDelayOneMinuteDescription;
+
+  /// No description provided for @securityDelayFiveMinutesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Long enough to take a call'**
+  String get securityDelayFiveMinutesDescription;
+
+  /// No description provided for @securityHeroProtected.
+  ///
+  /// In en, this message translates to:
+  /// **'Protected'**
+  String get securityHeroProtected;
+
+  /// No description provided for @securityHeroNothingOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing turned on'**
+  String get securityHeroNothingOn;
+
+  /// SAFETY: two claims: nothing is sent, and nothing can be changed remotely. Both are properties of the code and both must survive.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything here works on this device. None of these settings is sent anywhere, and none of them can be changed remotely.'**
+  String get securityHeroFootnote;
+
+  /// No description provided for @securityHeadlineNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Three protections are available'**
+  String get securityHeadlineNone;
+
+  /// No description provided for @securityHeadlineOne.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} is on'**
+  String securityHeadlineOne(String first);
+
+  /// No description provided for @securityHeadlineTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} and {second} are on'**
+  String securityHeadlineTwo(String first, String second);
+
+  /// No description provided for @securityHeadlineAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All three protections are on'**
+  String get securityHeadlineAll;
+
+  /// No description provided for @securityTransfersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What left this device'**
+  String get securityTransfersTitle;
+
+  /// SAFETY: a statement about the present state, not a promise about the future. It must stay conditional on no provider being connected.
+  ///
+  /// In en, this message translates to:
+  /// **'No AI provider is connected, so nothing is being sent for analysis at all.'**
+  String get securityTransfersNoProvider;
+
+  /// SAFETY: four claims and every one is testable: recorded at send time rather than on success, contents never recorded, kept 90 days, never uploaded. This is the paragraph the whole receipts feature rests on.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded here the moment something is sent, whether or not it came back. Only the tool, the provider and the size — never what was in it. Kept for 90 days on this device and sent nowhere.'**
+  String get securityTransfersDescription;
+
+  /// No description provided for @securityClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get securityClear;
+
+  /// No description provided for @securityNothingSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing has been sent'**
+  String get securityNothingSent;
+
+  /// No description provided for @securityNothingSentDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'When you run a tool that uses your AI provider, it will be listed here.'**
+  String get securityNothingSentDescription;
+
+  /// No description provided for @securityClearHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear this history?'**
+  String get securityClearHistoryTitle;
+
+  /// SAFETY: clearing the receipt does not unsend anything. The second sentence is the entire point and must not be lost.
+  ///
+  /// In en, this message translates to:
+  /// **'The record of what was sent will be deleted from this device. It does not undo anything that was already sent.'**
+  String get securityClearHistoryBody;
+
+  /// No description provided for @securityUnnamedTool.
+  ///
+  /// In en, this message translates to:
+  /// **'An Intelligence tool'**
+  String get securityUnnamedTool;
+
+  /// No description provided for @securityYourProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'your AI provider'**
+  String get securityYourProvider;
+
+  /// No description provided for @securityTransferPages.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 page} other{{count} pages}}'**
+  String securityTransferPages(int count);
+
+  /// No description provided for @securityTransferFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 file} other{{count} files}}'**
+  String securityTransferFiles(int count);
+
+  /// No description provided for @securityTransferShortText.
+  ///
+  /// In en, this message translates to:
+  /// **'a short piece of text'**
+  String get securityTransferShortText;
+
+  /// No description provided for @securityTransferCharacters.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}k characters'**
+  String securityTransferCharacters(int count);
+
+  /// No description provided for @securitySentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to {provider}.'**
+  String securitySentTo(String provider);
+
+  /// No description provided for @securitySentToWithSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to {provider} · {size}.'**
+  String securitySentToWithSize(String provider, String size);
+
+  /// No description provided for @relativeWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}w ago'**
+  String relativeWeeks(int count);
+
+  /// No description provided for @helpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get helpTitle;
+
+  /// No description provided for @helpAddQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What can I add?'**
+  String get helpAddQuestion;
+
+  /// No description provided for @helpAddAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'A screenshot, a photo of a letter or bill, or text you paste in. Anything with a date, an amount or a request works best.'**
+  String get helpAddAnswer;
+
+  /// No description provided for @helpReviewQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Why does Action ask me to review?'**
+  String get helpReviewQuestion;
+
+  /// SAFETY: the reason the review step exists. It must keep both halves - that a misread is possible, and that nothing is saved without confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Because a machine reading a document can misread it, and a deadline that is quietly wrong is worse than no deadline at all. Action shows what it found and the words it came from, and nothing is saved until you confirm it.'**
+  String get helpReviewAnswer;
+
+  /// No description provided for @helpVaryQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Why do the results change if I try again?'**
+  String get helpVaryQuestion;
+
+  /// SAFETY: an admission that output varies. Never soften it into a claim of consistency the service does not provide.
+  ///
+  /// In en, this message translates to:
+  /// **'The service that reads your document is not deterministic, so the same capture can come back slightly differently. That is also why the review step exists — you are the part that does not change.'**
+  String get helpVaryAnswer;
+
+  /// No description provided for @helpLateQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Why was my reminder late?'**
+  String get helpLateQuestion;
+
+  /// SAFETY: the final sentence is a refusal to promise punctual delivery, and it is the point of the answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are scheduled with Android, and Android decides exactly when to deliver them. Battery saving, Doze and manufacturer power settings can all delay one. Action never promises a reminder to the minute.'**
+  String get helpLateAnswer;
+
+  /// No description provided for @helpDataQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is my data?'**
+  String get helpDataQuestion;
+
+  /// SAFETY: names both exceptions explicitly. Losing either turns a truthful summary into a claim that everything stays local.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost all of it is on this device: your captures, Actions, steps, reminders and searches. Two exceptions — the content you ask Action to read is sent to the AI service that reads it, and a short record of a confirmed Action may be stored in the cloud under an anonymous ID. Privacy & data in Settings lists exactly what that record contains.'**
+  String get helpDataAnswer;
+
+  /// No description provided for @helpBackupQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Is this a backup?'**
+  String get helpBackupQuestion;
+
+  /// SAFETY: says no, and says what that means. This answer exists so nobody relies on the cloud record as a backup.
+  ///
+  /// In en, this message translates to:
+  /// **'No. The cloud record cannot be restored to a new device, and there is no account to sign in to. If you uninstall Action or lose this device, the data on it is gone.'**
+  String get helpBackupAnswer;
+
+  /// No description provided for @helpCorrectQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I correct an Action?'**
+  String get helpCorrectQuestion;
+
+  /// SAFETY: the last sentence is a privacy claim: editing sends nothing. Keep it.
+  ///
+  /// In en, this message translates to:
+  /// **'Open it and edit any field — the title, the deadline, the amount or the suggested next step. You can add, reorder, complete and delete steps at any time. Editing an Action never asks the AI service anything.'**
+  String get helpCorrectAnswer;
+
+  /// No description provided for @privacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & data'**
+  String get privacyTitle;
+
+  /// SAFETY: promises that the exceptions are listed, and there are exactly two. Do not generalise it into a claim that everything stays local.
+  ///
+  /// In en, this message translates to:
+  /// **'Action keeps as much as it can on this device. Two things are exceptions, and they are both listed below.'**
+  String get privacyIntro;
+
+  /// No description provided for @privacyGroupOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device'**
+  String get privacyGroupOnDevice;
+
+  /// No description provided for @privacyOnDeviceCaptures.
+  ///
+  /// In en, this message translates to:
+  /// **'Captures — the screenshots, photos and text you add, and the text read out of them.'**
+  String get privacyOnDeviceCaptures;
+
+  /// No description provided for @privacyOnDeviceActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions, their steps, facts and reminders.'**
+  String get privacyOnDeviceActions;
+
+  /// SAFETY: three claims about search: it runs locally, it is never transmitted, it is not retained. All three are enforced in code and all three must survive.
+  ///
+  /// In en, this message translates to:
+  /// **'Search. Your searches run here, are never sent anywhere, and are not kept after you close the screen.'**
+  String get privacyOnDeviceSearch;
+
+  /// SAFETY: two claims: the metadata is removed before storage, and it is therefore absent when a capture is sent onward. Both are asserted in test/capture/image_metadata_test.dart.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos are stored without their location. The coordinates, time and camera details a phone writes into a picture are removed before the capture is saved, so they are not kept here and not included when you send a capture to your AI provider.'**
+  String get privacyOnDevicePhotoMetadata;
+
+  /// No description provided for @privacyGroupSentToRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to be read'**
+  String get privacyGroupSentToRead;
+
+  /// SAFETY: the second sentence prevents the first from being read as local processing. It is the most easily lost claim on this screen.
+  ///
+  /// In en, this message translates to:
+  /// **'When you ask Action to interpret a capture, that content is sent to the AI service that reads it. This is not on-device AI.'**
+  String get privacySentToReadWhat;
+
+  /// SAFETY: two limits, both required: only the chosen capture, and only on an explicit request. Nothing is ever sent in the background.
+  ///
+  /// In en, this message translates to:
+  /// **'It is sent only for the capture you chose, and only when you ask for it.'**
+  String get privacySentToReadWhen;
+
+  /// No description provided for @privacyGroupYourProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to your own AI provider'**
+  String get privacyGroupYourProvider;
+
+  /// SAFETY: names the providers and the fact that the user's own key is used. Provider names are proper nouns and stay untranslated.
+  ///
+  /// In en, this message translates to:
+  /// **'If you connect an AI provider in Settings, the Intelligence tools send the content you select to that provider — OpenAI, Anthropic, Google or an endpoint you chose — using your own API key.'**
+  String get privacyProviderWhat;
+
+  /// SAFETY: both sentences are required. The second is the claim that matters and the one a shortened translation would drop.
+  ///
+  /// In en, this message translates to:
+  /// **'It goes to them directly. It does not pass through any server belonging to Action.'**
+  String get privacyProviderDirect;
+
+  /// SAFETY: three limits and none of them is decorative: chosen content only, on an explicit run only, and never in the background.
+  ///
+  /// In en, this message translates to:
+  /// **'Only what you pick for a tool is sent, and only when you run it. Your other Actions, captures and sources are never included, and nothing is ever sent in the background.'**
+  String get privacyProviderScope;
+
+  /// SAFETY: the qualification is the point. Secure storage is described as a real but limited obstacle; a translation that stops after the first sentence turns a measured statement into a guarantee.
+  ///
+  /// In en, this message translates to:
+  /// **'Your API key is kept in this device’s secure storage and is sent only to the provider it belongs to. Secure storage is a real obstacle to anyone with your unlocked device, but it is not absolute, and Action will not claim otherwise.'**
+  String get privacyProviderKey;
+
+  /// No description provided for @privacyProviderLocalTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Two tools never send anything: hiding sensitive details, and checking where a file came from. Both run entirely on this device.'**
+  String get privacyProviderLocalTools;
+
+  /// SAFETY: a limit of responsibility, stated plainly. It must not become a reassurance about what the provider does.
+  ///
+  /// In en, this message translates to:
+  /// **'What your provider does with what you send is governed by your agreement with them, not by Action.'**
+  String get privacyProviderAgreement;
+
+  /// No description provided for @privacyGroupCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Stored in the cloud'**
+  String get privacyGroupCloud;
+
+  /// SAFETY: an exhaustive list of what is uploaded. Shortening it would make the disclosure incomplete, which is the one thing it cannot be.
+  ///
+  /// In en, this message translates to:
+  /// **'When you confirm an Action, a short record of it may be saved under an anonymous ID belonging to this installation: its title, status, urgency, category, deadline, amount, suggested next step and timestamps.'**
+  String get privacyCloudWhat;
+
+  /// SAFETY: the complement of privacyCloudWhat. Every item named here is one the code does not upload.
+  ///
+  /// In en, this message translates to:
+  /// **'Your captures, the text read from them, an Action’s steps and facts, and your reminders are not sent.'**
+  String get privacyCloudNotSent;
+
+  /// SAFETY: says no to a reasonable assumption, and says why. Both halves required.
+  ///
+  /// In en, this message translates to:
+  /// **'This is not a backup. There is no way to restore it to a new device, and losing this installation loses the anonymous ID with it.'**
+  String get privacyCloudNotBackup;
+
+  /// No description provided for @privacyGroupDiagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostics'**
+  String get privacyGroupDiagnostics;
+
+  /// No description provided for @privacyDiagnosticsWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'Action records anonymous counts of what happens in the app — that a capture was started, that an extraction worked or did not, that a search found nothing, that an Action was completed.'**
+  String get privacyDiagnosticsWhat;
+
+  /// SAFETY: the whole analytics contract in one sentence, and every clause of it is enforced on the way in. Nothing here is a generalisation that can be compressed.
+  ///
+  /// In en, this message translates to:
+  /// **'These are counts, not contents. No title, amount, deadline, reference, captured text or search term is ever included, and neither is the anonymous ID or any identifier for an Action or capture.'**
+  String get privacyDiagnosticsCounts;
+
+  /// SAFETY: the second sentence is the limit and must survive.
+  ///
+  /// In en, this message translates to:
+  /// **'If the app crashes, the error and where it happened are reported so it can be fixed. Action does not attach your data to those reports.'**
+  String get privacyDiagnosticsCrash;
+
+  /// No description provided for @privacySectionYourData.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get privacySectionYourData;
+
+  /// No description provided for @privacyYourDataFootnote.
+  ///
+  /// In en, this message translates to:
+  /// **'Clearing captures leaves your Actions in place. An Action whose capture is gone still works; it simply no longer shows what it came from.'**
+  String get privacyYourDataFootnote;
+
+  /// No description provided for @privacyClearCaptures.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear captures'**
+  String get privacyClearCaptures;
+
+  /// No description provided for @privacyClearCapturesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Deletes every capture and its image file.'**
+  String get privacyClearCapturesDescription;
+
+  /// No description provided for @privacyDeleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all my data'**
+  String get privacyDeleteAll;
+
+  /// No description provided for @privacyDeleteAllDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions, steps, reminders, captures and the cloud records above.'**
+  String get privacyDeleteAllDescription;
+
+  /// No description provided for @privacyClearCapturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear captures?'**
+  String get privacyClearCapturesTitle;
+
+  /// SAFETY: says what is destroyed and what is not. The second sentence is why someone is willing to press the button.
+  ///
+  /// In en, this message translates to:
+  /// **'Every capture and its image will be deleted from this device. Your Actions stay exactly as they are.'**
+  String get privacyClearCapturesBody;
+
+  /// No description provided for @privacyCapturesDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Captures deleted.'**
+  String get privacyCapturesDeleted;
+
+  /// SAFETY: a partial failure reported as one. Never collapse it into a success message.
+  ///
+  /// In en, this message translates to:
+  /// **'Some captures could not be deleted. Nothing else was changed.'**
+  String get privacyCapturesPartlyDeleted;
+
+  /// No description provided for @privacyDeleteAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all your data?'**
+  String get privacyDeleteAllTitle;
+
+  /// SAFETY: the last clause is the one that stops someone assuming a backup exists. All three parts are required.
+  ///
+  /// In en, this message translates to:
+  /// **'This deletes every Action, step, reminder and capture on this device, and the cloud records listed above. It cannot be undone, and there is no backup to restore from.'**
+  String get privacyDeleteAllBody;
+
+  /// No description provided for @privacyDeleteEverything.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete everything'**
+  String get privacyDeleteEverything;
+
+  /// SAFETY: said only when it is true of the device and the cloud both. It must not become a general success message.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything has been deleted.'**
+  String get privacyDeletedAll;
+
+  /// No description provided for @privacyDeleteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data could not be deleted.'**
+  String get privacyDeleteFailed;
+
+  /// SAFETY: the subtle case: local deletion succeeded and the cloud could not be checked. Reporting this as complete deletion would be the exact lie this screen exists to avoid.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything on this device has been deleted. Action could not reach the cloud to confirm nothing is left there, and will check again.'**
+  String get privacyDeletedUnverified;
+
+  /// No description provided for @privacyDeletedApartFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted, apart from {leftovers}.'**
+  String privacyDeletedApartFrom(String leftovers);
+
+  /// No description provided for @privacyWillTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Action will try again.'**
+  String get privacyWillTryAgain;
+
+  /// No description provided for @privacyCloudCheckIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Action could not finish checking the cloud, and will try again.'**
+  String get privacyCloudCheckIncomplete;
+
+  /// No description provided for @privacyLeftoverCaptures.
+  ///
+  /// In en, this message translates to:
+  /// **'some captures'**
+  String get privacyLeftoverCaptures;
+
+  /// No description provided for @privacyLeftoverCloudRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 cloud record} other{{count} cloud records}}'**
+  String privacyLeftoverCloudRecords(int count);
+
+  /// No description provided for @privacyLeftoverJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} and {second}'**
+  String privacyLeftoverJoin(String first, String second);
+
+  /// No description provided for @privacyCloudDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The cloud records have been deleted.'**
+  String get privacyCloudDeleted;
+
+  /// No description provided for @privacyCloudUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Still could not reach them. Action will try again.'**
+  String get privacyCloudUnreachable;
+
+  /// No description provided for @privacyPendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to delete'**
+  String get privacyPendingTitle;
+
+  /// SAFETY: an outstanding obligation, stated with the count. It must keep both remedies - that Action retries on its own, and that the user can retry now.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 cloud record could not be reached last time. Action will try again on its own, or you can retry now.} other{{count} cloud records could not be reached last time. Action will try again on its own, or you can retry now.}}'**
+  String privacyPendingBody(int count);
+
+  /// No description provided for @privacyTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get privacyTryAgain;
+
   /// No description provided for @evidenceTitle.
   ///
   /// In en, this message translates to:

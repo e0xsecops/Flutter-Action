@@ -1050,6 +1050,353 @@
   },
   "editSaveAmount": "Save amount",
   "editRemoveAmount": "Remove the amount",
+  "securityTitle": "Security & privacy",
+  "securitySectionProtection": "Protection",
+  "securityAppLockUnavailable": "App Lock needs a screen lock on this device. Set a PIN, pattern, password or fingerprint in your device settings first.",
+  "@securityAppLockUnavailable": {
+    "description": "SAFETY: says why the control is unavailable and how to make it available. Both halves are needed; without the second the user is told no and left with nowhere to go."
+  },
+  "securityAppLockOn": "Action asks your device to confirm it is you.",
+  "@securityAppLockOn": {
+    "description": "SAFETY: states who does the confirming. Action never sees a biometric, and the sentence must not drift into implying that it does."
+  },
+  "securityAppLockOff": "Require your fingerprint, face or device PIN to open Action.",
+  "securityAskAgain": "Ask again",
+  "securityAskAgainDescription": "How long Action may be in the background before it locks.",
+  "securityScreenPrivacy": "Screen privacy",
+  "securityScreenPrivacyDescription": "Ask Android to block screenshots and screen recording, and to hide Action in the app switcher.",
+  "@securityScreenPrivacyDescription": {
+    "description": "SAFETY: the verb is 'ask'. Android may refuse, and the copy must not promise a block this app cannot enforce."
+  },
+  "securityPrivateReminders": "Private reminders",
+  "securityPrivateRemindersOn": "Reminders say only that something needs you.",
+  "securityPrivateRemindersOff": "Reminders show the Action title. Turn this on to keep it off your lock screen.",
+  "securityLockNow": "Lock now",
+  "securityLockNowDescription": "Close the door without waiting.",
+  "securitySectionStorage": "How your data is stored",
+  "securityStorageDataLabel": "Your Actions, captures and settings",
+  "securityStorageDataDetail": "They sit in this app's own private storage, which other apps cannot read and which Android encrypts as part of the device's encryption. Action does not add a second layer of its own on top.",
+  "@securityStorageDataDetail": {
+    "description": "SAFETY: three claims, and the third is the one that must never be dropped: Action adds no encryption of its own. Losing it turns an honest description into a claim of an encrypted vault that does not exist."
+  },
+  "securityStorageKeyLabel": "Your AI provider key",
+  "securityStorageKeyDetail": "Held in the Android Keystore rather than with everything else, and never shown again after you save it.",
+  "@securityStorageKeyDetail": {
+    "description": "SAFETY: names the mechanism rather than calling the key safe. Keep both facts: where it is held, and that it is never displayed again."
+  },
+  "securityStorageGapLabel": "What that does not cover",
+  "securityStorageGapDetail": "None of it is a defence against someone using your unlocked device, and a modified or rooted system can read more than a normal one. App Lock is the control that helps with the first of those.",
+  "@securityStorageGapDetail": {
+    "description": "SAFETY: the limits of the protection, stated plainly. All three parts are required - the unlocked device, the rooted system, and which control addresses which. This paragraph exists so the page cannot be read as a promise."
+  },
+  "securitySectionInformation": "Your information",
+  "securityWhereInfoDescription": "Every route your data can take, and the two that leave this device.",
+  "securityAppLockRefused": "Not confirmed, so nothing changed.",
+  "securityAppLockUnavailableToast": "This device has no screen lock set up. Add a PIN, pattern, password or fingerprint in your device settings, then try again.",
+  "@securityAppLockUnavailableToast": {
+    "description": "SAFETY: same rule as securityAppLockUnavailable: the refusal and the remedy travel together."
+  },
+  "securityScreenPrivacyRefused": "This device would not apply screen privacy, so it has been left off rather than shown as on.",
+  "@securityScreenPrivacyRefused": {
+    "description": "SAFETY: the switch stays off when the platform refuses. Both halves are required - that the device declined, and that the app did not pretend otherwise."
+  },
+  "securityRemindersUpdatedQuiet": "{count, plural, =1{1 scheduled reminder updated to say less.} other{{count} scheduled reminders updated to say less.}}",
+  "@securityRemindersUpdatedQuiet": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "securityRemindersUpdated": "{count, plural, =1{1 scheduled reminder updated.} other{{count} scheduled reminders updated.}}",
+  "@securityRemindersUpdated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appLockDelayImmediately": "Immediately",
+  "appLockDelayOneMinute": "After 1 minute",
+  "appLockDelayFiveMinutes": "After 5 minutes",
+  "securityDelayImmediatelyDescription": "Every time Action leaves the screen",
+  "securityDelayOneMinuteDescription": "Long enough to answer a message",
+  "securityDelayFiveMinutesDescription": "Long enough to take a call",
+  "securityHeroProtected": "Protected",
+  "securityHeroNothingOn": "Nothing turned on",
+  "securityHeroFootnote": "Everything here works on this device. None of these settings is sent anywhere, and none of them can be changed remotely.",
+  "@securityHeroFootnote": {
+    "description": "SAFETY: two claims: nothing is sent, and nothing can be changed remotely. Both are properties of the code and both must survive."
+  },
+  "securityHeadlineNone": "Three protections are available",
+  "securityHeadlineOne": "{first} is on",
+  "@securityHeadlineOne": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      }
+    }
+  },
+  "securityHeadlineTwo": "{first} and {second} are on",
+  "@securityHeadlineTwo": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "securityHeadlineAll": "All three protections are on",
+  "securityTransfersTitle": "What left this device",
+  "securityTransfersNoProvider": "No AI provider is connected, so nothing is being sent for analysis at all.",
+  "@securityTransfersNoProvider": {
+    "description": "SAFETY: a statement about the present state, not a promise about the future. It must stay conditional on no provider being connected."
+  },
+  "securityTransfersDescription": "Recorded here the moment something is sent, whether or not it came back. Only the tool, the provider and the size — never what was in it. Kept for 90 days on this device and sent nowhere.",
+  "@securityTransfersDescription": {
+    "description": "SAFETY: four claims and every one is testable: recorded at send time rather than on success, contents never recorded, kept 90 days, never uploaded. This is the paragraph the whole receipts feature rests on."
+  },
+  "securityClear": "Clear",
+  "securityNothingSent": "Nothing has been sent",
+  "securityNothingSentDescription": "When you run a tool that uses your AI provider, it will be listed here.",
+  "securityClearHistoryTitle": "Clear this history?",
+  "securityClearHistoryBody": "The record of what was sent will be deleted from this device. It does not undo anything that was already sent.",
+  "@securityClearHistoryBody": {
+    "description": "SAFETY: clearing the receipt does not unsend anything. The second sentence is the entire point and must not be lost."
+  },
+  "securityUnnamedTool": "An Intelligence tool",
+  "securityYourProvider": "your AI provider",
+  "securityTransferPages": "{count, plural, =1{1 page} other{{count} pages}}",
+  "@securityTransferPages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "securityTransferFiles": "{count, plural, =1{1 file} other{{count} files}}",
+  "@securityTransferFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "securityTransferShortText": "a short piece of text",
+  "securityTransferCharacters": "{count}k characters",
+  "@securityTransferCharacters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "securitySentTo": "Sent to {provider}.",
+  "@securitySentTo": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "securitySentToWithSize": "Sent to {provider} · {size}.",
+  "@securitySentToWithSize": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeWeeks": "{count}w ago",
+  "@relativeWeeks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "helpTitle": "Help",
+  "helpAddQuestion": "What can I add?",
+  "helpAddAnswer": "A screenshot, a photo of a letter or bill, or text you paste in. Anything with a date, an amount or a request works best.",
+  "helpReviewQuestion": "Why does Action ask me to review?",
+  "helpReviewAnswer": "Because a machine reading a document can misread it, and a deadline that is quietly wrong is worse than no deadline at all. Action shows what it found and the words it came from, and nothing is saved until you confirm it.",
+  "@helpReviewAnswer": {
+    "description": "SAFETY: the reason the review step exists. It must keep both halves - that a misread is possible, and that nothing is saved without confirmation."
+  },
+  "helpVaryQuestion": "Why do the results change if I try again?",
+  "helpVaryAnswer": "The service that reads your document is not deterministic, so the same capture can come back slightly differently. That is also why the review step exists — you are the part that does not change.",
+  "@helpVaryAnswer": {
+    "description": "SAFETY: an admission that output varies. Never soften it into a claim of consistency the service does not provide."
+  },
+  "helpLateQuestion": "Why was my reminder late?",
+  "helpLateAnswer": "Reminders are scheduled with Android, and Android decides exactly when to deliver them. Battery saving, Doze and manufacturer power settings can all delay one. Action never promises a reminder to the minute.",
+  "@helpLateAnswer": {
+    "description": "SAFETY: the final sentence is a refusal to promise punctual delivery, and it is the point of the answer."
+  },
+  "helpDataQuestion": "Where is my data?",
+  "helpDataAnswer": "Almost all of it is on this device: your captures, Actions, steps, reminders and searches. Two exceptions — the content you ask Action to read is sent to the AI service that reads it, and a short record of a confirmed Action may be stored in the cloud under an anonymous ID. Privacy & data in Settings lists exactly what that record contains.",
+  "@helpDataAnswer": {
+    "description": "SAFETY: names both exceptions explicitly. Losing either turns a truthful summary into a claim that everything stays local."
+  },
+  "helpBackupQuestion": "Is this a backup?",
+  "helpBackupAnswer": "No. The cloud record cannot be restored to a new device, and there is no account to sign in to. If you uninstall Action or lose this device, the data on it is gone.",
+  "@helpBackupAnswer": {
+    "description": "SAFETY: says no, and says what that means. This answer exists so nobody relies on the cloud record as a backup."
+  },
+  "helpCorrectQuestion": "How do I correct an Action?",
+  "helpCorrectAnswer": "Open it and edit any field — the title, the deadline, the amount or the suggested next step. You can add, reorder, complete and delete steps at any time. Editing an Action never asks the AI service anything.",
+  "@helpCorrectAnswer": {
+    "description": "SAFETY: the last sentence is a privacy claim: editing sends nothing. Keep it."
+  },
+  "privacyTitle": "Privacy & data",
+  "privacyIntro": "Action keeps as much as it can on this device. Two things are exceptions, and they are both listed below.",
+  "@privacyIntro": {
+    "description": "SAFETY: promises that the exceptions are listed, and there are exactly two. Do not generalise it into a claim that everything stays local."
+  },
+  "privacyGroupOnDevice": "On this device",
+  "privacyOnDeviceCaptures": "Captures — the screenshots, photos and text you add, and the text read out of them.",
+  "privacyOnDeviceActions": "Actions, their steps, facts and reminders.",
+  "privacyOnDeviceSearch": "Search. Your searches run here, are never sent anywhere, and are not kept after you close the screen.",
+  "@privacyOnDeviceSearch": {
+    "description": "SAFETY: three claims about search: it runs locally, it is never transmitted, it is not retained. All three are enforced in code and all three must survive."
+  },
+  "privacyOnDevicePhotoMetadata": "Photos are stored without their location. The coordinates, time and camera details a phone writes into a picture are removed before the capture is saved, so they are not kept here and not included when you send a capture to your AI provider.",
+  "@privacyOnDevicePhotoMetadata": {
+    "description": "SAFETY: two claims: the metadata is removed before storage, and it is therefore absent when a capture is sent onward. Both are asserted in test/capture/image_metadata_test.dart."
+  },
+  "privacyGroupSentToRead": "Sent to be read",
+  "privacySentToReadWhat": "When you ask Action to interpret a capture, that content is sent to the AI service that reads it. This is not on-device AI.",
+  "@privacySentToReadWhat": {
+    "description": "SAFETY: the second sentence prevents the first from being read as local processing. It is the most easily lost claim on this screen."
+  },
+  "privacySentToReadWhen": "It is sent only for the capture you chose, and only when you ask for it.",
+  "@privacySentToReadWhen": {
+    "description": "SAFETY: two limits, both required: only the chosen capture, and only on an explicit request. Nothing is ever sent in the background."
+  },
+  "privacyGroupYourProvider": "Sent to your own AI provider",
+  "privacyProviderWhat": "If you connect an AI provider in Settings, the Intelligence tools send the content you select to that provider — OpenAI, Anthropic, Google or an endpoint you chose — using your own API key.",
+  "@privacyProviderWhat": {
+    "description": "SAFETY: names the providers and the fact that the user's own key is used. Provider names are proper nouns and stay untranslated."
+  },
+  "privacyProviderDirect": "It goes to them directly. It does not pass through any server belonging to Action.",
+  "@privacyProviderDirect": {
+    "description": "SAFETY: both sentences are required. The second is the claim that matters and the one a shortened translation would drop."
+  },
+  "privacyProviderScope": "Only what you pick for a tool is sent, and only when you run it. Your other Actions, captures and sources are never included, and nothing is ever sent in the background.",
+  "@privacyProviderScope": {
+    "description": "SAFETY: three limits and none of them is decorative: chosen content only, on an explicit run only, and never in the background."
+  },
+  "privacyProviderKey": "Your API key is kept in this device’s secure storage and is sent only to the provider it belongs to. Secure storage is a real obstacle to anyone with your unlocked device, but it is not absolute, and Action will not claim otherwise.",
+  "@privacyProviderKey": {
+    "description": "SAFETY: the qualification is the point. Secure storage is described as a real but limited obstacle; a translation that stops after the first sentence turns a measured statement into a guarantee."
+  },
+  "privacyProviderLocalTools": "Two tools never send anything: hiding sensitive details, and checking where a file came from. Both run entirely on this device.",
+  "privacyProviderAgreement": "What your provider does with what you send is governed by your agreement with them, not by Action.",
+  "@privacyProviderAgreement": {
+    "description": "SAFETY: a limit of responsibility, stated plainly. It must not become a reassurance about what the provider does."
+  },
+  "privacyGroupCloud": "Stored in the cloud",
+  "privacyCloudWhat": "When you confirm an Action, a short record of it may be saved under an anonymous ID belonging to this installation: its title, status, urgency, category, deadline, amount, suggested next step and timestamps.",
+  "@privacyCloudWhat": {
+    "description": "SAFETY: an exhaustive list of what is uploaded. Shortening it would make the disclosure incomplete, which is the one thing it cannot be."
+  },
+  "privacyCloudNotSent": "Your captures, the text read from them, an Action’s steps and facts, and your reminders are not sent.",
+  "@privacyCloudNotSent": {
+    "description": "SAFETY: the complement of privacyCloudWhat. Every item named here is one the code does not upload."
+  },
+  "privacyCloudNotBackup": "This is not a backup. There is no way to restore it to a new device, and losing this installation loses the anonymous ID with it.",
+  "@privacyCloudNotBackup": {
+    "description": "SAFETY: says no to a reasonable assumption, and says why. Both halves required."
+  },
+  "privacyGroupDiagnostics": "Diagnostics",
+  "privacyDiagnosticsWhat": "Action records anonymous counts of what happens in the app — that a capture was started, that an extraction worked or did not, that a search found nothing, that an Action was completed.",
+  "privacyDiagnosticsCounts": "These are counts, not contents. No title, amount, deadline, reference, captured text or search term is ever included, and neither is the anonymous ID or any identifier for an Action or capture.",
+  "@privacyDiagnosticsCounts": {
+    "description": "SAFETY: the whole analytics contract in one sentence, and every clause of it is enforced on the way in. Nothing here is a generalisation that can be compressed."
+  },
+  "privacyDiagnosticsCrash": "If the app crashes, the error and where it happened are reported so it can be fixed. Action does not attach your data to those reports.",
+  "@privacyDiagnosticsCrash": {
+    "description": "SAFETY: the second sentence is the limit and must survive."
+  },
+  "privacySectionYourData": "Your data",
+  "privacyYourDataFootnote": "Clearing captures leaves your Actions in place. An Action whose capture is gone still works; it simply no longer shows what it came from.",
+  "privacyClearCaptures": "Clear captures",
+  "privacyClearCapturesDescription": "Deletes every capture and its image file.",
+  "privacyDeleteAll": "Delete all my data",
+  "privacyDeleteAllDescription": "Actions, steps, reminders, captures and the cloud records above.",
+  "privacyClearCapturesTitle": "Clear captures?",
+  "privacyClearCapturesBody": "Every capture and its image will be deleted from this device. Your Actions stay exactly as they are.",
+  "@privacyClearCapturesBody": {
+    "description": "SAFETY: says what is destroyed and what is not. The second sentence is why someone is willing to press the button."
+  },
+  "privacyCapturesDeleted": "Captures deleted.",
+  "privacyCapturesPartlyDeleted": "Some captures could not be deleted. Nothing else was changed.",
+  "@privacyCapturesPartlyDeleted": {
+    "description": "SAFETY: a partial failure reported as one. Never collapse it into a success message."
+  },
+  "privacyDeleteAllTitle": "Delete all your data?",
+  "privacyDeleteAllBody": "This deletes every Action, step, reminder and capture on this device, and the cloud records listed above. It cannot be undone, and there is no backup to restore from.",
+  "@privacyDeleteAllBody": {
+    "description": "SAFETY: the last clause is the one that stops someone assuming a backup exists. All three parts are required."
+  },
+  "privacyDeleteEverything": "Delete everything",
+  "privacyDeletedAll": "Everything has been deleted.",
+  "@privacyDeletedAll": {
+    "description": "SAFETY: said only when it is true of the device and the cloud both. It must not become a general success message."
+  },
+  "privacyDeleteFailed": "Your data could not be deleted.",
+  "privacyDeletedUnverified": "Everything on this device has been deleted. Action could not reach the cloud to confirm nothing is left there, and will check again.",
+  "@privacyDeletedUnverified": {
+    "description": "SAFETY: the subtle case: local deletion succeeded and the cloud could not be checked. Reporting this as complete deletion would be the exact lie this screen exists to avoid."
+  },
+  "privacyDeletedApartFrom": "Deleted, apart from {leftovers}.",
+  "@privacyDeletedApartFrom": {
+    "placeholders": {
+      "leftovers": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyWillTryAgain": "Action will try again.",
+  "privacyCloudCheckIncomplete": "Action could not finish checking the cloud, and will try again.",
+  "privacyLeftoverCaptures": "some captures",
+  "privacyLeftoverCloudRecords": "{count, plural, =1{1 cloud record} other{{count} cloud records}}",
+  "@privacyLeftoverCloudRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "privacyLeftoverJoin": "{first} and {second}",
+  "@privacyLeftoverJoin": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyCloudDeleted": "The cloud records have been deleted.",
+  "privacyCloudUnreachable": "Still could not reach them. Action will try again.",
+  "privacyPendingTitle": "Still to delete",
+  "privacyPendingBody": "{count, plural, =1{1 cloud record could not be reached last time. Action will try again on its own, or you can retry now.} other{{count} cloud records could not be reached last time. Action will try again on its own, or you can retry now.}}",
+  "@privacyPendingBody": {
+    "description": "SAFETY: an outstanding obligation, stated with the count. It must keep both remedies - that Action retries on its own, and that the user can retry now.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "privacyTryAgain": "Try again",
   "evidenceTitle": "Where this came from",
   "evidenceUnverified": "Action could not find these words in the text it read, so this value has not been verified. Check it against the original before you rely on it.",
   "@evidenceUnverified": {

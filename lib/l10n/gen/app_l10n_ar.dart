@@ -1687,6 +1687,525 @@ class AppL10nAr extends AppL10n {
   String get editRemoveAmount => 'إزالة المبلغ';
 
   @override
+  String get securityTitle => 'الأمان والخصوصية';
+
+  @override
+  String get securitySectionProtection => 'الحماية';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'يحتاج قفل التطبيق إلى قفل شاشة على هذا الجهاز. اضبط أولًا رمز PIN أو نمطًا أو كلمة مرور أو بصمة من إعدادات الجهاز.';
+
+  @override
+  String get securityAppLockOn => 'يطلب Action من جهازك أن يؤكّد أنك أنت.';
+
+  @override
+  String get securityAppLockOff =>
+      'اشتراط بصمتك أو وجهك أو رمز الجهاز لفتح Action.';
+
+  @override
+  String get securityAskAgain => 'اسأل مجددًا';
+
+  @override
+  String get securityAskAgainDescription =>
+      'كم يمكن أن يبقى Action في الخلفية قبل أن يُقفل.';
+
+  @override
+  String get securityScreenPrivacy => 'خصوصية الشاشة';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'اطلب من أندرويد منع لقطات الشاشة وتسجيلها، وإخفاء Action في مبدّل التطبيقات.';
+
+  @override
+  String get securityPrivateReminders => 'تذكيرات خاصة';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'لا تقول التذكيرات سوى أن شيئًا ينتظرك.';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'تعرض التذكيرات عنوان الإجراء. فعّل هذا لإبقائه بعيدًا عن شاشة القفل.';
+
+  @override
+  String get securityLockNow => 'أقفل الآن';
+
+  @override
+  String get securityLockNowDescription => 'إغلاق الباب دون انتظار.';
+
+  @override
+  String get securitySectionStorage => 'كيف تُحفظ بياناتك';
+
+  @override
+  String get securityStorageDataLabel => 'إجراءاتك والتقاطاتك وإعداداتك';
+
+  @override
+  String get securityStorageDataDetail =>
+      'تقع في التخزين الخاص بهذا التطبيق نفسه، الذي لا تستطيع التطبيقات الأخرى قراءته والذي يشفّره أندرويد ضمن تشفير الجهاز. ولا يضيف Action فوقه طبقة ثانية خاصة به.';
+
+  @override
+  String get securityStorageKeyLabel => 'مفتاح مزوّد الذكاء الاصطناعي الخاص بك';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'محفوظ في Android Keystore بدلًا من أن يكون مع البقية، ولا يُعرض مرة أخرى بعد حفظه.';
+
+  @override
+  String get securityStorageGapLabel => 'ما لا يغطّيه ذلك';
+
+  @override
+  String get securityStorageGapDetail =>
+      'لا شيء من ذلك يحمي من شخص يستخدم جهازك وهو غير مقفل، والنظام المعدّل أو المروّت يستطيع قراءة أكثر مما يقرأه النظام العادي. وقفل التطبيق هو الإعداد الذي يساعد في الحالة الأولى.';
+
+  @override
+  String get securitySectionInformation => 'معلوماتك';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'كل مسار يمكن أن تسلكه بياناتك، والمساران اللذان يغادران هذا الجهاز.';
+
+  @override
+  String get securityAppLockRefused => 'لم يتم التأكيد، فلم يتغيّر شيء.';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'هذا الجهاز لا يحتوي على قفل شاشة. أضف رمز PIN أو نمطًا أو كلمة مرور أو بصمة من إعدادات الجهاز ثم حاول مرة أخرى.';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'لم يطبّق هذا الجهاز خصوصية الشاشة، فتُركت مُطفأة بدل أن تُعرض على أنها مفعّلة.';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'حُدِّث $count تذكير مجدول ليقول أقل.',
+      many: 'حُدِّث $count تذكيرًا مجدولًا ليقول أقل.',
+      few: 'حُدِّثت $count تذكيرات مجدولة لتقول أقل.',
+      two: 'حُدِّث تذكيران مجدولان ليقولا أقل.',
+      one: 'حُدِّث تذكير مجدول واحد ليقول أقل.',
+      zero: 'لم يُحدَّث أي تذكير مجدول.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'حُدِّث $count تذكير مجدول.',
+      many: 'حُدِّث $count تذكيرًا مجدولًا.',
+      few: 'حُدِّثت $count تذكيرات مجدولة.',
+      two: 'حُدِّث تذكيران مجدولان.',
+      one: 'حُدِّث تذكير مجدول واحد.',
+      zero: 'لم يُحدَّث أي تذكير مجدول.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'فورًا';
+
+  @override
+  String get appLockDelayOneMinute => 'بعد دقيقة واحدة';
+
+  @override
+  String get appLockDelayFiveMinutes => 'بعد 5 دقائق';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'في كل مرة يغادر فيها Action الشاشة';
+
+  @override
+  String get securityDelayOneMinuteDescription => 'يكفي للرد على رسالة';
+
+  @override
+  String get securityDelayFiveMinutesDescription => 'يكفي للرد على مكالمة';
+
+  @override
+  String get securityHeroProtected => 'محمي';
+
+  @override
+  String get securityHeroNothingOn => 'لا شيء مفعّل';
+
+  @override
+  String get securityHeroFootnote =>
+      'كل ما هنا يعمل على هذا الجهاز. ولا يُرسل أي من هذه الإعدادات إلى أي جهة، ولا يمكن تغيير أي منها عن بُعد.';
+
+  @override
+  String get securityHeadlineNone => 'تتوفر ثلاث حمايات';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first مفعّل';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first و$second مفعّلان';
+  }
+
+  @override
+  String get securityHeadlineAll => 'الحمايات الثلاث كلها مفعّلة';
+
+  @override
+  String get securityTransfersTitle => 'ما غادر هذا الجهاز';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'لا يوجد مزوّد ذكاء اصطناعي موصول، فلا يُرسل أي شيء للتحليل إطلاقًا.';
+
+  @override
+  String get securityTransfersDescription =>
+      'يُسجَّل هنا لحظة إرسال أي شيء، سواء عاد جواب أم لا. الأداة والمزوّد والحجم فقط — وليس ما بداخله أبدًا. يُحفظ 90 يومًا على هذا الجهاز ولا يُرسل إلى أي مكان.';
+
+  @override
+  String get securityClear => 'مسح';
+
+  @override
+  String get securityNothingSent => 'لم يُرسل شيء';
+
+  @override
+  String get securityNothingSentDescription =>
+      'عندما تشغّل أداة تستخدم مزوّد الذكاء الاصطناعي الخاص بك، ستظهر هنا.';
+
+  @override
+  String get securityClearHistoryTitle => 'مسح هذا السجل؟';
+
+  @override
+  String get securityClearHistoryBody =>
+      'سيُحذف سجل ما أُرسل من هذا الجهاز. وهو لا يتراجع عن أي شيء أُرسل من قبل.';
+
+  @override
+  String get securityUnnamedTool => 'أداة من Intelligence';
+
+  @override
+  String get securityYourProvider => 'مزوّد الذكاء الاصطناعي الخاص بك';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count صفحة',
+      many: '$count صفحة',
+      few: '$count صفحات',
+      two: 'صفحتان',
+      one: 'صفحة واحدة',
+      zero: 'لا صفحات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ملف',
+      many: '$count ملفًا',
+      few: '$count ملفات',
+      two: 'ملفان',
+      one: 'ملف واحد',
+      zero: 'لا ملفات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'نص قصير';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count ألف حرف';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return 'أُرسل إلى $provider.';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return 'أُرسل إلى $provider · $size.';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return 'قبل $count أسبوع';
+  }
+
+  @override
+  String get helpTitle => 'المساعدة';
+
+  @override
+  String get helpAddQuestion => 'ماذا يمكنني أن أضيف؟';
+
+  @override
+  String get helpAddAnswer =>
+      'لقطة شاشة، أو صورة لرسالة أو فاتورة، أو نصًا تلصقه. وأفضل ما ينفع هو كل ما فيه تاريخ أو مبلغ أو طلب.';
+
+  @override
+  String get helpReviewQuestion => 'لماذا يطلب Action مني المراجعة؟';
+
+  @override
+  String get helpReviewAnswer =>
+      'لأن آلة تقرأ مستندًا قد تخطئ في قراءته، ولأن موعدًا نهائيًا خاطئًا في صمت أسوأ من غياب الموعد أصلًا. يعرض Action ما وجده والكلمات التي جاء منها، ولا يُحفظ شيء حتى تؤكّده أنت.';
+
+  @override
+  String get helpVaryQuestion => 'لماذا تتغيّر النتائج إذا حاولت مرة أخرى؟';
+
+  @override
+  String get helpVaryAnswer =>
+      'الخدمة التي تقرأ مستندك ليست حتمية، فقد يعود الالتقاط نفسه مختلفًا قليلًا. ولهذا أيضًا توجد خطوة المراجعة — أنت الجزء الذي لا يتغيّر.';
+
+  @override
+  String get helpLateQuestion => 'لماذا تأخّر تذكيري؟';
+
+  @override
+  String get helpLateAnswer =>
+      'تُجدوَل التذكيرات عبر أندرويد، وأندرويد هو من يقرّر متى يسلّمها بالضبط. وقد يؤخّر أيًّا منها توفير البطارية أو Doze أو إعدادات الطاقة من الشركة المصنّعة. ولا يعد Action أبدًا بتذكير بالدقيقة.';
+
+  @override
+  String get helpDataQuestion => 'أين بياناتي؟';
+
+  @override
+  String get helpDataAnswer =>
+      'كلها تقريبًا على هذا الجهاز: التقاطاتك وإجراءاتك وخطواتك وتذكيراتك وعمليات بحثك. استثناءان — المحتوى الذي تطلب من Action قراءته يُرسل إلى خدمة الذكاء الاصطناعي التي تقرأه، وقد يُحفظ سجل قصير لإجراء مؤكَّد في السحابة تحت معرّف مجهول. وقسم الخصوصية والبيانات في الإعدادات يذكر بالضبط ما يحتويه ذلك السجل.';
+
+  @override
+  String get helpBackupQuestion => 'هل هذه نسخة احتياطية؟';
+
+  @override
+  String get helpBackupAnswer =>
+      'لا. لا يمكن استعادة السجل السحابي إلى جهاز جديد، ولا يوجد حساب لتسجّل الدخول إليه. وإذا أزلت Action أو فقدت هذا الجهاز، فإن البيانات التي عليه تذهب.';
+
+  @override
+  String get helpCorrectQuestion => 'كيف أصحّح إجراءً؟';
+
+  @override
+  String get helpCorrectAnswer =>
+      'افتحه وعدّل أي حقل — العنوان أو الموعد النهائي أو المبلغ أو الخطوة التالية المقترحة. ويمكنك إضافة الخطوات وإعادة ترتيبها وإتمامها وحذفها في أي وقت. وتعديل إجراء لا يسأل خدمة الذكاء الاصطناعي عن أي شيء أبدًا.';
+
+  @override
+  String get privacyTitle => 'الخصوصية والبيانات';
+
+  @override
+  String get privacyIntro =>
+      'يُبقي Action على هذا الجهاز كل ما يستطيع. وهناك أمران استثناء، وكلاهما مذكور أدناه.';
+
+  @override
+  String get privacyGroupOnDevice => 'على هذا الجهاز';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'الالتقاطات — لقطات الشاشة والصور والنصوص التي تضيفها، والنص المقروء منها.';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'الإجراءات بخطواتها ومعلوماتها وتذكيراتها.';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'البحث. عمليات بحثك تجري هنا، ولا تُرسل إلى أي مكان أبدًا، ولا يُحتفظ بها بعد إغلاق الشاشة.';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'تُحفظ الصور دون موقعها. فالإحداثيات والوقت وتفاصيل الكاميرا التي يكتبها الهاتف داخل الصورة تُزال قبل حفظ الالتقاط، فلا تبقى هنا ولا تُرسل معه عندما ترسل التقاطًا إلى مزوّد الذكاء الاصطناعي الخاص بك.';
+
+  @override
+  String get privacyGroupSentToRead => 'يُرسل ليُقرأ';
+
+  @override
+  String get privacySentToReadWhat =>
+      'عندما تطلب من Action تفسير التقاط، يُرسل ذلك المحتوى إلى خدمة الذكاء الاصطناعي التي تقرأه. وهذا ليس ذكاءً اصطناعيًا على الجهاز.';
+
+  @override
+  String get privacySentToReadWhen =>
+      'لا يُرسل إلا الالتقاط الذي اخترته، وفقط عندما تطلب ذلك.';
+
+  @override
+  String get privacyGroupYourProvider =>
+      'يُرسل إلى مزوّد الذكاء الاصطناعي الخاص بك';
+
+  @override
+  String get privacyProviderWhat =>
+      'إذا وصّلت مزوّد ذكاء اصطناعي في الإعدادات، ترسل أدوات Intelligence المحتوى الذي تختاره إلى ذلك المزوّد — OpenAI أو Anthropic أو Google أو endpoint اخترته — باستخدام مفتاح API الخاص بك.';
+
+  @override
+  String get privacyProviderDirect =>
+      'يذهب إليهم مباشرة. ولا يمر عبر أي خادم يخص Action.';
+
+  @override
+  String get privacyProviderScope =>
+      'لا يُرسل إلا ما تختاره لأداة، وفقط عند تشغيلها. ولا تُدرَج أبدًا إجراءاتك والتقاطاتك ومصادرك الأخرى، ولا يُرسل شيء في الخلفية أبدًا.';
+
+  @override
+  String get privacyProviderKey =>
+      'يُحفظ مفتاح API الخاص بك في التخزين الآمن لهذا الجهاز ولا يُرسل إلا إلى المزوّد الذي يخصّه. والتخزين الآمن عائق حقيقي أمام من يمسك جهازك غير المقفل، لكنه ليس مطلقًا، ولن يدّعي Action غير ذلك.';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'أداتان لا ترسلان شيئًا أبدًا: إخفاء التفاصيل الحساسة، والتحقق من مصدر ملف. وكلتاهما تعملان بالكامل على هذا الجهاز.';
+
+  @override
+  String get privacyProviderAgreement =>
+      'ما يفعله مزوّدك بما ترسله يحكمه اتفاقك معه، لا Action.';
+
+  @override
+  String get privacyGroupCloud => 'محفوظ في السحابة';
+
+  @override
+  String get privacyCloudWhat =>
+      'عندما تؤكّد إجراءً، قد يُحفظ سجل قصير له تحت معرّف مجهول يخص هذا التثبيت: عنوانه وحالته وأولويته وفئته وموعده النهائي ومبلغه والخطوة التالية المقترحة والطوابع الزمنية.';
+
+  @override
+  String get privacyCloudNotSent =>
+      'التقاطاتك، والنص المقروء منها، وخطوات إجراء ومعلوماته، وتذكيراتك — كل ذلك لا يُرسل.';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'هذه ليست نسخة احتياطية. ولا سبيل لاستعادتها إلى جهاز جديد، وفقدان هذا التثبيت يأخذ معه المعرّف المجهول.';
+
+  @override
+  String get privacyGroupDiagnostics => 'التشخيص';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'يسجّل Action أعدادًا مجهولة لما يحدث في التطبيق — أن التقاطًا قد بدأ، وأن استخلاصًا نجح أو لم ينجح، وأن بحثًا لم يجد شيئًا، وأن إجراءً قد اكتمل.';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'هذه أعداد لا محتويات. ولا يُدرج فيها أبدًا أي عنوان أو مبلغ أو موعد نهائي أو مرجع أو نص ملتقط أو كلمة بحث، ولا المعرّف المجهول ولا أي معرّف لإجراء أو التقاط.';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'إذا تعطّل التطبيق، يُبلَّغ عن الخطأ وموضع حدوثه ليتسنى إصلاحه. ولا يرفق Action بياناتك بتلك التقارير.';
+
+  @override
+  String get privacySectionYourData => 'بياناتك';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'مسح الالتقاطات يترك إجراءاتك في مكانها. والإجراء الذي ذهب التقاطه يظل يعمل؛ إنما لم يعد يعرض ما جاء منه.';
+
+  @override
+  String get privacyClearCaptures => 'مسح الالتقاطات';
+
+  @override
+  String get privacyClearCapturesDescription => 'يحذف كل التقاط وملف صورته.';
+
+  @override
+  String get privacyDeleteAll => 'حذف كل بياناتي';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'الإجراءات والخطوات والتذكيرات والالتقاطات والسجلات السحابية أعلاه.';
+
+  @override
+  String get privacyClearCapturesTitle => 'مسح الالتقاطات؟';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'سيُحذف كل التقاط وصورته من هذا الجهاز. وتبقى إجراءاتك كما هي تمامًا.';
+
+  @override
+  String get privacyCapturesDeleted => 'حُذفت الالتقاطات.';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'تعذّر حذف بعض الالتقاطات. ولم يتغيّر شيء آخر.';
+
+  @override
+  String get privacyDeleteAllTitle => 'حذف كل بياناتك؟';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'هذا يحذف كل إجراء وخطوة وتذكير والتقاط على هذا الجهاز، والسجلات السحابية المذكورة أعلاه. ولا يمكن التراجع عنه، ولا توجد نسخة احتياطية للاستعادة منها.';
+
+  @override
+  String get privacyDeleteEverything => 'حذف كل شيء';
+
+  @override
+  String get privacyDeletedAll => 'حُذف كل شيء.';
+
+  @override
+  String get privacyDeleteFailed => 'تعذّر حذف بياناتك.';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'حُذف كل ما على هذا الجهاز. ولم يستطع Action الوصول إلى السحابة ليؤكّد أنه لم يبقَ شيء هناك، وسيتحقق مرة أخرى.';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return 'حُذف، عدا $leftovers.';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'سيحاول Action مرة أخرى.';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'لم يستطع Action إنهاء التحقق من السحابة، وسيحاول مرة أخرى.';
+
+  @override
+  String get privacyLeftoverCaptures => 'بعض الالتقاطات';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سجل سحابي',
+      many: '$count سجلًا سحابيًا',
+      few: '$count سجلات سحابية',
+      two: 'سجلان سحابيان',
+      one: 'سجل سحابي واحد',
+      zero: 'لا سجلات سحابية',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first و$second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'حُذفت السجلات السحابية.';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'ما زال الوصول إليها متعذّرًا. سيحاول Action مرة أخرى.';
+
+  @override
+  String get privacyPendingTitle => 'ما زال للحذف';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'تعذّر الوصول إلى $count سجل سحابي آخر مرة. سيحاول Action من تلقاء نفسه، أو يمكنك المحاولة الآن.',
+      many:
+          'تعذّر الوصول إلى $count سجلًا سحابيًا آخر مرة. سيحاول Action من تلقاء نفسه، أو يمكنك المحاولة الآن.',
+      few:
+          'تعذّر الوصول إلى $count سجلات سحابية آخر مرة. سيحاول Action من تلقاء نفسه، أو يمكنك المحاولة الآن.',
+      two: 'تعذّر الوصول إلى سجلين سحابيين آخر مرة. سيحاول Action من تلقاء نفسه، أو يمكنك المحاولة الآن.',
+      one: 'تعذّر الوصول إلى سجل سحابي واحد آخر مرة. سيحاول Action من تلقاء نفسه، أو يمكنك المحاولة الآن.',
+      zero: 'تعذّر الوصول إلى سجلات سحابية آخر مرة. سيحاول Action من تلقاء نفسه، أو يمكنك المحاولة الآن.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'أعد المحاولة';
+
+  @override
   String get evidenceTitle => 'من أين جاء هذا';
 
   @override

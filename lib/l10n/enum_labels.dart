@@ -13,6 +13,7 @@
 /// `ActionCategory.unknown.labelIn(l10n)` is what a person reads.
 library;
 
+import '../core/security/device_lock.dart';
 import '../features/actions/application/reminder_presets.dart';
 
 import '../features/capture/domain/ocr_script.dart';
@@ -132,5 +133,13 @@ extension ReminderPresetKindL10n on ReminderPresetKind {
         ReminderPresetKind.oneWeekBefore => l10n.reminderPresetWeekBefore,
         ReminderPresetKind.atTheDeadline => l10n.reminderPresetAtDeadline,
         ReminderPresetKind.oneHourBefore => l10n.reminderPresetHourBefore,
+      };
+}
+
+extension AppLockDelayL10n on AppLockDelay {
+  String labelIn(AppL10n l10n) => switch (this) {
+        AppLockDelay.immediately => l10n.appLockDelayImmediately,
+        AppLockDelay.afterOneMinute => l10n.appLockDelayOneMinute,
+        AppLockDelay.afterFiveMinutes => l10n.appLockDelayFiveMinutes,
       };
 }

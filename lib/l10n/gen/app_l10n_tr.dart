@@ -1650,6 +1650,505 @@ class AppL10nTr extends AppL10n {
   String get editRemoveAmount => 'Tutarı kaldır';
 
   @override
+  String get securityTitle => 'Güvenlik ve gizlilik';
+
+  @override
+  String get securitySectionProtection => 'Koruma';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'Uygulama Kilidi bu cihazda bir ekran kilidi gerektirir. Önce cihaz ayarlarınızdan bir PIN, desen, parola veya parmak izi ayarlayın.';
+
+  @override
+  String get securityAppLockOn =>
+      'Action, siz olduğunuzu doğrulamasını cihazınızdan ister.';
+
+  @override
+  String get securityAppLockOff =>
+      'Action\'ı açmak için parmak izinizi, yüzünüzü veya cihaz PIN\'inizi isteyin.';
+
+  @override
+  String get securityAskAgain => 'Yeniden sor';
+
+  @override
+  String get securityAskAgainDescription =>
+      'Action kilitlenmeden önce ne kadar süre arka planda kalabilir.';
+
+  @override
+  String get securityScreenPrivacy => 'Ekran gizliliği';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'Android\'den ekran görüntüsü ile ekran kaydını engellemesini ve Action\'ı uygulama değiştiricide gizlemesini isteyin.';
+
+  @override
+  String get securityPrivateReminders => 'Özel hatırlatıcılar';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'Hatırlatıcılar yalnızca bir şeyin sizi beklediğini söyler.';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'Hatırlatıcılar görevin başlığını gösterir. Başlığın kilit ekranına çıkmaması için bunu açın.';
+
+  @override
+  String get securityLockNow => 'Şimdi kilitle';
+
+  @override
+  String get securityLockNowDescription => 'Beklemeden kapıyı kapatın.';
+
+  @override
+  String get securitySectionStorage => 'Verileriniz nasıl saklanıyor';
+
+  @override
+  String get securityStorageDataLabel =>
+      'Görevleriniz, yakalamalarınız ve ayarlarınız';
+
+  @override
+  String get securityStorageDataDetail =>
+      'Bu uygulamanın kendi özel depolamasında duruyorlar; başka uygulamalar okuyamaz ve Android bunları cihaz şifrelemesinin bir parçası olarak şifreler. Action bunun üstüne kendine ait ikinci bir katman eklemez.';
+
+  @override
+  String get securityStorageKeyLabel => 'Yapay zekâ sağlayıcı anahtarınız';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'Geri kalanın yanında değil, Android Keystore içinde tutulur ve kaydettikten sonra bir daha gösterilmez.';
+
+  @override
+  String get securityStorageGapLabel => 'Bunun kapsamadığı şeyler';
+
+  @override
+  String get securityStorageGapDetail =>
+      'Bunların hiçbiri, cihazınızı kilitsizken kullanan birine karşı koruma sağlamaz; değiştirilmiş ya da root\'lanmış bir sistem de normal bir sistemden fazlasını okuyabilir. Uygulama Kilidi, bunlardan ilkine yardımcı olan ayardır.';
+
+  @override
+  String get securitySectionInformation => 'Bilgileriniz';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'Verilerinizin gidebileceği her yol ve bu cihazdan ayrılan iki tanesi.';
+
+  @override
+  String get securityAppLockRefused =>
+      'Onaylanmadı, bu yüzden hiçbir şey değişmedi.';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'Bu cihazda kurulu bir ekran kilidi yok. Cihaz ayarlarınızdan bir PIN, desen, parola veya parmak izi ekleyin, sonra yeniden deneyin.';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'Bu cihaz ekran gizliliğini uygulamadı, bu yüzden açık gibi gösterilmek yerine kapalı bırakıldı.';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count planlanmış hatırlatıcı artık daha az şey söylüyor.',
+      one: '1 planlanmış hatırlatıcı artık daha az şey söylüyor.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count planlanmış hatırlatıcı güncellendi.',
+      one: '1 planlanmış hatırlatıcı güncellendi.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'Hemen';
+
+  @override
+  String get appLockDelayOneMinute => '1 dakika sonra';
+
+  @override
+  String get appLockDelayFiveMinutes => '5 dakika sonra';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'Action ekrandan her ayrıldığında';
+
+  @override
+  String get securityDelayOneMinuteDescription =>
+      'Bir mesaja cevap vermeye yetecek kadar';
+
+  @override
+  String get securityDelayFiveMinutesDescription =>
+      'Bir aramayı almaya yetecek kadar';
+
+  @override
+  String get securityHeroProtected => 'Korunuyor';
+
+  @override
+  String get securityHeroNothingOn => 'Hiçbiri açık değil';
+
+  @override
+  String get securityHeroFootnote =>
+      'Buradaki her şey bu cihazda çalışır. Bu ayarların hiçbiri hiçbir yere gönderilmez ve hiçbiri uzaktan değiştirilemez.';
+
+  @override
+  String get securityHeadlineNone => 'Üç koruma mevcut';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first açık';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first ve $second açık';
+  }
+
+  @override
+  String get securityHeadlineAll => 'Üç korumanın üçü de açık';
+
+  @override
+  String get securityTransfersTitle => 'Bu cihazdan ne çıktı';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'Bağlı bir yapay zekâ sağlayıcı yok, bu yüzden analiz için hiçbir şey gönderilmiyor.';
+
+  @override
+  String get securityTransfersDescription =>
+      'Bir şey gönderildiği anda, karşılığı dönsün ya da dönmesin buraya yazılır. Yalnızca araç, sağlayıcı ve boyut — içinde ne olduğu asla. Bu cihazda 90 gün saklanır ve hiçbir yere gönderilmez.';
+
+  @override
+  String get securityClear => 'Temizle';
+
+  @override
+  String get securityNothingSent => 'Hiçbir şey gönderilmedi';
+
+  @override
+  String get securityNothingSentDescription =>
+      'Yapay zekâ sağlayıcınızı kullanan bir araç çalıştırdığınızda burada listelenecek.';
+
+  @override
+  String get securityClearHistoryTitle => 'Bu geçmiş temizlensin mi?';
+
+  @override
+  String get securityClearHistoryBody =>
+      'Nelerin gönderildiğine dair kayıt bu cihazdan silinecek. Bu, çoktan gönderilmiş hiçbir şeyi geri almaz.';
+
+  @override
+  String get securityUnnamedTool => 'Bir Intelligence aracı';
+
+  @override
+  String get securityYourProvider => 'yapay zekâ sağlayıcınıza';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sayfa',
+      one: '1 sayfa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dosya',
+      one: '1 dosya',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'kısa bir metin';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count bin karakter';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return '$provider adresine gönderildi.';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return '$provider adresine gönderildi · $size.';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count hf önce';
+  }
+
+  @override
+  String get helpTitle => 'Yardım';
+
+  @override
+  String get helpAddQuestion => 'Ne ekleyebilirim?';
+
+  @override
+  String get helpAddAnswer =>
+      'Bir ekran görüntüsü, bir mektup ya da fatura fotoğrafı veya yapıştırdığınız metin. İçinde tarih, tutar ya da bir talep geçen her şey en iyi sonucu verir.';
+
+  @override
+  String get helpReviewQuestion => 'Action neden gözden geçirmemi istiyor?';
+
+  @override
+  String get helpReviewAnswer =>
+      'Çünkü bir belgeyi okuyan makine onu yanlış okuyabilir ve sessizce yanlış olan bir son tarih, hiç son tarih olmamasından kötüdür. Action neyi bulduğunu ve hangi sözcüklerden geldiğini gösterir, siz onaylamadan da hiçbir şey kaydedilmez.';
+
+  @override
+  String get helpVaryQuestion => 'Tekrar denediğimde sonuçlar neden değişiyor?';
+
+  @override
+  String get helpVaryAnswer =>
+      'Belgenizi okuyan hizmet belirlenimci değildir, bu yüzden aynı yakalama biraz farklı dönebilir. Gözden geçirme adımı da bu yüzden var — değişmeyen taraf sizsiniz.';
+
+  @override
+  String get helpLateQuestion => 'Hatırlatıcım neden geç geldi?';
+
+  @override
+  String get helpLateAnswer =>
+      'Hatırlatıcılar Android üzerinden planlanır ve onları tam olarak ne zaman ileteceğine Android karar verir. Pil tasarrufu, Doze ve üreticinin güç ayarları bir hatırlatıcıyı geciktirebilir. Action hiçbir zaman dakikası dakikasına bir hatırlatıcı sözü vermez.';
+
+  @override
+  String get helpDataQuestion => 'Verilerim nerede?';
+
+  @override
+  String get helpDataAnswer =>
+      'Neredeyse tamamı bu cihazda: yakalamalarınız, görevleriniz, adımlarınız, hatırlatıcılarınız ve aramalarınız. İki istisna — Action\'ın okumasını istediğiniz içerik onu okuyan yapay zekâ hizmetine gönderilir ve onaylanmış bir görevin kısa bir kaydı anonim bir kimlik altında bulutta saklanabilir. Ayarlar\'daki Gizlilik ve veriler, o kaydın tam olarak neleri içerdiğini listeler.';
+
+  @override
+  String get helpBackupQuestion => 'Bu bir yedek mi?';
+
+  @override
+  String get helpBackupAnswer =>
+      'Hayır. Buluttaki kayıt yeni bir cihaza geri yüklenemez ve giriş yapılacak bir hesap yoktur. Action\'ı kaldırırsanız ya da bu cihazı kaybederseniz, üzerindeki veriler gider.';
+
+  @override
+  String get helpCorrectQuestion => 'Bir görevi nasıl düzeltirim?';
+
+  @override
+  String get helpCorrectAnswer =>
+      'Görevi açın ve herhangi bir alanı düzenleyin — başlığı, son tarihi, tutarı ya da önerilen sonraki adımı. Adımları dilediğiniz zaman ekleyebilir, sıralayabilir, tamamlayabilir ve silebilirsiniz. Bir görevi düzenlemek yapay zekâ hizmetine asla bir şey sormaz.';
+
+  @override
+  String get privacyTitle => 'Gizlilik ve veriler';
+
+  @override
+  String get privacyIntro =>
+      'Action elinden geldiğince çok şeyi bu cihazda tutar. İki şey istisnadır ve ikisi de aşağıda listelenmiştir.';
+
+  @override
+  String get privacyGroupOnDevice => 'Bu cihazda';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'Yakalamalar — eklediğiniz ekran görüntüleri, fotoğraflar ve metinler ile bunlardan okunan metin.';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'Görevler; adımları, bilgileri ve hatırlatıcılarıyla birlikte.';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'Arama. Aramalarınız burada çalışır, hiçbir yere gönderilmez ve ekranı kapattıktan sonra saklanmaz.';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'Fotoğraflar konumları olmadan saklanır. Bir telefonun görüntünün içine yazdığı koordinatlar, saat ve kamera bilgileri yakalama kaydedilmeden önce kaldırılır; böylece burada tutulmazlar ve bir yakalamayı yapay zekâ sağlayıcınıza gönderdiğinizde de gitmezler.';
+
+  @override
+  String get privacyGroupSentToRead => 'Okunmak üzere gönderilenler';
+
+  @override
+  String get privacySentToReadWhat =>
+      'Action\'dan bir yakalamayı yorumlamasını istediğinizde, o içerik onu okuyan yapay zekâ hizmetine gönderilir. Bu, cihaz üzerinde çalışan bir yapay zekâ değildir.';
+
+  @override
+  String get privacySentToReadWhen =>
+      'Yalnızca seçtiğiniz yakalama gönderilir ve yalnızca siz istediğinizde.';
+
+  @override
+  String get privacyGroupYourProvider =>
+      'Kendi yapay zekâ sağlayıcınıza gönderilenler';
+
+  @override
+  String get privacyProviderWhat =>
+      'Ayarlar\'da bir yapay zekâ sağlayıcı bağlarsanız, Intelligence araçları seçtiğiniz içeriği o sağlayıcıya — OpenAI, Anthropic, Google ya da seçtiğiniz bir endpoint — kendi API anahtarınızla gönderir.';
+
+  @override
+  String get privacyProviderDirect =>
+      'Doğrudan onlara gider. Action\'a ait hiçbir sunucudan geçmez.';
+
+  @override
+  String get privacyProviderScope =>
+      'Yalnızca bir araç için seçtiğiniz gönderilir ve yalnızca onu çalıştırdığınızda. Diğer görevleriniz, yakalamalarınız ve kaynaklarınız asla dahil edilmez, arka planda da hiçbir zaman bir şey gönderilmez.';
+
+  @override
+  String get privacyProviderKey =>
+      'API anahtarınız bu cihazın güvenli deposunda tutulur ve yalnızca ait olduğu sağlayıcıya gönderilir. Güvenli depo, cihazınızı kilitsiz ele geçiren biri için gerçek bir engeldir, ama mutlak değildir ve Action aksini iddia etmez.';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'İki araç hiçbir zaman bir şey göndermez: hassas ayrıntıları gizlemek ve bir dosyanın nereden geldiğini kontrol etmek. İkisi de tamamen bu cihazda çalışır.';
+
+  @override
+  String get privacyProviderAgreement =>
+      'Sağlayıcınızın gönderdiklerinizle ne yaptığı, Action\'ın değil, onunla yaptığınız sözleşmenin konusudur.';
+
+  @override
+  String get privacyGroupCloud => 'Bulutta saklananlar';
+
+  @override
+  String get privacyCloudWhat =>
+      'Bir görevi onayladığınızda, ona ait kısa bir kayıt bu kuruluma ait anonim bir kimlik altında saklanabilir: başlığı, durumu, aciliyeti, kategorisi, son tarihi, tutarı, önerilen sonraki adımı ve zaman damgaları.';
+
+  @override
+  String get privacyCloudNotSent =>
+      'Yakalamalarınız, onlardan okunan metin, bir görevin adımları ve bilgileri ile hatırlatıcılarınız gönderilmez.';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'Bu bir yedek değildir. Yeni bir cihaza geri yüklemenin yolu yoktur ve bu kurulumu kaybetmek anonim kimliği de beraberinde götürür.';
+
+  @override
+  String get privacyGroupDiagnostics => 'Tanılama';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action uygulamada olup bitenlerin anonim sayımlarını tutar — bir yakalamanın başladığını, bir çıkarımın işe yarayıp yaramadığını, bir aramanın hiçbir şey bulamadığını, bir görevin tamamlandığını.';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'Bunlar sayımdır, içerik değil. Hiçbir başlık, tutar, son tarih, referans, yakalanmış metin ya da arama terimi asla dahil edilmez; anonim kimlik ile bir göreve veya yakalamaya ait herhangi bir tanımlayıcı da dahil edilmez.';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'Uygulama çökerse, düzeltilebilmesi için hata ve nerede olduğu bildirilir. Action bu raporlara verilerinizi eklemez.';
+
+  @override
+  String get privacySectionYourData => 'Verileriniz';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'Yakalamaları temizlemek görevlerinizi yerinde bırakır. Yakalaması silinmiş bir görev yine çalışır; yalnızca artık neyden geldiğini göstermez.';
+
+  @override
+  String get privacyClearCaptures => 'Yakalamaları temizle';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'Her yakalamayı ve görüntü dosyasını siler.';
+
+  @override
+  String get privacyDeleteAll => 'Bütün verilerimi sil';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'Görevler, adımlar, hatırlatıcılar, yakalamalar ve yukarıdaki bulut kayıtları.';
+
+  @override
+  String get privacyClearCapturesTitle => 'Yakalamalar temizlensin mi?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'Her yakalama ve görüntüsü bu cihazdan silinecek. Görevleriniz tam olduğu gibi kalır.';
+
+  @override
+  String get privacyCapturesDeleted => 'Yakalamalar silindi.';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'Bazı yakalamalar silinemedi. Başka hiçbir şey değiştirilmedi.';
+
+  @override
+  String get privacyDeleteAllTitle => 'Bütün verileriniz silinsin mi?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'Bu, bu cihazdaki her görevi, adımı, hatırlatıcıyı ve yakalamayı ve yukarıda listelenen bulut kayıtlarını siler. Geri alınamaz ve geri yüklenecek bir yedek yoktur.';
+
+  @override
+  String get privacyDeleteEverything => 'Her şeyi sil';
+
+  @override
+  String get privacyDeletedAll => 'Her şey silindi.';
+
+  @override
+  String get privacyDeleteFailed => 'Verileriniz silinemedi.';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'Bu cihazdaki her şey silindi. Action, orada bir şey kalmadığını doğrulamak için buluta ulaşamadı ve yeniden bakacak.';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return '$leftovers dışında silindi.';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action yeniden deneyecek.';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action bulut kontrolünü bitiremedi ve yeniden deneyecek.';
+
+  @override
+  String get privacyLeftoverCaptures => 'bazı yakalamalar';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bulut kaydı',
+      one: '1 bulut kaydı',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first ve $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'Bulut kayıtları silindi.';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'Onlara yine ulaşılamadı. Action yeniden deneyecek.';
+
+  @override
+  String get privacyPendingTitle => 'Hâlâ silinecek';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Geçen sefer $count bulut kaydına ulaşılamadı. Action kendiliğinden yeniden deneyecek, ya da şimdi siz deneyebilirsiniz.',
+      one: 'Geçen sefer 1 bulut kaydına ulaşılamadı. Action kendiliğinden yeniden deneyecek, ya da şimdi siz deneyebilirsiniz.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'Yeniden dene';
+
+  @override
   String get evidenceTitle => 'Bunun geldiği yer';
 
   @override

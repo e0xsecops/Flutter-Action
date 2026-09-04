@@ -1660,6 +1660,506 @@ class AppL10nPt extends AppL10n {
   String get editRemoveAmount => 'Retirar o valor';
 
   @override
+  String get securityTitle => 'Segurança e privacidade';
+
+  @override
+  String get securitySectionProtection => 'Proteção';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'O bloqueio da app precisa de um bloqueio de ecrã neste dispositivo. Configure primeiro um PIN, um padrão, uma palavra-passe ou uma impressão digital nas definições do dispositivo.';
+
+  @override
+  String get securityAppLockOn =>
+      'A Action pede ao seu dispositivo que confirme que é você.';
+
+  @override
+  String get securityAppLockOff =>
+      'Exigir a sua impressão digital, o rosto ou o PIN do dispositivo para abrir a Action.';
+
+  @override
+  String get securityAskAgain => 'Perguntar de novo';
+
+  @override
+  String get securityAskAgainDescription =>
+      'Quanto tempo a Action pode estar em segundo plano antes de bloquear.';
+
+  @override
+  String get securityScreenPrivacy => 'Privacidade do ecrã';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'Pedir ao Android que bloqueie capturas e gravação de ecrã, e que esconda a Action no seletor de apps.';
+
+  @override
+  String get securityPrivateReminders => 'Lembretes privados';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'Os lembretes dizem apenas que algo precisa de si.';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'Os lembretes mostram o título da tarefa. Ligue isto para o manter fora do ecrã bloqueado.';
+
+  @override
+  String get securityLockNow => 'Bloquear agora';
+
+  @override
+  String get securityLockNowDescription => 'Fechar a porta sem esperar.';
+
+  @override
+  String get securitySectionStorage => 'Como os seus dados são guardados';
+
+  @override
+  String get securityStorageDataLabel =>
+      'As suas tarefas, capturas e definições';
+
+  @override
+  String get securityStorageDataDetail =>
+      'Ficam no armazenamento privado desta app, que outras apps não conseguem ler e que o Android cifra como parte da cifragem do dispositivo. A Action não acrescenta uma segunda camada própria por cima.';
+
+  @override
+  String get securityStorageKeyLabel => 'A sua chave do fornecedor de IA';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'Guardada no Keystore do Android em vez de junto com o resto, e nunca mais mostrada depois de a guardar.';
+
+  @override
+  String get securityStorageGapLabel => 'O que isso não cobre';
+
+  @override
+  String get securityStorageGapDetail =>
+      'Nada disto defende contra alguém que use o seu dispositivo desbloqueado, e um sistema modificado ou com root consegue ler mais do que um normal. O bloqueio da app é o controlo que ajuda com o primeiro caso.';
+
+  @override
+  String get securitySectionInformation => 'A sua informação';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'Todos os caminhos que os seus dados podem tomar, e os dois que saem deste dispositivo.';
+
+  @override
+  String get securityAppLockRefused =>
+      'Não foi confirmado, por isso nada mudou.';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'Este dispositivo não tem bloqueio de ecrã configurado. Adicione um PIN, um padrão, uma palavra-passe ou uma impressão digital nas definições do dispositivo e tente de novo.';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'Este dispositivo não quis aplicar a privacidade do ecrã, por isso ficou desligada em vez de ser mostrada como ligada.';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lembretes agendados passam a dizer menos.',
+      one: '1 lembrete agendado passa a dizer menos.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lembretes agendados atualizados.',
+      one: '1 lembrete agendado atualizado.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'Imediatamente';
+
+  @override
+  String get appLockDelayOneMinute => 'Ao fim de 1 minuto';
+
+  @override
+  String get appLockDelayFiveMinutes => 'Ao fim de 5 minutos';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'Sempre que a Action sai do ecrã';
+
+  @override
+  String get securityDelayOneMinuteDescription =>
+      'O suficiente para responder a uma mensagem';
+
+  @override
+  String get securityDelayFiveMinutesDescription =>
+      'O suficiente para atender uma chamada';
+
+  @override
+  String get securityHeroProtected => 'Protegido';
+
+  @override
+  String get securityHeroNothingOn => 'Nada ligado';
+
+  @override
+  String get securityHeroFootnote =>
+      'Tudo aqui funciona neste dispositivo. Nenhuma destas definições é enviada para lado nenhum, e nenhuma pode ser mudada à distância.';
+
+  @override
+  String get securityHeadlineNone => 'Há três proteções disponíveis';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first está ligada';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first e $second estão ligadas';
+  }
+
+  @override
+  String get securityHeadlineAll => 'As três proteções estão ligadas';
+
+  @override
+  String get securityTransfersTitle => 'O que saiu deste dispositivo';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'Não há nenhum fornecedor de IA ligado, por isso não está a ser enviado nada para análise.';
+
+  @override
+  String get securityTransfersDescription =>
+      'Registado aqui no momento em que algo é enviado, tenha voltado resposta ou não. Só a ferramenta, o fornecedor e o tamanho — nunca o que ia lá dentro. Guardado 90 dias neste dispositivo e enviado para lado nenhum.';
+
+  @override
+  String get securityClear => 'Limpar';
+
+  @override
+  String get securityNothingSent => 'Não foi enviado nada';
+
+  @override
+  String get securityNothingSentDescription =>
+      'Quando usar uma ferramenta que recorra ao seu fornecedor de IA, aparecerá aqui.';
+
+  @override
+  String get securityClearHistoryTitle => 'Limpar este histórico?';
+
+  @override
+  String get securityClearHistoryBody =>
+      'O registo do que foi enviado será eliminado deste dispositivo. Não desfaz nada do que já foi enviado.';
+
+  @override
+  String get securityUnnamedTool => 'Uma ferramenta Intelligence';
+
+  @override
+  String get securityYourProvider => 'o seu fornecedor de IA';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count páginas',
+      one: '1 página',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ficheiros',
+      one: '1 ficheiro',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'um texto curto';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count mil caracteres';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return 'Enviado para $provider.';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return 'Enviado para $provider · $size.';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return 'há $count sem.';
+  }
+
+  @override
+  String get helpTitle => 'Ajuda';
+
+  @override
+  String get helpAddQuestion => 'O que posso adicionar?';
+
+  @override
+  String get helpAddAnswer =>
+      'Uma captura de ecrã, uma foto de uma carta ou de uma fatura, ou texto que cole. Resulta melhor tudo o que tenha uma data, um valor ou um pedido.';
+
+  @override
+  String get helpReviewQuestion => 'Porque é que a Action me pede para rever?';
+
+  @override
+  String get helpReviewAnswer =>
+      'Porque uma máquina que lê um documento pode lê-lo mal, e um prazo calado e errado é pior do que prazo nenhum. A Action mostra o que encontrou e as palavras de onde veio, e não se guarda nada até que o confirme.';
+
+  @override
+  String get helpVaryQuestion =>
+      'Porque é que os resultados mudam se tentar de novo?';
+
+  @override
+  String get helpVaryAnswer =>
+      'O serviço que lê o seu documento não é determinístico, por isso a mesma captura pode voltar ligeiramente diferente. É também por isso que existe o passo de revisão — você é a parte que não muda.';
+
+  @override
+  String get helpLateQuestion => 'Porque é que o meu lembrete chegou tarde?';
+
+  @override
+  String get helpLateAnswer =>
+      'Os lembretes são agendados no Android, e é o Android que decide exatamente quando os entrega. A poupança de bateria, o Doze e as definições de energia do fabricante podem atrasar qualquer um. A Action nunca promete um lembrete ao minuto.';
+
+  @override
+  String get helpDataQuestion => 'Onde estão os meus dados?';
+
+  @override
+  String get helpDataAnswer =>
+      'Quase tudo está neste dispositivo: as suas capturas, tarefas, passos, lembretes e pesquisas. Duas exceções — o conteúdo que pede à Action para ler é enviado ao serviço de IA que o lê, e um registo curto de uma tarefa confirmada pode ser guardado na nuvem sob um identificador anónimo. Privacidade e dados, nas Definições, lista exatamente o que esse registo contém.';
+
+  @override
+  String get helpBackupQuestion => 'Isto é uma cópia de segurança?';
+
+  @override
+  String get helpBackupAnswer =>
+      'Não. O registo na nuvem não pode ser reposto num dispositivo novo, e não há nenhuma conta para iniciar sessão. Se desinstalar a Action ou perder este dispositivo, os dados que lá estavam desaparecem.';
+
+  @override
+  String get helpCorrectQuestion => 'Como corrijo uma tarefa?';
+
+  @override
+  String get helpCorrectAnswer =>
+      'Abra-a e edite qualquer campo — o título, o prazo, o valor ou o passo seguinte sugerido. Pode adicionar, reordenar, concluir e eliminar passos a qualquer momento. Editar uma tarefa nunca pergunta nada ao serviço de IA.';
+
+  @override
+  String get privacyTitle => 'Privacidade e dados';
+
+  @override
+  String get privacyIntro =>
+      'A Action mantém neste dispositivo tudo o que consegue. Duas coisas são exceções, e ambas estão listadas abaixo.';
+
+  @override
+  String get privacyGroupOnDevice => 'Neste dispositivo';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'Capturas — as capturas de ecrã, fotos e textos que adiciona, e o texto lido a partir deles.';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'Tarefas, com os seus passos, dados e lembretes.';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'Pesquisa. As suas pesquisas correm aqui, nunca são enviadas para lado nenhum, e não ficam guardadas depois de fechar o ecrã.';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'As fotos são guardadas sem a sua localização. As coordenadas, a hora e os dados da câmara que um telemóvel escreve dentro de uma imagem são removidos antes de a captura ser guardada, por isso não ficam aqui nem vão incluídos quando envia uma captura ao seu fornecedor de IA.';
+
+  @override
+  String get privacyGroupSentToRead => 'Enviado para ser lido';
+
+  @override
+  String get privacySentToReadWhat =>
+      'Quando pede à Action que interprete uma captura, esse conteúdo é enviado ao serviço de IA que o lê. Isto não é IA no dispositivo.';
+
+  @override
+  String get privacySentToReadWhen =>
+      'É enviada apenas a captura que escolheu, e apenas quando o pede.';
+
+  @override
+  String get privacyGroupYourProvider =>
+      'Enviado para o seu próprio fornecedor de IA';
+
+  @override
+  String get privacyProviderWhat =>
+      'Se ligar um fornecedor de IA nas Definições, as ferramentas Intelligence enviam o conteúdo que selecionar para esse fornecedor — OpenAI, Anthropic, Google ou um endpoint que escolheu — usando a sua própria chave API.';
+
+  @override
+  String get privacyProviderDirect =>
+      'Vai diretamente para eles. Não passa por nenhum servidor pertencente à Action.';
+
+  @override
+  String get privacyProviderScope =>
+      'Só é enviado o que escolhe para uma ferramenta, e só quando a executa. As suas outras tarefas, capturas e fontes nunca são incluídas, e nunca é enviado nada em segundo plano.';
+
+  @override
+  String get privacyProviderKey =>
+      'A sua chave API é guardada no armazenamento seguro deste dispositivo e é enviada apenas ao fornecedor a que pertence. O armazenamento seguro é um obstáculo real para quem tenha o seu dispositivo desbloqueado, mas não é absoluto, e a Action não dirá o contrário.';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'Duas ferramentas nunca enviam nada: esconder dados sensíveis e verificar de onde veio um ficheiro. Ambas funcionam inteiramente neste dispositivo.';
+
+  @override
+  String get privacyProviderAgreement =>
+      'O que o seu fornecedor faz com o que envia rege-se pelo seu acordo com ele, não pela Action.';
+
+  @override
+  String get privacyGroupCloud => 'Guardado na nuvem';
+
+  @override
+  String get privacyCloudWhat =>
+      'Quando confirma uma tarefa, pode ser guardado um registo curto sob um identificador anónimo desta instalação: o título, o estado, a urgência, a categoria, o prazo, o valor, o passo seguinte sugerido e as marcas temporais.';
+
+  @override
+  String get privacyCloudNotSent =>
+      'As suas capturas, o texto lido a partir delas, os passos e dados de uma tarefa, e os seus lembretes não são enviados.';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'Isto não é uma cópia de segurança. Não há forma de o repor num dispositivo novo, e perder esta instalação leva com ela o identificador anónimo.';
+
+  @override
+  String get privacyGroupDiagnostics => 'Diagnóstico';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'A Action regista contagens anónimas do que acontece na app — que uma captura começou, que uma extração resultou ou não, que uma pesquisa não encontrou nada, que uma tarefa foi concluída.';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'São contagens, não conteúdos. Nunca vai incluído nenhum título, valor, prazo, referência, texto capturado ou termo de pesquisa, e também não o identificador anónimo nem qualquer identificador de uma tarefa ou captura.';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'Se a app rebentar, o erro e o sítio onde aconteceu são comunicados para poder ser corrigido. A Action não anexa os seus dados a esses relatórios.';
+
+  @override
+  String get privacySectionYourData => 'Os seus dados';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'Limpar as capturas deixa as suas tarefas onde estão. Uma tarefa cuja captura desapareceu continua a funcionar; simplesmente já não mostra de onde veio.';
+
+  @override
+  String get privacyClearCaptures => 'Limpar capturas';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'Elimina todas as capturas e o respetivo ficheiro de imagem.';
+
+  @override
+  String get privacyDeleteAll => 'Eliminar todos os meus dados';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'Tarefas, passos, lembretes, capturas e os registos na nuvem acima.';
+
+  @override
+  String get privacyClearCapturesTitle => 'Limpar as capturas?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'Todas as capturas e as suas imagens serão eliminadas deste dispositivo. As suas tarefas ficam exatamente como estão.';
+
+  @override
+  String get privacyCapturesDeleted => 'Capturas eliminadas.';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'Algumas capturas não puderam ser eliminadas. Não foi alterado mais nada.';
+
+  @override
+  String get privacyDeleteAllTitle => 'Eliminar todos os seus dados?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'Isto elimina todas as tarefas, passos, lembretes e capturas neste dispositivo, e os registos na nuvem listados acima. Não pode ser desfeito, e não há cópia de segurança a partir da qual repor.';
+
+  @override
+  String get privacyDeleteEverything => 'Eliminar tudo';
+
+  @override
+  String get privacyDeletedAll => 'Foi tudo eliminado.';
+
+  @override
+  String get privacyDeleteFailed => 'Não foi possível eliminar os seus dados.';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'Tudo o que estava neste dispositivo foi eliminado. A Action não conseguiu chegar à nuvem para confirmar que lá não sobra nada, e vai voltar a verificar.';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return 'Eliminado, tirando $leftovers.';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'A Action vai tentar de novo.';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'A Action não conseguiu terminar a verificação da nuvem, e vai tentar de novo.';
+
+  @override
+  String get privacyLeftoverCaptures => 'algumas capturas';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count registos na nuvem',
+      one: '1 registo na nuvem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first e $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'Os registos na nuvem foram eliminados.';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'Continuou sem os conseguir alcançar. A Action vai tentar de novo.';
+
+  @override
+  String get privacyPendingTitle => 'Ainda por eliminar';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Não foi possível alcançar $count registos na nuvem da última vez. A Action vai tentar sozinha, ou pode tentar agora.',
+      one: 'Não foi possível alcançar 1 registo na nuvem da última vez. A Action vai tentar sozinha, ou pode tentar agora.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'Tentar de novo';
+
+  @override
   String get evidenceTitle => 'De onde isto veio';
 
   @override

@@ -19,6 +19,7 @@ import 'package:action_app/features/settings/presentation/help_screen.dart';
 import 'package:action_app/features/settings/presentation/privacy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:action_app/l10n/gen/app_l10n_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../actions/support/actions_test_support.dart';
@@ -294,7 +295,7 @@ void main() {
     // These strings are the product's promises. A refactor that quietly
     // reworded one would be a change of meaning, not of style.
     test('privacy copy still names the two exceptions', () {
-      final all = privacyDataMap.expand((g) => g.lines).join(' ');
+      final all = privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ');
       expect(all, contains('sent to the AI service'));
       expect(all, contains('This is not on-device AI'));
       expect(all, contains('This is not a backup'));
@@ -303,8 +304,8 @@ void main() {
 
     test('nothing anywhere promises a cross-device backup', () {
       final everything = [
-        ...privacyDataMap.expand((g) => g.lines),
-        ...helpEntries.map((e) => '${e.question} ${e.answer}'),
+        ...privacyDataMapIn(AppL10nEn()).expand((g) => g.lines),
+        ...helpEntriesIn(AppL10nEn()).map((e) => '${e.question} ${e.answer}'),
       ].join(' ').toLowerCase();
 
       for (final forbidden in [

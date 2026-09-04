@@ -1580,6 +1580,466 @@ class AppL10nZh extends AppL10n {
   String get editRemoveAmount => '删除金额';
 
   @override
+  String get securityTitle => '安全与隐私';
+
+  @override
+  String get securitySectionProtection => '保护';
+
+  @override
+  String get securityAppLockUnavailable =>
+      '应用锁需要本机设有屏幕锁。请先在设备设置里设置 PIN、图案、密码或指纹。';
+
+  @override
+  String get securityAppLockOn => 'Action 请你的设备确认是你本人。';
+
+  @override
+  String get securityAppLockOff => '打开 Action 时需要你的指纹、面容或设备 PIN。';
+
+  @override
+  String get securityAskAgain => '再次询问';
+
+  @override
+  String get securityAskAgainDescription => 'Action 在后台停留多久后锁定。';
+
+  @override
+  String get securityScreenPrivacy => '屏幕隐私';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      '请求 Android 阻止截屏和录屏，并在应用切换器中隐藏 Action。';
+
+  @override
+  String get securityPrivateReminders => '私密提醒';
+
+  @override
+  String get securityPrivateRemindersOn => '提醒只说有事等着你。';
+
+  @override
+  String get securityPrivateRemindersOff => '提醒会显示待办的标题。打开这项可以让它不出现在锁屏上。';
+
+  @override
+  String get securityLockNow => '立即锁定';
+
+  @override
+  String get securityLockNowDescription => '不用等，直接关门。';
+
+  @override
+  String get securitySectionStorage => '你的数据怎么存';
+
+  @override
+  String get securityStorageDataLabel => '你的待办、采集和设置';
+
+  @override
+  String get securityStorageDataDetail =>
+      '它们放在本应用自己的私有存储里，其他应用读不到，Android 会作为设备加密的一部分加密它们。Action 没有在上面再加一层自己的加密。';
+
+  @override
+  String get securityStorageKeyLabel => '你的 AI 提供方密钥';
+
+  @override
+  String get securityStorageKeyDetail =>
+      '存在 Android Keystore 里，而不是和其他东西放在一起，保存之后不会再显示。';
+
+  @override
+  String get securityStorageGapLabel => '这些覆盖不到的地方';
+
+  @override
+  String get securityStorageGapDetail =>
+      '这些都挡不住有人拿着你已解锁的设备使用，被改动或已 root 的系统也能读到比正常系统更多的东西。应用锁是对前一种情况有帮助的那项设置。';
+
+  @override
+  String get securitySectionInformation => '你的信息';
+
+  @override
+  String get securityWhereInfoDescription => '你的数据可能走的每条路，以及离开本机的那两条。';
+
+  @override
+  String get securityAppLockRefused => '没有确认，所以什么都没变。';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      '本机没有设置屏幕锁。请在设备设置里添加 PIN、图案、密码或指纹，然后再试一次。';
+
+  @override
+  String get securityScreenPrivacyRefused => '本机没有应用屏幕隐私，所以它保持关闭，而不是被显示成已开启。';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 条已排期的提醒现在说得更少了。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已更新 $count 条已排期的提醒。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => '立即';
+
+  @override
+  String get appLockDelayOneMinute => '1 分钟后';
+
+  @override
+  String get appLockDelayFiveMinutes => '5 分钟后';
+
+  @override
+  String get securityDelayImmediatelyDescription => '每次 Action 离开屏幕时';
+
+  @override
+  String get securityDelayOneMinuteDescription => '够回一条消息';
+
+  @override
+  String get securityDelayFiveMinutesDescription => '够接一个电话';
+
+  @override
+  String get securityHeroProtected => '已保护';
+
+  @override
+  String get securityHeroNothingOn => '什么都没开';
+
+  @override
+  String get securityHeroFootnote => '这里的一切都在本机运行。这些设置都不会被发送到任何地方，也都不能被远程更改。';
+
+  @override
+  String get securityHeadlineNone => '有三项保护可用';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first 已开启';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first 和 $second 已开启';
+  }
+
+  @override
+  String get securityHeadlineAll => '三项保护全部开启';
+
+  @override
+  String get securityTransfersTitle => '有什么离开了本机';
+
+  @override
+  String get securityTransfersNoProvider => '没有连接 AI 提供方，所以根本没有任何东西被送去分析。';
+
+  @override
+  String get securityTransfersDescription =>
+      '在有东西被发出去的那一刻就记在这里，不管有没有回来。只记工具、提供方和大小——绝不记里面是什么。在本机保留 90 天，不发往任何地方。';
+
+  @override
+  String get securityClear => '清除';
+
+  @override
+  String get securityNothingSent => '还没有发送过任何东西';
+
+  @override
+  String get securityNothingSentDescription => '当你运行用到你的 AI 提供方的工具时，它会列在这里。';
+
+  @override
+  String get securityClearHistoryTitle => '清除这份记录？';
+
+  @override
+  String get securityClearHistoryBody => '关于发送过什么的记录会从本机删除。这并不会撤回任何已经发出去的东西。';
+
+  @override
+  String get securityUnnamedTool => '一个 Intelligence 工具';
+
+  @override
+  String get securityYourProvider => '你的 AI 提供方';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 页',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个文件',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => '一小段文字';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count 千字符';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return '已发送至 $provider。';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return '已发送至 $provider · $size。';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count 周前';
+  }
+
+  @override
+  String get helpTitle => '帮助';
+
+  @override
+  String get helpAddQuestion => '我可以添加什么？';
+
+  @override
+  String get helpAddAnswer => '一张截图，一张信件或账单的照片，或者你粘贴进来的文字。含有日期、金额或某项请求的内容效果最好。';
+
+  @override
+  String get helpReviewQuestion => 'Action 为什么要我核对？';
+
+  @override
+  String get helpReviewAnswer =>
+      '因为读文档的机器可能读错，而一个悄悄弄错的期限比没有期限更糟。Action 会显示它找到了什么、来自哪些字，而且在你确认之前什么都不会保存。';
+
+  @override
+  String get helpVaryQuestion => '为什么再试一次结果会变？';
+
+  @override
+  String get helpVaryAnswer =>
+      '读你文档的服务不是确定性的，所以同一项采集可能返回得略有不同。核对这一步存在也正是因为这个——不变的那一部分是你。';
+
+  @override
+  String get helpLateQuestion => '我的提醒为什么迟到了？';
+
+  @override
+  String get helpLateAnswer =>
+      '提醒由 Android 排期，具体什么时候送达由 Android 决定。省电、Doze 和厂商的电源设置都可能让它延迟。Action 从不承诺分秒不差的提醒。';
+
+  @override
+  String get helpDataQuestion => '我的数据在哪里？';
+
+  @override
+  String get helpDataAnswer =>
+      '几乎全都在本机：你的采集、待办、步骤、提醒和搜索。两个例外——你请 Action 读的内容会送到读它的 AI 服务，而一条已确认待办的简短记录可能以匿名标识存在云端。设置里的“隐私与数据”会准确列出那条记录包含什么。';
+
+  @override
+  String get helpBackupQuestion => '这是备份吗？';
+
+  @override
+  String get helpBackupAnswer =>
+      '不是。云端记录无法恢复到新设备，也没有账号可以登录。如果你卸载 Action 或丢了这台设备，上面的数据就没了。';
+
+  @override
+  String get helpCorrectQuestion => '我怎么改一项待办？';
+
+  @override
+  String get helpCorrectAnswer =>
+      '打开它，然后编辑任意字段——标题、期限、金额或建议的下一步。步骤随时可以添加、调整顺序、完成和删除。编辑一项待办从不向 AI 服务询问任何东西。';
+
+  @override
+  String get privacyTitle => '隐私与数据';
+
+  @override
+  String get privacyIntro => 'Action 尽量把一切都留在本机。有两件事是例外，两件都列在下面。';
+
+  @override
+  String get privacyGroupOnDevice => '在本机';
+
+  @override
+  String get privacyOnDeviceCaptures => '采集——你添加的截图、照片和文字，以及从中读出的文字。';
+
+  @override
+  String get privacyOnDeviceActions => '待办，及其步骤、要点和提醒。';
+
+  @override
+  String get privacyOnDeviceSearch => '搜索。你的搜索在这里运行，从不发往任何地方，关掉屏幕后也不保留。';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      '照片保存时不带位置。手机写进图片里的坐标、时间和相机信息，会在采集被保存之前移除，所以它们既不留在这里，你把采集发给自己的 AI 提供方时也不会跟着走。';
+
+  @override
+  String get privacyGroupSentToRead => '发出去供阅读';
+
+  @override
+  String get privacySentToReadWhat =>
+      '当你请 Action 解读一项采集时，那份内容会发送给读它的 AI 服务。这不是运行在设备上的 AI。';
+
+  @override
+  String get privacySentToReadWhen => '只发送你选中的那一项采集，而且只在你提出请求时。';
+
+  @override
+  String get privacyGroupYourProvider => '发给你自己的 AI 提供方';
+
+  @override
+  String get privacyProviderWhat =>
+      '如果你在设置里连接了 AI 提供方，Intelligence 工具会用你自己的 API 密钥，把你选中的内容发给该提供方——OpenAI、Anthropic、Google 或你选定的 endpoint。';
+
+  @override
+  String get privacyProviderDirect => '它直接发给他们。不经过任何属于 Action 的服务器。';
+
+  @override
+  String get privacyProviderScope =>
+      '只发送你为某个工具挑选的内容，而且只在你运行它时。你其他的待办、采集和来源永远不会被一并带上，后台也从不发送任何东西。';
+
+  @override
+  String get privacyProviderKey =>
+      '你的 API 密钥保存在本机的安全存储中，并且只发送给它所属的那个提供方。对于拿到你已解锁设备的人来说，安全存储是一道真实的阻碍，但它并非绝对，Action 也不会声称相反。';
+
+  @override
+  String get privacyProviderLocalTools =>
+      '有两个工具从不发送任何东西：隐去敏感信息，以及查看文件来自哪里。两者完全在本机运行。';
+
+  @override
+  String get privacyProviderAgreement =>
+      '你的提供方拿你发过去的东西做什么，由你与他们的协议决定，而不是由 Action 决定。';
+
+  @override
+  String get privacyGroupCloud => '存在云端';
+
+  @override
+  String get privacyCloudWhat =>
+      '当你确认一项待办时，它的一条简短记录可能以这次安装的匿名标识保存下来：标题、状态、紧急程度、类别、期限、金额、建议的下一步和时间戳。';
+
+  @override
+  String get privacyCloudNotSent => '你的采集、从中读出的文字、一项待办的步骤和要点，以及你的提醒，都不会被发送。';
+
+  @override
+  String get privacyCloudNotBackup => '这不是备份。没有办法把它恢复到新设备，丢失这次安装也会一并丢失那个匿名标识。';
+
+  @override
+  String get privacyGroupDiagnostics => '诊断';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action 记录应用里发生了什么的匿名计数——某次采集开始了，某次提取成功或失败，某次搜索没找到东西，某项待办完成了。';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      '这些是计数，不是内容。任何标题、金额、期限、编号、采集到的文字或搜索词都不会被带上，匿名标识以及待办或采集的任何标识符也不会。';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      '如果应用崩溃，错误和发生的位置会被上报，以便修复。Action 不会把你的数据附在那些报告里。';
+
+  @override
+  String get privacySectionYourData => '你的数据';
+
+  @override
+  String get privacyYourDataFootnote =>
+      '清除采集不会动你的待办。采集已经没有的待办照样能用，只是不再显示它是从哪来的。';
+
+  @override
+  String get privacyClearCaptures => '清除采集';
+
+  @override
+  String get privacyClearCapturesDescription => '删除每一项采集及其图片文件。';
+
+  @override
+  String get privacyDeleteAll => '删除我的所有数据';
+
+  @override
+  String get privacyDeleteAllDescription => '待办、步骤、提醒、采集，以及上面的云端记录。';
+
+  @override
+  String get privacyClearCapturesTitle => '清除采集？';
+
+  @override
+  String get privacyClearCapturesBody => '每一项采集及其图片都会从本机删除。你的待办完全保持原样。';
+
+  @override
+  String get privacyCapturesDeleted => '采集已删除。';
+
+  @override
+  String get privacyCapturesPartlyDeleted => '有些采集没能删除。其他什么都没有改动。';
+
+  @override
+  String get privacyDeleteAllTitle => '删除你的所有数据？';
+
+  @override
+  String get privacyDeleteAllBody =>
+      '这会删除本机的每一项待办、步骤、提醒和采集，以及上面列出的云端记录。无法撤销，也没有备份可以恢复。';
+
+  @override
+  String get privacyDeleteEverything => '全部删除';
+
+  @override
+  String get privacyDeletedAll => '全部已删除。';
+
+  @override
+  String get privacyDeleteFailed => '你的数据未能删除。';
+
+  @override
+  String get privacyDeletedUnverified =>
+      '本机上的一切都已删除。Action 没能连上云端确认那里没有残留，会再检查一次。';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return '已删除，$leftovers除外。';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action 会再试一次。';
+
+  @override
+  String get privacyCloudCheckIncomplete => 'Action 没能查完云端，会再试一次。';
+
+  @override
+  String get privacyLeftoverCaptures => '部分采集';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 条云端记录',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first和$second';
+  }
+
+  @override
+  String get privacyCloudDeleted => '云端记录已删除。';
+
+  @override
+  String get privacyCloudUnreachable => '仍然联系不上它们。Action 会再试一次。';
+
+  @override
+  String get privacyPendingTitle => '还需删除';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '上次有 $count 条云端记录联系不上。Action 会自己再试，你也可以现在重试。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => '重试';
+
+  @override
   String get evidenceTitle => '这是哪儿来的';
 
   @override
@@ -3188,6 +3648,466 @@ class AppL10nZhHans extends AppL10nZh {
 
   @override
   String get editRemoveAmount => '删除金额';
+
+  @override
+  String get securityTitle => '安全与隐私';
+
+  @override
+  String get securitySectionProtection => '保护';
+
+  @override
+  String get securityAppLockUnavailable =>
+      '应用锁需要本机设有屏幕锁。请先在设备设置里设置 PIN、图案、密码或指纹。';
+
+  @override
+  String get securityAppLockOn => 'Action 请你的设备确认是你本人。';
+
+  @override
+  String get securityAppLockOff => '打开 Action 时需要你的指纹、面容或设备 PIN。';
+
+  @override
+  String get securityAskAgain => '再次询问';
+
+  @override
+  String get securityAskAgainDescription => 'Action 在后台停留多久后锁定。';
+
+  @override
+  String get securityScreenPrivacy => '屏幕隐私';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      '请求 Android 阻止截屏和录屏，并在应用切换器中隐藏 Action。';
+
+  @override
+  String get securityPrivateReminders => '私密提醒';
+
+  @override
+  String get securityPrivateRemindersOn => '提醒只说有事等着你。';
+
+  @override
+  String get securityPrivateRemindersOff => '提醒会显示待办的标题。打开这项可以让它不出现在锁屏上。';
+
+  @override
+  String get securityLockNow => '立即锁定';
+
+  @override
+  String get securityLockNowDescription => '不用等，直接关门。';
+
+  @override
+  String get securitySectionStorage => '你的数据怎么存';
+
+  @override
+  String get securityStorageDataLabel => '你的待办、采集和设置';
+
+  @override
+  String get securityStorageDataDetail =>
+      '它们放在本应用自己的私有存储里，其他应用读不到，Android 会作为设备加密的一部分加密它们。Action 没有在上面再加一层自己的加密。';
+
+  @override
+  String get securityStorageKeyLabel => '你的 AI 提供方密钥';
+
+  @override
+  String get securityStorageKeyDetail =>
+      '存在 Android Keystore 里，而不是和其他东西放在一起，保存之后不会再显示。';
+
+  @override
+  String get securityStorageGapLabel => '这些覆盖不到的地方';
+
+  @override
+  String get securityStorageGapDetail =>
+      '这些都挡不住有人拿着你已解锁的设备使用，被改动或已 root 的系统也能读到比正常系统更多的东西。应用锁是对前一种情况有帮助的那项设置。';
+
+  @override
+  String get securitySectionInformation => '你的信息';
+
+  @override
+  String get securityWhereInfoDescription => '你的数据可能走的每条路，以及离开本机的那两条。';
+
+  @override
+  String get securityAppLockRefused => '没有确认，所以什么都没变。';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      '本机没有设置屏幕锁。请在设备设置里添加 PIN、图案、密码或指纹，然后再试一次。';
+
+  @override
+  String get securityScreenPrivacyRefused => '本机没有应用屏幕隐私，所以它保持关闭，而不是被显示成已开启。';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 条已排期的提醒现在说得更少了。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已更新 $count 条已排期的提醒。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => '立即';
+
+  @override
+  String get appLockDelayOneMinute => '1 分钟后';
+
+  @override
+  String get appLockDelayFiveMinutes => '5 分钟后';
+
+  @override
+  String get securityDelayImmediatelyDescription => '每次 Action 离开屏幕时';
+
+  @override
+  String get securityDelayOneMinuteDescription => '够回一条消息';
+
+  @override
+  String get securityDelayFiveMinutesDescription => '够接一个电话';
+
+  @override
+  String get securityHeroProtected => '已保护';
+
+  @override
+  String get securityHeroNothingOn => '什么都没开';
+
+  @override
+  String get securityHeroFootnote => '这里的一切都在本机运行。这些设置都不会被发送到任何地方，也都不能被远程更改。';
+
+  @override
+  String get securityHeadlineNone => '有三项保护可用';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first 已开启';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first 和 $second 已开启';
+  }
+
+  @override
+  String get securityHeadlineAll => '三项保护全部开启';
+
+  @override
+  String get securityTransfersTitle => '有什么离开了本机';
+
+  @override
+  String get securityTransfersNoProvider => '没有连接 AI 提供方，所以根本没有任何东西被送去分析。';
+
+  @override
+  String get securityTransfersDescription =>
+      '在有东西被发出去的那一刻就记在这里，不管有没有回来。只记工具、提供方和大小——绝不记里面是什么。在本机保留 90 天，不发往任何地方。';
+
+  @override
+  String get securityClear => '清除';
+
+  @override
+  String get securityNothingSent => '还没有发送过任何东西';
+
+  @override
+  String get securityNothingSentDescription => '当你运行用到你的 AI 提供方的工具时，它会列在这里。';
+
+  @override
+  String get securityClearHistoryTitle => '清除这份记录？';
+
+  @override
+  String get securityClearHistoryBody => '关于发送过什么的记录会从本机删除。这并不会撤回任何已经发出去的东西。';
+
+  @override
+  String get securityUnnamedTool => '一个 Intelligence 工具';
+
+  @override
+  String get securityYourProvider => '你的 AI 提供方';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 页',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个文件',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => '一小段文字';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count 千字符';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return '已发送至 $provider。';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return '已发送至 $provider · $size。';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count 周前';
+  }
+
+  @override
+  String get helpTitle => '帮助';
+
+  @override
+  String get helpAddQuestion => '我可以添加什么？';
+
+  @override
+  String get helpAddAnswer => '一张截图，一张信件或账单的照片，或者你粘贴进来的文字。含有日期、金额或某项请求的内容效果最好。';
+
+  @override
+  String get helpReviewQuestion => 'Action 为什么要我核对？';
+
+  @override
+  String get helpReviewAnswer =>
+      '因为读文档的机器可能读错，而一个悄悄弄错的期限比没有期限更糟。Action 会显示它找到了什么、来自哪些字，而且在你确认之前什么都不会保存。';
+
+  @override
+  String get helpVaryQuestion => '为什么再试一次结果会变？';
+
+  @override
+  String get helpVaryAnswer =>
+      '读你文档的服务不是确定性的，所以同一项采集可能返回得略有不同。核对这一步存在也正是因为这个——不变的那一部分是你。';
+
+  @override
+  String get helpLateQuestion => '我的提醒为什么迟到了？';
+
+  @override
+  String get helpLateAnswer =>
+      '提醒由 Android 排期，具体什么时候送达由 Android 决定。省电、Doze 和厂商的电源设置都可能让它延迟。Action 从不承诺分秒不差的提醒。';
+
+  @override
+  String get helpDataQuestion => '我的数据在哪里？';
+
+  @override
+  String get helpDataAnswer =>
+      '几乎全都在本机：你的采集、待办、步骤、提醒和搜索。两个例外——你请 Action 读的内容会送到读它的 AI 服务，而一条已确认待办的简短记录可能以匿名标识存在云端。设置里的“隐私与数据”会准确列出那条记录包含什么。';
+
+  @override
+  String get helpBackupQuestion => '这是备份吗？';
+
+  @override
+  String get helpBackupAnswer =>
+      '不是。云端记录无法恢复到新设备，也没有账号可以登录。如果你卸载 Action 或丢了这台设备，上面的数据就没了。';
+
+  @override
+  String get helpCorrectQuestion => '我怎么改一项待办？';
+
+  @override
+  String get helpCorrectAnswer =>
+      '打开它，然后编辑任意字段——标题、期限、金额或建议的下一步。步骤随时可以添加、调整顺序、完成和删除。编辑一项待办从不向 AI 服务询问任何东西。';
+
+  @override
+  String get privacyTitle => '隐私与数据';
+
+  @override
+  String get privacyIntro => 'Action 尽量把一切都留在本机。有两件事是例外，两件都列在下面。';
+
+  @override
+  String get privacyGroupOnDevice => '在本机';
+
+  @override
+  String get privacyOnDeviceCaptures => '采集——你添加的截图、照片和文字，以及从中读出的文字。';
+
+  @override
+  String get privacyOnDeviceActions => '待办，及其步骤、要点和提醒。';
+
+  @override
+  String get privacyOnDeviceSearch => '搜索。你的搜索在这里运行，从不发往任何地方，关掉屏幕后也不保留。';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      '照片保存时不带位置。手机写进图片里的坐标、时间和相机信息，会在采集被保存之前移除，所以它们既不留在这里，你把采集发给自己的 AI 提供方时也不会跟着走。';
+
+  @override
+  String get privacyGroupSentToRead => '发出去供阅读';
+
+  @override
+  String get privacySentToReadWhat =>
+      '当你请 Action 解读一项采集时，那份内容会发送给读它的 AI 服务。这不是运行在设备上的 AI。';
+
+  @override
+  String get privacySentToReadWhen => '只发送你选中的那一项采集，而且只在你提出请求时。';
+
+  @override
+  String get privacyGroupYourProvider => '发给你自己的 AI 提供方';
+
+  @override
+  String get privacyProviderWhat =>
+      '如果你在设置里连接了 AI 提供方，Intelligence 工具会用你自己的 API 密钥，把你选中的内容发给该提供方——OpenAI、Anthropic、Google 或你选定的 endpoint。';
+
+  @override
+  String get privacyProviderDirect => '它直接发给他们。不经过任何属于 Action 的服务器。';
+
+  @override
+  String get privacyProviderScope =>
+      '只发送你为某个工具挑选的内容，而且只在你运行它时。你其他的待办、采集和来源永远不会被一并带上，后台也从不发送任何东西。';
+
+  @override
+  String get privacyProviderKey =>
+      '你的 API 密钥保存在本机的安全存储中，并且只发送给它所属的那个提供方。对于拿到你已解锁设备的人来说，安全存储是一道真实的阻碍，但它并非绝对，Action 也不会声称相反。';
+
+  @override
+  String get privacyProviderLocalTools =>
+      '有两个工具从不发送任何东西：隐去敏感信息，以及查看文件来自哪里。两者完全在本机运行。';
+
+  @override
+  String get privacyProviderAgreement =>
+      '你的提供方拿你发过去的东西做什么，由你与他们的协议决定，而不是由 Action 决定。';
+
+  @override
+  String get privacyGroupCloud => '存在云端';
+
+  @override
+  String get privacyCloudWhat =>
+      '当你确认一项待办时，它的一条简短记录可能以这次安装的匿名标识保存下来：标题、状态、紧急程度、类别、期限、金额、建议的下一步和时间戳。';
+
+  @override
+  String get privacyCloudNotSent => '你的采集、从中读出的文字、一项待办的步骤和要点，以及你的提醒，都不会被发送。';
+
+  @override
+  String get privacyCloudNotBackup => '这不是备份。没有办法把它恢复到新设备，丢失这次安装也会一并丢失那个匿名标识。';
+
+  @override
+  String get privacyGroupDiagnostics => '诊断';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action 记录应用里发生了什么的匿名计数——某次采集开始了，某次提取成功或失败，某次搜索没找到东西，某项待办完成了。';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      '这些是计数，不是内容。任何标题、金额、期限、编号、采集到的文字或搜索词都不会被带上，匿名标识以及待办或采集的任何标识符也不会。';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      '如果应用崩溃，错误和发生的位置会被上报，以便修复。Action 不会把你的数据附在那些报告里。';
+
+  @override
+  String get privacySectionYourData => '你的数据';
+
+  @override
+  String get privacyYourDataFootnote =>
+      '清除采集不会动你的待办。采集已经没有的待办照样能用，只是不再显示它是从哪来的。';
+
+  @override
+  String get privacyClearCaptures => '清除采集';
+
+  @override
+  String get privacyClearCapturesDescription => '删除每一项采集及其图片文件。';
+
+  @override
+  String get privacyDeleteAll => '删除我的所有数据';
+
+  @override
+  String get privacyDeleteAllDescription => '待办、步骤、提醒、采集，以及上面的云端记录。';
+
+  @override
+  String get privacyClearCapturesTitle => '清除采集？';
+
+  @override
+  String get privacyClearCapturesBody => '每一项采集及其图片都会从本机删除。你的待办完全保持原样。';
+
+  @override
+  String get privacyCapturesDeleted => '采集已删除。';
+
+  @override
+  String get privacyCapturesPartlyDeleted => '有些采集没能删除。其他什么都没有改动。';
+
+  @override
+  String get privacyDeleteAllTitle => '删除你的所有数据？';
+
+  @override
+  String get privacyDeleteAllBody =>
+      '这会删除本机的每一项待办、步骤、提醒和采集，以及上面列出的云端记录。无法撤销，也没有备份可以恢复。';
+
+  @override
+  String get privacyDeleteEverything => '全部删除';
+
+  @override
+  String get privacyDeletedAll => '全部已删除。';
+
+  @override
+  String get privacyDeleteFailed => '你的数据未能删除。';
+
+  @override
+  String get privacyDeletedUnverified =>
+      '本机上的一切都已删除。Action 没能连上云端确认那里没有残留，会再检查一次。';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return '已删除，$leftovers除外。';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action 会再试一次。';
+
+  @override
+  String get privacyCloudCheckIncomplete => 'Action 没能查完云端，会再试一次。';
+
+  @override
+  String get privacyLeftoverCaptures => '部分采集';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 条云端记录',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first和$second';
+  }
+
+  @override
+  String get privacyCloudDeleted => '云端记录已删除。';
+
+  @override
+  String get privacyCloudUnreachable => '仍然联系不上它们。Action 会再试一次。';
+
+  @override
+  String get privacyPendingTitle => '还需删除';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '上次有 $count 条云端记录联系不上。Action 会自己再试，你也可以现在重试。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => '重试';
 
   @override
   String get evidenceTitle => '这是哪儿来的';
@@ -4799,6 +5719,466 @@ class AppL10nZhHant extends AppL10nZh {
 
   @override
   String get editRemoveAmount => '刪除金額';
+
+  @override
+  String get securityTitle => '安全與隱私';
+
+  @override
+  String get securitySectionProtection => '保護';
+
+  @override
+  String get securityAppLockUnavailable =>
+      '應用程式鎖需要本機設有螢幕鎖。請先在裝置設定裡設定 PIN、圖形、密碼或指紋。';
+
+  @override
+  String get securityAppLockOn => 'Action 請你的裝置確認是你本人。';
+
+  @override
+  String get securityAppLockOff => '開啟 Action 時需要你的指紋、臉部或裝置 PIN。';
+
+  @override
+  String get securityAskAgain => '再次詢問';
+
+  @override
+  String get securityAskAgainDescription => 'Action 在背景停留多久後鎖定。';
+
+  @override
+  String get securityScreenPrivacy => '螢幕隱私';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      '請求 Android 阻擋截圖與螢幕錄影，並在應用程式切換器中隱藏 Action。';
+
+  @override
+  String get securityPrivateReminders => '私密提醒';
+
+  @override
+  String get securityPrivateRemindersOn => '提醒只說有事在等你。';
+
+  @override
+  String get securityPrivateRemindersOff => '提醒會顯示待辦的標題。開啟這項可以讓它不出現在鎖定畫面上。';
+
+  @override
+  String get securityLockNow => '立即鎖定';
+
+  @override
+  String get securityLockNowDescription => '不用等，直接關門。';
+
+  @override
+  String get securitySectionStorage => '你的資料怎麼存';
+
+  @override
+  String get securityStorageDataLabel => '你的待辦、擷取和設定';
+
+  @override
+  String get securityStorageDataDetail =>
+      '它們放在本應用程式自己的私有儲存區裡，其他應用程式讀不到，Android 會作為裝置加密的一部分加密它們。Action 沒有在上面再加一層自己的加密。';
+
+  @override
+  String get securityStorageKeyLabel => '你的 AI 供應方金鑰';
+
+  @override
+  String get securityStorageKeyDetail =>
+      '存在 Android Keystore 裡，而不是和其他東西放在一起，儲存之後不會再顯示。';
+
+  @override
+  String get securityStorageGapLabel => '這些涵蓋不到的地方';
+
+  @override
+  String get securityStorageGapDetail =>
+      '這些都擋不住有人拿著你已解鎖的裝置使用，被改動或已 root 的系統也能讀到比正常系統更多的東西。應用程式鎖是對前一種情況有幫助的那項設定。';
+
+  @override
+  String get securitySectionInformation => '你的資訊';
+
+  @override
+  String get securityWhereInfoDescription => '你的資料可能走的每條路，以及離開本機的那兩條。';
+
+  @override
+  String get securityAppLockRefused => '沒有確認，所以什麼都沒變。';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      '本機沒有設定螢幕鎖。請在裝置設定裡新增 PIN、圖形、密碼或指紋，然後再試一次。';
+
+  @override
+  String get securityScreenPrivacyRefused => '本機沒有套用螢幕隱私，所以它保持關閉，而不是被顯示成已開啟。';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 則已排程的提醒現在說得更少了。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已更新 $count 則已排程的提醒。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => '立即';
+
+  @override
+  String get appLockDelayOneMinute => '1 分鐘後';
+
+  @override
+  String get appLockDelayFiveMinutes => '5 分鐘後';
+
+  @override
+  String get securityDelayImmediatelyDescription => '每次 Action 離開畫面時';
+
+  @override
+  String get securityDelayOneMinuteDescription => '夠回一則訊息';
+
+  @override
+  String get securityDelayFiveMinutesDescription => '夠接一通電話';
+
+  @override
+  String get securityHeroProtected => '已保護';
+
+  @override
+  String get securityHeroNothingOn => '什麼都沒開';
+
+  @override
+  String get securityHeroFootnote => '這裡的一切都在本機執行。這些設定都不會被傳送到任何地方，也都不能被遠端更改。';
+
+  @override
+  String get securityHeadlineNone => '有三項保護可用';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first 已開啟';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first 和 $second 已開啟';
+  }
+
+  @override
+  String get securityHeadlineAll => '三項保護全部開啟';
+
+  @override
+  String get securityTransfersTitle => '有什麼離開了本機';
+
+  @override
+  String get securityTransfersNoProvider => '沒有連接 AI 供應方，所以根本沒有任何東西被送去分析。';
+
+  @override
+  String get securityTransfersDescription =>
+      '在有東西被送出去的那一刻就記在這裡，不管有沒有回來。只記工具、供應方和大小——絕不記裡面是什麼。在本機保留 90 天，不傳往任何地方。';
+
+  @override
+  String get securityClear => '清除';
+
+  @override
+  String get securityNothingSent => '還沒有傳送過任何東西';
+
+  @override
+  String get securityNothingSentDescription => '當你執行用到你的 AI 供應方的工具時，它會列在這裡。';
+
+  @override
+  String get securityClearHistoryTitle => '清除這份紀錄？';
+
+  @override
+  String get securityClearHistoryBody => '關於傳送過什麼的紀錄會從本機刪除。這並不會收回任何已經送出去的東西。';
+
+  @override
+  String get securityUnnamedTool => '一個 Intelligence 工具';
+
+  @override
+  String get securityYourProvider => '你的 AI 供應方';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 頁',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個檔案',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => '一小段文字';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count 千字元';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return '已傳送至 $provider。';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return '已傳送至 $provider · $size。';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count 週前';
+  }
+
+  @override
+  String get helpTitle => '說明';
+
+  @override
+  String get helpAddQuestion => '我可以加入什麼？';
+
+  @override
+  String get helpAddAnswer => '一張截圖，一張信件或帳單的照片，或者你貼進來的文字。含有日期、金額或某項請求的內容效果最好。';
+
+  @override
+  String get helpReviewQuestion => 'Action 為什麼要我核對？';
+
+  @override
+  String get helpReviewAnswer =>
+      '因為讀文件的機器可能讀錯，而一個悄悄弄錯的期限比沒有期限更糟。Action 會顯示它找到了什麼、來自哪些字，而且在你確認之前什麼都不會儲存。';
+
+  @override
+  String get helpVaryQuestion => '為什麼再試一次結果會變？';
+
+  @override
+  String get helpVaryAnswer =>
+      '讀你文件的服務不是確定性的，所以同一項擷取可能回來得略有不同。核對這一步存在也正是因為這個——不變的那一部分是你。';
+
+  @override
+  String get helpLateQuestion => '我的提醒為什麼遲到了？';
+
+  @override
+  String get helpLateAnswer =>
+      '提醒由 Android 排程，具體什麼時候送達由 Android 決定。省電、Doze 和廠商的電源設定都可能讓它延遲。Action 從不承諾分秒不差的提醒。';
+
+  @override
+  String get helpDataQuestion => '我的資料在哪裡？';
+
+  @override
+  String get helpDataAnswer =>
+      '幾乎全都在本機：你的擷取、待辦、步驟、提醒和搜尋。兩個例外——你請 Action 讀的內容會送到讀它的 AI 服務，而一則已確認待辦的簡短紀錄可能以匿名識別碼存在雲端。設定裡的「隱私與資料」會準確列出那則紀錄包含什麼。';
+
+  @override
+  String get helpBackupQuestion => '這是備份嗎？';
+
+  @override
+  String get helpBackupAnswer =>
+      '不是。雲端紀錄無法還原到新裝置，也沒有帳號可以登入。如果你解除安裝 Action 或遺失這台裝置，上面的資料就沒了。';
+
+  @override
+  String get helpCorrectQuestion => '我怎麼改一項待辦？';
+
+  @override
+  String get helpCorrectAnswer =>
+      '開啟它，然後編輯任何欄位——標題、期限、金額或建議的下一步。步驟隨時可以新增、調整順序、完成和刪除。編輯一項待辦從不向 AI 服務詢問任何東西。';
+
+  @override
+  String get privacyTitle => '隱私與資料';
+
+  @override
+  String get privacyIntro => 'Action 盡量把一切都留在本機。有兩件事是例外，兩件都列在下面。';
+
+  @override
+  String get privacyGroupOnDevice => '在本機';
+
+  @override
+  String get privacyOnDeviceCaptures => '擷取——你加入的截圖、照片和文字，以及從中讀出的文字。';
+
+  @override
+  String get privacyOnDeviceActions => '待辦，及其步驟、要點和提醒。';
+
+  @override
+  String get privacyOnDeviceSearch => '搜尋。你的搜尋在這裡執行，從不傳往任何地方，關掉畫面後也不保留。';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      '照片儲存時不帶位置。手機寫進圖片裡的座標、時間和相機資訊，會在擷取被儲存之前移除，所以它們既不留在這裡，你把擷取傳給自己的 AI 供應方時也不會跟著走。';
+
+  @override
+  String get privacyGroupSentToRead => '送出去供閱讀';
+
+  @override
+  String get privacySentToReadWhat =>
+      '當你請 Action 解讀一項擷取時，那份內容會傳送給讀它的 AI 服務。這不是在裝置上執行的 AI。';
+
+  @override
+  String get privacySentToReadWhen => '只傳送你選取的那一項擷取，而且只在你提出請求時。';
+
+  @override
+  String get privacyGroupYourProvider => '傳給你自己的 AI 供應方';
+
+  @override
+  String get privacyProviderWhat =>
+      '如果你在設定裡連接了 AI 供應方，Intelligence 工具會用你自己的 API 金鑰，把你選取的內容傳給該供應方——OpenAI、Anthropic、Google 或你選定的 endpoint。';
+
+  @override
+  String get privacyProviderDirect => '它直接傳給他們。不經過任何屬於 Action 的伺服器。';
+
+  @override
+  String get privacyProviderScope =>
+      '只傳送你為某個工具挑選的內容，而且只在你執行它時。你其他的待辦、擷取和來源永遠不會被一併帶上，背景也從不傳送任何東西。';
+
+  @override
+  String get privacyProviderKey =>
+      '你的 API 金鑰保存在本機的安全儲存區中，而且只傳送給它所屬的那個供應方。對於拿到你已解鎖裝置的人來說，安全儲存區是一道真實的阻礙，但它並非絕對，Action 也不會宣稱相反。';
+
+  @override
+  String get privacyProviderLocalTools =>
+      '有兩個工具從不傳送任何東西：隱去敏感資訊，以及查看檔案來自哪裡。兩者完全在本機執行。';
+
+  @override
+  String get privacyProviderAgreement =>
+      '你的供應方拿你傳過去的東西做什麼，由你與他們的協議決定，而不是由 Action 決定。';
+
+  @override
+  String get privacyGroupCloud => '存在雲端';
+
+  @override
+  String get privacyCloudWhat =>
+      '當你確認一項待辦時，它的一則簡短紀錄可能以這次安裝的匿名識別碼儲存下來：標題、狀態、緊急程度、類別、期限、金額、建議的下一步和時間戳記。';
+
+  @override
+  String get privacyCloudNotSent => '你的擷取、從中讀出的文字、一項待辦的步驟和要點，以及你的提醒，都不會被傳送。';
+
+  @override
+  String get privacyCloudNotBackup => '這不是備份。沒有辦法把它還原到新裝置，遺失這次安裝也會一併遺失那個匿名識別碼。';
+
+  @override
+  String get privacyGroupDiagnostics => '診斷';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action 記錄應用程式裡發生了什麼的匿名計數——某次擷取開始了，某次擷取內容成功或失敗，某次搜尋沒找到東西，某項待辦完成了。';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      '這些是計數，不是內容。任何標題、金額、期限、編號、擷取到的文字或搜尋詞都不會被帶上，匿名識別碼以及待辦或擷取的任何識別碼也不會。';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      '如果應用程式當掉，錯誤和發生的位置會被回報，以便修正。Action 不會把你的資料附在那些報告裡。';
+
+  @override
+  String get privacySectionYourData => '你的資料';
+
+  @override
+  String get privacyYourDataFootnote =>
+      '清除擷取不會動你的待辦。擷取已經沒有的待辦照樣能用，只是不再顯示它是從哪來的。';
+
+  @override
+  String get privacyClearCaptures => '清除擷取';
+
+  @override
+  String get privacyClearCapturesDescription => '刪除每一項擷取及其圖片檔案。';
+
+  @override
+  String get privacyDeleteAll => '刪除我的所有資料';
+
+  @override
+  String get privacyDeleteAllDescription => '待辦、步驟、提醒、擷取，以及上面的雲端紀錄。';
+
+  @override
+  String get privacyClearCapturesTitle => '清除擷取？';
+
+  @override
+  String get privacyClearCapturesBody => '每一項擷取及其圖片都會從本機刪除。你的待辦完全保持原樣。';
+
+  @override
+  String get privacyCapturesDeleted => '擷取已刪除。';
+
+  @override
+  String get privacyCapturesPartlyDeleted => '有些擷取沒能刪除。其他什麼都沒有變動。';
+
+  @override
+  String get privacyDeleteAllTitle => '刪除你的所有資料？';
+
+  @override
+  String get privacyDeleteAllBody =>
+      '這會刪除本機的每一項待辦、步驟、提醒和擷取，以及上面列出的雲端紀錄。無法復原，也沒有備份可以還原。';
+
+  @override
+  String get privacyDeleteEverything => '全部刪除';
+
+  @override
+  String get privacyDeletedAll => '全部已刪除。';
+
+  @override
+  String get privacyDeleteFailed => '你的資料未能刪除。';
+
+  @override
+  String get privacyDeletedUnverified =>
+      '本機上的一切都已刪除。Action 沒能連上雲端確認那裡沒有殘留，會再檢查一次。';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return '已刪除，$leftovers除外。';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action 會再試一次。';
+
+  @override
+  String get privacyCloudCheckIncomplete => 'Action 沒能查完雲端，會再試一次。';
+
+  @override
+  String get privacyLeftoverCaptures => '部分擷取';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 則雲端紀錄',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first和$second';
+  }
+
+  @override
+  String get privacyCloudDeleted => '雲端紀錄已刪除。';
+
+  @override
+  String get privacyCloudUnreachable => '仍然聯繫不上它們。Action 會再試一次。';
+
+  @override
+  String get privacyPendingTitle => '還需刪除';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '上次有 $count 則雲端紀錄聯繫不上。Action 會自己再試，你也可以現在重試。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => '重試';
 
   @override
   String get evidenceTitle => '這是哪來的';

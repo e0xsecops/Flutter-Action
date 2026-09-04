@@ -1631,6 +1631,495 @@ class AppL10nTh extends AppL10n {
   String get editRemoveAmount => 'นำจำนวนเงินออก';
 
   @override
+  String get securityTitle => 'ความปลอดภัยและความเป็นส่วนตัว';
+
+  @override
+  String get securitySectionProtection => 'การป้องกัน';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'การล็อกแอปต้องมีการล็อกหน้าจอบนเครื่องนี้ ตั้งค่า PIN รูปแบบ รหัสผ่าน หรือลายนิ้วมือในการตั้งค่าเครื่องก่อน';
+
+  @override
+  String get securityAppLockOn =>
+      'Action ขอให้เครื่องของคุณยืนยันว่าเป็นคุณจริง';
+
+  @override
+  String get securityAppLockOff =>
+      'ต้องใช้ลายนิ้วมือ ใบหน้า หรือ PIN ของเครื่องเพื่อเปิด Action';
+
+  @override
+  String get securityAskAgain => 'ถามอีกครั้ง';
+
+  @override
+  String get securityAskAgainDescription =>
+      'Action อยู่เบื้องหลังได้นานแค่ไหนก่อนจะล็อก';
+
+  @override
+  String get securityScreenPrivacy => 'ความเป็นส่วนตัวของหน้าจอ';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'ขอให้ Android บล็อกการจับภาพและการบันทึกหน้าจอ และซ่อน Action ในตัวสลับแอป';
+
+  @override
+  String get securityPrivateReminders => 'การเตือนแบบส่วนตัว';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'การเตือนบอกเพียงว่ามีบางอย่างรอคุณอยู่';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'การเตือนแสดงชื่องาน เปิดสิ่งนี้เพื่อไม่ให้ชื่อไปอยู่บนหน้าจอล็อก';
+
+  @override
+  String get securityLockNow => 'ล็อกเดี๋ยวนี้';
+
+  @override
+  String get securityLockNowDescription => 'ปิดประตูโดยไม่ต้องรอ';
+
+  @override
+  String get securitySectionStorage => 'ข้อมูลของคุณถูกเก็บอย่างไร';
+
+  @override
+  String get securityStorageDataLabel =>
+      'งาน สิ่งที่บันทึกไว้ และการตั้งค่าของคุณ';
+
+  @override
+  String get securityStorageDataDetail =>
+      'ทั้งหมดอยู่ในที่เก็บส่วนตัวของแอปนี้เอง ซึ่งแอปอื่นอ่านไม่ได้ และ Android เข้ารหัสไว้เป็นส่วนหนึ่งของการเข้ารหัสเครื่อง Action ไม่ได้เพิ่มชั้นที่สองของตัวเองทับลงไป';
+
+  @override
+  String get securityStorageKeyLabel => 'กุญแจผู้ให้บริการ AI ของคุณ';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'เก็บไว้ใน Android Keystore แทนที่จะอยู่รวมกับส่วนอื่น และไม่แสดงอีกเลยหลังจากคุณบันทึก';
+
+  @override
+  String get securityStorageGapLabel => 'สิ่งที่ยังไม่ครอบคลุม';
+
+  @override
+  String get securityStorageGapDetail =>
+      'ไม่มีข้อใดป้องกันคนที่ใช้เครื่องของคุณขณะปลดล็อกอยู่ และระบบที่ถูกดัดแปลงหรือรูทอ่านได้มากกว่าระบบปกติ การล็อกแอปคือการตั้งค่าที่ช่วยเรื่องแรก';
+
+  @override
+  String get securitySectionInformation => 'ข้อมูลของคุณ';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'ทุกเส้นทางที่ข้อมูลของคุณไปได้ และสองเส้นทางที่ออกจากเครื่องนี้';
+
+  @override
+  String get securityAppLockRefused => 'ยังไม่ได้ยืนยัน จึงไม่มีอะไรเปลี่ยน';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'เครื่องนี้ยังไม่ได้ตั้งการล็อกหน้าจอ เพิ่ม PIN รูปแบบ รหัสผ่าน หรือลายนิ้วมือในการตั้งค่าเครื่อง แล้วลองอีกครั้ง';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'เครื่องนี้ไม่ยอมใช้ความเป็นส่วนตัวของหน้าจอ จึงปล่อยให้ปิดไว้แทนที่จะแสดงว่าเปิดอยู่';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'การเตือนที่ตั้งไว้ $count รายการพูดน้อยลงแล้ว',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'อัปเดตการเตือนที่ตั้งไว้ $count รายการ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'ทันที';
+
+  @override
+  String get appLockDelayOneMinute => 'หลัง 1 นาที';
+
+  @override
+  String get appLockDelayFiveMinutes => 'หลัง 5 นาที';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'ทุกครั้งที่ Action ออกจากหน้าจอ';
+
+  @override
+  String get securityDelayOneMinuteDescription =>
+      'นานพอจะตอบข้อความหนึ่งข้อความ';
+
+  @override
+  String get securityDelayFiveMinutesDescription => 'นานพอจะรับสายหนึ่งสาย';
+
+  @override
+  String get securityHeroProtected => 'มีการป้องกันอยู่';
+
+  @override
+  String get securityHeroNothingOn => 'ยังไม่ได้เปิดอะไรเลย';
+
+  @override
+  String get securityHeroFootnote =>
+      'ทุกอย่างที่นี่ทำงานบนเครื่องนี้ ไม่มีการตั้งค่าใดถูกส่งไปที่ไหน และไม่มีข้อใดถูกเปลี่ยนจากระยะไกลได้';
+
+  @override
+  String get securityHeadlineNone => 'มีการป้องกันสามอย่างให้เลือกใช้';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first เปิดอยู่';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first และ $second เปิดอยู่';
+  }
+
+  @override
+  String get securityHeadlineAll => 'การป้องกันทั้งสามอย่างเปิดอยู่';
+
+  @override
+  String get securityTransfersTitle => 'สิ่งที่ออกจากเครื่องนี้ไป';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'ยังไม่ได้เชื่อมต่อผู้ให้บริการ AI จึงไม่มีอะไรถูกส่งไปวิเคราะห์เลย';
+
+  @override
+  String get securityTransfersDescription =>
+      'บันทึกที่นี่ในวินาทีที่มีบางอย่างถูกส่งออกไป ไม่ว่าจะมีคำตอบกลับมาหรือไม่ มีเพียงเครื่องมือ ผู้ให้บริการ และขนาด — ไม่เคยมีเนื้อหาข้างใน เก็บไว้ 90 วันบนเครื่องนี้และไม่ส่งไปที่ใด';
+
+  @override
+  String get securityClear => 'ล้าง';
+
+  @override
+  String get securityNothingSent => 'ยังไม่มีอะไรถูกส่ง';
+
+  @override
+  String get securityNothingSentDescription =>
+      'เมื่อคุณใช้เครื่องมือที่เรียกผู้ให้บริการ AI ของคุณ มันจะแสดงอยู่ที่นี่';
+
+  @override
+  String get securityClearHistoryTitle => 'ล้างประวัตินี้ไหม';
+
+  @override
+  String get securityClearHistoryBody =>
+      'บันทึกว่ามีอะไรถูกส่งไปบ้างจะถูกลบจากเครื่องนี้ แต่ไม่ได้เรียกคืนสิ่งที่ส่งออกไปแล้ว';
+
+  @override
+  String get securityUnnamedTool => 'เครื่องมือ Intelligence หนึ่งรายการ';
+
+  @override
+  String get securityYourProvider => 'ผู้ให้บริการ AI ของคุณ';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count หน้า',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ไฟล์',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'ข้อความสั้น ๆ';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count พันอักขระ';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return 'ส่งไปยัง $provider';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return 'ส่งไปยัง $provider · $size';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count สัปดาห์ก่อน';
+  }
+
+  @override
+  String get helpTitle => 'ความช่วยเหลือ';
+
+  @override
+  String get helpAddQuestion => 'ฉันเพิ่มอะไรได้บ้าง';
+
+  @override
+  String get helpAddAnswer =>
+      'ภาพหน้าจอ รูปถ่ายจดหมายหรือใบเรียกเก็บเงิน หรือข้อความที่คุณวาง อะไรที่มีวันที่ จำนวนเงิน หรือคำขอ จะได้ผลดีที่สุด';
+
+  @override
+  String get helpReviewQuestion => 'ทำไม Action ถึงให้ฉันตรวจสอบ';
+
+  @override
+  String get helpReviewAnswer =>
+      'เพราะเครื่องที่อ่านเอกสารอาจอ่านผิด และกำหนดส่งที่ผิดอย่างเงียบ ๆ แย่กว่าการไม่มีกำหนดส่งเลย Action แสดงสิ่งที่พบและคำที่มันมาจาก และจะไม่บันทึกอะไรจนกว่าคุณจะยืนยัน';
+
+  @override
+  String get helpVaryQuestion => 'ทำไมผลลัพธ์เปลี่ยนไปเมื่อลองอีกครั้ง';
+
+  @override
+  String get helpVaryAnswer =>
+      'บริการที่อ่านเอกสารของคุณไม่ได้ให้ผลตายตัว สิ่งที่บันทึกไว้อันเดียวกันจึงอาจกลับมาต่างออกไปเล็กน้อย นั่นก็เป็นอีกเหตุผลที่มีขั้นตอนตรวจสอบ — คุณคือส่วนที่ไม่เปลี่ยน';
+
+  @override
+  String get helpLateQuestion => 'ทำไมการเตือนของฉันมาช้า';
+
+  @override
+  String get helpLateAnswer =>
+      'การเตือนถูกตั้งเวลาผ่าน Android และ Android เป็นผู้ตัดสินว่าจะส่งเมื่อใดกันแน่ การประหยัดแบตเตอรี่ Doze และการตั้งค่าพลังงานของผู้ผลิตล้วนทำให้ช้าได้ Action ไม่เคยสัญญาว่าจะเตือนตรงนาที';
+
+  @override
+  String get helpDataQuestion => 'ข้อมูลของฉันอยู่ที่ไหน';
+
+  @override
+  String get helpDataAnswer =>
+      'เกือบทั้งหมดอยู่บนเครื่องนี้ ทั้งสิ่งที่บันทึกไว้ งาน ขั้นตอน การเตือน และการค้นหาของคุณ มีสองข้อยกเว้น — เนื้อหาที่คุณให้ Action อ่านจะถูกส่งไปยังบริการ AI ที่อ่านมัน และบันทึกสั้น ๆ ของงานที่ยืนยันแล้วอาจถูกเก็บบนคลาวด์ภายใต้รหัสนิรนาม หัวข้อความเป็นส่วนตัวและข้อมูลในการตั้งค่าระบุไว้ชัดเจนว่าบันทึกนั้นมีอะไรบ้าง';
+
+  @override
+  String get helpBackupQuestion => 'นี่เป็นข้อมูลสำรองหรือเปล่า';
+
+  @override
+  String get helpBackupAnswer =>
+      'ไม่ใช่ บันทึกบนคลาวด์กู้คืนไปยังเครื่องใหม่ไม่ได้ และไม่มีบัญชีให้เข้าสู่ระบบ ถ้าคุณถอนการติดตั้ง Action หรือทำเครื่องนี้หาย ข้อมูลบนเครื่องก็หายไป';
+
+  @override
+  String get helpCorrectQuestion => 'ฉันแก้ไขงานอย่างไร';
+
+  @override
+  String get helpCorrectAnswer =>
+      'เปิดงานนั้นแล้วแก้ช่องไหนก็ได้ — ชื่อ กำหนดส่ง จำนวนเงิน หรือขั้นตอนถัดไปที่แนะนำ คุณเพิ่ม จัดลำดับใหม่ ทำให้เสร็จ และลบขั้นตอนได้ทุกเมื่อ การแก้ไขงานไม่เคยถามอะไรกับบริการ AI';
+
+  @override
+  String get privacyTitle => 'ความเป็นส่วนตัวและข้อมูล';
+
+  @override
+  String get privacyIntro =>
+      'Action เก็บทุกอย่างเท่าที่ทำได้ไว้บนเครื่องนี้ มีสองสิ่งที่เป็นข้อยกเว้น และทั้งสองอยู่ในรายการด้านล่าง';
+
+  @override
+  String get privacyGroupOnDevice => 'บนเครื่องนี้';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'สิ่งที่บันทึกไว้ — ภาพหน้าจอ รูปภาพ และข้อความที่คุณเพิ่ม รวมถึงข้อความที่อ่านได้จากสิ่งเหล่านั้น';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'งาน พร้อมขั้นตอน ข้อมูล และการเตือนของมัน';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'การค้นหา การค้นหาของคุณทำงานที่นี่ ไม่เคยถูกส่งไปที่ใด และไม่ถูกเก็บไว้หลังจากคุณปิดหน้าจอ';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'ภาพถ่ายถูกเก็บโดยไม่มีตำแหน่ง พิกัด เวลา และรายละเอียดกล้องที่โทรศัพท์เขียนไว้ในภาพจะถูกลบก่อนบันทึก จึงไม่ถูกเก็บไว้ที่นี่และไม่ติดไปด้วยเมื่อคุณส่งภาพไปยังผู้ให้บริการ AI ของคุณ';
+
+  @override
+  String get privacyGroupSentToRead => 'ส่งไปเพื่อให้อ่าน';
+
+  @override
+  String get privacySentToReadWhat =>
+      'เมื่อคุณขอให้ Action ตีความสิ่งที่บันทึกไว้ เนื้อหานั้นจะถูกส่งไปยังบริการ AI ที่อ่านมัน นี่ไม่ใช่ AI ที่ทำงานบนเครื่อง';
+
+  @override
+  String get privacySentToReadWhen =>
+      'ส่งเฉพาะสิ่งที่บันทึกไว้ซึ่งคุณเลือก และเฉพาะเมื่อคุณขอเท่านั้น';
+
+  @override
+  String get privacyGroupYourProvider => 'ส่งไปยังผู้ให้บริการ AI ของคุณเอง';
+
+  @override
+  String get privacyProviderWhat =>
+      'ถ้าคุณเชื่อมต่อผู้ให้บริการ AI ในการตั้งค่า เครื่องมือ Intelligence จะส่งเนื้อหาที่คุณเลือกไปยังผู้ให้บริการนั้น — OpenAI, Anthropic, Google หรือ endpoint ที่คุณเลือก — โดยใช้กุญแจ API ของคุณเอง';
+
+  @override
+  String get privacyProviderDirect =>
+      'มันไปหาพวกเขาโดยตรง ไม่ผ่านเซิร์ฟเวอร์ใดที่เป็นของ Action';
+
+  @override
+  String get privacyProviderScope =>
+      'ส่งเฉพาะสิ่งที่คุณเลือกให้เครื่องมือ และเฉพาะตอนที่คุณสั่งให้ทำงาน งาน สิ่งที่บันทึกไว้ และแหล่งที่มาอื่นของคุณไม่เคยถูกรวมไปด้วย และไม่เคยมีอะไรถูกส่งอยู่เบื้องหลัง';
+
+  @override
+  String get privacyProviderKey =>
+      'กุญแจ API ของคุณถูกเก็บไว้ในที่เก็บนิรภัยของเครื่องนี้ และส่งไปยังผู้ให้บริการเจ้าของกุญแจเท่านั้น ที่เก็บนิรภัยเป็นอุปสรรคจริงสำหรับคนที่ได้เครื่องของคุณตอนปลดล็อกอยู่ แต่ไม่ใช่สิ่งสัมบูรณ์ และ Action จะไม่อ้างเป็นอย่างอื่น';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'มีสองเครื่องมือที่ไม่เคยส่งอะไรออกไปเลย คือการซ่อนรายละเอียดอ่อนไหว และการตรวจว่าไฟล์มาจากไหน ทั้งสองทำงานบนเครื่องนี้ทั้งหมด';
+
+  @override
+  String get privacyProviderAgreement =>
+      'ผู้ให้บริการของคุณจะทำอะไรกับสิ่งที่คุณส่งไปนั้นเป็นไปตามข้อตกลงระหว่างคุณกับเขา ไม่ใช่ตาม Action';
+
+  @override
+  String get privacyGroupCloud => 'เก็บไว้บนคลาวด์';
+
+  @override
+  String get privacyCloudWhat =>
+      'เมื่อคุณยืนยันงานหนึ่ง บันทึกสั้น ๆ ของงานนั้นอาจถูกเก็บไว้ภายใต้รหัสนิรนามของการติดตั้งนี้ ได้แก่ ชื่อ สถานะ ความเร่งด่วน หมวดหมู่ กำหนดส่ง จำนวนเงิน ขั้นตอนถัดไปที่แนะนำ และเวลาที่บันทึก';
+
+  @override
+  String get privacyCloudNotSent =>
+      'สิ่งที่บันทึกไว้ของคุณ ข้อความที่อ่านได้จากมัน ขั้นตอนและข้อมูลของงาน รวมถึงการเตือนของคุณ จะไม่ถูกส่ง';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'นี่ไม่ใช่ข้อมูลสำรอง ไม่มีทางกู้คืนไปยังเครื่องใหม่ และการสูญเสียการติดตั้งนี้ก็พารหัสนิรนามหายไปด้วย';
+
+  @override
+  String get privacyGroupDiagnostics => 'การวินิจฉัย';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action บันทึกจำนวนนับแบบนิรนามว่ามีอะไรเกิดขึ้นในแอป — ว่ามีการเริ่มบันทึกสิ่งหนึ่ง ว่าการดึงข้อมูลสำเร็จหรือไม่ ว่าการค้นหาไม่พบอะไร ว่างานหนึ่งเสร็จแล้ว';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'สิ่งเหล่านี้คือจำนวนนับ ไม่ใช่เนื้อหา ไม่เคยมีชื่อ จำนวนเงิน กำหนดส่ง เลขอ้างอิง ข้อความที่บันทึกไว้ หรือคำค้นใดถูกรวมไปด้วย และรหัสนิรนามหรือรหัสใด ๆ ของงานหรือสิ่งที่บันทึกไว้ก็เช่นกัน';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'ถ้าแอปหยุดทำงาน ข้อผิดพลาดและตำแหน่งที่เกิดจะถูกรายงานเพื่อให้แก้ไขได้ Action ไม่แนบข้อมูลของคุณไปกับรายงานเหล่านั้น';
+
+  @override
+  String get privacySectionYourData => 'ข้อมูลของคุณ';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'การล้างสิ่งที่บันทึกไว้ไม่กระทบงานของคุณ งานที่สิ่งบันทึกหายไปแล้วก็ยังใช้ได้ เพียงแต่ไม่แสดงอีกต่อไปว่ามันมาจากอะไร';
+
+  @override
+  String get privacyClearCaptures => 'ล้างสิ่งที่บันทึกไว้';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'ลบทุกสิ่งที่บันทึกไว้พร้อมไฟล์ภาพของมัน';
+
+  @override
+  String get privacyDeleteAll => 'ลบข้อมูลทั้งหมดของฉัน';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'งาน ขั้นตอน การเตือน สิ่งที่บันทึกไว้ และบันทึกบนคลาวด์ข้างต้น';
+
+  @override
+  String get privacyClearCapturesTitle => 'ล้างสิ่งที่บันทึกไว้ไหม';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'ทุกสิ่งที่บันทึกไว้และภาพของมันจะถูกลบจากเครื่องนี้ งานของคุณยังคงอยู่เหมือนเดิมทุกประการ';
+
+  @override
+  String get privacyCapturesDeleted => 'ลบสิ่งที่บันทึกไว้แล้ว';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'บางรายการที่บันทึกไว้ลบไม่ได้ ไม่มีอย่างอื่นถูกเปลี่ยน';
+
+  @override
+  String get privacyDeleteAllTitle => 'ลบข้อมูลทั้งหมดของคุณไหม';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'การทำเช่นนี้ลบทุกงาน ขั้นตอน การเตือน และสิ่งที่บันทึกไว้บนเครื่องนี้ รวมถึงบันทึกบนคลาวด์ที่ระบุไว้ข้างต้น ย้อนกลับไม่ได้ และไม่มีข้อมูลสำรองให้กู้คืน';
+
+  @override
+  String get privacyDeleteEverything => 'ลบทั้งหมด';
+
+  @override
+  String get privacyDeletedAll => 'ลบทุกอย่างแล้ว';
+
+  @override
+  String get privacyDeleteFailed => 'ลบข้อมูลของคุณไม่ได้';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'ทุกอย่างบนเครื่องนี้ถูกลบแล้ว Action ติดต่อคลาวด์ไม่ได้เพื่อยืนยันว่าไม่มีอะไรเหลืออยู่ที่นั่น และจะตรวจอีกครั้ง';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return 'ลบแล้ว ยกเว้น $leftovers';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action จะลองอีกครั้ง';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action ตรวจคลาวด์ไม่จบ และจะลองอีกครั้ง';
+
+  @override
+  String get privacyLeftoverCaptures => 'บางรายการที่บันทึกไว้';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'บันทึกบนคลาวด์ $count รายการ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first และ$second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'ลบบันทึกบนคลาวด์แล้ว';
+
+  @override
+  String get privacyCloudUnreachable => 'ยังติดต่อไม่ได้ Action จะลองอีกครั้ง';
+
+  @override
+  String get privacyPendingTitle => 'ยังต้องลบ';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'ครั้งที่แล้วติดต่อบันทึกบนคลาวด์ $count รายการไม่ได้ Action จะลองเองอีกครั้ง หรือคุณจะลองตอนนี้ก็ได้',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'ลองอีกครั้ง';
+
+  @override
   String get evidenceTitle => 'สิ่งนี้มาจากไหน';
 
   @override
