@@ -332,6 +332,82 @@ class AppL10nRu extends AppL10n {
       'Тексты Action написаны на английском. Остальные переводы подготовлены по фиксированному глоссарию и проверены автоматически, но их ещё не читал носитель языка. Там, где важна точность формулировки — конфиденциальность, безопасность, что Action утверждает и что отказывается утверждать, — эталоном остаётся английский.';
 
   @override
+  String get ocrScriptTitle => 'Распознавание текста';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'Письменность, которую Action читает на фотографии. Распознавание происходит на этом устройстве; ничего из добавленного никуда не отправляется для чтения.';
+
+  @override
+  String get ocrScriptSectionChoose => 'Письменность';
+
+  @override
+  String get ocrScriptFollowLanguage => 'Следовать языку приложения';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return 'Сейчас $script';
+  }
+
+  @override
+  String get ocrScriptLatin => 'Латиница';
+
+  @override
+  String get ocrScriptChinese => 'Китайская';
+
+  @override
+  String get ocrScriptDevanagari => 'Деванагари';
+
+  @override
+  String get ocrScriptJapanese => 'Японская';
+
+  @override
+  String get ocrScriptKorean => 'Корейская';
+
+  @override
+  String get ocrScriptLatinDescription =>
+      'Английский, испанский, французский, немецкий и остальные языки, которые пишут латиницей.';
+
+  @override
+  String get ocrScriptChineseDescription =>
+      'Упрощённый и традиционный китайский.';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      'Хинди, маратхи и непальский. Не бенгальский, тамильский и не телугу — у каждого из них своя письменность.';
+
+  @override
+  String get ocrScriptJapaneseDescription => 'Японский.';
+
+  @override
+  String get ocrScriptKoreanDescription => 'Корейский.';
+
+  @override
+  String get ocrScriptFootnote =>
+      'Любой вариант, кроме латиницы, читает и латинские буквы, поэтому выбор добавляет письменность, а не заменяет её. Изменение действует на снимки, сделанные с этого момента, а не на уже прочитанные.';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action не читает письменность $language';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      'Для неё на устройстве нет распознавания. Фотографии по-прежнему будут прочитаны в той части, что написана латиницей, остальное вернётся пустым. Этот текст можно ввести или вставить вручную.';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action настроена читать $script. Если на этом снимке другая письменность, измените настройку и прочитайте его заново.';
+  }
+
+  @override
+  String get settingsTextRecognition => 'Распознавание текста';
+
+  @override
+  String get settingsTextRecognitionDescription =>
+      'Письменность, которую Action читает на фотографиях.';
+
+  @override
   String get settingsIntelligenceFootnote =>
       'Action работает и без ИИ. Подключение собственного провайдера добавляет инструменты анализа документов, планирования и черновиков.';
 
@@ -861,4 +937,504 @@ class AppL10nRu extends AppL10n {
 
   @override
   String get errorEnterManually => 'Ввести вручную';
+
+  @override
+  String get sourceWhatWeRead => 'Что мы прочитали';
+
+  @override
+  String get sourceDelete => 'Удалить добавленное';
+
+  @override
+  String get sourceGone => 'Это добавленное больше недоступно.';
+
+  @override
+  String get sourceDeleteTitle => 'Удалить это добавленное?';
+
+  @override
+  String get sourceDeleteBody =>
+      'Изображение и прочитанный из него текст удаляются с этого устройства.';
+
+  @override
+  String get sourceDeleteKeep => 'Оставить';
+
+  @override
+  String get sourceOpenAction => 'Открыть задачу';
+
+  @override
+  String sourceOpenActions(int count) {
+    return 'Открыть задачи: $count';
+  }
+
+  @override
+  String get sourceCreateAnother => 'Создать из этого ещё одну';
+
+  @override
+  String get sourceCreateAction => 'Создать из этого задачу';
+
+  @override
+  String get sourceDoMore => 'Сделать с этим больше';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size КБ';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return 'из $format $size КБ';
+  }
+
+  @override
+  String get sourceTextFound => 'Текст найден';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return 'строк: $lines · $ms мс';
+  }
+
+  @override
+  String get sourceReadExplainer =>
+      'Это текст, который прочитала Action. Что из него получилось — ниже.';
+
+  @override
+  String get sourceNotInterpreted =>
+      'Пока ничего не истолковано. Action предложит, что с этим сделать, а вы подтверждаете, прежде чем что-либо будет создано.';
+
+  @override
+  String get sourceNoTextExplainer =>
+      'Так бывает с рукописным текстом, при очень слабом свете или с письменностью, которую это устройство пока не читает.';
+
+  @override
+  String get sourceReadFailed => 'Не удалось это прочитать';
+
+  @override
+  String get sourceReadFailedReason =>
+      'Распознавание текста не было доведено до конца.';
+
+  @override
+  String get sourceTryReadingAgain => 'Попробовать прочитать снова';
+
+  @override
+  String get sourceTypeInstead => 'Ввести данные вручную';
+
+  @override
+  String get sourceTypeWhatItSays => 'Введите, что там написано';
+
+  @override
+  String get sourceTypeHint => 'Даты, суммы и то, о чём просят.';
+
+  @override
+  String get sourceMadeFromThis => 'Создано из этого добавленного';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return 'Создано из этого добавленного: $count';
+  }
+
+  @override
+  String get sourceTheDocument => 'Документ';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count страницы',
+      many: '$count страниц',
+      few: '$count страницы',
+      one: '1 страница',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => 'Число страниц неизвестно';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action не читала, что внутри этого документа. Когда вы запустите инструмент, которому это нужно, файл уйдёт к подключённому вами поставщику ИИ, и вас предупредят об этом заранее.';
+
+  @override
+  String get previewSaveFailed =>
+      'Не удалось это сохранить. Попробуйте ещё раз.';
+
+  @override
+  String get previewTitle => 'Проверьте добавленное';
+
+  @override
+  String get previewImageFailed => 'Это изображение не удалось открыть.';
+
+  @override
+  String get previewHint =>
+      'Убедитесь, что текст читается и ничего важного не обрезано.';
+
+  @override
+  String get previewRetake => 'Снять заново';
+
+  @override
+  String get pasteTitle => 'Вставить текст';
+
+  @override
+  String get pasteHint =>
+      'Вставьте письмо, сообщение или уведомление, которое вам не хочется читать целиком.';
+
+  @override
+  String get pasteFootnote =>
+      'Хорошо подходит всё, где есть дата, сумма или просьба.';
+
+  @override
+  String get pasteEnough => 'Похоже, этого достаточно для работы.';
+
+  @override
+  String get pasteMore => 'Немного больше текста даст лучший результат.';
+
+  @override
+  String get reviewLoadFailed => 'Не удалось загрузить это добавленное.';
+
+  @override
+  String get reviewConfirmed => 'Подтверждено';
+
+  @override
+  String get reviewNeedsReview => 'Нужна проверка';
+
+  @override
+  String get reviewReview => 'Проверить';
+
+  @override
+  String get reviewHighConfidence => 'Высокая уверенность';
+
+  @override
+  String get reviewConfirmedByYou => 'Подтверждено вами';
+
+  @override
+  String get reviewMissing => 'Отсутствует';
+
+  @override
+  String get reviewNotUnderstood =>
+      'Action не смогла надёжно понять достаточную часть этого источника.';
+
+  @override
+  String get reviewNotUnderstoodBody =>
+      'С добавленным ничего не случилось, и ничего не потеряно. Вы можете ввести данные сами, а источник останется прикреплённым для справки.';
+
+  @override
+  String get reviewEnterDetails => 'Ввести данные';
+
+  @override
+  String get reviewKeepSource => 'Сохранить источник на потом';
+
+  @override
+  String reviewEngine(String engine) {
+    return 'Движок: $engine';
+  }
+
+  @override
+  String get reviewManualNotice =>
+      'Эту задачу вы создаёте сами. Использовано будет только то, что вы введёте здесь.';
+
+  @override
+  String get reviewUntitled => 'Задача без названия';
+
+  @override
+  String get reviewEditTitle => 'Изменить название';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count значения нужно проверить.',
+      many: '$count значений нужно проверить.',
+      few: '$count значения нужно проверить.',
+      one:
+          '1 значение нужно проверить, прежде чем это можно будет подтвердить.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => 'Главные данные';
+
+  @override
+  String get reviewNotFound => 'Не найдено';
+
+  @override
+  String get reviewSuggestedNextStep => 'Предлагаемый следующий шаг';
+
+  @override
+  String get reviewWhyThisMatters => 'Почему это важно';
+
+  @override
+  String get reviewSteps => 'Шаги';
+
+  @override
+  String get reviewAddStep => 'Добавить шаг';
+
+  @override
+  String get reviewInjectionNotice =>
+      'Часть текста в этом источнике выглядела как указания, а не как данные документа, поэтому Action её не учла.';
+
+  @override
+  String get reviewLayoutNotice =>
+      'В разметке этого документа могут быть связи, которые извлечение текста сохранило не полностью. Сверьте значения ниже с источником, прежде чем подтверждать.';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason Сверьте значения ниже с источником.';
+  }
+
+  @override
+  String get reviewDeadline => 'Срок';
+
+  @override
+  String get reviewAmount => 'Сумма';
+
+  @override
+  String get reviewLeftUnset => 'Нет — вы решили оставить это незаданным';
+
+  @override
+  String get reviewUnclear => 'Неясно';
+
+  @override
+  String get reviewNotSet => 'Не задано';
+
+  @override
+  String get reviewNoDeadlineFound => 'В этом документе не найден';
+
+  @override
+  String get reviewNoAmountFound => 'В этом документе не найдена';
+
+  @override
+  String get reviewMultipleDates => 'Action нашла несколько возможных дат.';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return 'Сроком могут быть $count даты. Выберите нужную, введите другую или оставьте незаданной.';
+  }
+
+  @override
+  String get reviewChooseDate => 'Выбрать дату';
+
+  @override
+  String get reviewMultipleAmounts =>
+      'Action нашла больше одной возможной суммы.';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return 'Речь может идти о $count суммах. Выберите одну, введите другую или оставьте незаданной.';
+  }
+
+  @override
+  String get reviewChooseAmount => 'Выбрать сумму';
+
+  @override
+  String get reviewSkipStep => 'Пропустить этот шаг';
+
+  @override
+  String get reviewKeepStep => 'Оставить этот шаг';
+
+  @override
+  String get reviewEditStep => 'Изменить шаг';
+
+  @override
+  String get reviewCreateManually => 'Создать вручную';
+
+  @override
+  String get reviewConfirmAndCreate => 'Подтвердить и создать задачу';
+
+  @override
+  String get reviewFixHighlighted => 'Проверьте отмеченные поля';
+
+  @override
+  String get reviewSaving => 'Сохранение…';
+
+  @override
+  String get reviewSaveFailed =>
+      'Не удалось сохранить эту задачу. Ничего не потеряно — попробуйте ещё раз.';
+
+  @override
+  String get reviewFieldTitle => 'Название';
+
+  @override
+  String get reviewTitleHint => 'Что должно произойти?';
+
+  @override
+  String get reviewNewStep => 'Новый шаг';
+
+  @override
+  String get reviewStepHint => 'Что сделать';
+
+  @override
+  String get reviewDatesConflict => 'В документе упомянута не одна дата.';
+
+  @override
+  String get reviewAmountsConflict => 'В документе упомянута не одна сумма.';
+
+  @override
+  String get reviewAnotherDate => 'Другая дата — 2026-08-30';
+
+  @override
+  String get reviewBadDate =>
+      'Это не настоящая дата. Используйте формат 2026-08-30.';
+
+  @override
+  String get reviewTypeDate => 'Введите дату или оставьте её незаданной ниже.';
+
+  @override
+  String get reviewUseThisDate => 'Использовать эту дату';
+
+  @override
+  String get reviewLeaveNoDeadline => 'Продолжить без срока';
+
+  @override
+  String get reviewAnotherAmount => 'Другая сумма — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return 'Эту сумму использовать нельзя: $reason.';
+  }
+
+  @override
+  String get reviewUseThisAmount => 'Использовать эту сумму';
+
+  @override
+  String get reviewLeaveNoAmount => 'Продолжить без суммы';
+
+  @override
+  String get reviewThisValue => 'Это значение';
+
+  @override
+  String reviewQuote(String quote) {
+    return '«$quote»';
+  }
+
+  @override
+  String get reviewSeeOnCapture => 'Показать на добавленном';
+
+  @override
+  String get reviewViewSource => 'Открыть источник';
+
+  @override
+  String get reviewFromSource => 'Из источника';
+
+  @override
+  String get reviewNotVerified => 'Не сверено';
+
+  @override
+  String get reviewCouldNotVerify => 'Не удалось сверить это с источником.';
+
+  @override
+  String get reviewLooksRight => 'Выглядит верно';
+
+  @override
+  String get reviewStageReading => 'Чтение источника';
+
+  @override
+  String get reviewStageUnderstanding => 'Разбор важных деталей';
+
+  @override
+  String get reviewStageChecking => 'Проверка того, что нужно просмотреть';
+
+  @override
+  String get reviewNothingToDo => 'Прямо сейчас от вас ничего не требуется.';
+
+  @override
+  String get reviewInformationOnly =>
+      'Похоже, это просто сведения — ни срока, ни платежа, ни просьбы ответить не найдено.';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      'Похоже, это просто сведения — в этом добавленном ни срока, ни платежа, ни просьбы ответить не найдено.';
+
+  @override
+  String get reviewSourceKept => 'Источник сохраняется в любом случае.';
+
+  @override
+  String get reviewAddAnyway => 'Всё равно добавить задачу';
+
+  @override
+  String get reviewActionConfirmed => 'Задача подтверждена';
+
+  @override
+  String get reviewCreatedByYou => 'Создана вами.';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Подтверждена вами на основании $count проверенных фактов.',
+      many: 'Подтверждена вами на основании $count проверенных фактов.',
+      few: 'Подтверждена вами на основании $count проверенных фактов.',
+      one: 'Подтверждена вами на основании 1 проверенного факта.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Подтверждена вами на основании $count проверенных фактов. Вы изменили $edited из них.',
+      many:
+          'Подтверждена вами на основании $count проверенных фактов. Вы изменили $edited из них.',
+      few:
+          'Подтверждена вами на основании $count проверенных фактов. Вы изменили $edited из них.',
+      one:
+          'Подтверждена вами на основании 1 проверенного факта. Вы изменили $edited из них.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => 'Сохранена на этом устройстве.';
+
+  @override
+  String get evidenceTitle => 'Откуда это взято';
+
+  @override
+  String get evidenceUnverified =>
+      'Action не нашла этих слов в прочитанном тексте, поэтому это значение не сверено. Сравните его с оригиналом, прежде чем на него полагаться.';
+
+  @override
+  String get evidenceHighlighted =>
+      'Эти слова были в тексте, который Action прочитала из этого добавленного, и выделение показывает где.';
+
+  @override
+  String get evidenceNoRegion =>
+      'Эти слова были в тексте, который Action прочитала из этого добавленного. Где именно на изображении они находятся, установить не удалось, и догадки здесь не строятся.';
+
+  @override
+  String get evidenceInText =>
+      'Эти слова были в тексте, который содержится в этом добавленном.';
+
+  @override
+  String get sourceCapturedAtFormat => 'd MMM, HH:mm';
+
+  @override
+  String get urgencyCritical => 'Критично';
+
+  @override
+  String get urgencyImportant => 'Важно';
+
+  @override
+  String get urgencyNormal => 'Обычно';
+
+  @override
+  String get urgencyLow => 'Низкая';
+
+  @override
+  String get urgencyUnsure => 'Неизвестно';
 }

@@ -80,6 +80,10 @@ abstract final class PreferenceKeys {
   /// One of the tags in `AppLocales.all`; anything else reads as absent.
   static const languageTag = 'language_tag_v1';
 
+  /// The writing system the on-device text recogniser is set to read, or
+  /// absent for "follow the app's language". One of the tags in `OcrScript`.
+  static const ocrScript = 'ocr_script_v1';
+
   /// Everything a "delete my data" wipe clears. [pendingCloudDeletion] is
   /// absent on purpose; see above.
   ///
@@ -97,5 +101,10 @@ abstract final class PreferenceKeys {
   /// has to find a settings screen written in English to get it back. There is
   /// no privacy gain to weigh against that: which language a phone is held in
   /// is already the device's own setting.
+  ///
+  /// [ocrScript] is absent on the same grounds. It says which writing system
+  /// the recogniser is loaded for — a capability the user configured, not a
+  /// fact about them — and resetting it would leave someone who reads Hindi
+  /// photographing Hindi letters that silently come back empty.
   static const clearedOnDelete = <String>[onboardingCompleted, themeMode];
 }

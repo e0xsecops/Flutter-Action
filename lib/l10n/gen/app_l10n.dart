@@ -631,6 +631,132 @@ abstract class AppL10n {
   /// **'English is the language Action\'s wording was written in. The other translations were drafted against a fixed glossary and checked automatically, and have not yet been reviewed by a native speaker. Where the exact wording matters — privacy, security, what Action will and will not claim — English remains the reference.'**
   String get languageDraftNote;
 
+  /// No description provided for @ocrScriptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Text recognition'**
+  String get ocrScriptTitle;
+
+  /// SAFETY: carries two claims that must both survive — which writing system is read, and that reading happens on the device. Never soften the second into 'privately' or 'securely'; the point is the literal fact that no capture leaves the handset to be read.
+  ///
+  /// In en, this message translates to:
+  /// **'The writing system Action reads when it looks at a photo. Recognition happens on this device; no capture is sent anywhere to be read.'**
+  String get ocrScriptSubtitle;
+
+  /// No description provided for @ocrScriptSectionChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Writing system'**
+  String get ocrScriptSectionChoose;
+
+  /// No description provided for @ocrScriptFollowLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the app language'**
+  String get ocrScriptFollowLanguage;
+
+  /// No description provided for @ocrScriptFollowLanguageValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently {script}'**
+  String ocrScriptFollowLanguageValue(String script);
+
+  /// No description provided for @ocrScriptLatin.
+  ///
+  /// In en, this message translates to:
+  /// **'Latin'**
+  String get ocrScriptLatin;
+
+  /// No description provided for @ocrScriptChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese'**
+  String get ocrScriptChinese;
+
+  /// No description provided for @ocrScriptDevanagari.
+  ///
+  /// In en, this message translates to:
+  /// **'Devanagari'**
+  String get ocrScriptDevanagari;
+
+  /// No description provided for @ocrScriptJapanese.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese'**
+  String get ocrScriptJapanese;
+
+  /// No description provided for @ocrScriptKorean.
+  ///
+  /// In en, this message translates to:
+  /// **'Korean'**
+  String get ocrScriptKorean;
+
+  /// No description provided for @ocrScriptLatinDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'English, Spanish, French, German and the other languages written in Latin letters.'**
+  String get ocrScriptLatinDescription;
+
+  /// No description provided for @ocrScriptChineseDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Simplified and Traditional Chinese.'**
+  String get ocrScriptChineseDescription;
+
+  /// SAFETY: names a script, not a country or a region. The second sentence prevents a reader from choosing this for Bengali and getting empty results with no explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Hindi, Marathi and Nepali. Not Bengali, Tamil or Telugu — each of those is a different writing system.'**
+  String get ocrScriptDevanagariDescription;
+
+  /// No description provided for @ocrScriptJapaneseDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese.'**
+  String get ocrScriptJapaneseDescription;
+
+  /// No description provided for @ocrScriptKoreanDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Korean.'**
+  String get ocrScriptKoreanDescription;
+
+  /// SAFETY: two separate claims, both required. The choice is additive, and it is not retroactive. Dropping either leaves the user with a wrong model of what the setting did.
+  ///
+  /// In en, this message translates to:
+  /// **'Every choice except Latin also reads Latin letters, so picking one adds a writing system instead of swapping it. Changing this affects photos taken from now on, not ones already read.'**
+  String get ocrScriptFootnote;
+
+  /// SAFETY: a plain statement of a missing capability. It must stay a statement of fact — not 'not yet supported', which implies a date nobody has promised.
+  ///
+  /// In en, this message translates to:
+  /// **'Action cannot read the {language} script'**
+  String ocrScriptUnreadableTitle(String language);
+
+  /// SAFETY: three claims that must all survive — no recogniser exists, Latin is still read, and there is a manual way through. Dropping the third leaves the user with a dead end.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no on-device recogniser for it. Photos will still be read for anything written in Latin letters, and the rest will come back empty. You can type or paste that text instead.'**
+  String get ocrScriptUnreadableBody;
+
+  /// SAFETY: shown when recognition found nothing. It must name the current setting rather than implying the capture was unreadable in general.
+  ///
+  /// In en, this message translates to:
+  /// **'Action is set to read {script}. If this photo is in another writing system, change it in Settings and read it again.'**
+  String ocrScriptNoTextHint(String script);
+
+  /// No description provided for @settingsTextRecognition.
+  ///
+  /// In en, this message translates to:
+  /// **'Text recognition'**
+  String get settingsTextRecognition;
+
+  /// No description provided for @settingsTextRecognitionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The writing system Action reads from photos.'**
+  String get settingsTextRecognitionDescription;
+
   /// SAFETY: must keep the first sentence — that the product is useful with nothing connected.
   ///
   /// In en, this message translates to:
@@ -1524,6 +1650,816 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Enter it manually'**
   String get errorEnterManually;
+
+  /// No description provided for @sourceWhatWeRead.
+  ///
+  /// In en, this message translates to:
+  /// **'What we read'**
+  String get sourceWhatWeRead;
+
+  /// No description provided for @sourceDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete capture'**
+  String get sourceDelete;
+
+  /// No description provided for @sourceGone.
+  ///
+  /// In en, this message translates to:
+  /// **'That capture is no longer available.'**
+  String get sourceGone;
+
+  /// No description provided for @sourceDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this capture?'**
+  String get sourceDeleteTitle;
+
+  /// No description provided for @sourceDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The image and the text read from it are removed from this device.'**
+  String get sourceDeleteBody;
+
+  /// No description provided for @sourceDeleteKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep'**
+  String get sourceDeleteKeep;
+
+  /// No description provided for @sourceOpenAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the action'**
+  String get sourceOpenAction;
+
+  /// No description provided for @sourceOpenActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {count} actions'**
+  String sourceOpenActions(int count);
+
+  /// No description provided for @sourceCreateAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Create another from this'**
+  String get sourceCreateAnother;
+
+  /// No description provided for @sourceCreateAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an action from this'**
+  String get sourceCreateAction;
+
+  /// No description provided for @sourceDoMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Do more with this'**
+  String get sourceDoMore;
+
+  /// No description provided for @sourceMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{provenance} · {when}'**
+  String sourceMeta(String provenance, String when);
+
+  /// No description provided for @sourceDimensions.
+  ///
+  /// In en, this message translates to:
+  /// **'{width}×{height}'**
+  String sourceDimensions(int width, int height);
+
+  /// No description provided for @sourceKilobytes.
+  ///
+  /// In en, this message translates to:
+  /// **'{size} KB'**
+  String sourceKilobytes(int size);
+
+  /// No description provided for @sourceConvertedFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'from {format} {size} KB'**
+  String sourceConvertedFrom(String format, String size);
+
+  /// No description provided for @sourceTextFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Text found'**
+  String get sourceTextFound;
+
+  /// No description provided for @sourceOcrStats.
+  ///
+  /// In en, this message translates to:
+  /// **'{lines} lines · {ms} ms'**
+  String sourceOcrStats(int lines, int ms);
+
+  /// No description provided for @sourceReadExplainer.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the text Action read. What was made from it is below.'**
+  String get sourceReadExplainer;
+
+  /// SAFETY: the second clause is the confirm-before-create guarantee. It must stay a statement that the user confirms first.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing has been interpreted yet. Action will suggest what to do with this, and you confirm before anything is created.'**
+  String get sourceNotInterpreted;
+
+  /// SAFETY: names the real limits of on-device OCR, including scripts it cannot read. Must not be softened into a temporary glitch.
+  ///
+  /// In en, this message translates to:
+  /// **'This can happen with handwriting, very low light, or a script this device cannot read yet.'**
+  String get sourceNoTextExplainer;
+
+  /// No description provided for @sourceReadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read this'**
+  String get sourceReadFailed;
+
+  /// No description provided for @sourceReadFailedReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Text recognition did not complete.'**
+  String get sourceReadFailedReason;
+
+  /// No description provided for @sourceTryReadingAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try reading again'**
+  String get sourceTryReadingAgain;
+
+  /// No description provided for @sourceTypeInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the details instead'**
+  String get sourceTypeInstead;
+
+  /// No description provided for @sourceTypeWhatItSays.
+  ///
+  /// In en, this message translates to:
+  /// **'Type what it says'**
+  String get sourceTypeWhatItSays;
+
+  /// No description provided for @sourceTypeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates, amounts, and what is being asked for.'**
+  String get sourceTypeHint;
+
+  /// No description provided for @sourceMadeFromThis.
+  ///
+  /// In en, this message translates to:
+  /// **'Made from this capture'**
+  String get sourceMadeFromThis;
+
+  /// No description provided for @sourceMadeFromThisCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} made from this capture'**
+  String sourceMadeFromThisCount(int count);
+
+  /// No description provided for @sourceTheDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'The document'**
+  String get sourceTheDocument;
+
+  /// No description provided for @sourcePageCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 page} other{{count} pages}}'**
+  String sourcePageCount(int count);
+
+  /// No description provided for @sourcePageCountUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Page count unknown'**
+  String get sourcePageCountUnknown;
+
+  /// SAFETY: the central data-flow disclosure for PDFs. Two claims: Action has not read the contents, and the file leaves only on an explicit tool run with a warning first. Both must survive.
+  ///
+  /// In en, this message translates to:
+  /// **'Action has not read what is inside this document. When you run a tool that needs to, the file goes to the AI provider you connected and you will be told before it does.'**
+  String get sourceDocumentNotRead;
+
+  /// No description provided for @previewSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save that. Try again.'**
+  String get previewSaveFailed;
+
+  /// No description provided for @previewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the capture'**
+  String get previewTitle;
+
+  /// No description provided for @previewImageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That image couldn\'t be opened.'**
+  String get previewImageFailed;
+
+  /// No description provided for @previewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure the text is readable and nothing important is cut off.'**
+  String get previewHint;
+
+  /// No description provided for @previewRetake.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get previewRetake;
+
+  /// No description provided for @pasteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste text'**
+  String get pasteTitle;
+
+  /// No description provided for @pasteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the email, message, or notice you would rather not read through.'**
+  String get pasteHint;
+
+  /// No description provided for @pasteFootnote.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything with a date, an amount, or a request works well.'**
+  String get pasteFootnote;
+
+  /// No description provided for @pasteEnough.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks like enough to work with.'**
+  String get pasteEnough;
+
+  /// No description provided for @pasteMore.
+  ///
+  /// In en, this message translates to:
+  /// **'A little more text will give a better result.'**
+  String get pasteMore;
+
+  /// No description provided for @reviewLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this capture.'**
+  String get reviewLoadFailed;
+
+  /// No description provided for @reviewConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get reviewConfirmed;
+
+  /// No description provided for @reviewNeedsReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs review'**
+  String get reviewNeedsReview;
+
+  /// No description provided for @reviewReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get reviewReview;
+
+  /// No description provided for @reviewHighConfidence.
+  ///
+  /// In en, this message translates to:
+  /// **'High confidence'**
+  String get reviewHighConfidence;
+
+  /// No description provided for @reviewConfirmedByYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed by you'**
+  String get reviewConfirmedByYou;
+
+  /// No description provided for @reviewMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing'**
+  String get reviewMissing;
+
+  /// SAFETY: an admission that extraction failed. Must not become a claim that the source was unreadable or that data was lost.
+  ///
+  /// In en, this message translates to:
+  /// **'Action couldn’t reliably understand enough of this source.'**
+  String get reviewNotUnderstood;
+
+  /// No description provided for @reviewNotUnderstoodBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The capture is safe and nothing was lost. You can enter the details yourself, and the source stays attached for reference.'**
+  String get reviewNotUnderstoodBody;
+
+  /// No description provided for @reviewEnterDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the details'**
+  String get reviewEnterDetails;
+
+  /// No description provided for @reviewKeepSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the source for later'**
+  String get reviewKeepSource;
+
+  /// Debug-build diagnostic line.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine: {engine}'**
+  String reviewEngine(String engine);
+
+  /// SAFETY: states that a manual entry involves no extraction at all. Must not imply Action contributed anything.
+  ///
+  /// In en, this message translates to:
+  /// **'You are creating this action yourself. Only what you enter here will be used.'**
+  String get reviewManualNotice;
+
+  /// No description provided for @reviewUntitled.
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled action'**
+  String get reviewUntitled;
+
+  /// No description provided for @reviewEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit title'**
+  String get reviewEditTitle;
+
+  /// No description provided for @reviewNeedsReviewCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 value needs your review before this can be confirmed.} other{{count} values need your review.}}'**
+  String reviewNeedsReviewCount(int count);
+
+  /// No description provided for @reviewKeyFacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Key facts'**
+  String get reviewKeyFacts;
+
+  /// No description provided for @reviewNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found'**
+  String get reviewNotFound;
+
+  /// No description provided for @reviewSuggestedNextStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested next step'**
+  String get reviewSuggestedNextStep;
+
+  /// No description provided for @reviewWhyThisMatters.
+  ///
+  /// In en, this message translates to:
+  /// **'Why this matters'**
+  String get reviewWhyThisMatters;
+
+  /// No description provided for @reviewSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get reviewSteps;
+
+  /// No description provided for @reviewAddStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a step'**
+  String get reviewAddStep;
+
+  /// SAFETY: the prompt-injection disclosure. Must stay a statement that instructions embedded in a document were ignored, never that they were followed or sanitised.
+  ///
+  /// In en, this message translates to:
+  /// **'Some text in this source looked like instructions rather than document facts, so Action ignored it.'**
+  String get reviewInjectionNotice;
+
+  /// No description provided for @reviewLayoutNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This document’s layout may contain relationships that text extraction couldn’t fully preserve. Check the values below against the source before confirming.'**
+  String get reviewLayoutNotice;
+
+  /// No description provided for @reviewSignalNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'{reason} Check the values below against the source.'**
+  String reviewSignalNotice(String reason);
+
+  /// No description provided for @reviewDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Deadline'**
+  String get reviewDeadline;
+
+  /// No description provided for @reviewAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get reviewAmount;
+
+  /// No description provided for @reviewLeftUnset.
+  ///
+  /// In en, this message translates to:
+  /// **'None — you chose to leave this unset'**
+  String get reviewLeftUnset;
+
+  /// No description provided for @reviewUnclear.
+  ///
+  /// In en, this message translates to:
+  /// **'Unclear'**
+  String get reviewUnclear;
+
+  /// No description provided for @reviewNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get reviewNotSet;
+
+  /// No description provided for @reviewNoDeadlineFound.
+  ///
+  /// In en, this message translates to:
+  /// **'None found in this document'**
+  String get reviewNoDeadlineFound;
+
+  /// No description provided for @reviewNoAmountFound.
+  ///
+  /// In en, this message translates to:
+  /// **'None found in this document'**
+  String get reviewNoAmountFound;
+
+  /// No description provided for @reviewMultipleDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Action found multiple possible dates.'**
+  String get reviewMultipleDates;
+
+  /// No description provided for @reviewMultipleDatesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} dates could be the deadline. Choose the right one, enter another, or leave it unset.'**
+  String reviewMultipleDatesBody(int count);
+
+  /// No description provided for @reviewChooseDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a date'**
+  String get reviewChooseDate;
+
+  /// No description provided for @reviewMultipleAmounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Action found more than one possible amount.'**
+  String get reviewMultipleAmounts;
+
+  /// No description provided for @reviewMultipleAmountsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} amounts could be the one this action is about. Choose, enter another, or leave it unset.'**
+  String reviewMultipleAmountsBody(int count);
+
+  /// No description provided for @reviewChooseAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an amount'**
+  String get reviewChooseAmount;
+
+  /// No description provided for @reviewSkipStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip this step'**
+  String get reviewSkipStep;
+
+  /// No description provided for @reviewKeepStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this step'**
+  String get reviewKeepStep;
+
+  /// No description provided for @reviewEditStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit step'**
+  String get reviewEditStep;
+
+  /// No description provided for @reviewCreateManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Create manually'**
+  String get reviewCreateManually;
+
+  /// No description provided for @reviewConfirmAndCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & create action'**
+  String get reviewConfirmAndCreate;
+
+  /// No description provided for @reviewFixHighlighted.
+  ///
+  /// In en, this message translates to:
+  /// **'Review highlighted fields'**
+  String get reviewFixHighlighted;
+
+  /// No description provided for @reviewSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get reviewSaving;
+
+  /// No description provided for @reviewSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save this action. Nothing was lost — try again.'**
+  String get reviewSaveFailed;
+
+  /// No description provided for @reviewFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get reviewFieldTitle;
+
+  /// No description provided for @reviewTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs to happen?'**
+  String get reviewTitleHint;
+
+  /// No description provided for @reviewNewStep.
+  ///
+  /// In en, this message translates to:
+  /// **'New step'**
+  String get reviewNewStep;
+
+  /// No description provided for @reviewStepHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What to do'**
+  String get reviewStepHint;
+
+  /// No description provided for @reviewDatesConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'The document mentions more than one date.'**
+  String get reviewDatesConflict;
+
+  /// No description provided for @reviewAmountsConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'The document mentions more than one amount.'**
+  String get reviewAmountsConflict;
+
+  /// The example date is the ISO format the field parses; keep the digits and the dashes exactly.
+  ///
+  /// In en, this message translates to:
+  /// **'Another date — 2026-08-30'**
+  String get reviewAnotherDate;
+
+  /// No description provided for @reviewBadDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Not a real date. Use the format 2026-08-30.'**
+  String get reviewBadDate;
+
+  /// No description provided for @reviewTypeDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a date, or leave it unset below.'**
+  String get reviewTypeDate;
+
+  /// No description provided for @reviewUseThisDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this date'**
+  String get reviewUseThisDate;
+
+  /// No description provided for @reviewLeaveNoDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave without a deadline'**
+  String get reviewLeaveNoDeadline;
+
+  /// No description provided for @reviewAnotherAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Another amount — 780.00'**
+  String get reviewAnotherAmount;
+
+  /// No description provided for @reviewAmountError.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot use this amount: {reason}.'**
+  String reviewAmountError(String reason);
+
+  /// No description provided for @reviewUseThisAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this amount'**
+  String get reviewUseThisAmount;
+
+  /// No description provided for @reviewLeaveNoAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave without an amount'**
+  String get reviewLeaveNoAmount;
+
+  /// No description provided for @reviewThisValue.
+  ///
+  /// In en, this message translates to:
+  /// **'This value'**
+  String get reviewThisValue;
+
+  /// No description provided for @reviewQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'“{quote}”'**
+  String reviewQuote(String quote);
+
+  /// No description provided for @reviewSeeOnCapture.
+  ///
+  /// In en, this message translates to:
+  /// **'See it on the capture'**
+  String get reviewSeeOnCapture;
+
+  /// No description provided for @reviewViewSource.
+  ///
+  /// In en, this message translates to:
+  /// **'View source'**
+  String get reviewViewSource;
+
+  /// No description provided for @reviewFromSource.
+  ///
+  /// In en, this message translates to:
+  /// **'From source'**
+  String get reviewFromSource;
+
+  /// No description provided for @reviewNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not verified'**
+  String get reviewNotVerified;
+
+  /// SAFETY: says verification failed. Must never be softened into 'probably correct'.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not verify this against the source.'**
+  String get reviewCouldNotVerify;
+
+  /// No description provided for @reviewLooksRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks right'**
+  String get reviewLooksRight;
+
+  /// No description provided for @reviewStageReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading source'**
+  String get reviewStageReading;
+
+  /// No description provided for @reviewStageUnderstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding important details'**
+  String get reviewStageUnderstanding;
+
+  /// No description provided for @reviewStageChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking what needs review'**
+  String get reviewStageChecking;
+
+  /// No description provided for @reviewNothingToDo.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing you need to do right now.'**
+  String get reviewNothingToDo;
+
+  /// No description provided for @reviewInformationOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'This looks like information only — no deadline, payment or reply was found.'**
+  String get reviewInformationOnly;
+
+  /// No description provided for @reviewInformationOnlyWithSource.
+  ///
+  /// In en, this message translates to:
+  /// **'This looks like information only — no deadline, payment or reply was found in this capture.'**
+  String get reviewInformationOnlyWithSource;
+
+  /// No description provided for @reviewSourceKept.
+  ///
+  /// In en, this message translates to:
+  /// **'The source is kept either way.'**
+  String get reviewSourceKept;
+
+  /// No description provided for @reviewAddAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an action anyway'**
+  String get reviewAddAnyway;
+
+  /// No description provided for @reviewActionConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Action confirmed'**
+  String get reviewActionConfirmed;
+
+  /// No description provided for @reviewCreatedByYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Created by you.'**
+  String get reviewCreatedByYou;
+
+  /// SAFETY: attributes the confirmation to the user, not to Action.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Confirmed by you from 1 reviewed fact.} other{Confirmed by you from {count} reviewed facts.}}'**
+  String reviewConfirmedFrom(int count);
+
+  /// No description provided for @reviewConfirmedFromEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Confirmed by you from 1 reviewed fact. You changed {edited} of them.} other{Confirmed by you from {count} reviewed facts. You changed {edited} of them.}}'**
+  String reviewConfirmedFromEdited(int count, int edited);
+
+  /// No description provided for @reviewSavedOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on this device.'**
+  String get reviewSavedOnDevice;
+
+  /// No description provided for @evidenceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where this came from'**
+  String get evidenceTitle;
+
+  /// SAFETY: the strongest 'do not trust this yet' statement in the product. It must keep both halves — not verified, and check the original.
+  ///
+  /// In en, this message translates to:
+  /// **'Action could not find these words in the text it read, so this value has not been verified. Check it against the original before you rely on it.'**
+  String get evidenceUnverified;
+
+  /// No description provided for @evidenceHighlighted.
+  ///
+  /// In en, this message translates to:
+  /// **'These words were found in the text Action read from this capture, and the highlight shows where.'**
+  String get evidenceHighlighted;
+
+  /// SAFETY: the fail-closed statement for region mapping — Action refuses to point at a place it cannot support. 'It is not guessing' must survive.
+  ///
+  /// In en, this message translates to:
+  /// **'These words were found in the text Action read from this capture. It could not work out exactly where on the image they sit, so it is not guessing.'**
+  String get evidenceNoRegion;
+
+  /// No description provided for @evidenceInText.
+  ///
+  /// In en, this message translates to:
+  /// **'These words were found in the text this capture contains.'**
+  String get evidenceInText;
+
+  /// ICU skeleton: day, abbreviated month, 24-hour time.
+  ///
+  /// In en, this message translates to:
+  /// **'d MMM, HH:mm'**
+  String get sourceCapturedAtFormat;
+
+  /// No description provided for @urgencyCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get urgencyCritical;
+
+  /// No description provided for @urgencyImportant.
+  ///
+  /// In en, this message translates to:
+  /// **'Important'**
+  String get urgencyImportant;
+
+  /// No description provided for @urgencyNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get urgencyNormal;
+
+  /// No description provided for @urgencyLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get urgencyLow;
+
+  /// SAFETY: the urgency Action assigns when the document did not establish one. It must stay an admission of not knowing — never rendered as a calm "Low".
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure'**
+  String get urgencyUnsure;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

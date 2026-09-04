@@ -26,6 +26,7 @@ import '../../../design/tokens/dimens.dart';
 import '../../capture/domain/source_item.dart';
 import '../application/evidence_regions.dart';
 import '../domain/extraction_evidence.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 /// Opens the lens for one piece of evidence.
 Future<void> showEvidenceLens(
@@ -64,6 +65,7 @@ class EvidenceLensSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -107,7 +109,7 @@ class EvidenceLensSheet extends StatelessWidget {
             const SizedBox(height: Space.lg),
             Semantics(
               header: true,
-              child: Text('Where this came from', style: text.titleLarge),
+              child: Text(l10n.evidenceTitle, style: text.titleLarge),
             ),
             const SizedBox(height: Space.xs),
             Text(
@@ -255,6 +257,7 @@ class _Quote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -276,7 +279,7 @@ class _Quote extends StatelessWidget {
       child: SelectableText(
         // Exactly what the source says, unedited. Selectable so the user can
         // copy it into a reply or a search.
-        '“${evidence.quote}”',
+        l10n.reviewQuote(evidence.quote),
         style: text.bodyMedium?.copyWith(
           color: colors.textPrimary,
           fontStyle: FontStyle.italic,
@@ -301,6 +304,7 @@ class _Provenance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final grounded = evidence.isGrounded;
@@ -309,15 +313,12 @@ class _Provenance extends StatelessWidget {
       false => (
           Icons.help_outline_rounded,
           colors.confidenceReview,
-          'Action could not find these words in the text it read, so this '
-              'value has not been verified. Check it against the original '
-              'before you rely on it.',
+          l10n.evidenceUnverified,
         ),
       true when showedRegion => (
           Icons.check_circle_outline_rounded,
           colors.confidenceConfirmed,
-          'These words were found in the text Action read from this capture, '
-              'and the highlight shows where.',
+          l10n.evidenceHighlighted,
         ),
       // Grounded, but no region: pasted text, or geometry that could not be
       // trusted. Said plainly rather than dressed up — and deliberately not
@@ -325,14 +326,12 @@ class _Provenance extends StatelessWidget {
       true when hasImage => (
           Icons.check_circle_outline_rounded,
           colors.confidenceConfirmed,
-          'These words were found in the text Action read from this capture. '
-              'It could not work out exactly where on the image they sit, so '
-              'it is not guessing.',
+          l10n.evidenceNoRegion,
         ),
       true => (
           Icons.check_circle_outline_rounded,
           colors.confidenceConfirmed,
-          'These words were found in the text this capture contains.',
+          l10n.evidenceInText,
         ),
     };
 

@@ -308,6 +308,79 @@ class AppL10nZh extends AppL10n {
       'Action 的文案原本是用英文写的。其余译文按照固定术语表起草，并经过自动检查，但尚未由母语者通读。凡是措辞的准确性要紧的地方 —— 隐私、安全，以及 Action 声称什么、不声称什么 —— 英文仍是基准。';
 
   @override
+  String get ocrScriptTitle => '文字识别';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'Action 看照片时读取的书写系统。识别在本机进行；不会为了读取而把任何采集发送到任何地方。';
+
+  @override
+  String get ocrScriptSectionChoose => '书写系统';
+
+  @override
+  String get ocrScriptFollowLanguage => '跟随应用语言';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return '当前为$script';
+  }
+
+  @override
+  String get ocrScriptLatin => '拉丁字母';
+
+  @override
+  String get ocrScriptChinese => '中文';
+
+  @override
+  String get ocrScriptDevanagari => '天城文';
+
+  @override
+  String get ocrScriptJapanese => '日文';
+
+  @override
+  String get ocrScriptKorean => '韩文';
+
+  @override
+  String get ocrScriptLatinDescription => '英语、西班牙语、法语、德语，以及其他用拉丁字母书写的语言。';
+
+  @override
+  String get ocrScriptChineseDescription => '简体中文和繁体中文。';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      '印地语、马拉地语和尼泊尔语。不含孟加拉语、泰米尔语或泰卢固语——它们各自是不同的书写系统。';
+
+  @override
+  String get ocrScriptJapaneseDescription => '日文。';
+
+  @override
+  String get ocrScriptKoreanDescription => '韩文。';
+
+  @override
+  String get ocrScriptFootnote =>
+      '除拉丁字母外的每一项也都能读拉丁字母，所以选择一项是增加一种书写系统，而不是换掉一种。此改动对从现在起拍的照片生效，对已经读过的照片不生效。';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action 读不了$language文字';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      '本机没有对应的识别模型。照片中凡是用拉丁字母写的内容仍会被读取，其余部分会是空的。你可以改为自己输入或粘贴那段文字。';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action 目前设为读取$script。如果这张照片是另一种书写系统，请在设置中更改后重新读取。';
+  }
+
+  @override
+  String get settingsTextRecognition => '文字识别';
+
+  @override
+  String get settingsTextRecognitionDescription => 'Action 从照片中读取的书写系统。';
+
+  @override
   String get settingsIntelligenceFootnote =>
       '没有 AI，Action 一样能用。接入你自己的服务商后，会增加文档分析、规划和起草工具。';
 
@@ -801,6 +874,471 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get errorEnterManually => '手动输入';
+
+  @override
+  String get sourceWhatWeRead => '我们读到的内容';
+
+  @override
+  String get sourceDelete => '删除采集';
+
+  @override
+  String get sourceGone => '那项采集已经不在了。';
+
+  @override
+  String get sourceDeleteTitle => '删除这项采集？';
+
+  @override
+  String get sourceDeleteBody => '图片以及从中读出的文字会从本机移除。';
+
+  @override
+  String get sourceDeleteKeep => '保留';
+
+  @override
+  String get sourceOpenAction => '打开待办';
+
+  @override
+  String sourceOpenActions(int count) {
+    return '打开 $count 项待办';
+  }
+
+  @override
+  String get sourceCreateAnother => '再据此创建一项';
+
+  @override
+  String get sourceCreateAction => '据此创建一项待办';
+
+  @override
+  String get sourceDoMore => '用它做更多事';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return '来自 $format $size KB';
+  }
+
+  @override
+  String get sourceTextFound => '找到文字';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines 行 · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer => '这是 Action 读到的文字。据此做出的东西在下面。';
+
+  @override
+  String get sourceNotInterpreted =>
+      '目前还没有做任何解读。Action 会建议拿它做什么，在任何东西被创建之前由你确认。';
+
+  @override
+  String get sourceNoTextExplainer => '手写字、光线极暗，或本机还读不了的书写系统，都可能出现这种情况。';
+
+  @override
+  String get sourceReadFailed => '这个读不出来';
+
+  @override
+  String get sourceReadFailedReason => '文字识别没有走完。';
+
+  @override
+  String get sourceTryReadingAgain => '再读一次';
+
+  @override
+  String get sourceTypeInstead => '改为自己输入内容';
+
+  @override
+  String get sourceTypeWhatItSays => '把上面写的内容打出来';
+
+  @override
+  String get sourceTypeHint => '日期、金额，以及要求做什么。';
+
+  @override
+  String get sourceMadeFromThis => '由这项采集做出的';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return '由这项采集做出 $count 项';
+  }
+
+  @override
+  String get sourceTheDocument => '文档';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 页',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => '页数未知';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action 没有读过这份文档里面的内容。当你运行需要读它的工具时，文件会送到你连接的 AI 提供方，并且会在发送前告知你。';
+
+  @override
+  String get previewSaveFailed => '没能保存。请再试一次。';
+
+  @override
+  String get previewTitle => '核对采集';
+
+  @override
+  String get previewImageFailed => '那张图片打不开。';
+
+  @override
+  String get previewHint => '确认文字清晰可读，重要部分没有被截掉。';
+
+  @override
+  String get previewRetake => '重拍';
+
+  @override
+  String get pasteTitle => '粘贴文字';
+
+  @override
+  String get pasteHint => '把你不想通篇读的邮件、消息或通知粘贴进来。';
+
+  @override
+  String get pasteFootnote => '含有日期、金额或某项请求的内容效果最好。';
+
+  @override
+  String get pasteEnough => '看起来够用了。';
+
+  @override
+  String get pasteMore => '再多一点文字，结果会更好。';
+
+  @override
+  String get reviewLoadFailed => '这项采集加载不出来。';
+
+  @override
+  String get reviewConfirmed => '已确认';
+
+  @override
+  String get reviewNeedsReview => '需要核对';
+
+  @override
+  String get reviewReview => '核对';
+
+  @override
+  String get reviewHighConfidence => '把握较大';
+
+  @override
+  String get reviewConfirmedByYou => '由你确认';
+
+  @override
+  String get reviewMissing => '缺失';
+
+  @override
+  String get reviewNotUnderstood => 'Action 没能可靠地看懂这份来源里足够多的内容。';
+
+  @override
+  String get reviewNotUnderstoodBody => '采集完好无损，什么都没丢。你可以自己填写内容，来源也会继续附着以供对照。';
+
+  @override
+  String get reviewEnterDetails => '填写内容';
+
+  @override
+  String get reviewKeepSource => '把来源留着以后看';
+
+  @override
+  String reviewEngine(String engine) {
+    return '引擎：$engine';
+  }
+
+  @override
+  String get reviewManualNotice => '这项待办是你自己创建的。只会用到你在这里填的内容。';
+
+  @override
+  String get reviewUntitled => '未命名的待办';
+
+  @override
+  String get reviewEditTitle => '编辑标题';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '确认之前，有 $count 项数值需要你核对。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => '关键信息';
+
+  @override
+  String get reviewNotFound => '没找到';
+
+  @override
+  String get reviewSuggestedNextStep => '建议的下一步';
+
+  @override
+  String get reviewWhyThisMatters => '为什么这件事要紧';
+
+  @override
+  String get reviewSteps => '步骤';
+
+  @override
+  String get reviewAddStep => '添加步骤';
+
+  @override
+  String get reviewInjectionNotice => '这份来源里有些文字看起来像指令而不是文档信息，所以 Action 没有采用。';
+
+  @override
+  String get reviewLayoutNotice =>
+      '这份文档的版式里可能有一些对应关系，文字提取没能完整保留。确认之前请把下面的数值和来源比对一下。';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason 请把下面的数值和来源比对一下。';
+  }
+
+  @override
+  String get reviewDeadline => '期限';
+
+  @override
+  String get reviewAmount => '金额';
+
+  @override
+  String get reviewLeftUnset => '没有——你选择了留空';
+
+  @override
+  String get reviewUnclear => '不清楚';
+
+  @override
+  String get reviewNotSet => '未设定';
+
+  @override
+  String get reviewNoDeadlineFound => '这份文档里没找到';
+
+  @override
+  String get reviewNoAmountFound => '这份文档里没找到金额';
+
+  @override
+  String get reviewMultipleDates => 'Action 找到了多个可能的日期。';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return '有 $count 个日期可能是期限。选出正确的，输入另一个，或者留空。';
+  }
+
+  @override
+  String get reviewChooseDate => '选一个日期';
+
+  @override
+  String get reviewMultipleAmounts => 'Action 找到了不止一个可能的金额。';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return '有 $count 个金额可能是这里说的那个。选一个，输入另一个，或者留空。';
+  }
+
+  @override
+  String get reviewChooseAmount => '选一个金额';
+
+  @override
+  String get reviewSkipStep => '跳过这一步';
+
+  @override
+  String get reviewKeepStep => '保留这一步';
+
+  @override
+  String get reviewEditStep => '编辑步骤';
+
+  @override
+  String get reviewCreateManually => '自己创建';
+
+  @override
+  String get reviewConfirmAndCreate => '确认并创建待办';
+
+  @override
+  String get reviewFixHighlighted => '核对标出的字段';
+
+  @override
+  String get reviewSaving => '正在保存…';
+
+  @override
+  String get reviewSaveFailed => '这项待办没能保存。什么都没丢——请再试一次。';
+
+  @override
+  String get reviewFieldTitle => '标题';
+
+  @override
+  String get reviewTitleHint => '需要做成什么？';
+
+  @override
+  String get reviewNewStep => '新步骤';
+
+  @override
+  String get reviewStepHint => '要做什么';
+
+  @override
+  String get reviewDatesConflict => '文档里提到了不止一个日期。';
+
+  @override
+  String get reviewAmountsConflict => '文档里提到了不止一个金额。';
+
+  @override
+  String get reviewAnotherDate => '另一个日期 — 2026-08-30';
+
+  @override
+  String get reviewBadDate => '这不是一个真实日期。请用 2026-08-30 的格式。';
+
+  @override
+  String get reviewTypeDate => '输入一个日期，或者在下面留空。';
+
+  @override
+  String get reviewUseThisDate => '用这个日期';
+
+  @override
+  String get reviewLeaveNoDeadline => '不设期限继续';
+
+  @override
+  String get reviewAnotherAmount => '另一个金额 — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return '这个金额用不了：$reason。';
+  }
+
+  @override
+  String get reviewUseThisAmount => '用这个金额';
+
+  @override
+  String get reviewLeaveNoAmount => '不设金额继续';
+
+  @override
+  String get reviewThisValue => '这个数值';
+
+  @override
+  String reviewQuote(String quote) {
+    return '“$quote”';
+  }
+
+  @override
+  String get reviewSeeOnCapture => '在采集上查看';
+
+  @override
+  String get reviewViewSource => '查看来源';
+
+  @override
+  String get reviewFromSource => '来自来源';
+
+  @override
+  String get reviewNotVerified => '未比对';
+
+  @override
+  String get reviewCouldNotVerify => '没能把这个和来源比对上。';
+
+  @override
+  String get reviewLooksRight => '看着没问题';
+
+  @override
+  String get reviewStageReading => '正在读取来源';
+
+  @override
+  String get reviewStageUnderstanding => '正在理解重要信息';
+
+  @override
+  String get reviewStageChecking => '正在检查哪些需要核对';
+
+  @override
+  String get reviewNothingToDo => '眼下你不需要做什么。';
+
+  @override
+  String get reviewInformationOnly => '这看起来只是告知——没有找到期限、付款或要求回复。';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      '这看起来只是告知——这项采集里没有找到期限、付款或要求回复。';
+
+  @override
+  String get reviewSourceKept => '无论如何来源都会留着。';
+
+  @override
+  String get reviewAddAnyway => '仍然添加一项待办';
+
+  @override
+  String get reviewActionConfirmed => '待办已确认';
+
+  @override
+  String get reviewCreatedByYou => '由你创建。';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '根据 $count 条已核对的信息，由你确认。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '根据 $count 条已核对的信息，由你确认。其中 $edited 条是你改过的。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => '已保存在本机。';
+
+  @override
+  String get evidenceTitle => '这是哪儿来的';
+
+  @override
+  String get evidenceUnverified =>
+      'Action 没能在读到的文字里找到这些词，所以这个数值没有比对过。在依赖它之前，请对照原件核实。';
+
+  @override
+  String get evidenceHighlighted => '这些词出现在 Action 从这项采集里读到的文字中，高亮显示了位置。';
+
+  @override
+  String get evidenceNoRegion =>
+      '这些词出现在 Action 从这项采集里读到的文字中。它没能确定这些词在图片上的确切位置，也不会去猜。';
+
+  @override
+  String get evidenceInText => '这些词出现在这项采集所含的文字中。';
+
+  @override
+  String get sourceCapturedAtFormat => 'M月d日 HH:mm';
+
+  @override
+  String get urgencyCritical => '紧要';
+
+  @override
+  String get urgencyImportant => '重要';
+
+  @override
+  String get urgencyNormal => '一般';
+
+  @override
+  String get urgencyLow => '较低';
+
+  @override
+  String get urgencyUnsure => '说不准';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
@@ -1106,6 +1644,79 @@ class AppL10nZhHans extends AppL10nZh {
       'Action 的文案原本是用英文写的。其余译文按照固定术语表起草，并经过自动检查，但尚未由母语者通读。凡是措辞的准确性要紧的地方 —— 隐私、安全，以及 Action 声称什么、不声称什么 —— 英文仍是基准。';
 
   @override
+  String get ocrScriptTitle => '文字识别';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'Action 看照片时读取的书写系统。识别在本机进行；不会为了读取而把任何采集发送到任何地方。';
+
+  @override
+  String get ocrScriptSectionChoose => '书写系统';
+
+  @override
+  String get ocrScriptFollowLanguage => '跟随应用语言';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return '当前为$script';
+  }
+
+  @override
+  String get ocrScriptLatin => '拉丁字母';
+
+  @override
+  String get ocrScriptChinese => '中文';
+
+  @override
+  String get ocrScriptDevanagari => '天城文';
+
+  @override
+  String get ocrScriptJapanese => '日文';
+
+  @override
+  String get ocrScriptKorean => '韩文';
+
+  @override
+  String get ocrScriptLatinDescription => '英语、西班牙语、法语、德语，以及其他用拉丁字母书写的语言。';
+
+  @override
+  String get ocrScriptChineseDescription => '简体中文和繁体中文。';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      '印地语、马拉地语和尼泊尔语。不含孟加拉语、泰米尔语或泰卢固语——它们各自是不同的书写系统。';
+
+  @override
+  String get ocrScriptJapaneseDescription => '日文。';
+
+  @override
+  String get ocrScriptKoreanDescription => '韩文。';
+
+  @override
+  String get ocrScriptFootnote =>
+      '除拉丁字母外的每一项也都能读拉丁字母，所以选择一项是增加一种书写系统，而不是换掉一种。此改动对从现在起拍的照片生效，对已经读过的照片不生效。';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action 读不了$language文字';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      '本机没有对应的识别模型。照片中凡是用拉丁字母写的内容仍会被读取，其余部分会是空的。你可以改为自己输入或粘贴那段文字。';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action 目前设为读取$script。如果这张照片是另一种书写系统，请在设置中更改后重新读取。';
+  }
+
+  @override
+  String get settingsTextRecognition => '文字识别';
+
+  @override
+  String get settingsTextRecognitionDescription => 'Action 从照片中读取的书写系统。';
+
+  @override
   String get settingsIntelligenceFootnote =>
       '没有 AI，Action 一样能用。接入你自己的服务商后，会增加文档分析、规划和起草工具。';
 
@@ -1599,6 +2210,471 @@ class AppL10nZhHans extends AppL10nZh {
 
   @override
   String get errorEnterManually => '手动输入';
+
+  @override
+  String get sourceWhatWeRead => '我们读到的内容';
+
+  @override
+  String get sourceDelete => '删除采集';
+
+  @override
+  String get sourceGone => '那项采集已经不在了。';
+
+  @override
+  String get sourceDeleteTitle => '删除这项采集？';
+
+  @override
+  String get sourceDeleteBody => '图片以及从中读出的文字会从本机移除。';
+
+  @override
+  String get sourceDeleteKeep => '保留';
+
+  @override
+  String get sourceOpenAction => '打开待办';
+
+  @override
+  String sourceOpenActions(int count) {
+    return '打开 $count 项待办';
+  }
+
+  @override
+  String get sourceCreateAnother => '再据此创建一项';
+
+  @override
+  String get sourceCreateAction => '据此创建一项待办';
+
+  @override
+  String get sourceDoMore => '用它做更多事';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return '来自 $format $size KB';
+  }
+
+  @override
+  String get sourceTextFound => '找到文字';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines 行 · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer => '这是 Action 读到的文字。据此做出的东西在下面。';
+
+  @override
+  String get sourceNotInterpreted =>
+      '目前还没有做任何解读。Action 会建议拿它做什么，在任何东西被创建之前由你确认。';
+
+  @override
+  String get sourceNoTextExplainer => '手写字、光线极暗，或本机还读不了的书写系统，都可能出现这种情况。';
+
+  @override
+  String get sourceReadFailed => '这个读不出来';
+
+  @override
+  String get sourceReadFailedReason => '文字识别没有走完。';
+
+  @override
+  String get sourceTryReadingAgain => '再读一次';
+
+  @override
+  String get sourceTypeInstead => '改为自己输入内容';
+
+  @override
+  String get sourceTypeWhatItSays => '把上面写的内容打出来';
+
+  @override
+  String get sourceTypeHint => '日期、金额，以及要求做什么。';
+
+  @override
+  String get sourceMadeFromThis => '由这项采集做出的';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return '由这项采集做出 $count 项';
+  }
+
+  @override
+  String get sourceTheDocument => '文档';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 页',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => '页数未知';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action 没有读过这份文档里面的内容。当你运行需要读它的工具时，文件会送到你连接的 AI 提供方，并且会在发送前告知你。';
+
+  @override
+  String get previewSaveFailed => '没能保存。请再试一次。';
+
+  @override
+  String get previewTitle => '核对采集';
+
+  @override
+  String get previewImageFailed => '那张图片打不开。';
+
+  @override
+  String get previewHint => '确认文字清晰可读，重要部分没有被截掉。';
+
+  @override
+  String get previewRetake => '重拍';
+
+  @override
+  String get pasteTitle => '粘贴文字';
+
+  @override
+  String get pasteHint => '把你不想通篇读的邮件、消息或通知粘贴进来。';
+
+  @override
+  String get pasteFootnote => '含有日期、金额或某项请求的内容效果最好。';
+
+  @override
+  String get pasteEnough => '看起来够用了。';
+
+  @override
+  String get pasteMore => '再多一点文字，结果会更好。';
+
+  @override
+  String get reviewLoadFailed => '这项采集加载不出来。';
+
+  @override
+  String get reviewConfirmed => '已确认';
+
+  @override
+  String get reviewNeedsReview => '需要核对';
+
+  @override
+  String get reviewReview => '核对';
+
+  @override
+  String get reviewHighConfidence => '把握较大';
+
+  @override
+  String get reviewConfirmedByYou => '由你确认';
+
+  @override
+  String get reviewMissing => '缺失';
+
+  @override
+  String get reviewNotUnderstood => 'Action 没能可靠地看懂这份来源里足够多的内容。';
+
+  @override
+  String get reviewNotUnderstoodBody => '采集完好无损，什么都没丢。你可以自己填写内容，来源也会继续附着以供对照。';
+
+  @override
+  String get reviewEnterDetails => '填写内容';
+
+  @override
+  String get reviewKeepSource => '把来源留着以后看';
+
+  @override
+  String reviewEngine(String engine) {
+    return '引擎：$engine';
+  }
+
+  @override
+  String get reviewManualNotice => '这项待办是你自己创建的。只会用到你在这里填的内容。';
+
+  @override
+  String get reviewUntitled => '未命名的待办';
+
+  @override
+  String get reviewEditTitle => '编辑标题';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '确认之前，有 $count 项数值需要你核对。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => '关键信息';
+
+  @override
+  String get reviewNotFound => '没找到';
+
+  @override
+  String get reviewSuggestedNextStep => '建议的下一步';
+
+  @override
+  String get reviewWhyThisMatters => '为什么这件事要紧';
+
+  @override
+  String get reviewSteps => '步骤';
+
+  @override
+  String get reviewAddStep => '添加步骤';
+
+  @override
+  String get reviewInjectionNotice => '这份来源里有些文字看起来像指令而不是文档信息，所以 Action 没有采用。';
+
+  @override
+  String get reviewLayoutNotice =>
+      '这份文档的版式里可能有一些对应关系，文字提取没能完整保留。确认之前请把下面的数值和来源比对一下。';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason 请把下面的数值和来源比对一下。';
+  }
+
+  @override
+  String get reviewDeadline => '期限';
+
+  @override
+  String get reviewAmount => '金额';
+
+  @override
+  String get reviewLeftUnset => '没有——你选择了留空';
+
+  @override
+  String get reviewUnclear => '不清楚';
+
+  @override
+  String get reviewNotSet => '未设定';
+
+  @override
+  String get reviewNoDeadlineFound => '这份文档里没找到';
+
+  @override
+  String get reviewNoAmountFound => '这份文档里没找到金额';
+
+  @override
+  String get reviewMultipleDates => 'Action 找到了多个可能的日期。';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return '有 $count 个日期可能是期限。选出正确的，输入另一个，或者留空。';
+  }
+
+  @override
+  String get reviewChooseDate => '选一个日期';
+
+  @override
+  String get reviewMultipleAmounts => 'Action 找到了不止一个可能的金额。';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return '有 $count 个金额可能是这里说的那个。选一个，输入另一个，或者留空。';
+  }
+
+  @override
+  String get reviewChooseAmount => '选一个金额';
+
+  @override
+  String get reviewSkipStep => '跳过这一步';
+
+  @override
+  String get reviewKeepStep => '保留这一步';
+
+  @override
+  String get reviewEditStep => '编辑步骤';
+
+  @override
+  String get reviewCreateManually => '自己创建';
+
+  @override
+  String get reviewConfirmAndCreate => '确认并创建待办';
+
+  @override
+  String get reviewFixHighlighted => '核对标出的字段';
+
+  @override
+  String get reviewSaving => '正在保存…';
+
+  @override
+  String get reviewSaveFailed => '这项待办没能保存。什么都没丢——请再试一次。';
+
+  @override
+  String get reviewFieldTitle => '标题';
+
+  @override
+  String get reviewTitleHint => '需要做成什么？';
+
+  @override
+  String get reviewNewStep => '新步骤';
+
+  @override
+  String get reviewStepHint => '要做什么';
+
+  @override
+  String get reviewDatesConflict => '文档里提到了不止一个日期。';
+
+  @override
+  String get reviewAmountsConflict => '文档里提到了不止一个金额。';
+
+  @override
+  String get reviewAnotherDate => '另一个日期 — 2026-08-30';
+
+  @override
+  String get reviewBadDate => '这不是一个真实日期。请用 2026-08-30 的格式。';
+
+  @override
+  String get reviewTypeDate => '输入一个日期，或者在下面留空。';
+
+  @override
+  String get reviewUseThisDate => '用这个日期';
+
+  @override
+  String get reviewLeaveNoDeadline => '不设期限继续';
+
+  @override
+  String get reviewAnotherAmount => '另一个金额 — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return '这个金额用不了：$reason。';
+  }
+
+  @override
+  String get reviewUseThisAmount => '用这个金额';
+
+  @override
+  String get reviewLeaveNoAmount => '不设金额继续';
+
+  @override
+  String get reviewThisValue => '这个数值';
+
+  @override
+  String reviewQuote(String quote) {
+    return '“$quote”';
+  }
+
+  @override
+  String get reviewSeeOnCapture => '在采集上查看';
+
+  @override
+  String get reviewViewSource => '查看来源';
+
+  @override
+  String get reviewFromSource => '来自来源';
+
+  @override
+  String get reviewNotVerified => '未比对';
+
+  @override
+  String get reviewCouldNotVerify => '没能把这个和来源比对上。';
+
+  @override
+  String get reviewLooksRight => '看着没问题';
+
+  @override
+  String get reviewStageReading => '正在读取来源';
+
+  @override
+  String get reviewStageUnderstanding => '正在理解重要信息';
+
+  @override
+  String get reviewStageChecking => '正在检查哪些需要核对';
+
+  @override
+  String get reviewNothingToDo => '眼下你不需要做什么。';
+
+  @override
+  String get reviewInformationOnly => '这看起来只是告知——没有找到期限、付款或要求回复。';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      '这看起来只是告知——这项采集里没有找到期限、付款或要求回复。';
+
+  @override
+  String get reviewSourceKept => '无论如何来源都会留着。';
+
+  @override
+  String get reviewAddAnyway => '仍然添加一项待办';
+
+  @override
+  String get reviewActionConfirmed => '待办已确认';
+
+  @override
+  String get reviewCreatedByYou => '由你创建。';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '根据 $count 条已核对的信息，由你确认。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '根据 $count 条已核对的信息，由你确认。其中 $edited 条是你改过的。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => '已保存在本机。';
+
+  @override
+  String get evidenceTitle => '这是哪儿来的';
+
+  @override
+  String get evidenceUnverified =>
+      'Action 没能在读到的文字里找到这些词，所以这个数值没有比对过。在依赖它之前，请对照原件核实。';
+
+  @override
+  String get evidenceHighlighted => '这些词出现在 Action 从这项采集里读到的文字中，高亮显示了位置。';
+
+  @override
+  String get evidenceNoRegion =>
+      '这些词出现在 Action 从这项采集里读到的文字中。它没能确定这些词在图片上的确切位置，也不会去猜。';
+
+  @override
+  String get evidenceInText => '这些词出现在这项采集所含的文字中。';
+
+  @override
+  String get sourceCapturedAtFormat => 'M月d日 HH:mm';
+
+  @override
+  String get urgencyCritical => '紧要';
+
+  @override
+  String get urgencyImportant => '重要';
+
+  @override
+  String get urgencyNormal => '一般';
+
+  @override
+  String get urgencyLow => '较低';
+
+  @override
+  String get urgencyUnsure => '说不准';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -1902,6 +2978,79 @@ class AppL10nZhHant extends AppL10nZh {
   @override
   String get languageDraftNote =>
       'Action 的文案原本是用英文寫的。其餘譯文依照固定術語表起草，並經過自動檢查，但尚未由母語者通讀。凡是措辭準確性要緊的地方 —— 隱私、安全，以及 Action 聲稱什麼、不聲稱什麼 —— 英文仍是基準。';
+
+  @override
+  String get ocrScriptTitle => '文字辨識';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'Action 看照片時讀取的書寫系統。辨識在本機進行；不會為了讀取而把任何擷取傳送到任何地方。';
+
+  @override
+  String get ocrScriptSectionChoose => '書寫系統';
+
+  @override
+  String get ocrScriptFollowLanguage => '跟隨應用程式語言';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return '目前為$script';
+  }
+
+  @override
+  String get ocrScriptLatin => '拉丁字母';
+
+  @override
+  String get ocrScriptChinese => '中文';
+
+  @override
+  String get ocrScriptDevanagari => '天城文';
+
+  @override
+  String get ocrScriptJapanese => '日文';
+
+  @override
+  String get ocrScriptKorean => '韓文';
+
+  @override
+  String get ocrScriptLatinDescription => '英語、西班牙語、法語、德語，以及其他以拉丁字母書寫的語言。';
+
+  @override
+  String get ocrScriptChineseDescription => '簡體中文和繁體中文。';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      '印地語、馬拉地語和尼泊爾語。不含孟加拉語、坦米爾語或泰盧固語——它們各自是不同的書寫系統。';
+
+  @override
+  String get ocrScriptJapaneseDescription => '日文。';
+
+  @override
+  String get ocrScriptKoreanDescription => '韓文。';
+
+  @override
+  String get ocrScriptFootnote =>
+      '除拉丁字母外的每一項也都讀得了拉丁字母，所以選擇一項是增加一種書寫系統，而不是換掉一種。此變更對從現在起拍的照片生效，對已經讀過的照片不生效。';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action 讀不了$language文字';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      '本機沒有對應的辨識模型。照片中凡是以拉丁字母書寫的內容仍會被讀取，其餘部分會是空的。你可以改為自己輸入或貼上那段文字。';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action 目前設為讀取$script。如果這張照片是另一種書寫系統，請在設定中更改後重新讀取。';
+  }
+
+  @override
+  String get settingsTextRecognition => '文字辨識';
+
+  @override
+  String get settingsTextRecognitionDescription => 'Action 從照片中讀取的書寫系統。';
 
   @override
   String get settingsIntelligenceFootnote =>
@@ -2398,4 +3547,469 @@ class AppL10nZhHant extends AppL10nZh {
 
   @override
   String get errorEnterManually => '手動輸入';
+
+  @override
+  String get sourceWhatWeRead => '我們讀到的內容';
+
+  @override
+  String get sourceDelete => '刪除擷取';
+
+  @override
+  String get sourceGone => '那項擷取已經不在了。';
+
+  @override
+  String get sourceDeleteTitle => '刪除這項擷取？';
+
+  @override
+  String get sourceDeleteBody => '圖片以及從中讀出的文字會從本機移除。';
+
+  @override
+  String get sourceDeleteKeep => '保留';
+
+  @override
+  String get sourceOpenAction => '開啟待辦';
+
+  @override
+  String sourceOpenActions(int count) {
+    return '開啟 $count 項待辦';
+  }
+
+  @override
+  String get sourceCreateAnother => '再據此建立一項';
+
+  @override
+  String get sourceCreateAction => '據此建立一項待辦';
+
+  @override
+  String get sourceDoMore => '用它做更多事';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return '來自 $format $size KB';
+  }
+
+  @override
+  String get sourceTextFound => '找到文字';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines 行 · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer => '這是 Action 讀到的文字。據此做出的東西在下面。';
+
+  @override
+  String get sourceNotInterpreted =>
+      '目前還沒有做任何解讀。Action 會建議拿它做什麼，在任何東西被建立之前由你確認。';
+
+  @override
+  String get sourceNoTextExplainer => '手寫字、光線極暗，或本機還讀不了的書寫系統，都可能出現這種情況。';
+
+  @override
+  String get sourceReadFailed => '這個讀不出來';
+
+  @override
+  String get sourceReadFailedReason => '文字辨識沒有走完。';
+
+  @override
+  String get sourceTryReadingAgain => '再讀一次';
+
+  @override
+  String get sourceTypeInstead => '改為自己輸入內容';
+
+  @override
+  String get sourceTypeWhatItSays => '把上面寫的內容打出來';
+
+  @override
+  String get sourceTypeHint => '日期、金額，以及要求做什麼。';
+
+  @override
+  String get sourceMadeFromThis => '由這項擷取做出的';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return '由這項擷取做出 $count 項';
+  }
+
+  @override
+  String get sourceTheDocument => '文件';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 頁',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => '頁數未知';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action 沒有讀過這份文件裡面的內容。當你執行需要讀它的工具時，檔案會送到你連接的 AI 供應方，並且會在傳送前告知你。';
+
+  @override
+  String get previewSaveFailed => '沒能儲存。請再試一次。';
+
+  @override
+  String get previewTitle => '核對擷取';
+
+  @override
+  String get previewImageFailed => '那張圖片打不開。';
+
+  @override
+  String get previewHint => '確認文字清晰可讀，重要部分沒有被截掉。';
+
+  @override
+  String get previewRetake => '重拍';
+
+  @override
+  String get pasteTitle => '貼上文字';
+
+  @override
+  String get pasteHint => '把你不想通篇讀的郵件、訊息或通知貼進來。';
+
+  @override
+  String get pasteFootnote => '含有日期、金額或某項請求的內容效果最好。';
+
+  @override
+  String get pasteEnough => '看起來夠用了。';
+
+  @override
+  String get pasteMore => '再多一點文字，結果會更好。';
+
+  @override
+  String get reviewLoadFailed => '這項擷取載入不出來。';
+
+  @override
+  String get reviewConfirmed => '已確認';
+
+  @override
+  String get reviewNeedsReview => '需要核對';
+
+  @override
+  String get reviewReview => '核對';
+
+  @override
+  String get reviewHighConfidence => '把握較大';
+
+  @override
+  String get reviewConfirmedByYou => '由你確認';
+
+  @override
+  String get reviewMissing => '缺少';
+
+  @override
+  String get reviewNotUnderstood => 'Action 沒能可靠地看懂這份來源裡足夠多的內容。';
+
+  @override
+  String get reviewNotUnderstoodBody => '擷取完好無損，什麼都沒丟。你可以自己填寫內容，來源也會繼續附著以供對照。';
+
+  @override
+  String get reviewEnterDetails => '填寫內容';
+
+  @override
+  String get reviewKeepSource => '把來源留著以後看';
+
+  @override
+  String reviewEngine(String engine) {
+    return '引擎：$engine';
+  }
+
+  @override
+  String get reviewManualNotice => '這項待辦是你自己建立的。只會用到你在這裡填的內容。';
+
+  @override
+  String get reviewUntitled => '未命名的待辦';
+
+  @override
+  String get reviewEditTitle => '編輯標題';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '確認之前，有 $count 項數值需要你核對。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => '關鍵資訊';
+
+  @override
+  String get reviewNotFound => '沒找到';
+
+  @override
+  String get reviewSuggestedNextStep => '建議的下一步';
+
+  @override
+  String get reviewWhyThisMatters => '為什麼這件事要緊';
+
+  @override
+  String get reviewSteps => '步驟';
+
+  @override
+  String get reviewAddStep => '新增步驟';
+
+  @override
+  String get reviewInjectionNotice => '這份來源裡有些文字看起來像指令而不是文件資訊，所以 Action 沒有採用。';
+
+  @override
+  String get reviewLayoutNotice =>
+      '這份文件的版面裡可能有一些對應關係，文字擷取沒能完整保留。確認之前請把下面的數值和來源比對一下。';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason 請把下面的數值和來源比對一下。';
+  }
+
+  @override
+  String get reviewDeadline => '期限';
+
+  @override
+  String get reviewAmount => '金額';
+
+  @override
+  String get reviewLeftUnset => '沒有——你選擇了留空';
+
+  @override
+  String get reviewUnclear => '不清楚';
+
+  @override
+  String get reviewNotSet => '未設定';
+
+  @override
+  String get reviewNoDeadlineFound => '這份文件裡沒找到';
+
+  @override
+  String get reviewNoAmountFound => '這份文件裡沒找到金額';
+
+  @override
+  String get reviewMultipleDates => 'Action 找到了多個可能的日期。';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return '有 $count 個日期可能是期限。選出正確的，輸入另一個，或者留空。';
+  }
+
+  @override
+  String get reviewChooseDate => '選一個日期';
+
+  @override
+  String get reviewMultipleAmounts => 'Action 找到了不只一個可能的金額。';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return '有 $count 個金額可能是這裡說的那個。選一個，輸入另一個，或者留空。';
+  }
+
+  @override
+  String get reviewChooseAmount => '選一個金額';
+
+  @override
+  String get reviewSkipStep => '略過這一步';
+
+  @override
+  String get reviewKeepStep => '保留這一步';
+
+  @override
+  String get reviewEditStep => '編輯步驟';
+
+  @override
+  String get reviewCreateManually => '自己建立';
+
+  @override
+  String get reviewConfirmAndCreate => '確認並建立待辦';
+
+  @override
+  String get reviewFixHighlighted => '核對標出的欄位';
+
+  @override
+  String get reviewSaving => '正在儲存…';
+
+  @override
+  String get reviewSaveFailed => '這項待辦沒能儲存。什麼都沒丟——請再試一次。';
+
+  @override
+  String get reviewFieldTitle => '標題';
+
+  @override
+  String get reviewTitleHint => '需要做成什麼？';
+
+  @override
+  String get reviewNewStep => '新步驟';
+
+  @override
+  String get reviewStepHint => '要做什麼';
+
+  @override
+  String get reviewDatesConflict => '文件裡提到了不只一個日期。';
+
+  @override
+  String get reviewAmountsConflict => '文件裡提到了不只一個金額。';
+
+  @override
+  String get reviewAnotherDate => '另一個日期 — 2026-08-30';
+
+  @override
+  String get reviewBadDate => '這不是一個真實日期。請用 2026-08-30 的格式。';
+
+  @override
+  String get reviewTypeDate => '輸入一個日期，或者在下面留空。';
+
+  @override
+  String get reviewUseThisDate => '用這個日期';
+
+  @override
+  String get reviewLeaveNoDeadline => '不設期限繼續';
+
+  @override
+  String get reviewAnotherAmount => '另一個金額 — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return '這個金額用不了：$reason。';
+  }
+
+  @override
+  String get reviewUseThisAmount => '用這個金額';
+
+  @override
+  String get reviewLeaveNoAmount => '不設金額繼續';
+
+  @override
+  String get reviewThisValue => '這個數值';
+
+  @override
+  String reviewQuote(String quote) {
+    return '「$quote」';
+  }
+
+  @override
+  String get reviewSeeOnCapture => '在擷取上查看';
+
+  @override
+  String get reviewViewSource => '查看來源';
+
+  @override
+  String get reviewFromSource => '來自來源';
+
+  @override
+  String get reviewNotVerified => '未比對';
+
+  @override
+  String get reviewCouldNotVerify => '沒能把這個和來源比對上。';
+
+  @override
+  String get reviewLooksRight => '看著沒問題';
+
+  @override
+  String get reviewStageReading => '正在讀取來源';
+
+  @override
+  String get reviewStageUnderstanding => '正在理解重要資訊';
+
+  @override
+  String get reviewStageChecking => '正在檢查哪些需要核對';
+
+  @override
+  String get reviewNothingToDo => '眼下你不需要做什麼。';
+
+  @override
+  String get reviewInformationOnly => '這看起來只是告知——沒有找到期限、付款或要求回覆。';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      '這看起來只是告知——這項擷取裡沒有找到期限、付款或要求回覆。';
+
+  @override
+  String get reviewSourceKept => '無論如何來源都會留著。';
+
+  @override
+  String get reviewAddAnyway => '仍然新增一項待辦';
+
+  @override
+  String get reviewActionConfirmed => '待辦已確認';
+
+  @override
+  String get reviewCreatedByYou => '由你建立。';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '根據 $count 條已核對的資訊，由你確認。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '根據 $count 條已核對的資訊，由你確認。其中 $edited 條是你改過的。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => '已儲存在本機。';
+
+  @override
+  String get evidenceTitle => '這是哪來的';
+
+  @override
+  String get evidenceUnverified =>
+      'Action 沒能在讀到的文字裡找到這些詞，所以這個數值沒有比對過。在依賴它之前，請對照原件核實。';
+
+  @override
+  String get evidenceHighlighted => '這些詞出現在 Action 從這項擷取裡讀到的文字中，醒目標示顯示了位置。';
+
+  @override
+  String get evidenceNoRegion =>
+      '這些詞出現在 Action 從這項擷取裡讀到的文字中。它沒能確定這些詞在圖片上的確切位置，也不會去猜。';
+
+  @override
+  String get evidenceInText => '這些詞出現在這項擷取所含的文字中。';
+
+  @override
+  String get sourceCapturedAtFormat => 'M月d日 HH:mm';
+
+  @override
+  String get urgencyCritical => '緊要';
+
+  @override
+  String get urgencyImportant => '重要';
+
+  @override
+  String get urgencyNormal => '一般';
+
+  @override
+  String get urgencyLow => '較低';
+
+  @override
+  String get urgencyUnsure => '說不準';
 }

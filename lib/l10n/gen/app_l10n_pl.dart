@@ -331,6 +331,81 @@ class AppL10nPl extends AppL10n {
       'Angielski to język, w którym napisano teksty Action. Pozostałe tłumaczenia powstały według stałego słownika i zostały sprawdzone automatycznie, ale nikt, dla kogo są to języki ojczyste, jeszcze ich nie przeczytał. Tam, gdzie liczy się dokładne sformułowanie — prywatność, bezpieczeństwo, to, co Action twierdzi i czego nie twierdzi — punktem odniesienia pozostaje angielski.';
 
   @override
+  String get ocrScriptTitle => 'Rozpoznawanie tekstu';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'System pisma, który Action odczytuje na zdjęciu. Rozpoznawanie odbywa się na tym urządzeniu; żadne przechwycenie nie jest nigdzie wysyłane do odczytu.';
+
+  @override
+  String get ocrScriptSectionChoose => 'System pisma';
+
+  @override
+  String get ocrScriptFollowLanguage => 'Zgodnie z językiem aplikacji';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return 'Obecnie $script';
+  }
+
+  @override
+  String get ocrScriptLatin => 'Łacińskie';
+
+  @override
+  String get ocrScriptChinese => 'Chińskie';
+
+  @override
+  String get ocrScriptDevanagari => 'Dewanagari';
+
+  @override
+  String get ocrScriptJapanese => 'Japońskie';
+
+  @override
+  String get ocrScriptKorean => 'Koreańskie';
+
+  @override
+  String get ocrScriptLatinDescription =>
+      'Angielski, hiszpański, francuski, niemiecki i pozostałe języki zapisywane literami łacińskimi.';
+
+  @override
+  String get ocrScriptChineseDescription => 'Chiński uproszczony i tradycyjny.';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      'Hindi, marathi i nepalski. Nie bengalski, tamilski ani telugu — każdy z nich to inny system pisma.';
+
+  @override
+  String get ocrScriptJapaneseDescription => 'Japoński.';
+
+  @override
+  String get ocrScriptKoreanDescription => 'Koreański.';
+
+  @override
+  String get ocrScriptFootnote =>
+      'Każdy wybór poza łacińskim odczytuje także litery łacińskie, więc wybranie go dodaje system pisma, a nie zamienia go. Zmiana dotyczy zdjęć robionych od teraz, nie tych już odczytanych.';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action nie odczyta pisma $language';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      'Nie ma dla niego rozpoznawania na urządzeniu. Zdjęcia nadal będą odczytywane w zakresie tego, co zapisano literami łacińskimi, a reszta wróci pusta. Ten tekst możesz zamiast tego wpisać lub wkleić.';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action jest ustawiona na odczyt: $script. Jeśli to zdjęcie jest w innym systemie pisma, zmień to w Ustawieniach i odczytaj je ponownie.';
+  }
+
+  @override
+  String get settingsTextRecognition => 'Rozpoznawanie tekstu';
+
+  @override
+  String get settingsTextRecognitionDescription =>
+      'System pisma, który Action odczytuje ze zdjęć.';
+
+  @override
   String get settingsIntelligenceFootnote =>
       'Action działa bez AI. Podłączenie własnego dostawcy dodaje narzędzia do analizy dokumentów, planowania i pisania szkiców.';
 
@@ -858,4 +933,508 @@ class AppL10nPl extends AppL10n {
 
   @override
   String get errorEnterManually => 'Wpisz ręcznie';
+
+  @override
+  String get sourceWhatWeRead => 'Co odczytaliśmy';
+
+  @override
+  String get sourceDelete => 'Usuń przechwycenie';
+
+  @override
+  String get sourceGone => 'To przechwycenie nie jest już dostępne.';
+
+  @override
+  String get sourceDeleteTitle => 'Usunąć to przechwycenie?';
+
+  @override
+  String get sourceDeleteBody =>
+      'Obraz i odczytany z niego tekst zostaną usunięte z tego urządzenia.';
+
+  @override
+  String get sourceDeleteKeep => 'Zachowaj';
+
+  @override
+  String get sourceOpenAction => 'Otwórz zadanie';
+
+  @override
+  String sourceOpenActions(int count) {
+    return 'Otwórz zadania: $count';
+  }
+
+  @override
+  String get sourceCreateAnother => 'Utwórz z tego kolejne';
+
+  @override
+  String get sourceCreateAction => 'Utwórz z tego zadanie';
+
+  @override
+  String get sourceDoMore => 'Zrób z tym więcej';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return 'z $format $size KB';
+  }
+
+  @override
+  String get sourceTextFound => 'Znaleziono tekst';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return 'wiersze: $lines · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer =>
+      'To jest tekst, który Action odczytała. Co z niego powstało, widać poniżej.';
+
+  @override
+  String get sourceNotInterpreted =>
+      'Nic jeszcze nie zostało zinterpretowane. Action zaproponuje, co z tym zrobić, a Ty potwierdzasz, zanim cokolwiek powstanie.';
+
+  @override
+  String get sourceNoTextExplainer =>
+      'Zdarza się to przy piśmie odręcznym, bardzo słabym świetle albo piśmie, którego to urządzenie jeszcze nie odczyta.';
+
+  @override
+  String get sourceReadFailed => 'Nie udało się tego odczytać';
+
+  @override
+  String get sourceReadFailedReason =>
+      'Rozpoznawanie tekstu nie zostało ukończone.';
+
+  @override
+  String get sourceTryReadingAgain => 'Spróbuj odczytać ponownie';
+
+  @override
+  String get sourceTypeInstead => 'Wpisz dane zamiast tego';
+
+  @override
+  String get sourceTypeWhatItSays => 'Wpisz, co tam jest napisane';
+
+  @override
+  String get sourceTypeHint => 'Daty, kwoty i to, o co się prosi.';
+
+  @override
+  String get sourceMadeFromThis => 'Powstało z tego przechwycenia';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return 'Powstało z tego przechwycenia: $count';
+  }
+
+  @override
+  String get sourceTheDocument => 'Dokument';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count strony',
+      many: '$count stron',
+      few: '$count strony',
+      one: '1 strona',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => 'Nieznana liczba stron';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action nie odczytała tego, co jest w środku tego dokumentu. Gdy uruchomisz narzędzie, które tego wymaga, plik trafi do podłączonego przez Ciebie dostawcy AI, a Ty zostaniesz o tym uprzedzony.';
+
+  @override
+  String get previewSaveFailed =>
+      'Nie udało się tego zapisać. Spróbuj ponownie.';
+
+  @override
+  String get previewTitle => 'Sprawdź przechwycenie';
+
+  @override
+  String get previewImageFailed => 'Nie udało się otworzyć tego obrazu.';
+
+  @override
+  String get previewHint =>
+      'Upewnij się, że tekst jest czytelny i nic ważnego nie zostało ucięte.';
+
+  @override
+  String get previewRetake => 'Zrób ponownie';
+
+  @override
+  String get pasteTitle => 'Wklej tekst';
+
+  @override
+  String get pasteHint =>
+      'Wklej e-mail, wiadomość lub pismo, którego wolisz nie czytać w całości.';
+
+  @override
+  String get pasteFootnote =>
+      'Dobrze sprawdza się wszystko, co zawiera datę, kwotę albo prośbę.';
+
+  @override
+  String get pasteEnough => 'Wygląda na to, że wystarczy do pracy.';
+
+  @override
+  String get pasteMore => 'Trochę więcej tekstu da lepszy wynik.';
+
+  @override
+  String get reviewLoadFailed => 'Nie udało się wczytać tego przechwycenia.';
+
+  @override
+  String get reviewConfirmed => 'Potwierdzone';
+
+  @override
+  String get reviewNeedsReview => 'Wymaga sprawdzenia';
+
+  @override
+  String get reviewReview => 'Sprawdź';
+
+  @override
+  String get reviewHighConfidence => 'Wysoka pewność';
+
+  @override
+  String get reviewConfirmedByYou => 'Potwierdzone przez Ciebie';
+
+  @override
+  String get reviewMissing => 'Brakuje';
+
+  @override
+  String get reviewNotUnderstood =>
+      'Action nie zdołała wiarygodnie zrozumieć wystarczająco dużo z tego źródła.';
+
+  @override
+  String get reviewNotUnderstoodBody =>
+      'Przechwycenie jest nienaruszone i nic nie przepadło. Możesz wpisać dane samodzielnie, a źródło pozostaje dołączone dla odniesienia.';
+
+  @override
+  String get reviewEnterDetails => 'Wpisz dane';
+
+  @override
+  String get reviewKeepSource => 'Zachowaj źródło na później';
+
+  @override
+  String reviewEngine(String engine) {
+    return 'Silnik: $engine';
+  }
+
+  @override
+  String get reviewManualNotice =>
+      'To zadanie tworzysz sam. Użyte zostanie wyłącznie to, co tu wpiszesz.';
+
+  @override
+  String get reviewUntitled => 'Zadanie bez tytułu';
+
+  @override
+  String get reviewEditTitle => 'Edytuj tytuł';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count wartości wymaga Twojego sprawdzenia.',
+      many: '$count wartości wymaga Twojego sprawdzenia.',
+      few: '$count wartości wymagają Twojego sprawdzenia.',
+      one: '1 wartość wymaga Twojego sprawdzenia, zanim będzie można to potwierdzić.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => 'Najważniejsze dane';
+
+  @override
+  String get reviewNotFound => 'Nie znaleziono';
+
+  @override
+  String get reviewSuggestedNextStep => 'Proponowany następny krok';
+
+  @override
+  String get reviewWhyThisMatters => 'Dlaczego to ważne';
+
+  @override
+  String get reviewSteps => 'Kroki';
+
+  @override
+  String get reviewAddStep => 'Dodaj krok';
+
+  @override
+  String get reviewInjectionNotice =>
+      'Część tekstu w tym źródle wyglądała na polecenia, a nie na dane z dokumentu, więc Action to pominęła.';
+
+  @override
+  String get reviewLayoutNotice =>
+      'Układ tego dokumentu może zawierać zależności, których wydobycie tekstu nie zdołało w pełni zachować. Porównaj poniższe wartości ze źródłem, zanim potwierdzisz.';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason Porównaj poniższe wartości ze źródłem.';
+  }
+
+  @override
+  String get reviewDeadline => 'Termin';
+
+  @override
+  String get reviewAmount => 'Kwota';
+
+  @override
+  String get reviewLeftUnset => 'Brak — sam zdecydowałeś tego nie ustawiać';
+
+  @override
+  String get reviewUnclear => 'Niejasne';
+
+  @override
+  String get reviewNotSet => 'Nieustawione';
+
+  @override
+  String get reviewNoDeadlineFound => 'Nie znaleziono go w tym dokumencie';
+
+  @override
+  String get reviewNoAmountFound => 'Nie znaleziono jej w tym dokumencie';
+
+  @override
+  String get reviewMultipleDates => 'Action znalazła kilka możliwych dat.';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return 'Terminem mogą być te daty: $count. Wybierz właściwą, wpisz inną albo zostaw nieustawioną.';
+  }
+
+  @override
+  String get reviewChooseDate => 'Wybierz datę';
+
+  @override
+  String get reviewMultipleAmounts =>
+      'Action znalazła więcej niż jedną możliwą kwotę.';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return 'Kwot, o które może tu chodzić, jest $count. Wybierz jedną, wpisz inną albo zostaw nieustawioną.';
+  }
+
+  @override
+  String get reviewChooseAmount => 'Wybierz kwotę';
+
+  @override
+  String get reviewSkipStep => 'Pomiń ten krok';
+
+  @override
+  String get reviewKeepStep => 'Zachowaj ten krok';
+
+  @override
+  String get reviewEditStep => 'Edytuj krok';
+
+  @override
+  String get reviewCreateManually => 'Utwórz ręcznie';
+
+  @override
+  String get reviewConfirmAndCreate => 'Potwierdź i utwórz zadanie';
+
+  @override
+  String get reviewFixHighlighted => 'Sprawdź zaznaczone pola';
+
+  @override
+  String get reviewSaving => 'Zapisywanie…';
+
+  @override
+  String get reviewSaveFailed =>
+      'Nie udało się zapisać tego zadania. Nic nie przepadło — spróbuj ponownie.';
+
+  @override
+  String get reviewFieldTitle => 'Tytuł';
+
+  @override
+  String get reviewTitleHint => 'Co ma się wydarzyć?';
+
+  @override
+  String get reviewNewStep => 'Nowy krok';
+
+  @override
+  String get reviewStepHint => 'Co zrobić';
+
+  @override
+  String get reviewDatesConflict => 'Dokument wymienia więcej niż jedną datę.';
+
+  @override
+  String get reviewAmountsConflict =>
+      'Dokument wymienia więcej niż jedną kwotę.';
+
+  @override
+  String get reviewAnotherDate => 'Inna data — 2026-08-30';
+
+  @override
+  String get reviewBadDate =>
+      'To nie jest prawdziwa data. Użyj formatu 2026-08-30.';
+
+  @override
+  String get reviewTypeDate =>
+      'Wpisz datę albo zostaw ją nieustawioną poniżej.';
+
+  @override
+  String get reviewUseThisDate => 'Użyj tej daty';
+
+  @override
+  String get reviewLeaveNoDeadline => 'Dalej bez terminu';
+
+  @override
+  String get reviewAnotherAmount => 'Inna kwota — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return 'Nie można użyć tej kwoty: $reason.';
+  }
+
+  @override
+  String get reviewUseThisAmount => 'Użyj tej kwoty';
+
+  @override
+  String get reviewLeaveNoAmount => 'Dalej bez kwoty';
+
+  @override
+  String get reviewThisValue => 'Ta wartość';
+
+  @override
+  String reviewQuote(String quote) {
+    return '„$quote”';
+  }
+
+  @override
+  String get reviewSeeOnCapture => 'Pokaż na przechwyceniu';
+
+  @override
+  String get reviewViewSource => 'Zobacz źródło';
+
+  @override
+  String get reviewFromSource => 'Ze źródła';
+
+  @override
+  String get reviewNotVerified => 'Niesprawdzone';
+
+  @override
+  String get reviewCouldNotVerify => 'Nie udało się tego sprawdzić ze źródłem.';
+
+  @override
+  String get reviewLooksRight => 'Wygląda poprawnie';
+
+  @override
+  String get reviewStageReading => 'Odczytywanie źródła';
+
+  @override
+  String get reviewStageUnderstanding => 'Rozumienie ważnych szczegółów';
+
+  @override
+  String get reviewStageChecking => 'Sprawdzanie, co wymaga przejrzenia';
+
+  @override
+  String get reviewNothingToDo => 'W tej chwili nie musisz nic robić.';
+
+  @override
+  String get reviewInformationOnly =>
+      'To wygląda wyłącznie na informację — nie znaleziono terminu, płatności ani prośby o odpowiedź.';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      'To wygląda wyłącznie na informację — w tym przechwyceniu nie znaleziono terminu, płatności ani prośby o odpowiedź.';
+
+  @override
+  String get reviewSourceKept => 'Źródło zostaje zachowane tak czy inaczej.';
+
+  @override
+  String get reviewAddAnyway => 'Mimo to dodaj zadanie';
+
+  @override
+  String get reviewActionConfirmed => 'Zadanie potwierdzone';
+
+  @override
+  String get reviewCreatedByYou => 'Utworzone przez Ciebie.';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Potwierdzone przez Ciebie na podstawie $count sprawdzonych informacji.',
+      many:
+          'Potwierdzone przez Ciebie na podstawie $count sprawdzonych informacji.',
+      few:
+          'Potwierdzone przez Ciebie na podstawie $count sprawdzonych informacji.',
+      one: 'Potwierdzone przez Ciebie na podstawie 1 sprawdzonej informacji.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Potwierdzone przez Ciebie na podstawie $count sprawdzonych informacji. Zmieniłeś $edited z nich.',
+      many:
+          'Potwierdzone przez Ciebie na podstawie $count sprawdzonych informacji. Zmieniłeś $edited z nich.',
+      few:
+          'Potwierdzone przez Ciebie na podstawie $count sprawdzonych informacji. Zmieniłeś $edited z nich.',
+      one:
+          'Potwierdzone przez Ciebie na podstawie 1 sprawdzonej informacji. Zmieniłeś $edited z nich.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => 'Zapisane na tym urządzeniu.';
+
+  @override
+  String get evidenceTitle => 'Skąd to pochodzi';
+
+  @override
+  String get evidenceUnverified =>
+      'Action nie znalazła tych słów w odczytanym tekście, więc ta wartość nie została sprawdzona. Porównaj ją z oryginałem, zanim na niej polegniesz.';
+
+  @override
+  String get evidenceHighlighted =>
+      'Te słowa były w tekście, który Action odczytała z tego przechwycenia, a podświetlenie pokazuje gdzie.';
+
+  @override
+  String get evidenceNoRegion =>
+      'Te słowa były w tekście, który Action odczytała z tego przechwycenia. Nie udało się ustalić, gdzie dokładnie znajdują się na obrazie, i nie ma tu zgadywania.';
+
+  @override
+  String get evidenceInText =>
+      'Te słowa były w tekście, który zawiera to przechwycenie.';
+
+  @override
+  String get sourceCapturedAtFormat => 'd MMM, HH:mm';
+
+  @override
+  String get urgencyCritical => 'Krytyczne';
+
+  @override
+  String get urgencyImportant => 'Ważne';
+
+  @override
+  String get urgencyNormal => 'Zwykłe';
+
+  @override
+  String get urgencyLow => 'Niskie';
+
+  @override
+  String get urgencyUnsure => 'Nie wiadomo';
 }

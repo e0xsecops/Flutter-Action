@@ -319,6 +319,81 @@ class AppL10nBn extends AppL10n {
       'Action-এর লেখা মূলত ইংরেজিতে তৈরি। বাকি অনুবাদগুলো একটি নির্দিষ্ট শব্দতালিকা মেনে খসড়া করা হয়েছে এবং স্বয়ংক্রিয়ভাবে যাচাই হয়েছে, কিন্তু কোনো মাতৃভাষী এখনও সেগুলো পড়ে দেখেননি। যেখানে শব্দের নির্ভুলতা জরুরি — গোপনীয়তা, নিরাপত্তা, এবং Action কী দাবি করে ও কী করে না — সেখানে ইংরেজিই মূল সূত্র।';
 
   @override
+  String get ocrScriptTitle => 'লেখা শনাক্তকরণ';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'ছবির দিকে তাকালে Action যে লিপি পড়ে। শনাক্তকরণ এই ডিভাইসেই হয়; পড়ার জন্য কোনো ক্যাপচার কোথাও পাঠানো হয় না।';
+
+  @override
+  String get ocrScriptSectionChoose => 'লিপি';
+
+  @override
+  String get ocrScriptFollowLanguage => 'অ্যাপের ভাষা অনুসরণ করুন';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return 'এখন $script';
+  }
+
+  @override
+  String get ocrScriptLatin => 'রোমান';
+
+  @override
+  String get ocrScriptChinese => 'চীনা';
+
+  @override
+  String get ocrScriptDevanagari => 'দেবনাগরী';
+
+  @override
+  String get ocrScriptJapanese => 'জাপানি';
+
+  @override
+  String get ocrScriptKorean => 'কোরীয়';
+
+  @override
+  String get ocrScriptLatinDescription =>
+      'ইংরেজি, স্প্যানিশ, ফরাসি, জার্মান এবং রোমান অক্ষরে লেখা বাকি ভাষাগুলো।';
+
+  @override
+  String get ocrScriptChineseDescription => 'সরলীকৃত ও প্রচলিত চীনা।';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      'হিন্দি, মারাঠি ও নেপালি। বাংলা, তামিল বা তেলুগু নয় — এদের প্রত্যেকের লিপি আলাদা।';
+
+  @override
+  String get ocrScriptJapaneseDescription => 'জাপানি।';
+
+  @override
+  String get ocrScriptKoreanDescription => 'কোরীয়।';
+
+  @override
+  String get ocrScriptFootnote =>
+      'রোমান ছাড়া প্রতিটি পছন্দই রোমান অক্ষরও পড়ে, তাই একটি বেছে নিলে লিপি বদলায় না, যোগ হয়। এই বদল এখন থেকে তোলা ছবির ক্ষেত্রে খাটে, আগে পড়া হয়ে যাওয়া ছবির ক্ষেত্রে নয়।';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action $language লিপি পড়তে পারে না';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      'এর জন্য ডিভাইসে কোনো শনাক্তকারী নেই। ছবিতে রোমান অক্ষরে লেখা যা কিছু থাকবে তা তবু পড়া হবে, বাকিটা খালি ফিরবে। ওই লেখা আপনি বরং টাইপ করতে বা পেস্ট করতে পারেন।';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action এখন $script পড়ার জন্য সেট করা। এই ছবি অন্য কোনো লিপিতে হলে সেটিংসে বদলে নিয়ে আবার পড়ান।';
+  }
+
+  @override
+  String get settingsTextRecognition => 'লেখা শনাক্তকরণ';
+
+  @override
+  String get settingsTextRecognitionDescription =>
+      'ছবি থেকে Action যে লিপি পড়ে।';
+
+  @override
   String get settingsIntelligenceFootnote =>
       'AI ছাড়াই Action কাজ করে। নিজের প্রোভাইডার যুক্ত করলে ডকুমেন্ট বিশ্লেষণ, পরিকল্পনা ও খসড়া লেখার টুল যোগ হয়।';
 
@@ -835,4 +910,490 @@ class AppL10nBn extends AppL10n {
 
   @override
   String get errorEnterManually => 'নিজে লিখে দিন';
+
+  @override
+  String get sourceWhatWeRead => 'আমরা যা পড়েছি';
+
+  @override
+  String get sourceDelete => 'ক্যাপচার মুছুন';
+
+  @override
+  String get sourceGone => 'ওই ক্যাপচার আর নেই।';
+
+  @override
+  String get sourceDeleteTitle => 'এই ক্যাপচার মুছে ফেলবেন?';
+
+  @override
+  String get sourceDeleteBody =>
+      'ছবিটি এবং তা থেকে পড়া লেখা এই ডিভাইস থেকে সরে যাবে।';
+
+  @override
+  String get sourceDeleteKeep => 'থাক';
+
+  @override
+  String get sourceOpenAction => 'কাজটি খুলুন';
+
+  @override
+  String sourceOpenActions(int count) {
+    return '$countটি কাজ খুলুন';
+  }
+
+  @override
+  String get sourceCreateAnother => 'এটি থেকে আরেকটি তৈরি করুন';
+
+  @override
+  String get sourceCreateAction => 'এটি থেকে একটি কাজ তৈরি করুন';
+
+  @override
+  String get sourceDoMore => 'এটি দিয়ে আরও কিছু করুন';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return '$format $size KB থেকে';
+  }
+
+  @override
+  String get sourceTextFound => 'লেখা পাওয়া গেছে';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines লাইন · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer =>
+      'Action যে লেখা পড়েছে সেটি এই। তা থেকে যা তৈরি হয়েছে তা নিচে।';
+
+  @override
+  String get sourceNotInterpreted =>
+      'এখনও কিছু ব্যাখ্যা করা হয়নি। Action পরামর্শ দেবে এটি দিয়ে কী করা যায়, আর কিছু তৈরি হওয়ার আগে আপনি নিশ্চিত করেন।';
+
+  @override
+  String get sourceNoTextExplainer =>
+      'হাতের লেখায়, খুব কম আলোয়, বা এমন লিপিতে এটি হতে পারে যা এই ডিভাইস এখনও পড়তে পারে না।';
+
+  @override
+  String get sourceReadFailed => 'এটি পড়া গেল না';
+
+  @override
+  String get sourceReadFailedReason => 'লেখা শনাক্তকরণ শেষ হয়নি।';
+
+  @override
+  String get sourceTryReadingAgain => 'আবার পড়ার চেষ্টা করুন';
+
+  @override
+  String get sourceTypeInstead => 'বরং বিবরণ টাইপ করুন';
+
+  @override
+  String get sourceTypeWhatItSays => 'যা লেখা আছে তা টাইপ করুন';
+
+  @override
+  String get sourceTypeHint => 'তারিখ, অঙ্ক, আর কী চাওয়া হচ্ছে।';
+
+  @override
+  String get sourceMadeFromThis => 'এই ক্যাপচার থেকে তৈরি';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return 'এই ক্যাপচার থেকে $countটি তৈরি';
+  }
+
+  @override
+  String get sourceTheDocument => 'নথিটি';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count পৃষ্ঠা',
+      one: '১ পৃষ্ঠা',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => 'পৃষ্ঠার সংখ্যা জানা নেই';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'এই নথির ভিতরে কী আছে Action তা পড়েনি। যে সরঞ্জামের এটি দরকার তা চালালে ফাইলটি আপনার যুক্ত করা AI সরবরাহকারীর কাছে যাবে, এবং তার আগে আপনাকে জানানো হবে।';
+
+  @override
+  String get previewSaveFailed => 'ওটি সেভ করা গেল না। আবার চেষ্টা করুন।';
+
+  @override
+  String get previewTitle => 'ক্যাপচারটি দেখে নিন';
+
+  @override
+  String get previewImageFailed => 'ওই ছবিটি খোলা গেল না।';
+
+  @override
+  String get previewHint =>
+      'দেখে নিন লেখা পড়ার মতো আছে আর জরুরি কিছু কেটে যায়নি।';
+
+  @override
+  String get previewRetake => 'আবার তুলুন';
+
+  @override
+  String get pasteTitle => 'লেখা পেস্ট করুন';
+
+  @override
+  String get pasteHint =>
+      'যে ইমেল, বার্তা বা বিজ্ঞপ্তি পুরোটা পড়তে ইচ্ছে করছে না, সেটি পেস্ট করুন।';
+
+  @override
+  String get pasteFootnote =>
+      'যাতে তারিখ, অঙ্ক বা কোনো অনুরোধ আছে, তা ভালো কাজ করে।';
+
+  @override
+  String get pasteEnough => 'মনে হচ্ছে কাজ চালানোর মতো যথেষ্ট।';
+
+  @override
+  String get pasteMore => 'আর একটু লেখা হলে ফল ভালো হবে।';
+
+  @override
+  String get reviewLoadFailed => 'এই ক্যাপচারটি লোড করা গেল না।';
+
+  @override
+  String get reviewConfirmed => 'নিশ্চিত';
+
+  @override
+  String get reviewNeedsReview => 'পর্যালোচনা দরকার';
+
+  @override
+  String get reviewReview => 'পর্যালোচনা করুন';
+
+  @override
+  String get reviewHighConfidence => 'উঁচু আস্থা';
+
+  @override
+  String get reviewConfirmedByYou => 'আপনি নিশ্চিত করেছেন';
+
+  @override
+  String get reviewMissing => 'নেই';
+
+  @override
+  String get reviewNotUnderstood =>
+      'Action এই উৎসের যথেষ্ট অংশ নির্ভরযোগ্যভাবে বুঝতে পারেনি।';
+
+  @override
+  String get reviewNotUnderstoodBody =>
+      'ক্যাপচারটি অক্ষত আছে এবং কিছুই হারায়নি। আপনি নিজেই বিবরণ লিখতে পারেন, আর উৎসটি মিলিয়ে দেখার জন্য জোড়া থাকে।';
+
+  @override
+  String get reviewEnterDetails => 'বিবরণ লিখুন';
+
+  @override
+  String get reviewKeepSource => 'উৎসটি পরে দেখার জন্য রাখুন';
+
+  @override
+  String reviewEngine(String engine) {
+    return 'ইঞ্জিন: $engine';
+  }
+
+  @override
+  String get reviewManualNotice =>
+      'এই কাজটি আপনি নিজেই তৈরি করছেন। আপনি এখানে যা লিখবেন কেবল তাই ব্যবহার হবে।';
+
+  @override
+  String get reviewUntitled => 'শিরোনামহীন কাজ';
+
+  @override
+  String get reviewEditTitle => 'শিরোনাম বদলান';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি মান আপনার পর্যালোচনা চায়।',
+      one: 'এটি নিশ্চিত করার আগে ১টি মান আপনার পর্যালোচনা চায়।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => 'মূল তথ্য';
+
+  @override
+  String get reviewNotFound => 'পাওয়া যায়নি';
+
+  @override
+  String get reviewSuggestedNextStep => 'প্রস্তাবিত পরের ধাপ';
+
+  @override
+  String get reviewWhyThisMatters => 'কেন এটি জরুরি';
+
+  @override
+  String get reviewSteps => 'ধাপ';
+
+  @override
+  String get reviewAddStep => 'ধাপ যোগ করুন';
+
+  @override
+  String get reviewInjectionNotice =>
+      'এই উৎসের কিছু লেখা নথির তথ্য নয়, বরং নির্দেশের মতো দেখাচ্ছিল, তাই Action সেটি বাদ দিয়েছে।';
+
+  @override
+  String get reviewLayoutNotice =>
+      'এই নথির বিন্যাসে এমন সম্পর্ক থাকতে পারে যা লেখা তুলে আনার সময় পুরোপুরি রক্ষা করা যায়নি। নিশ্চিত করার আগে নিচের মানগুলো উৎসের সঙ্গে মিলিয়ে নিন।';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason নিচের মানগুলো উৎসের সঙ্গে মিলিয়ে নিন।';
+  }
+
+  @override
+  String get reviewDeadline => 'সময়সীমা';
+
+  @override
+  String get reviewAmount => 'পরিমাণ';
+
+  @override
+  String get reviewLeftUnset => 'কিছু নেই — আপনি এটি ফাঁকা রাখা বেছে নিয়েছেন';
+
+  @override
+  String get reviewUnclear => 'স্পষ্ট নয়';
+
+  @override
+  String get reviewNotSet => 'ঠিক করা হয়নি';
+
+  @override
+  String get reviewNoDeadlineFound => 'এই নথিতে কোনোটি পাওয়া যায়নি';
+
+  @override
+  String get reviewNoAmountFound => 'এই নথিতে কোনো পরিমাণ পাওয়া যায়নি';
+
+  @override
+  String get reviewMultipleDates => 'Action একাধিক সম্ভাব্য তারিখ পেয়েছে।';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return '$countটি তারিখ সময়সীমা হতে পারে। ঠিকটি বেছে নিন, অন্য একটি লিখুন, বা ফাঁকা রাখুন।';
+  }
+
+  @override
+  String get reviewChooseDate => 'একটি তারিখ বেছে নিন';
+
+  @override
+  String get reviewMultipleAmounts =>
+      'Action একের বেশি সম্ভাব্য পরিমাণ পেয়েছে।';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return '$countটি পরিমাণের কোনোটি এই কাজের হতে পারে। একটি বেছে নিন, অন্য একটি লিখুন, বা ফাঁকা রাখুন।';
+  }
+
+  @override
+  String get reviewChooseAmount => 'একটি পরিমাণ বেছে নিন';
+
+  @override
+  String get reviewSkipStep => 'এই ধাপটি বাদ দিন';
+
+  @override
+  String get reviewKeepStep => 'এই ধাপটি রাখুন';
+
+  @override
+  String get reviewEditStep => 'ধাপ বদলান';
+
+  @override
+  String get reviewCreateManually => 'নিজে তৈরি করুন';
+
+  @override
+  String get reviewConfirmAndCreate => 'নিশ্চিত করে কাজ তৈরি করুন';
+
+  @override
+  String get reviewFixHighlighted => 'চিহ্নিত ঘরগুলো দেখুন';
+
+  @override
+  String get reviewSaving => 'সেভ হচ্ছে…';
+
+  @override
+  String get reviewSaveFailed =>
+      'এই কাজটি সেভ করা গেল না। কিছুই হারায়নি — আবার চেষ্টা করুন।';
+
+  @override
+  String get reviewFieldTitle => 'শিরোনাম';
+
+  @override
+  String get reviewTitleHint => 'কী হওয়া দরকার?';
+
+  @override
+  String get reviewNewStep => 'নতুন ধাপ';
+
+  @override
+  String get reviewStepHint => 'কী করতে হবে';
+
+  @override
+  String get reviewDatesConflict => 'নথিতে একের বেশি তারিখ আছে।';
+
+  @override
+  String get reviewAmountsConflict => 'নথিতে একের বেশি পরিমাণ আছে।';
+
+  @override
+  String get reviewAnotherDate => 'অন্য তারিখ — 2026-08-30';
+
+  @override
+  String get reviewBadDate =>
+      'এটি সত্যিকারের তারিখ নয়। 2026-08-30 ছাঁদে লিখুন।';
+
+  @override
+  String get reviewTypeDate => 'একটি তারিখ টাইপ করুন, বা নিচে ফাঁকা রাখুন।';
+
+  @override
+  String get reviewUseThisDate => 'এই তারিখটি নিন';
+
+  @override
+  String get reviewLeaveNoDeadline => 'সময়সীমা ছাড়াই এগোন';
+
+  @override
+  String get reviewAnotherAmount => 'অন্য পরিমাণ — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return 'এই পরিমাণ ব্যবহার করা যাবে না: $reason।';
+  }
+
+  @override
+  String get reviewUseThisAmount => 'এই পরিমাণটি নিন';
+
+  @override
+  String get reviewLeaveNoAmount => 'পরিমাণ ছাড়াই এগোন';
+
+  @override
+  String get reviewThisValue => 'এই মান';
+
+  @override
+  String reviewQuote(String quote) {
+    return '“$quote”';
+  }
+
+  @override
+  String get reviewSeeOnCapture => 'ক্যাপচারে দেখুন';
+
+  @override
+  String get reviewViewSource => 'উৎস দেখুন';
+
+  @override
+  String get reviewFromSource => 'উৎস থেকে';
+
+  @override
+  String get reviewNotVerified => 'মিলিয়ে দেখা হয়নি';
+
+  @override
+  String get reviewCouldNotVerify => 'এটি উৎসের সঙ্গে মিলিয়ে দেখা গেল না।';
+
+  @override
+  String get reviewLooksRight => 'ঠিক মনে হচ্ছে';
+
+  @override
+  String get reviewStageReading => 'উৎস পড়া হচ্ছে';
+
+  @override
+  String get reviewStageUnderstanding => 'জরুরি বিবরণ বোঝা হচ্ছে';
+
+  @override
+  String get reviewStageChecking => 'কীসের পর্যালোচনা দরকার তা দেখা হচ্ছে';
+
+  @override
+  String get reviewNothingToDo => 'এই মুহূর্তে আপনার কিছু করার নেই।';
+
+  @override
+  String get reviewInformationOnly =>
+      'এটি কেবল তথ্য বলে মনে হচ্ছে — কোনো সময়সীমা, টাকা বা উত্তরের অনুরোধ পাওয়া যায়নি।';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      'এটি কেবল তথ্য বলে মনে হচ্ছে — এই ক্যাপচারে কোনো সময়সীমা, টাকা বা উত্তরের অনুরোধ পাওয়া যায়নি।';
+
+  @override
+  String get reviewSourceKept => 'উৎসটি যেভাবেই হোক রাখা থাকে।';
+
+  @override
+  String get reviewAddAnyway => 'তবুও একটি কাজ যোগ করুন';
+
+  @override
+  String get reviewActionConfirmed => 'কাজ নিশ্চিত হয়েছে';
+
+  @override
+  String get reviewCreatedByYou => 'আপনি তৈরি করেছেন।';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি পর্যালোচিত তথ্যের ভিত্তিতে আপনি নিশ্চিত করেছেন।',
+      one: '১টি পর্যালোচিত তথ্যের ভিত্তিতে আপনি নিশ্চিত করেছেন।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$countটি পর্যালোচিত তথ্যের ভিত্তিতে আপনি নিশ্চিত করেছেন। এর মধ্যে $editedটি আপনি বদলেছেন।',
+      one:
+          '১টি পর্যালোচিত তথ্যের ভিত্তিতে আপনি নিশ্চিত করেছেন। এর মধ্যে $editedটি আপনি বদলেছেন।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => 'এই ডিভাইসেই সেভ হয়েছে।';
+
+  @override
+  String get evidenceTitle => 'এটি কোথা থেকে এসেছে';
+
+  @override
+  String get evidenceUnverified =>
+      'Action যে লেখা পড়েছে তাতে এই শব্দগুলো পায়নি, তাই এই মানটি মিলিয়ে দেখা হয়নি। এর উপর ভরসা করার আগে মূলটির সঙ্গে মিলিয়ে নিন।';
+
+  @override
+  String get evidenceHighlighted =>
+      'Action এই ক্যাপচার থেকে যে লেখা পড়েছে তাতে এই শব্দগুলো ছিল, আর চিহ্নটি দেখাচ্ছে কোথায়।';
+
+  @override
+  String get evidenceNoRegion =>
+      'Action এই ক্যাপচার থেকে যে লেখা পড়েছে তাতে এই শব্দগুলো ছিল। ছবির ঠিক কোন জায়গায় সেগুলো আছে তা বের করা যায়নি, আর এখানে আন্দাজ করা হয় না।';
+
+  @override
+  String get evidenceInText => 'এই ক্যাপচারে যে লেখা আছে তাতে এই শব্দগুলো ছিল।';
+
+  @override
+  String get sourceCapturedAtFormat => 'd MMM, HH:mm';
+
+  @override
+  String get urgencyCritical => 'অতি জরুরি';
+
+  @override
+  String get urgencyImportant => 'গুরুত্বপূর্ণ';
+
+  @override
+  String get urgencyNormal => 'সাধারণ';
+
+  @override
+  String get urgencyLow => 'কম';
+
+  @override
+  String get urgencyUnsure => 'নিশ্চিত নয়';
 }

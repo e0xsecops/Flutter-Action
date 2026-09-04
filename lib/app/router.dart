@@ -25,6 +25,7 @@ import '../features/settings/presentation/language_screen.dart';
 import '../features/settings/presentation/privacy_screen.dart';
 import '../features/settings/presentation/security_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/settings/presentation/text_recognition_screen.dart';
 import 'action_shell.dart';
 
 /// Route paths in one place so navigation is never stringly-typed.
@@ -47,6 +48,7 @@ abstract final class Routes {
   static const settingsPrivacy = '/settings/privacy';
   static const settingsHelp = '/settings/help';
   static const settingsLanguage = '/settings/language';
+  static const settingsTextRecognition = '/settings/text-recognition';
   static const settingsIntelligence = '/settings/intelligence';
 
   /// Deliberately not nested under `/studio`. A tool run is a focused task that
@@ -248,6 +250,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'language',
             builder: (context, state) => const LanguageScreen(),
+          ),
+          GoRoute(
+            path: 'text-recognition',
+            builder: (context, state) => const TextRecognitionScreen(),
           ),
           GoRoute(
             path: 'intelligence',

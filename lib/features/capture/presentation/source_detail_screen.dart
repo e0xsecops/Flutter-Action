@@ -18,7 +18,10 @@ import '../../actions/domain/action_item.dart';
 import '../../extraction/application/action_review_state.dart'
     show sourceReadyForExtraction;
 import '../application/capture_controller.dart';
+import '../application/ocr_script_controller.dart';
 import '../domain/source_item.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 /// What Action has read from a capture, before it has interpreted anything.
 ///
@@ -33,6 +36,7 @@ class SourceDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final sources = ref.watch(sourcesProvider);
     final item = sources.value?.where((s) => s.id == id).firstOrNull;
 
@@ -51,7 +55,7 @@ class SourceDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         scrolledUnderElevation: 0,
-        title: const Text('What we read'),
+        title: Text(l10n.sourceWhatWeRead),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -59,14 +63,14 @@ class SourceDetailScreen extends ConsumerWidget {
         actions: [
           if (item != null)
             IconButton(
-              tooltip: 'Delete capture',
+              tooltip: l10n.sourceDelete,
               icon: const Icon(Icons.delete_outline),
               onPressed: () => _confirmDelete(context, ref),
             ),
         ],
       ),
       body: item == null
-          ? const ErrorView(message: 'That capture is no longer available.')
+          ? ErrorView(message: l10n.sourceGone)
           : _Body(item: item, created: created),
       // The bridge into review: the one production entry point to
       // extraction. Only offered once the capture actually has text to
@@ -79,21 +83,20 @@ class SourceDetailScreen extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final l10n = AppL10n.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete this capture?'),
-        content: const Text(
-          'The image and the text read from it are removed from this device.',
-        ),
+        title: Text(l10n.sourceDeleteTitle),
+        content: Text(l10n.sourceDeleteBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Keep'),
+            child: Text(l10n.sourceDeleteKeep),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Delete'),
+            child: Text(l10n.commonDelete),
           ),
         ],
       ),
@@ -115,6 +118,7 @@ class _ReviewBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final done = created.isNotEmpty;
 
@@ -143,19 +147,19 @@ class _ReviewBar extends StatelessWidget {
                           context.push(Routes.action(created.first.id)),
                       child: Text(
                         created.length == 1
-                            ? 'Open the action'
-                            : 'Open ${created.length} actions',
+                            ? l10n.sourceOpenAction
+                            : l10n.sourceOpenActions(created.length),
                       ),
                     ),
                     TextButton(
                       onPressed: () => context.push(Routes.sourceReview(id)),
-                      child: const Text('Create another from this'),
+                      child: Text(l10n.sourceCreateAnother),
                     ),
                   ],
                 )
               : FilledButton(
                   onPressed: () => context.push(Routes.sourceReview(id)),
-                  child: const Text('Create an action from this'),
+                  child: Text(l10n.sourceCreateAction),
                 ),
         ),
       ),
@@ -225,7 +229,7 @@ class _IntelligenceStrip extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Do more with this', style: text.titleSmall),
+        Text(AppL10n.of(context).sourceDoMore, style: text.titleSmall),
         const SizedBox(height: Space.md),
         Wrap(
           spacing: Space.sm,
@@ -252,6 +256,7 @@ class _ProvenanceStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -268,8 +273,11 @@ class _ProvenanceStrip extends StatelessWidget {
         const SizedBox(width: Space.sm),
         Expanded(
           child: Text(
-            '${item.type.provenanceLabel} · '
-            '${DateFormat('d MMM, HH:mm').format(item.capturedAt)}',
+            l10n.sourceMeta(
+              item.type.provenanceIn(l10n),
+              DateFormat(l10n.sourceCapturedAtFormat, l10n.localeName)
+                  .format(item.capturedAt),
+            ),
             style: text.bodySmall,
           ),
         ),
@@ -320,26 +328,29 @@ class _ImagePanel extends StatelessWidget {
           ),
         ),
         const SizedBox(height: Space.sm),
-        Text(_describe(item), style: text.labelSmall?.copyWith(
+        Text(_describe(AppL10n.of(context), item), style: text.labelSmall?.copyWith(
           color: colors.textTertiary,
         )),
       ],
     );
   }
 
-  static String _describe(SourceItem item) {
+  static String _describe(AppL10n l10n, SourceItem item) {
     final parts = <String>[];
     if (item.imageWidth != null && item.imageHeight != null) {
-      parts.add('${item.imageWidth}×${item.imageHeight}');
+      parts.add(l10n.sourceDimensions(item.imageWidth!, item.imageHeight!));
     }
     if (item.byteSize != null) {
-      parts.add('${(item.byteSize! / 1024).round()} KB');
+      parts.add(l10n.sourceKilobytes((item.byteSize! / 1024).round()));
     }
     // Naming the original format makes the re-encode visible rather than
     // something the app quietly did to the user's file.
     if (item.originalFormat != null && item.originalByteSize != null) {
       final was = (item.originalByteSize! / 1024).round();
-      parts.add('from ${item.originalFormat!.toUpperCase()} $was KB');
+      parts.add(l10n.sourceConvertedFrom(
+        item.originalFormat!.toUpperCase(),
+        '$was',
+      ));
     }
     return parts.join(' · ');
   }
@@ -384,7 +395,8 @@ class _Processing extends StatelessWidget {
           child: CircularProgressIndicator(strokeWidth: 2),
         ),
         const SizedBox(width: Space.md),
-        Text('Reading the text…', style: text.bodyMedium),
+        Text(AppL10n.of(context).stageReadingPreview,
+            style: text.bodyMedium),
       ],
     );
   }
@@ -400,6 +412,7 @@ class _TextPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -408,11 +421,14 @@ class _TextPanel extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text('Text found', style: text.titleSmall),
+            Text(l10n.sourceTextFound, style: text.titleSmall),
             const Spacer(),
             if (item.ocr != null)
               Text(
-                '${item.ocr!.lineCount} lines · ${item.ocr!.durationMs} ms',
+                l10n.sourceOcrStats(
+                  item.ocr!.lineCount,
+                  item.ocr!.durationMs,
+                ),
                 style: text.labelSmall?.copyWith(color: colors.textTertiary),
               ),
           ],
@@ -437,9 +453,8 @@ class _TextPanel extends StatelessWidget {
           // already become an Action is simply false, and it was what the
           // screen said after the user had just finished doing exactly that.
           interpreted
-              ? 'This is the text Action read. What was made from it is below.'
-              : 'Nothing has been interpreted yet. Action will suggest what to '
-                  'do with this, and you confirm before anything is created.',
+              ? l10n.sourceReadExplainer
+              : l10n.sourceNotInterpreted,
           style: text.bodySmall,
         ),
       ],
@@ -454,17 +469,25 @@ class _NoTextFound extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final text = Theme.of(context).textTheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('No text found', style: text.titleSmall),
+        Text(l10n.stageNoText, style: text.titleSmall),
         const SizedBox(height: Space.sm),
+        Text(l10n.sourceNoTextExplainer, style: text.bodyMedium),
+        const SizedBox(height: Space.sm),
+        // The explainer above lists three causes; this names which one the
+        // user can actually do something about, and what it is set to right
+        // now. "A script this device cannot read" is only useful advice if the
+        // reader can find out which script it is currently reading.
         Text(
-          'This can happen with handwriting, very low light, or a script this '
-          'device cannot read yet.',
-          style: text.bodyMedium,
+          l10n.ocrScriptNoTextHint(
+            ref.watch(ocrScriptProvider).labelIn(l10n),
+          ),
+          style: text.bodySmall?.copyWith(color: context.colors.textSecondary),
         ),
         const SizedBox(height: Space.xl),
         _Actions(item: item),
@@ -480,6 +503,7 @@ class _Failed extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -490,12 +514,12 @@ class _Failed extends ConsumerWidget {
           children: [
             Icon(Icons.error_outline_rounded, size: 18, color: colors.danger),
             const SizedBox(width: Space.sm),
-            Text("Couldn't read this", style: text.titleSmall),
+            Text(l10n.sourceReadFailed, style: text.titleSmall),
           ],
         ),
         const SizedBox(height: Space.sm),
         Text(
-          item.failureReason ?? 'Text recognition did not complete.',
+          item.failureReason ?? l10n.sourceReadFailedReason,
           style: text.bodyMedium,
         ),
         const SizedBox(height: Space.xl),
@@ -522,18 +546,19 @@ class _Actions extends ConsumerWidget {
             onPressed: () =>
                 ref.read(sourcesProvider.notifier).runOcr(item.id),
             icon: const Icon(Icons.refresh_rounded, size: 20),
-            label: const Text('Try reading again'),
+            label: Text(AppL10n.of(context).sourceTryReadingAgain),
           ),
         const SizedBox(height: Space.sm),
         FilledButton(
           onPressed: () => _enterManually(context, ref),
-          child: const Text('Type the details instead'),
+          child: Text(AppL10n.of(context).sourceTypeInstead),
         ),
       ],
     );
   }
 
   Future<void> _enterManually(BuildContext context, WidgetRef ref) async {
+    final l10n = AppL10n.of(context);
     final controller = TextEditingController(text: item.pastedText ?? '');
 
     final saved = await showModalBottomSheet<String>(
@@ -543,7 +568,7 @@ class _Actions extends ConsumerWidget {
       // sheet surface glass, and it is AppSheet that paints it — a sheet
       // built by hand would now come out transparent.
       builder: (sheetContext) => AppSheet(
-        title: 'Type what it says',
+        title: l10n.sourceTypeWhatItSays,
         child: Padding(
           padding: EdgeInsets.only(
             left: Space.page,
@@ -559,15 +584,15 @@ class _Actions extends ConsumerWidget {
                 autofocus: true,
                 maxLines: 6,
                 minLines: 4,
-                decoration: const InputDecoration(
-                  hintText: 'Dates, amounts, and what is being asked for.',
+                decoration: InputDecoration(
+                  hintText: l10n.sourceTypeHint,
                 ),
               ),
               const SizedBox(height: Space.lg),
               FilledButton(
                 onPressed: () =>
                     Navigator.of(sheetContext).pop(controller.text),
-                child: const Text('Save'),
+                child: Text(l10n.commonSave),
               ),
             ],
           ),
@@ -596,6 +621,7 @@ class _CreatedActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -616,8 +642,8 @@ class _CreatedActions extends StatelessWidget {
             Expanded(
               child: Text(
                 actions.length == 1
-                    ? 'Made from this capture'
-                    : '${actions.length} made from this capture',
+                    ? l10n.sourceMadeFromThis
+                    : l10n.sourceMadeFromThisCount(actions.length),
                 style: text.titleSmall,
               ),
             ),
@@ -652,7 +678,7 @@ class _CreatedActions extends StatelessWidget {
                             if (action.status == ActionStatus.completed) ...[
                               const SizedBox(height: Space.xxs),
                               Text(
-                                'Done',
+                                l10n.commonDone,
                                 style: text.labelSmall?.copyWith(
                                   color: colors.confidenceConfirmed,
                                 ),
@@ -691,6 +717,7 @@ class _DocumentPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final pages = item.pageCount;
@@ -698,7 +725,7 @@ class _DocumentPanel extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('The document', style: text.titleSmall),
+        Text(l10n.sourceTheDocument, style: text.titleSmall),
         const SizedBox(height: Space.md),
         Container(
           width: double.infinity,
@@ -737,9 +764,9 @@ class _DocumentPanel extends StatelessWidget {
                       // that says what a run will cost.
                       [
                         if (pages != null)
-                          '$pages ${pages == 1 ? 'page' : 'pages'}'
+                          l10n.sourcePageCount(pages)
                         else
-                          'Page count unknown',
+                          l10n.sourcePageCountUnknown,
                         if (item.byteSize != null)
                           formatBytes(item.byteSize!),
                       ].join(' · '),
@@ -753,12 +780,7 @@ class _DocumentPanel extends StatelessWidget {
           ),
         ),
         const SizedBox(height: Space.md),
-        Text(
-          'Action has not read what is inside this document. When you run a '
-          'tool that needs to, the file goes to the AI provider you connected '
-          'and you will be told before it does.',
-          style: text.bodySmall,
-        ),
+        Text(l10n.sourceDocumentNotRead, style: text.bodySmall),
       ],
     );
   }

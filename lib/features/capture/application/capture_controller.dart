@@ -15,6 +15,7 @@ import '../data/source_store.dart';
 import '../domain/document_intake.dart';
 import '../domain/source_item.dart';
 import '../domain/text_normalizer.dart';
+import 'ocr_script_controller.dart';
 
 final _uuid = Uuid();
 
@@ -37,8 +38,14 @@ final sourceFileStoreProvider = FutureProvider<SourceFileStore>((ref) async {
 final imageNormalizerProvider =
     Provider<ImageNormalizer>((ref) => const IsolateImageNormalizer());
 
+/// Rebuilt whenever the chosen script changes.
+///
+/// Constructing a `TextRecognizer` loads a model, so this deliberately happens
+/// when the setting changes rather than on the capture the user is waiting on.
+/// The old service is disposed by `ref.onDispose`, which Riverpod runs on
+/// rebuild — without it each change would leak a native recogniser.
 final ocrServiceProvider = Provider<OcrService>((ref) {
-  final service = MlKitOcrService();
+  final service = MlKitOcrService(script: ref.watch(ocrScriptProvider));
   ref.onDispose(service.dispose);
   return service;
 });

@@ -316,6 +316,82 @@ class AppL10nId extends AppL10n {
       'Bahasa Inggris adalah bahasa asli teks Action. Terjemahan lain disusun mengikuti glosarium tetap dan diperiksa secara otomatis, namun belum dibaca oleh penutur asli. Ketika pilihan kata benar-benar penting — privasi, keamanan, apa yang diklaim Action dan apa yang tidak — bahasa Inggris tetap menjadi acuan.';
 
   @override
+  String get ocrScriptTitle => 'Pengenalan teks';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'Sistem tulisan yang dibaca Action saat melihat sebuah foto. Pengenalan berlangsung di perangkat ini; tidak ada tangkapan yang dikirim ke mana pun untuk dibaca.';
+
+  @override
+  String get ocrScriptSectionChoose => 'Sistem tulisan';
+
+  @override
+  String get ocrScriptFollowLanguage => 'Ikuti bahasa aplikasi';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return 'Saat ini $script';
+  }
+
+  @override
+  String get ocrScriptLatin => 'Latin';
+
+  @override
+  String get ocrScriptChinese => 'Tionghoa';
+
+  @override
+  String get ocrScriptDevanagari => 'Dewanagari';
+
+  @override
+  String get ocrScriptJapanese => 'Jepang';
+
+  @override
+  String get ocrScriptKorean => 'Korea';
+
+  @override
+  String get ocrScriptLatinDescription =>
+      'Inggris, Spanyol, Prancis, Jerman, dan bahasa lain yang ditulis dengan huruf Latin.';
+
+  @override
+  String get ocrScriptChineseDescription =>
+      'Tionghoa Sederhana dan Tradisional.';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      'Hindi, Marathi, dan Nepali. Bukan Bengali, Tamil, atau Telugu — masing-masing memakai sistem tulisan yang berbeda.';
+
+  @override
+  String get ocrScriptJapaneseDescription => 'Jepang.';
+
+  @override
+  String get ocrScriptKoreanDescription => 'Korea.';
+
+  @override
+  String get ocrScriptFootnote =>
+      'Semua pilihan selain Latin juga membaca huruf Latin, jadi memilih salah satu menambahkan sistem tulisan, bukan menukarnya. Perubahan ini berlaku untuk foto mulai sekarang, bukan untuk yang sudah dibaca.';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action tidak dapat membaca tulisan $language';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      'Tidak ada pengenal di perangkat untuk tulisan itu. Foto tetap dibaca untuk apa pun yang ditulis dengan huruf Latin, dan sisanya akan kembali kosong. Anda bisa mengetik atau menempelkan teks itu sebagai gantinya.';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action disetel membaca $script. Jika foto ini memakai sistem tulisan lain, ubah di Pengaturan lalu baca lagi.';
+  }
+
+  @override
+  String get settingsTextRecognition => 'Pengenalan teks';
+
+  @override
+  String get settingsTextRecognitionDescription =>
+      'Sistem tulisan yang dibaca Action dari foto.';
+
+  @override
   String get settingsIntelligenceFootnote =>
       'Action tetap berfungsi tanpa AI. Menghubungkan penyedia Anda sendiri menambahkan alat analisis dokumen, perencanaan, dan penyusunan draf.';
 
@@ -835,4 +911,493 @@ class AppL10nId extends AppL10n {
 
   @override
   String get errorEnterManually => 'Masukkan sendiri';
+
+  @override
+  String get sourceWhatWeRead => 'Yang kami baca';
+
+  @override
+  String get sourceDelete => 'Hapus tangkapan';
+
+  @override
+  String get sourceGone => 'Tangkapan itu sudah tidak tersedia.';
+
+  @override
+  String get sourceDeleteTitle => 'Hapus tangkapan ini?';
+
+  @override
+  String get sourceDeleteBody =>
+      'Gambar dan teks yang dibaca darinya dikeluarkan dari perangkat ini.';
+
+  @override
+  String get sourceDeleteKeep => 'Simpan saja';
+
+  @override
+  String get sourceOpenAction => 'Buka tugasnya';
+
+  @override
+  String sourceOpenActions(int count) {
+    return 'Buka $count tugas';
+  }
+
+  @override
+  String get sourceCreateAnother => 'Buat satu lagi dari ini';
+
+  @override
+  String get sourceCreateAction => 'Buat tugas dari ini';
+
+  @override
+  String get sourceDoMore => 'Lakukan lebih banyak dengan ini';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return 'dari $format $size KB';
+  }
+
+  @override
+  String get sourceTextFound => 'Teks ditemukan';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines baris · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer =>
+      'Ini teks yang dibaca Action. Apa yang dibuat darinya ada di bawah.';
+
+  @override
+  String get sourceNotInterpreted =>
+      'Belum ada yang ditafsirkan. Action akan menyarankan apa yang bisa dilakukan dengan ini, dan Anda yang menyetujui sebelum apa pun dibuat.';
+
+  @override
+  String get sourceNoTextExplainer =>
+      'Ini bisa terjadi pada tulisan tangan, cahaya yang sangat kurang, atau tulisan yang belum bisa dibaca perangkat ini.';
+
+  @override
+  String get sourceReadFailed => 'Tidak bisa membaca ini';
+
+  @override
+  String get sourceReadFailedReason => 'Pengenalan teks tidak sampai selesai.';
+
+  @override
+  String get sourceTryReadingAgain => 'Coba baca lagi';
+
+  @override
+  String get sourceTypeInstead => 'Ketik saja datanya';
+
+  @override
+  String get sourceTypeWhatItSays => 'Ketik apa yang tertulis';
+
+  @override
+  String get sourceTypeHint => 'Tanggal, jumlah, dan apa yang diminta.';
+
+  @override
+  String get sourceMadeFromThis => 'Dibuat dari tangkapan ini';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return '$count dibuat dari tangkapan ini';
+  }
+
+  @override
+  String get sourceTheDocument => 'Dokumennya';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count halaman',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => 'Jumlah halaman tidak diketahui';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action belum membaca isi dokumen ini. Saat Anda menjalankan alat yang membutuhkannya, berkas itu dikirim ke penyedia AI yang Anda hubungkan, dan Anda diberi tahu sebelum itu terjadi.';
+
+  @override
+  String get previewSaveFailed => 'Tidak bisa menyimpan itu. Coba lagi.';
+
+  @override
+  String get previewTitle => 'Periksa tangkapannya';
+
+  @override
+  String get previewImageFailed => 'Gambar itu tidak bisa dibuka.';
+
+  @override
+  String get previewHint =>
+      'Pastikan teksnya terbaca dan tidak ada bagian penting yang terpotong.';
+
+  @override
+  String get previewRetake => 'Foto ulang';
+
+  @override
+  String get pasteTitle => 'Tempel teks';
+
+  @override
+  String get pasteHint =>
+      'Tempel email, pesan, atau pemberitahuan yang enggan Anda baca sampai habis.';
+
+  @override
+  String get pasteFootnote =>
+      'Apa pun yang memuat tanggal, jumlah, atau permintaan cocok untuk ini.';
+
+  @override
+  String get pasteEnough => 'Sepertinya sudah cukup untuk dikerjakan.';
+
+  @override
+  String get pasteMore =>
+      'Sedikit teks lagi akan memberi hasil yang lebih baik.';
+
+  @override
+  String get reviewLoadFailed => 'Tangkapan ini tidak bisa dimuat.';
+
+  @override
+  String get reviewConfirmed => 'Dipastikan';
+
+  @override
+  String get reviewNeedsReview => 'Perlu diperiksa';
+
+  @override
+  String get reviewReview => 'Periksa';
+
+  @override
+  String get reviewHighConfidence => 'Keyakinan tinggi';
+
+  @override
+  String get reviewConfirmedByYou => 'Dipastikan oleh Anda';
+
+  @override
+  String get reviewMissing => 'Tidak ada';
+
+  @override
+  String get reviewNotUnderstood =>
+      'Action tidak bisa memahami cukup banyak dari sumber ini dengan andal.';
+
+  @override
+  String get reviewNotUnderstoodBody =>
+      'Tangkapannya utuh dan tidak ada yang hilang. Anda bisa mengisi datanya sendiri, dan sumbernya tetap terlampir sebagai rujukan.';
+
+  @override
+  String get reviewEnterDetails => 'Isi datanya';
+
+  @override
+  String get reviewKeepSource => 'Simpan sumbernya untuk nanti';
+
+  @override
+  String reviewEngine(String engine) {
+    return 'Mesin: $engine';
+  }
+
+  @override
+  String get reviewManualNotice =>
+      'Anda sendiri yang membuat tugas ini. Hanya yang Anda isi di sini yang akan dipakai.';
+
+  @override
+  String get reviewUntitled => 'Tugas tanpa judul';
+
+  @override
+  String get reviewEditTitle => 'Ubah judul';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nilai perlu Anda periksa sebelum ini bisa dipastikan.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => 'Fakta penting';
+
+  @override
+  String get reviewNotFound => 'Tidak ditemukan';
+
+  @override
+  String get reviewSuggestedNextStep => 'Saran langkah berikutnya';
+
+  @override
+  String get reviewWhyThisMatters => 'Kenapa ini penting';
+
+  @override
+  String get reviewSteps => 'Langkah';
+
+  @override
+  String get reviewAddStep => 'Tambah langkah';
+
+  @override
+  String get reviewInjectionNotice =>
+      'Sebagian teks di sumber ini tampak seperti perintah, bukan fakta dokumen, jadi Action mengabaikannya.';
+
+  @override
+  String get reviewLayoutNotice =>
+      'Tata letak dokumen ini mungkin memuat kaitan yang tidak sepenuhnya terjaga saat teks diambil. Bandingkan nilai di bawah dengan sumbernya sebelum memastikan.';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason Bandingkan nilai di bawah dengan sumbernya.';
+  }
+
+  @override
+  String get reviewDeadline => 'Tenggat';
+
+  @override
+  String get reviewAmount => 'Jumlah';
+
+  @override
+  String get reviewLeftUnset => 'Tidak ada — Anda memilih membiarkannya kosong';
+
+  @override
+  String get reviewUnclear => 'Kurang jelas';
+
+  @override
+  String get reviewNotSet => 'Belum diisi';
+
+  @override
+  String get reviewNoDeadlineFound => 'Tidak ditemukan di dokumen ini';
+
+  @override
+  String get reviewNoAmountFound =>
+      'Tidak ada jumlah yang ditemukan di dokumen ini';
+
+  @override
+  String get reviewMultipleDates =>
+      'Action menemukan beberapa kemungkinan tanggal.';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return '$count tanggal bisa jadi tenggatnya. Pilih yang benar, isi yang lain, atau biarkan kosong.';
+  }
+
+  @override
+  String get reviewChooseDate => 'Pilih tanggal';
+
+  @override
+  String get reviewMultipleAmounts =>
+      'Action menemukan lebih dari satu kemungkinan jumlah.';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return '$count jumlah bisa jadi yang dimaksud di sini. Pilih satu, isi yang lain, atau biarkan kosong.';
+  }
+
+  @override
+  String get reviewChooseAmount => 'Pilih jumlah';
+
+  @override
+  String get reviewSkipStep => 'Lewati langkah ini';
+
+  @override
+  String get reviewKeepStep => 'Simpan langkah ini';
+
+  @override
+  String get reviewEditStep => 'Ubah langkah';
+
+  @override
+  String get reviewCreateManually => 'Buat sendiri';
+
+  @override
+  String get reviewConfirmAndCreate => 'Pastikan & buat tugasnya';
+
+  @override
+  String get reviewFixHighlighted => 'Periksa kolom yang ditandai';
+
+  @override
+  String get reviewSaving => 'Menyimpan…';
+
+  @override
+  String get reviewSaveFailed =>
+      'Tugas ini tidak bisa disimpan. Tidak ada yang hilang — coba lagi.';
+
+  @override
+  String get reviewFieldTitle => 'Judul';
+
+  @override
+  String get reviewTitleHint => 'Apa yang perlu terjadi?';
+
+  @override
+  String get reviewNewStep => 'Langkah baru';
+
+  @override
+  String get reviewStepHint => 'Apa yang harus dilakukan';
+
+  @override
+  String get reviewDatesConflict =>
+      'Dokumen ini menyebut lebih dari satu tanggal.';
+
+  @override
+  String get reviewAmountsConflict =>
+      'Dokumen ini menyebut lebih dari satu jumlah.';
+
+  @override
+  String get reviewAnotherDate => 'Tanggal lain — 2026-08-30';
+
+  @override
+  String get reviewBadDate =>
+      'Bukan tanggal yang sahih. Pakai format 2026-08-30.';
+
+  @override
+  String get reviewTypeDate =>
+      'Ketik sebuah tanggal, atau biarkan kosong di bawah.';
+
+  @override
+  String get reviewUseThisDate => 'Pakai tanggal ini';
+
+  @override
+  String get reviewLeaveNoDeadline => 'Lanjut tanpa tenggat';
+
+  @override
+  String get reviewAnotherAmount => 'Jumlah lain — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return 'Jumlah ini tidak bisa dipakai: $reason.';
+  }
+
+  @override
+  String get reviewUseThisAmount => 'Pakai jumlah ini';
+
+  @override
+  String get reviewLeaveNoAmount => 'Lanjut tanpa jumlah';
+
+  @override
+  String get reviewThisValue => 'Nilai ini';
+
+  @override
+  String reviewQuote(String quote) {
+    return '“$quote”';
+  }
+
+  @override
+  String get reviewSeeOnCapture => 'Lihat di tangkapannya';
+
+  @override
+  String get reviewViewSource => 'Lihat sumbernya';
+
+  @override
+  String get reviewFromSource => 'Dari sumber';
+
+  @override
+  String get reviewNotVerified => 'Belum dicocokkan';
+
+  @override
+  String get reviewCouldNotVerify =>
+      'Tidak bisa mencocokkan ini dengan sumbernya.';
+
+  @override
+  String get reviewLooksRight => 'Tampak benar';
+
+  @override
+  String get reviewStageReading => 'Membaca sumber';
+
+  @override
+  String get reviewStageUnderstanding => 'Memahami rincian penting';
+
+  @override
+  String get reviewStageChecking => 'Memeriksa apa yang perlu ditinjau';
+
+  @override
+  String get reviewNothingToDo => 'Saat ini tidak ada yang perlu Anda lakukan.';
+
+  @override
+  String get reviewInformationOnly =>
+      'Ini tampak sebagai informasi saja — tidak ditemukan tenggat, pembayaran, atau permintaan balasan.';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      'Ini tampak sebagai informasi saja — di tangkapan ini tidak ditemukan tenggat, pembayaran, atau permintaan balasan.';
+
+  @override
+  String get reviewSourceKept => 'Sumbernya tetap disimpan bagaimanapun.';
+
+  @override
+  String get reviewAddAnyway => 'Tetap tambahkan tugas';
+
+  @override
+  String get reviewActionConfirmed => 'Tugas dipastikan';
+
+  @override
+  String get reviewCreatedByYou => 'Dibuat oleh Anda.';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Dipastikan oleh Anda dari $count fakta yang diperiksa.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Dipastikan oleh Anda dari $count fakta yang diperiksa. Anda mengubah $edited di antaranya.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => 'Disimpan di perangkat ini.';
+
+  @override
+  String get evidenceTitle => 'Asal muasalnya';
+
+  @override
+  String get evidenceUnverified =>
+      'Action tidak menemukan kata-kata ini dalam teks yang dibacanya, jadi nilai ini belum dicocokkan. Bandingkan dengan aslinya sebelum Anda mengandalkannya.';
+
+  @override
+  String get evidenceHighlighted =>
+      'Kata-kata ini ada dalam teks yang dibaca Action dari tangkapan ini, dan sorotannya menunjukkan letaknya.';
+
+  @override
+  String get evidenceNoRegion =>
+      'Kata-kata ini ada dalam teks yang dibaca Action dari tangkapan ini. Letak persisnya pada gambar tidak bisa ditentukan, dan itu tidak ditebak-tebak.';
+
+  @override
+  String get evidenceInText =>
+      'Kata-kata ini ada dalam teks yang dimuat tangkapan ini.';
+
+  @override
+  String get sourceCapturedAtFormat => 'd MMM, HH:mm';
+
+  @override
+  String get urgencyCritical => 'Kritis';
+
+  @override
+  String get urgencyImportant => 'Penting';
+
+  @override
+  String get urgencyNormal => 'Biasa';
+
+  @override
+  String get urgencyLow => 'Rendah';
+
+  @override
+  String get urgencyUnsure => 'Belum jelas';
 }

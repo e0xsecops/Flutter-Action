@@ -7,7 +7,9 @@ import '../../../core/security/protection_providers.dart';
 import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../capture/application/ocr_script_controller.dart';
 import '../../intelligence/application/intelligence_providers.dart';
+import '../../../l10n/enum_labels.dart';
 import '../../../l10n/gen/app_l10n.dart';
 import '../../../l10n/supported_locales.dart';
 import '../application/locale_controller.dart';
@@ -40,6 +42,7 @@ class SettingsScreen extends ConsumerWidget {
     final protection = ref.watch(protectionSettingsProvider);
     final l10n = AppL10n.of(context);
     final chosenLocale = ref.watch(localeControllerProvider);
+    final ocrScript = ref.watch(ocrScriptProvider);
 
     return SettingsPage(
       title: l10n.settingsTitle,
@@ -65,6 +68,17 @@ class SettingsScreen extends ConsumerWidget {
                   ? l10n.languageSystem
                   : AppLocales.forLocale(chosenLocale).nativeName,
               onTap: () => context.push(Routes.settingsLanguage),
+            ),
+            SettingsRow(
+              label: l10n.settingsTextRecognition,
+              description: l10n.settingsTextRecognitionDescription,
+              icon: Icons.document_scanner_outlined,
+              // Sits under Language on purpose: which writing system the
+              // camera can read is the second half of the same question, and
+              // a Hindi reader who has just switched the app to Hindi is
+              // exactly the person who needs to find it.
+              value: ocrScript.labelIn(l10n),
+              onTap: () => context.push(Routes.settingsTextRecognition),
             ),
           ],
         ),

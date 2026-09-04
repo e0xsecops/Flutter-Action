@@ -13,6 +13,7 @@
 /// `ActionCategory.unknown.labelIn(l10n)` is what a person reads.
 library;
 
+import '../features/capture/domain/ocr_script.dart';
 import '../features/capture/domain/source_item.dart';
 import '../features/extraction/domain/extraction_schema.dart';
 import '../features/intelligence/domain/intelligence_tool.dart';
@@ -80,5 +81,40 @@ extension LibrarySegmentL10n on LibrarySegment {
         LibrarySegment.captures => l10n.librarySegmentCaptures,
         LibrarySegment.goals => l10n.librarySegmentGoals,
         LibrarySegment.done => l10n.librarySegmentDone,
+      };
+}
+
+extension ActionUrgencyL10n on ActionUrgency {
+  String labelIn(AppL10n l10n) => switch (this) {
+        ActionUrgency.critical => l10n.urgencyCritical,
+        ActionUrgency.important => l10n.urgencyImportant,
+        ActionUrgency.normal => l10n.urgencyNormal,
+        ActionUrgency.low => l10n.urgencyLow,
+        // Never the calm "Low": not knowing and knowing it is minor are
+        // different claims.
+        ActionUrgency.unknown => l10n.urgencyUnsure,
+      };
+}
+
+extension OcrScriptL10n on OcrScript {
+  String labelIn(AppL10n l10n) => switch (this) {
+        OcrScript.latin => l10n.ocrScriptLatin,
+        OcrScript.chinese => l10n.ocrScriptChinese,
+        OcrScript.devanagari => l10n.ocrScriptDevanagari,
+        OcrScript.japanese => l10n.ocrScriptJapanese,
+        OcrScript.korean => l10n.ocrScriptKorean,
+      };
+
+  /// What the script covers, in the reader's language.
+  ///
+  /// Devanagari's is the one that has to work hardest: it is the only entry
+  /// whose name a reader can plausibly mistake for their own language when it
+  /// is not, so its description says which languages it is *not*.
+  String descriptionIn(AppL10n l10n) => switch (this) {
+        OcrScript.latin => l10n.ocrScriptLatinDescription,
+        OcrScript.chinese => l10n.ocrScriptChineseDescription,
+        OcrScript.devanagari => l10n.ocrScriptDevanagariDescription,
+        OcrScript.japanese => l10n.ocrScriptJapaneseDescription,
+        OcrScript.korean => l10n.ocrScriptKoreanDescription,
       };
 }

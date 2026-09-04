@@ -188,6 +188,62 @@
   "@languageDraftNote": {
     "description": "SAFETY: this is the honest disclosure about translation quality. It must not be softened into a claim that the translations are professionally certified, and it must keep the sentence pointing at English as the reference for privacy and security wording."
   },
+  "ocrScriptTitle": "Text recognition",
+  "ocrScriptSubtitle": "The writing system Action reads when it looks at a photo. Recognition happens on this device; no capture is sent anywhere to be read.",
+  "@ocrScriptSubtitle": {
+    "description": "SAFETY: carries two claims that must both survive — which writing system is read, and that reading happens on the device. Never soften the second into 'privately' or 'securely'; the point is the literal fact that no capture leaves the handset to be read."
+  },
+  "ocrScriptSectionChoose": "Writing system",
+  "ocrScriptFollowLanguage": "Follow the app language",
+  "ocrScriptFollowLanguageValue": "Currently {script}",
+  "@ocrScriptFollowLanguageValue": {
+    "placeholders": {
+      "script": {
+        "type": "String"
+      }
+    }
+  },
+  "ocrScriptLatin": "Latin",
+  "ocrScriptChinese": "Chinese",
+  "ocrScriptDevanagari": "Devanagari",
+  "ocrScriptJapanese": "Japanese",
+  "ocrScriptKorean": "Korean",
+  "ocrScriptLatinDescription": "English, Spanish, French, German and the other languages written in Latin letters.",
+  "ocrScriptChineseDescription": "Simplified and Traditional Chinese.",
+  "ocrScriptDevanagariDescription": "Hindi, Marathi and Nepali. Not Bengali, Tamil or Telugu — each of those is a different writing system.",
+  "@ocrScriptDevanagariDescription": {
+    "description": "SAFETY: names a script, not a country or a region. The second sentence prevents a reader from choosing this for Bengali and getting empty results with no explanation."
+  },
+  "ocrScriptJapaneseDescription": "Japanese.",
+  "ocrScriptKoreanDescription": "Korean.",
+  "ocrScriptFootnote": "Every choice except Latin also reads Latin letters, so picking one adds a writing system instead of swapping it. Changing this affects photos taken from now on, not ones already read.",
+  "@ocrScriptFootnote": {
+    "description": "SAFETY: two separate claims, both required. The choice is additive, and it is not retroactive. Dropping either leaves the user with a wrong model of what the setting did."
+  },
+  "ocrScriptUnreadableTitle": "Action cannot read the {language} script",
+  "@ocrScriptUnreadableTitle": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    },
+    "description": "SAFETY: a plain statement of a missing capability. It must stay a statement of fact — not 'not yet supported', which implies a date nobody has promised."
+  },
+  "ocrScriptUnreadableBody": "There is no on-device recogniser for it. Photos will still be read for anything written in Latin letters, and the rest will come back empty. You can type or paste that text instead.",
+  "@ocrScriptUnreadableBody": {
+    "description": "SAFETY: three claims that must all survive — no recogniser exists, Latin is still read, and there is a manual way through. Dropping the third leaves the user with a dead end."
+  },
+  "ocrScriptNoTextHint": "Action is set to read {script}. If this photo is in another writing system, change it in Settings and read it again.",
+  "@ocrScriptNoTextHint": {
+    "placeholders": {
+      "script": {
+        "type": "String"
+      }
+    },
+    "description": "SAFETY: shown when recognition found nothing. It must name the current setting rather than implying the capture was unreadable in general."
+  },
+  "settingsTextRecognition": "Text recognition",
+  "settingsTextRecognitionDescription": "The writing system Action reads from photos.",
   "settingsIntelligenceFootnote": "Action works without AI. Connecting your own provider adds document analysis, planning and drafting tools.",
   "@settingsIntelligenceFootnote": {
     "description": "SAFETY: must keep the first sentence — that the product is useful with nothing connected."
@@ -518,5 +574,312 @@
   "@categoryUnsure": {
     "description": "SAFETY: the category Action assigns when it could not tell. Must stay an admission of uncertainty, never a neutral 'other' or 'general'."
   },
-  "errorEnterManually": "Enter it manually"
+  "errorEnterManually": "Enter it manually",
+  "sourceWhatWeRead": "What we read",
+  "sourceDelete": "Delete capture",
+  "sourceGone": "That capture is no longer available.",
+  "sourceDeleteTitle": "Delete this capture?",
+  "sourceDeleteBody": "The image and the text read from it are removed from this device.",
+  "sourceDeleteKeep": "Keep",
+  "sourceOpenAction": "Open the action",
+  "sourceOpenActions": "Open {count} actions",
+  "@sourceOpenActions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceCreateAnother": "Create another from this",
+  "sourceCreateAction": "Create an action from this",
+  "sourceDoMore": "Do more with this",
+  "sourceMeta": "{provenance} · {when}",
+  "@sourceMeta": {
+    "placeholders": {
+      "provenance": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceDimensions": "{width}×{height}",
+  "@sourceDimensions": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      },
+      "height": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceKilobytes": "{size} KB",
+  "@sourceKilobytes": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceConvertedFrom": "from {format} {size} KB",
+  "@sourceConvertedFrom": {
+    "placeholders": {
+      "format": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceTextFound": "Text found",
+  "sourceOcrStats": "{lines} lines · {ms} ms",
+  "@sourceOcrStats": {
+    "placeholders": {
+      "lines": {
+        "type": "int"
+      },
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceReadExplainer": "This is the text Action read. What was made from it is below.",
+  "sourceNotInterpreted": "Nothing has been interpreted yet. Action will suggest what to do with this, and you confirm before anything is created.",
+  "@sourceNotInterpreted": {
+    "description": "SAFETY: the second clause is the confirm-before-create guarantee. It must stay a statement that the user confirms first."
+  },
+  "sourceNoTextExplainer": "This can happen with handwriting, very low light, or a script this device cannot read yet.",
+  "@sourceNoTextExplainer": {
+    "description": "SAFETY: names the real limits of on-device OCR, including scripts it cannot read. Must not be softened into a temporary glitch."
+  },
+  "sourceReadFailed": "Couldn't read this",
+  "sourceReadFailedReason": "Text recognition did not complete.",
+  "sourceTryReadingAgain": "Try reading again",
+  "sourceTypeInstead": "Type the details instead",
+  "sourceTypeWhatItSays": "Type what it says",
+  "sourceTypeHint": "Dates, amounts, and what is being asked for.",
+  "sourceMadeFromThis": "Made from this capture",
+  "sourceMadeFromThisCount": "{count} made from this capture",
+  "@sourceMadeFromThisCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceTheDocument": "The document",
+  "sourcePageCount": "{count, plural, =1{1 page} other{{count} pages}}",
+  "@sourcePageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sourcePageCountUnknown": "Page count unknown",
+  "sourceDocumentNotRead": "Action has not read what is inside this document. When you run a tool that needs to, the file goes to the AI provider you connected and you will be told before it does.",
+  "@sourceDocumentNotRead": {
+    "description": "SAFETY: the central data-flow disclosure for PDFs. Two claims: Action has not read the contents, and the file leaves only on an explicit tool run with a warning first. Both must survive."
+  },
+  "previewSaveFailed": "Couldn't save that. Try again.",
+  "previewTitle": "Check the capture",
+  "previewImageFailed": "That image couldn't be opened.",
+  "previewHint": "Make sure the text is readable and nothing important is cut off.",
+  "previewRetake": "Retake",
+  "pasteTitle": "Paste text",
+  "pasteHint": "Paste the email, message, or notice you would rather not read through.",
+  "pasteFootnote": "Anything with a date, an amount, or a request works well.",
+  "pasteEnough": "Looks like enough to work with.",
+  "pasteMore": "A little more text will give a better result.",
+  "reviewLoadFailed": "Could not load this capture.",
+  "reviewConfirmed": "Confirmed",
+  "reviewNeedsReview": "Needs review",
+  "reviewReview": "Review",
+  "reviewHighConfidence": "High confidence",
+  "reviewConfirmedByYou": "Confirmed by you",
+  "reviewMissing": "Missing",
+  "reviewNotUnderstood": "Action couldn’t reliably understand enough of this source.",
+  "@reviewNotUnderstood": {
+    "description": "SAFETY: an admission that extraction failed. Must not become a claim that the source was unreadable or that data was lost."
+  },
+  "reviewNotUnderstoodBody": "The capture is safe and nothing was lost. You can enter the details yourself, and the source stays attached for reference.",
+  "reviewEnterDetails": "Enter the details",
+  "reviewKeepSource": "Keep the source for later",
+  "reviewEngine": "Engine: {engine}",
+  "@reviewEngine": {
+    "description": "Debug-build diagnostic line.",
+    "placeholders": {
+      "engine": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewManualNotice": "You are creating this action yourself. Only what you enter here will be used.",
+  "@reviewManualNotice": {
+    "description": "SAFETY: states that a manual entry involves no extraction at all. Must not imply Action contributed anything."
+  },
+  "reviewUntitled": "Untitled action",
+  "reviewEditTitle": "Edit title",
+  "reviewNeedsReviewCount": "{count, plural, =1{1 value needs your review before this can be confirmed.} other{{count} values need your review.}}",
+  "@reviewNeedsReviewCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewKeyFacts": "Key facts",
+  "reviewNotFound": "Not found",
+  "reviewSuggestedNextStep": "Suggested next step",
+  "reviewWhyThisMatters": "Why this matters",
+  "reviewSteps": "Steps",
+  "reviewAddStep": "Add a step",
+  "reviewInjectionNotice": "Some text in this source looked like instructions rather than document facts, so Action ignored it.",
+  "@reviewInjectionNotice": {
+    "description": "SAFETY: the prompt-injection disclosure. Must stay a statement that instructions embedded in a document were ignored, never that they were followed or sanitised."
+  },
+  "reviewLayoutNotice": "This document’s layout may contain relationships that text extraction couldn’t fully preserve. Check the values below against the source before confirming.",
+  "reviewSignalNotice": "{reason} Check the values below against the source.",
+  "@reviewSignalNotice": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewDeadline": "Deadline",
+  "reviewAmount": "Amount",
+  "reviewLeftUnset": "None — you chose to leave this unset",
+  "reviewUnclear": "Unclear",
+  "reviewNotSet": "Not set",
+  "reviewNoDeadlineFound": "None found in this document",
+  "reviewNoAmountFound": "None found in this document",
+  "reviewMultipleDates": "Action found multiple possible dates.",
+  "reviewMultipleDatesBody": "{count} dates could be the deadline. Choose the right one, enter another, or leave it unset.",
+  "@reviewMultipleDatesBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewChooseDate": "Choose a date",
+  "reviewMultipleAmounts": "Action found more than one possible amount.",
+  "reviewMultipleAmountsBody": "{count} amounts could be the one this action is about. Choose, enter another, or leave it unset.",
+  "@reviewMultipleAmountsBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewChooseAmount": "Choose an amount",
+  "reviewSkipStep": "Skip this step",
+  "reviewKeepStep": "Keep this step",
+  "reviewEditStep": "Edit step",
+  "reviewCreateManually": "Create manually",
+  "reviewConfirmAndCreate": "Confirm & create action",
+  "reviewFixHighlighted": "Review highlighted fields",
+  "reviewSaving": "Saving…",
+  "reviewSaveFailed": "Could not save this action. Nothing was lost — try again.",
+  "reviewFieldTitle": "Title",
+  "reviewTitleHint": "What needs to happen?",
+  "reviewNewStep": "New step",
+  "reviewStepHint": "What to do",
+  "reviewDatesConflict": "The document mentions more than one date.",
+  "reviewAmountsConflict": "The document mentions more than one amount.",
+  "reviewAnotherDate": "Another date — 2026-08-30",
+  "@reviewAnotherDate": {
+    "description": "The example date is the ISO format the field parses; keep the digits and the dashes exactly."
+  },
+  "reviewBadDate": "Not a real date. Use the format 2026-08-30.",
+  "reviewTypeDate": "Type a date, or leave it unset below.",
+  "reviewUseThisDate": "Use this date",
+  "reviewLeaveNoDeadline": "Leave without a deadline",
+  "reviewAnotherAmount": "Another amount — 780.00",
+  "reviewAmountError": "Cannot use this amount: {reason}.",
+  "@reviewAmountError": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewUseThisAmount": "Use this amount",
+  "reviewLeaveNoAmount": "Leave without an amount",
+  "reviewThisValue": "This value",
+  "reviewQuote": "“{quote}”",
+  "@reviewQuote": {
+    "placeholders": {
+      "quote": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewSeeOnCapture": "See it on the capture",
+  "reviewViewSource": "View source",
+  "reviewFromSource": "From source",
+  "reviewNotVerified": "Not verified",
+  "reviewCouldNotVerify": "Could not verify this against the source.",
+  "@reviewCouldNotVerify": {
+    "description": "SAFETY: says verification failed. Must never be softened into 'probably correct'."
+  },
+  "reviewLooksRight": "Looks right",
+  "reviewStageReading": "Reading source",
+  "reviewStageUnderstanding": "Understanding important details",
+  "reviewStageChecking": "Checking what needs review",
+  "reviewNothingToDo": "Nothing you need to do right now.",
+  "reviewInformationOnly": "This looks like information only — no deadline, payment or reply was found.",
+  "reviewInformationOnlyWithSource": "This looks like information only — no deadline, payment or reply was found in this capture.",
+  "reviewSourceKept": "The source is kept either way.",
+  "reviewAddAnyway": "Add an action anyway",
+  "reviewActionConfirmed": "Action confirmed",
+  "reviewCreatedByYou": "Created by you.",
+  "reviewConfirmedFrom": "{count, plural, =1{Confirmed by you from 1 reviewed fact.} other{Confirmed by you from {count} reviewed facts.}}",
+  "@reviewConfirmedFrom": {
+    "description": "SAFETY: attributes the confirmation to the user, not to Action.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewConfirmedFromEdited": "{count, plural, =1{Confirmed by you from 1 reviewed fact. You changed {edited} of them.} other{Confirmed by you from {count} reviewed facts. You changed {edited} of them.}}",
+  "@reviewConfirmedFromEdited": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "edited": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewSavedOnDevice": "Saved on this device.",
+  "evidenceTitle": "Where this came from",
+  "evidenceUnverified": "Action could not find these words in the text it read, so this value has not been verified. Check it against the original before you rely on it.",
+  "@evidenceUnverified": {
+    "description": "SAFETY: the strongest 'do not trust this yet' statement in the product. It must keep both halves — not verified, and check the original."
+  },
+  "evidenceHighlighted": "These words were found in the text Action read from this capture, and the highlight shows where.",
+  "evidenceNoRegion": "These words were found in the text Action read from this capture. It could not work out exactly where on the image they sit, so it is not guessing.",
+  "@evidenceNoRegion": {
+    "description": "SAFETY: the fail-closed statement for region mapping — Action refuses to point at a place it cannot support. 'It is not guessing' must survive."
+  },
+  "evidenceInText": "These words were found in the text this capture contains.",
+  "sourceCapturedAtFormat": "d MMM, HH:mm",
+  "@sourceCapturedAtFormat": {
+    "description": "ICU skeleton: day, abbreviated month, 24-hour time."
+  },
+  "urgencyCritical": "Critical",
+  "urgencyImportant": "Important",
+  "urgencyNormal": "Normal",
+  "urgencyLow": "Low",
+  "urgencyUnsure": "Not sure",
+  "@urgencyUnsure": {
+    "description": "SAFETY: the urgency Action assigns when the document did not establish one. It must stay an admission of not knowing — never rendered as a calm \"Low\"."
+  }
 }

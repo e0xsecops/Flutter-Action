@@ -45,17 +45,16 @@ Goal _goal({
   GoalStatus status = GoalStatus.active,
   List<String> linked = const [],
   String title = 'Renew the car insurance without overpaying',
-}) =>
-    Goal(
-      id: 'g1',
-      title: title,
-      outcome: outcome,
-      context: context,
-      status: status,
-      linkedActionIds: linked,
-      createdAt: _now,
-      updatedAt: _now,
-    );
+}) => Goal(
+  id: 'g1',
+  title: title,
+  outcome: outcome,
+  context: context,
+  status: status,
+  linkedActionIds: linked,
+  createdAt: _now,
+  updatedAt: _now,
+);
 
 Future<void> pumpWorkspace(WidgetTester tester) async {
   final router = GoRouter(
@@ -82,12 +81,15 @@ Future<void> pumpWorkspace(WidgetTester tester) async {
       overrides: [
         actionsDatabaseProvider.overrideWithValue(_db),
         authIdentityServiceProvider.overrideWithValue(const _NoIdentity()),
-        actionCloudMirrorProvider
-            .overrideWithValue(const NoopActionCloudMirror()),
+        actionCloudMirrorProvider.overrideWithValue(
+          const NoopActionCloudMirror(),
+        ),
         appClockProvider.overrideWithValue(() => _now),
         goalStoreProvider.overrideWith((ref) async => _goals),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: AppL10n.localizationsDelegates,
+        supportedLocales: AppL10n.supportedLocales,
         theme: AppTheme.light(),
         routerConfig: router,
       ),
@@ -129,8 +131,9 @@ void main() {
       );
     });
 
-    goalTest('a prompt for each unwritten field, not an empty space',
-        (tester) async {
+    goalTest('a prompt for each unwritten field, not an empty space', (
+      tester,
+    ) async {
       await _goals.add(_goal());
       await pumpWorkspace(tester);
 
@@ -141,10 +144,12 @@ void main() {
     });
 
     goalTest('what has been written, when it has', (tester) async {
-      await _goals.add(_goal(
-        outcome: 'The car is insured and the paperwork is filed',
-        context: 'Two quotes so far',
-      ));
+      await _goals.add(
+        _goal(
+          outcome: 'The car is insured and the paperwork is filed',
+          context: 'Two quotes so far',
+        ),
+      );
       await pumpWorkspace(tester);
 
       expect(
@@ -213,8 +218,9 @@ void main() {
       expect(find.text('the action screen'), findsOneWidget);
     });
 
-    goalTest('a link to an Action that no longer exists is simply absent',
-        (tester) async {
+    goalTest('a link to an Action that no longer exists is simply absent', (
+      tester,
+    ) async {
       // Deleting an Action must not leave a row that goes nowhere.
       await _goals.add(_goal(linked: ['gone']));
       await pumpWorkspace(tester);
@@ -226,11 +232,9 @@ void main() {
   group('what it will not claim', () {
     goalTest('no score, no percentage, no progress', (tester) async {
       await DriftActionRepository(_db).create(sampleAction('a1'));
-      await _goals.add(_goal(
-        outcome: 'Insured',
-        context: 'Two quotes',
-        linked: ['a1'],
-      ));
+      await _goals.add(
+        _goal(outcome: 'Insured', context: 'Two quotes', linked: ['a1']),
+      );
       await pumpWorkspace(tester);
 
       for (final banned in ['%', 'score', 'progress', 'out of', 'complete']) {
@@ -242,8 +246,9 @@ void main() {
       }
     });
 
-    goalTest('a goal with every Action done is still not marked reached',
-        (tester) async {
+    goalTest('a goal with every Action done is still not marked reached', (
+      tester,
+    ) async {
       // Finishing every task a goal produced does not mean the goal was met,
       // and Action does not decide that on the user's behalf.
       await DriftActionRepository(_db).create(
@@ -265,8 +270,9 @@ void main() {
           overrides: [
             actionsDatabaseProvider.overrideWithValue(_db),
             authIdentityServiceProvider.overrideWithValue(const _NoIdentity()),
-            actionCloudMirrorProvider
-                .overrideWithValue(const NoopActionCloudMirror()),
+            actionCloudMirrorProvider.overrideWithValue(
+              const NoopActionCloudMirror(),
+            ),
             appClockProvider.overrideWithValue(() => _now),
             goalStoreProvider.overrideWith((ref) async => _goals),
           ],
@@ -289,7 +295,9 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    goalTest('a missing goal says so rather than showing a blank', (tester) async {
+    goalTest('a missing goal says so rather than showing a blank', (
+      tester,
+    ) async {
       await pumpWorkspace(tester);
 
       expect(find.textContaining('no longer here'), findsOneWidget);

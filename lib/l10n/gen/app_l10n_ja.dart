@@ -308,6 +308,79 @@ class AppL10nJa extends AppL10n {
       'Action の文章はもともと英語で書かれています。ほかの言語は固定された用語集にもとづいて下訳を作成し、機械的に検査したもので、母語話者による確認はまだ行われていません。言い回しの正確さが重要な箇所 — プライバシー、セキュリティ、Action が主張することとしないこと — については、英語が基準として残ります。';
 
   @override
+  String get ocrScriptTitle => '文字認識';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'Action が写真を見るときに読み取る文字体系です。認識はこの端末で行われ、読み取りのために取り込みがどこかへ送られることはありません。';
+
+  @override
+  String get ocrScriptSectionChoose => '文字体系';
+
+  @override
+  String get ocrScriptFollowLanguage => 'アプリの言語に合わせる';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return '現在は$script';
+  }
+
+  @override
+  String get ocrScriptLatin => 'ラテン文字';
+
+  @override
+  String get ocrScriptChinese => '中国語';
+
+  @override
+  String get ocrScriptDevanagari => 'デーヴァナーガリー';
+
+  @override
+  String get ocrScriptJapanese => '日本語';
+
+  @override
+  String get ocrScriptKorean => '韓国語';
+
+  @override
+  String get ocrScriptLatinDescription => '英語、スペイン語、フランス語、ドイツ語など、ラテン文字で書かれる言語。';
+
+  @override
+  String get ocrScriptChineseDescription => '簡体字と繁体字の中国語。';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      'ヒンディー語、マラーティー語、ネパール語。ベンガル語・タミル語・テルグ語は含みません — いずれも別の文字体系です。';
+
+  @override
+  String get ocrScriptJapaneseDescription => '日本語。';
+
+  @override
+  String get ocrScriptKoreanDescription => '韓国語。';
+
+  @override
+  String get ocrScriptFootnote =>
+      'ラテン文字以外のどれを選んでもラテン文字は読めるので、選択は文字体系の入れ替えではなく追加です。この変更はこれから撮る写真に適用され、すでに読み取った写真には適用されません。';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action は$languageの文字を読めません';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      'この文字体系に対応する認識機能が端末にありません。写真のうちラテン文字で書かれた部分は引き続き読み取られ、それ以外は空のまま返ります。その文字は代わりに入力するか貼り付けてください。';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action は$scriptを読む設定です。この写真が別の文字体系なら、設定で変更してもう一度読み取ってください。';
+  }
+
+  @override
+  String get settingsTextRecognition => '文字認識';
+
+  @override
+  String get settingsTextRecognitionDescription => 'Action が写真から読み取る文字体系。';
+
+  @override
   String get settingsIntelligenceFootnote =>
       'Action は AI がなくても使えます。ご自身のプロバイダーを接続すると、書類の分析・計画・下書きのツールが加わります。';
 
@@ -807,4 +880,474 @@ class AppL10nJa extends AppL10n {
 
   @override
   String get errorEnterManually => '自分で入力する';
+
+  @override
+  String get sourceWhatWeRead => '読み取った内容';
+
+  @override
+  String get sourceDelete => '取り込みを削除';
+
+  @override
+  String get sourceGone => 'その取り込みはもうありません。';
+
+  @override
+  String get sourceDeleteTitle => 'この取り込みを削除しますか？';
+
+  @override
+  String get sourceDeleteBody => '画像と、そこから読み取った文字がこの端末から取り除かれます。';
+
+  @override
+  String get sourceDeleteKeep => '残す';
+
+  @override
+  String get sourceOpenAction => 'タスクを開く';
+
+  @override
+  String sourceOpenActions(int count) {
+    return '$count件のタスクを開く';
+  }
+
+  @override
+  String get sourceCreateAnother => 'これからもう一つ作る';
+
+  @override
+  String get sourceCreateAction => 'これからタスクを作る';
+
+  @override
+  String get sourceDoMore => 'これでさらに何かする';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return '$format $size KB から';
+  }
+
+  @override
+  String get sourceTextFound => '文字が見つかりました';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines行 · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer => 'これは Action が読み取った文字です。そこから作られたものは下にあります。';
+
+  @override
+  String get sourceNotInterpreted =>
+      'まだ何も解釈していません。Action がこれをどう扱うか提案し、何かが作られる前にあなたが確認します。';
+
+  @override
+  String get sourceNoTextExplainer =>
+      '手書き、光が非常に少ない場合、またはこの端末がまだ読めない文字体系のときに起こります。';
+
+  @override
+  String get sourceReadFailed => 'これは読み取れませんでした';
+
+  @override
+  String get sourceReadFailedReason => '文字認識が最後まで終わりませんでした。';
+
+  @override
+  String get sourceTryReadingAgain => 'もう一度読み取る';
+
+  @override
+  String get sourceTypeInstead => '代わりに内容を入力する';
+
+  @override
+  String get sourceTypeWhatItSays => '書かれている内容を入力';
+
+  @override
+  String get sourceTypeHint => '日付、金額、そして何を求められているか。';
+
+  @override
+  String get sourceMadeFromThis => 'この取り込みから作られたもの';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return 'この取り込みから$count件';
+  }
+
+  @override
+  String get sourceTheDocument => '書類';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countページ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => 'ページ数は不明';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action はこの書類の中身を読んでいません。それを必要とするツールを使うと、ファイルはあなたが接続した AI プロバイダーに送られ、その前にお知らせします。';
+
+  @override
+  String get previewSaveFailed => '保存できませんでした。もう一度お試しください。';
+
+  @override
+  String get previewTitle => '取り込みを確認';
+
+  @override
+  String get previewImageFailed => 'その画像は開けませんでした。';
+
+  @override
+  String get previewHint => '文字が読める状態か、大事な部分が切れていないか確かめてください。';
+
+  @override
+  String get previewRetake => '撮り直す';
+
+  @override
+  String get pasteTitle => '文章を貼り付け';
+
+  @override
+  String get pasteHint => '読み通したくないメール・メッセージ・通知を貼り付けてください。';
+
+  @override
+  String get pasteFootnote => '日付、金額、依頼が入っているものはうまくいきます。';
+
+  @override
+  String get pasteEnough => '取りかかるには十分そうです。';
+
+  @override
+  String get pasteMore => 'もう少し文章があると結果がよくなります。';
+
+  @override
+  String get reviewLoadFailed => 'この取り込みを読み込めませんでした。';
+
+  @override
+  String get reviewConfirmed => '確認済み';
+
+  @override
+  String get reviewNeedsReview => '要確認';
+
+  @override
+  String get reviewReview => '確認する';
+
+  @override
+  String get reviewHighConfidence => '確度が高い';
+
+  @override
+  String get reviewConfirmedByYou => 'あなたが確認しました';
+
+  @override
+  String get reviewMissing => '見当たりません';
+
+  @override
+  String get reviewNotUnderstood => 'Action はこのソースを十分に、確かなかたちで理解できませんでした。';
+
+  @override
+  String get reviewNotUnderstoodBody =>
+      '取り込みはそのまま残っていて、失われたものはありません。内容はご自分で入力でき、ソースは参照用に付いたままです。';
+
+  @override
+  String get reviewEnterDetails => '内容を入力する';
+
+  @override
+  String get reviewKeepSource => 'ソースを後のために残す';
+
+  @override
+  String reviewEngine(String engine) {
+    return 'エンジン: $engine';
+  }
+
+  @override
+  String get reviewManualNotice => 'このタスクはご自分で作成しています。使われるのはここに入力した内容だけです。';
+
+  @override
+  String get reviewUntitled => '名称未設定のタスク';
+
+  @override
+  String get reviewEditTitle => '名称を編集';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '確定する前に$count件の値をご確認ください。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => '重要な項目';
+
+  @override
+  String get reviewNotFound => '見つかりません';
+
+  @override
+  String get reviewSuggestedNextStep => '次にやることの提案';
+
+  @override
+  String get reviewWhyThisMatters => 'これが重要な理由';
+
+  @override
+  String get reviewSteps => '手順';
+
+  @override
+  String get reviewAddStep => '手順を追加';
+
+  @override
+  String get reviewInjectionNotice =>
+      'このソースの一部の文字が、書類の内容ではなく指示のように見えたため、Action はそれを無視しました。';
+
+  @override
+  String get reviewLayoutNotice =>
+      'この書類のレイアウトには、文字の抽出では完全に保てなかった対応関係が含まれている可能性があります。確定する前に、下の値をソースと照らし合わせてください。';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason 下の値をソースと照らし合わせてください。';
+  }
+
+  @override
+  String get reviewDeadline => '期限';
+
+  @override
+  String get reviewAmount => '金額';
+
+  @override
+  String get reviewLeftUnset => 'なし — 未設定のままにすることを選びました';
+
+  @override
+  String get reviewUnclear => 'はっきりしません';
+
+  @override
+  String get reviewNotSet => '未設定';
+
+  @override
+  String get reviewNoDeadlineFound => 'この書類には見つかりませんでした';
+
+  @override
+  String get reviewNoAmountFound => 'この書類に金額は見つかりませんでした';
+
+  @override
+  String get reviewMultipleDates => 'Action は候補となる日付を複数見つけました。';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return '$count件の日付が期限の候補です。正しいものを選ぶか、別の日付を入力するか、未設定のままにしてください。';
+  }
+
+  @override
+  String get reviewChooseDate => '日付を選ぶ';
+
+  @override
+  String get reviewMultipleAmounts => 'Action は候補となる金額を複数見つけました。';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return '$count件の金額が候補です。一つ選ぶか、別の金額を入力するか、未設定のままにしてください。';
+  }
+
+  @override
+  String get reviewChooseAmount => '金額を選ぶ';
+
+  @override
+  String get reviewSkipStep => 'この手順を飛ばす';
+
+  @override
+  String get reviewKeepStep => 'この手順を残す';
+
+  @override
+  String get reviewEditStep => '手順を編集';
+
+  @override
+  String get reviewCreateManually => '自分で作る';
+
+  @override
+  String get reviewConfirmAndCreate => '確認してタスクを作成';
+
+  @override
+  String get reviewFixHighlighted => '印の付いた項目を確認';
+
+  @override
+  String get reviewSaving => '保存中…';
+
+  @override
+  String get reviewSaveFailed => 'このタスクを保存できませんでした。失われたものはありません — もう一度お試しください。';
+
+  @override
+  String get reviewFieldTitle => '名称';
+
+  @override
+  String get reviewTitleHint => '何を行う必要がありますか？';
+
+  @override
+  String get reviewNewStep => '新しい手順';
+
+  @override
+  String get reviewStepHint => '何をするか';
+
+  @override
+  String get reviewDatesConflict => '書類に日付が複数あります。';
+
+  @override
+  String get reviewAmountsConflict => '書類に金額が複数あります。';
+
+  @override
+  String get reviewAnotherDate => '別の日付 — 2026-08-30';
+
+  @override
+  String get reviewBadDate => '実在する日付ではありません。2026-08-30 の形式で入力してください。';
+
+  @override
+  String get reviewTypeDate => '日付を入力するか、下で未設定のままにしてください。';
+
+  @override
+  String get reviewUseThisDate => 'この日付を使う';
+
+  @override
+  String get reviewLeaveNoDeadline => '期限なしで進む';
+
+  @override
+  String get reviewAnotherAmount => '別の金額 — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return 'この金額は使えません: $reason。';
+  }
+
+  @override
+  String get reviewUseThisAmount => 'この金額を使う';
+
+  @override
+  String get reviewLeaveNoAmount => '金額なしで進む';
+
+  @override
+  String get reviewThisValue => 'この値';
+
+  @override
+  String reviewQuote(String quote) {
+    return '「$quote」';
+  }
+
+  @override
+  String get reviewSeeOnCapture => '取り込みの上で見る';
+
+  @override
+  String get reviewViewSource => 'ソースを見る';
+
+  @override
+  String get reviewFromSource => 'ソースから';
+
+  @override
+  String get reviewNotVerified => '未照合';
+
+  @override
+  String get reviewCouldNotVerify => 'これをソースと照らし合わせられませんでした。';
+
+  @override
+  String get reviewLooksRight => '合っていそうです';
+
+  @override
+  String get reviewStageReading => 'ソースを読み取り中';
+
+  @override
+  String get reviewStageUnderstanding => '重要な項目を読み解き中';
+
+  @override
+  String get reviewStageChecking => '確認が必要な箇所を点検中';
+
+  @override
+  String get reviewNothingToDo => 'いま行うことはありません。';
+
+  @override
+  String get reviewInformationOnly =>
+      'これはお知らせだけのようです — 期限も支払いも返信の依頼も見つかりませんでした。';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      'これはお知らせだけのようです — この取り込みには期限も支払いも返信の依頼も見つかりませんでした。';
+
+  @override
+  String get reviewSourceKept => 'どちらの場合もソースは残ります。';
+
+  @override
+  String get reviewAddAnyway => 'それでもタスクを追加する';
+
+  @override
+  String get reviewActionConfirmed => 'タスクを確認しました';
+
+  @override
+  String get reviewCreatedByYou => 'あなたが作成しました。';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '確認済みの$count件の項目にもとづき、あなたが確定しました。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '確認済みの$count件の項目にもとづき、あなたが確定しました。うち$edited件を変更しました。',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => 'この端末に保存しました。';
+
+  @override
+  String get evidenceTitle => 'この出どころ';
+
+  @override
+  String get evidenceUnverified =>
+      'Action は読み取った文字の中にこれらの語を見つけられなかったため、この値は照合されていません。頼りにする前に原本と照らし合わせてください。';
+
+  @override
+  String get evidenceHighlighted =>
+      'これらの語は Action がこの取り込みから読み取った文字の中にあり、ハイライトがその位置を示しています。';
+
+  @override
+  String get evidenceNoRegion =>
+      'これらの語は Action がこの取り込みから読み取った文字の中にありました。画像上のどこにあるかは特定できず、推測はしていません。';
+
+  @override
+  String get evidenceInText => 'これらの語は、この取り込みが含む文字の中にありました。';
+
+  @override
+  String get sourceCapturedAtFormat => 'M月d日 HH:mm';
+
+  @override
+  String get urgencyCritical => '非常に重大';
+
+  @override
+  String get urgencyImportant => '重要';
+
+  @override
+  String get urgencyNormal => 'ふつう';
+
+  @override
+  String get urgencyLow => '低い';
+
+  @override
+  String get urgencyUnsure => '判断できません';
 }

@@ -313,6 +313,81 @@ class AppL10nVi extends AppL10n {
       'Tiếng Anh là ngôn ngữ mà nội dung của Action được viết ra. Các bản dịch khác được soạn theo một bảng thuật ngữ cố định và đã được kiểm tra tự động, nhưng chưa có người bản ngữ đọc lại. Ở những chỗ mà cách diễn đạt chính xác là quan trọng — quyền riêng tư, bảo mật, điều Action khẳng định và điều Action không khẳng định — tiếng Anh vẫn là bản tham chiếu.';
 
   @override
+  String get ocrScriptTitle => 'Nhận dạng chữ';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'Hệ chữ viết mà Action đọc khi nhìn vào một tấm ảnh. Việc nhận dạng diễn ra trên thiết bị này; không có thứ gì thu nhận được gửi đi đâu để đọc.';
+
+  @override
+  String get ocrScriptSectionChoose => 'Hệ chữ viết';
+
+  @override
+  String get ocrScriptFollowLanguage => 'Theo ngôn ngữ của ứng dụng';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return 'Hiện là $script';
+  }
+
+  @override
+  String get ocrScriptLatin => 'La-tinh';
+
+  @override
+  String get ocrScriptChinese => 'Trung';
+
+  @override
+  String get ocrScriptDevanagari => 'Devanagari';
+
+  @override
+  String get ocrScriptJapanese => 'Nhật';
+
+  @override
+  String get ocrScriptKorean => 'Hàn';
+
+  @override
+  String get ocrScriptLatinDescription =>
+      'Tiếng Anh, Tây Ban Nha, Pháp, Đức và các thứ tiếng khác viết bằng chữ cái La-tinh.';
+
+  @override
+  String get ocrScriptChineseDescription => 'Chữ Trung giản thể và phồn thể.';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      'Tiếng Hindi, Marathi và Nepal. Không phải Bengal, Tamil hay Telugu — mỗi thứ tiếng đó dùng một hệ chữ viết khác.';
+
+  @override
+  String get ocrScriptJapaneseDescription => 'Tiếng Nhật.';
+
+  @override
+  String get ocrScriptKoreanDescription => 'Tiếng Hàn.';
+
+  @override
+  String get ocrScriptFootnote =>
+      'Mọi lựa chọn ngoài La-tinh đều đọc được cả chữ cái La-tinh, nên chọn một hệ là thêm vào chứ không phải đánh đổi. Thay đổi này áp dụng cho ảnh chụp từ giờ trở đi, không áp dụng cho ảnh đã đọc.';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action không đọc được hệ chữ $language';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      'Trên thiết bị không có bộ nhận dạng cho hệ chữ đó. Ảnh vẫn được đọc với mọi phần viết bằng chữ cái La-tinh, phần còn lại sẽ trả về rỗng. Bạn có thể gõ hoặc dán phần chữ đó thay thế.';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action đang được đặt để đọc $script. Nếu ảnh này dùng hệ chữ khác, hãy đổi trong Cài đặt rồi đọc lại.';
+  }
+
+  @override
+  String get settingsTextRecognition => 'Nhận dạng chữ';
+
+  @override
+  String get settingsTextRecognitionDescription =>
+      'Hệ chữ viết mà Action đọc từ ảnh.';
+
+  @override
   String get settingsIntelligenceFootnote =>
       'Action vẫn dùng được khi không có AI. Kết nối nhà cung cấp của riêng bạn sẽ thêm các công cụ phân tích tài liệu, lập kế hoạch và soạn thảo.';
 
@@ -830,4 +905,489 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get errorEnterManually => 'Tự nhập vào';
+
+  @override
+  String get sourceWhatWeRead => 'Những gì chúng tôi đọc được';
+
+  @override
+  String get sourceDelete => 'Xoá bản thu nhận';
+
+  @override
+  String get sourceGone => 'Bản thu nhận đó không còn nữa.';
+
+  @override
+  String get sourceDeleteTitle => 'Xoá bản thu nhận này?';
+
+  @override
+  String get sourceDeleteBody =>
+      'Ảnh và phần chữ đọc được từ nó sẽ bị gỡ khỏi thiết bị này.';
+
+  @override
+  String get sourceDeleteKeep => 'Giữ lại';
+
+  @override
+  String get sourceOpenAction => 'Mở việc';
+
+  @override
+  String sourceOpenActions(int count) {
+    return 'Mở $count việc';
+  }
+
+  @override
+  String get sourceCreateAnother => 'Tạo thêm một cái từ đây';
+
+  @override
+  String get sourceCreateAction => 'Tạo một việc từ đây';
+
+  @override
+  String get sourceDoMore => 'Làm thêm với cái này';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return 'từ $format $size KB';
+  }
+
+  @override
+  String get sourceTextFound => 'Đã tìm thấy chữ';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines dòng · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer =>
+      'Đây là phần chữ Action đã đọc. Những gì được tạo ra từ nó nằm bên dưới.';
+
+  @override
+  String get sourceNotInterpreted =>
+      'Chưa có gì được diễn giải. Action sẽ gợi ý nên làm gì với cái này, và bạn xác nhận trước khi bất cứ thứ gì được tạo.';
+
+  @override
+  String get sourceNoTextExplainer =>
+      'Điều này hay xảy ra với chữ viết tay, ánh sáng rất yếu, hoặc một hệ chữ mà thiết bị này chưa đọc được.';
+
+  @override
+  String get sourceReadFailed => 'Không đọc được cái này';
+
+  @override
+  String get sourceReadFailedReason => 'Việc nhận dạng chữ đã không hoàn tất.';
+
+  @override
+  String get sourceTryReadingAgain => 'Thử đọc lại';
+
+  @override
+  String get sourceTypeInstead => 'Gõ thông tin thay thế';
+
+  @override
+  String get sourceTypeWhatItSays => 'Gõ lại nội dung trong đó';
+
+  @override
+  String get sourceTypeHint =>
+      'Ngày tháng, số tiền, và điều đang được yêu cầu.';
+
+  @override
+  String get sourceMadeFromThis => 'Tạo ra từ bản thu nhận này';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return '$count thứ được tạo từ bản thu nhận này';
+  }
+
+  @override
+  String get sourceTheDocument => 'Tài liệu';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count trang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => 'Không rõ số trang';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action chưa đọc nội dung bên trong tài liệu này. Khi bạn chạy một công cụ cần đến nó, tệp sẽ được gửi tới nhà cung cấp AI mà bạn đã kết nối, và bạn sẽ được báo trước khi điều đó xảy ra.';
+
+  @override
+  String get previewSaveFailed => 'Không lưu được. Hãy thử lại.';
+
+  @override
+  String get previewTitle => 'Kiểm tra bản thu nhận';
+
+  @override
+  String get previewImageFailed => 'Không mở được ảnh đó.';
+
+  @override
+  String get previewHint =>
+      'Hãy chắc là chữ đọc được và không có phần quan trọng nào bị cắt mất.';
+
+  @override
+  String get previewRetake => 'Chụp lại';
+
+  @override
+  String get pasteTitle => 'Dán văn bản';
+
+  @override
+  String get pasteHint =>
+      'Dán email, tin nhắn hoặc thông báo mà bạn không muốn đọc hết.';
+
+  @override
+  String get pasteFootnote =>
+      'Bất cứ thứ gì có ngày tháng, số tiền hoặc một yêu cầu đều hợp.';
+
+  @override
+  String get pasteEnough => 'Có vẻ đã đủ để làm việc.';
+
+  @override
+  String get pasteMore => 'Thêm chút chữ nữa sẽ cho kết quả tốt hơn.';
+
+  @override
+  String get reviewLoadFailed => 'Không tải được bản thu nhận này.';
+
+  @override
+  String get reviewConfirmed => 'Đã xác nhận';
+
+  @override
+  String get reviewNeedsReview => 'Cần xem lại';
+
+  @override
+  String get reviewReview => 'Xem lại';
+
+  @override
+  String get reviewHighConfidence => 'Độ tin cậy cao';
+
+  @override
+  String get reviewConfirmedByYou => 'Bạn đã xác nhận';
+
+  @override
+  String get reviewMissing => 'Thiếu';
+
+  @override
+  String get reviewNotUnderstood =>
+      'Action không hiểu được đủ nhiều từ nguồn này một cách đáng tin.';
+
+  @override
+  String get reviewNotUnderstoodBody =>
+      'Bản thu nhận vẫn nguyên vẹn và không mất gì cả. Bạn có thể tự nhập thông tin, và nguồn vẫn được đính kèm để đối chiếu.';
+
+  @override
+  String get reviewEnterDetails => 'Nhập thông tin';
+
+  @override
+  String get reviewKeepSource => 'Giữ nguồn để dùng sau';
+
+  @override
+  String reviewEngine(String engine) {
+    return 'Bộ máy: $engine';
+  }
+
+  @override
+  String get reviewManualNotice =>
+      'Bạn đang tự tạo việc này. Chỉ những gì bạn nhập ở đây mới được dùng.';
+
+  @override
+  String get reviewUntitled => 'Việc chưa có tên';
+
+  @override
+  String get reviewEditTitle => 'Sửa tên';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giá trị cần bạn xem lại trước khi có thể xác nhận.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => 'Thông tin chính';
+
+  @override
+  String get reviewNotFound => 'Không tìm thấy';
+
+  @override
+  String get reviewSuggestedNextStep => 'Bước tiếp theo được gợi ý';
+
+  @override
+  String get reviewWhyThisMatters => 'Vì sao điều này quan trọng';
+
+  @override
+  String get reviewSteps => 'Các bước';
+
+  @override
+  String get reviewAddStep => 'Thêm một bước';
+
+  @override
+  String get reviewInjectionNotice =>
+      'Một phần chữ trong nguồn này trông giống chỉ dẫn hơn là thông tin của tài liệu, nên Action đã bỏ qua nó.';
+
+  @override
+  String get reviewLayoutNotice =>
+      'Cách trình bày của tài liệu này có thể chứa những liên hệ mà việc trích xuất chữ không giữ lại được trọn vẹn. Hãy đối chiếu các giá trị bên dưới với nguồn trước khi xác nhận.';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason Hãy đối chiếu các giá trị bên dưới với nguồn.';
+  }
+
+  @override
+  String get reviewDeadline => 'Hạn chót';
+
+  @override
+  String get reviewAmount => 'Số tiền';
+
+  @override
+  String get reviewLeftUnset => 'Không có — bạn đã chọn để trống';
+
+  @override
+  String get reviewUnclear => 'Chưa rõ';
+
+  @override
+  String get reviewNotSet => 'Chưa đặt';
+
+  @override
+  String get reviewNoDeadlineFound => 'Không tìm thấy trong tài liệu này';
+
+  @override
+  String get reviewNoAmountFound =>
+      'Không tìm thấy số tiền nào trong tài liệu này';
+
+  @override
+  String get reviewMultipleDates => 'Action tìm thấy nhiều ngày có thể là hạn.';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return '$count ngày đều có thể là hạn chót. Hãy chọn đúng ngày, nhập ngày khác, hoặc để trống.';
+  }
+
+  @override
+  String get reviewChooseDate => 'Chọn một ngày';
+
+  @override
+  String get reviewMultipleAmounts =>
+      'Action tìm thấy nhiều hơn một số tiền có thể đúng.';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return '$count số tiền đều có thể là số được nói tới ở đây. Hãy chọn một, nhập số khác, hoặc để trống.';
+  }
+
+  @override
+  String get reviewChooseAmount => 'Chọn một số tiền';
+
+  @override
+  String get reviewSkipStep => 'Bỏ qua bước này';
+
+  @override
+  String get reviewKeepStep => 'Giữ bước này';
+
+  @override
+  String get reviewEditStep => 'Sửa bước';
+
+  @override
+  String get reviewCreateManually => 'Tự tạo';
+
+  @override
+  String get reviewConfirmAndCreate => 'Xác nhận và tạo việc';
+
+  @override
+  String get reviewFixHighlighted => 'Xem lại các ô được đánh dấu';
+
+  @override
+  String get reviewSaving => 'Đang lưu…';
+
+  @override
+  String get reviewSaveFailed =>
+      'Không lưu được việc này. Không mất gì cả — hãy thử lại.';
+
+  @override
+  String get reviewFieldTitle => 'Tên';
+
+  @override
+  String get reviewTitleHint => 'Cần làm gì?';
+
+  @override
+  String get reviewNewStep => 'Bước mới';
+
+  @override
+  String get reviewStepHint => 'Việc cần làm';
+
+  @override
+  String get reviewDatesConflict => 'Tài liệu nhắc tới nhiều hơn một ngày.';
+
+  @override
+  String get reviewAmountsConflict =>
+      'Tài liệu nhắc tới nhiều hơn một số tiền.';
+
+  @override
+  String get reviewAnotherDate => 'Một ngày khác — 2026-08-30';
+
+  @override
+  String get reviewBadDate =>
+      'Không phải một ngày có thật. Hãy dùng dạng 2026-08-30.';
+
+  @override
+  String get reviewTypeDate => 'Gõ một ngày, hoặc để trống ở bên dưới.';
+
+  @override
+  String get reviewUseThisDate => 'Dùng ngày này';
+
+  @override
+  String get reviewLeaveNoDeadline => 'Tiếp tục mà không có hạn chót';
+
+  @override
+  String get reviewAnotherAmount => 'Một số tiền khác — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return 'Không dùng được số tiền này: $reason.';
+  }
+
+  @override
+  String get reviewUseThisAmount => 'Dùng số tiền này';
+
+  @override
+  String get reviewLeaveNoAmount => 'Tiếp tục mà không có số tiền';
+
+  @override
+  String get reviewThisValue => 'Giá trị này';
+
+  @override
+  String reviewQuote(String quote) {
+    return '“$quote”';
+  }
+
+  @override
+  String get reviewSeeOnCapture => 'Xem trên bản thu nhận';
+
+  @override
+  String get reviewViewSource => 'Xem nguồn';
+
+  @override
+  String get reviewFromSource => 'Từ nguồn';
+
+  @override
+  String get reviewNotVerified => 'Chưa đối chiếu';
+
+  @override
+  String get reviewCouldNotVerify => 'Không đối chiếu được cái này với nguồn.';
+
+  @override
+  String get reviewLooksRight => 'Trông có vẻ đúng';
+
+  @override
+  String get reviewStageReading => 'Đang đọc nguồn';
+
+  @override
+  String get reviewStageUnderstanding => 'Đang hiểu các chi tiết quan trọng';
+
+  @override
+  String get reviewStageChecking => 'Đang kiểm những chỗ cần xem lại';
+
+  @override
+  String get reviewNothingToDo => 'Ngay lúc này bạn không cần làm gì cả.';
+
+  @override
+  String get reviewInformationOnly =>
+      'Cái này có vẻ chỉ là thông tin — không tìm thấy hạn chót, khoản thanh toán hay yêu cầu trả lời nào.';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      'Cái này có vẻ chỉ là thông tin — trong bản thu nhận này không tìm thấy hạn chót, khoản thanh toán hay yêu cầu trả lời nào.';
+
+  @override
+  String get reviewSourceKept => 'Nguồn vẫn được giữ trong cả hai trường hợp.';
+
+  @override
+  String get reviewAddAnyway => 'Vẫn thêm một việc';
+
+  @override
+  String get reviewActionConfirmed => 'Đã xác nhận việc';
+
+  @override
+  String get reviewCreatedByYou => 'Do bạn tạo.';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bạn đã xác nhận dựa trên $count thông tin đã xem lại.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Bạn đã xác nhận dựa trên $count thông tin đã xem lại. Bạn đã đổi $edited trong số đó.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => 'Đã lưu trên thiết bị này.';
+
+  @override
+  String get evidenceTitle => 'Chỗ này lấy từ đâu';
+
+  @override
+  String get evidenceUnverified =>
+      'Action không tìm thấy những chữ này trong phần văn bản nó đã đọc, nên giá trị này chưa được đối chiếu. Hãy so với bản gốc trước khi bạn dựa vào nó.';
+
+  @override
+  String get evidenceHighlighted =>
+      'Những chữ này có trong phần văn bản Action đọc được từ bản thu nhận này, và phần tô sáng chỉ ra chỗ đó.';
+
+  @override
+  String get evidenceNoRegion =>
+      'Những chữ này có trong phần văn bản Action đọc được từ bản thu nhận này. Nó không xác định được chính xác vị trí của chúng trên ảnh, và nó không đoán.';
+
+  @override
+  String get evidenceInText =>
+      'Những chữ này có trong phần văn bản mà bản thu nhận này chứa.';
+
+  @override
+  String get sourceCapturedAtFormat => 'd MMM, HH:mm';
+
+  @override
+  String get urgencyCritical => 'Rất gấp';
+
+  @override
+  String get urgencyImportant => 'Quan trọng';
+
+  @override
+  String get urgencyNormal => 'Bình thường';
+
+  @override
+  String get urgencyLow => 'Thấp';
+
+  @override
+  String get urgencyUnsure => 'Chưa chắc';
 }

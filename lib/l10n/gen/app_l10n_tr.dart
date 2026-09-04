@@ -319,6 +319,82 @@ class AppL10nTr extends AppL10n {
       'Action\'ın metinleri İngilizce yazıldı. Diğer çeviriler sabit bir sözlüğe göre hazırlandı ve otomatik olarak denetlendi; henüz ana dili o dil olan biri okumadı. İfadenin tam olması önemli olduğu yerlerde — gizlilik, güvenlik, Action\'ın neyi iddia edip neyi etmediği — referans İngilizce olarak kalır.';
 
   @override
+  String get ocrScriptTitle => 'Metin tanıma';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'Action bir fotoğrafa baktığında okuduğu yazı sistemi. Tanıma bu cihazda yapılır; okunmak üzere hiçbir yakalama hiçbir yere gönderilmez.';
+
+  @override
+  String get ocrScriptSectionChoose => 'Yazı sistemi';
+
+  @override
+  String get ocrScriptFollowLanguage => 'Uygulama dilini izle';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return 'Şu anda $script';
+  }
+
+  @override
+  String get ocrScriptLatin => 'Latin';
+
+  @override
+  String get ocrScriptChinese => 'Çince';
+
+  @override
+  String get ocrScriptDevanagari => 'Devanagari';
+
+  @override
+  String get ocrScriptJapanese => 'Japonca';
+
+  @override
+  String get ocrScriptKorean => 'Korece';
+
+  @override
+  String get ocrScriptLatinDescription =>
+      'İngilizce, İspanyolca, Fransızca, Almanca ve Latin harfleriyle yazılan diğer diller.';
+
+  @override
+  String get ocrScriptChineseDescription =>
+      'Basitleştirilmiş ve geleneksel Çince.';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      'Hintçe, Marathi ve Nepalce. Bengalce, Tamilce veya Telugu değil — bunların her biri ayrı bir yazı sistemidir.';
+
+  @override
+  String get ocrScriptJapaneseDescription => 'Japonca.';
+
+  @override
+  String get ocrScriptKoreanDescription => 'Korece.';
+
+  @override
+  String get ocrScriptFootnote =>
+      'Latin dışındaki her seçenek Latin harflerini de okur; yani birini seçmek bir yazı sistemini değiştirmez, üstüne ekler. Bu değişiklik bundan sonra çekilen fotoğraflar için geçerlidir, daha önce okunanlar için değil.';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action $language yazısını okuyamıyor';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      'Cihazda bunun için bir tanıyıcı yok. Fotoğraflar Latin harfleriyle yazılmış her şey için okunmaya devam eder, gerisi boş döner. Bunun yerine o metni yazabilir ya da yapıştırabilirsiniz.';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action $script okuyacak şekilde ayarlı. Bu fotoğraf başka bir yazı sistemindeyse Ayarlar\'dan değiştirip yeniden okutun.';
+  }
+
+  @override
+  String get settingsTextRecognition => 'Metin tanıma';
+
+  @override
+  String get settingsTextRecognitionDescription =>
+      'Action\'ın fotoğraflardan okuduğu yazı sistemi.';
+
+  @override
   String get settingsIntelligenceFootnote =>
       'Action yapay zekâ olmadan da çalışır. Kendi sağlayıcınızı bağlamak belge çözümleme, planlama ve taslak yazma araçlarını ekler.';
 
@@ -837,4 +913,492 @@ class AppL10nTr extends AppL10n {
 
   @override
   String get errorEnterManually => 'Elle girin';
+
+  @override
+  String get sourceWhatWeRead => 'Okuduğumuz';
+
+  @override
+  String get sourceDelete => 'Yakalamayı sil';
+
+  @override
+  String get sourceGone => 'O yakalama artık kullanılamıyor.';
+
+  @override
+  String get sourceDeleteTitle => 'Bu yakalama silinsin mi?';
+
+  @override
+  String get sourceDeleteBody =>
+      'Görüntü ve ondan okunan metin bu cihazdan kaldırılır.';
+
+  @override
+  String get sourceDeleteKeep => 'Kalsın';
+
+  @override
+  String get sourceOpenAction => 'Görevi aç';
+
+  @override
+  String sourceOpenActions(int count) {
+    return '$count görevi aç';
+  }
+
+  @override
+  String get sourceCreateAnother => 'Bundan bir tane daha oluştur';
+
+  @override
+  String get sourceCreateAction => 'Bundan bir görev oluştur';
+
+  @override
+  String get sourceDoMore => 'Bununla daha fazlasını yap';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return '$format $size KB kaynağından';
+  }
+
+  @override
+  String get sourceTextFound => 'Metin bulundu';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines satır · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer =>
+      'Action\'ın okuduğu metin bu. Ondan ne çıktığı aşağıda.';
+
+  @override
+  String get sourceNotInterpreted =>
+      'Henüz hiçbir şey yorumlanmadı. Action bununla ne yapılacağını önerecek, bir şey oluşturulmadan önce siz onaylayacaksınız.';
+
+  @override
+  String get sourceNoTextExplainer =>
+      'Bu; el yazısında, çok az ışıkta ya da bu cihazın henüz okuyamadığı bir yazıda olabilir.';
+
+  @override
+  String get sourceReadFailed => 'Bu okunamadı';
+
+  @override
+  String get sourceReadFailedReason => 'Metin tanıma tamamlanamadı.';
+
+  @override
+  String get sourceTryReadingAgain => 'Yeniden okumayı dene';
+
+  @override
+  String get sourceTypeInstead => 'Bilgileri kendiniz yazın';
+
+  @override
+  String get sourceTypeWhatItSays => 'Ne yazdığını yazın';
+
+  @override
+  String get sourceTypeHint => 'Tarihler, tutarlar ve ne istendiği.';
+
+  @override
+  String get sourceMadeFromThis => 'Bu yakalamadan oluşturuldu';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return 'Bu yakalamadan $count tane oluşturuldu';
+  }
+
+  @override
+  String get sourceTheDocument => 'Belge';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sayfa',
+      one: '1 sayfa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => 'Sayfa sayısı bilinmiyor';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'Action bu belgenin içinde ne olduğunu okumadı. Buna ihtiyaç duyan bir araç çalıştırdığınızda dosya, bağladığınız yapay zekâ sağlayıcısına gider ve bu olmadan önce size bildirilir.';
+
+  @override
+  String get previewSaveFailed => 'Bu kaydedilemedi. Yeniden deneyin.';
+
+  @override
+  String get previewTitle => 'Yakalamayı kontrol edin';
+
+  @override
+  String get previewImageFailed => 'O görüntü açılamadı.';
+
+  @override
+  String get previewHint =>
+      'Metnin okunabildiğinden ve önemli bir yerin kesilmediğinden emin olun.';
+
+  @override
+  String get previewRetake => 'Yeniden çek';
+
+  @override
+  String get pasteTitle => 'Metin yapıştır';
+
+  @override
+  String get pasteHint =>
+      'Baştan sona okumak istemediğiniz e-postayı, mesajı ya da bildirimi yapıştırın.';
+
+  @override
+  String get pasteFootnote =>
+      'İçinde tarih, tutar ya da bir istek geçen her şey iyi sonuç verir.';
+
+  @override
+  String get pasteEnough => 'Çalışmak için yeterli görünüyor.';
+
+  @override
+  String get pasteMore => 'Biraz daha metin daha iyi bir sonuç verir.';
+
+  @override
+  String get reviewLoadFailed => 'Bu yakalama yüklenemedi.';
+
+  @override
+  String get reviewConfirmed => 'Onaylandı';
+
+  @override
+  String get reviewNeedsReview => 'Gözden geçirilmeli';
+
+  @override
+  String get reviewReview => 'Gözden geçir';
+
+  @override
+  String get reviewHighConfidence => 'Yüksek güven';
+
+  @override
+  String get reviewConfirmedByYou => 'Sizin onayınızla';
+
+  @override
+  String get reviewMissing => 'Eksik';
+
+  @override
+  String get reviewNotUnderstood =>
+      'Action bu kaynağın yeterince büyük bir bölümünü güvenilir biçimde anlayamadı.';
+
+  @override
+  String get reviewNotUnderstoodBody =>
+      'Yakalama olduğu gibi duruyor ve hiçbir şey kaybolmadı. Bilgileri kendiniz girebilirsiniz, kaynak da başvurmak için ekli kalır.';
+
+  @override
+  String get reviewEnterDetails => 'Bilgileri girin';
+
+  @override
+  String get reviewKeepSource => 'Kaynağı sonrası için sakla';
+
+  @override
+  String reviewEngine(String engine) {
+    return 'Motor: $engine';
+  }
+
+  @override
+  String get reviewManualNotice =>
+      'Bu görevi kendiniz oluşturuyorsunuz. Yalnızca buraya girdikleriniz kullanılacak.';
+
+  @override
+  String get reviewUntitled => 'Başlıksız görev';
+
+  @override
+  String get reviewEditTitle => 'Başlığı düzenle';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count değeri gözden geçirmeniz gerekiyor.',
+      one: 'Bu onaylanabilmeden önce 1 değeri gözden geçirmeniz gerekiyor.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => 'Önemli bilgiler';
+
+  @override
+  String get reviewNotFound => 'Bulunamadı';
+
+  @override
+  String get reviewSuggestedNextStep => 'Önerilen sonraki adım';
+
+  @override
+  String get reviewWhyThisMatters => 'Bu neden önemli';
+
+  @override
+  String get reviewSteps => 'Adımlar';
+
+  @override
+  String get reviewAddStep => 'Adım ekle';
+
+  @override
+  String get reviewInjectionNotice =>
+      'Bu kaynaktaki bazı metinler belge bilgisi yerine talimat gibi göründü, bu yüzden Action onu dikkate almadı.';
+
+  @override
+  String get reviewLayoutNotice =>
+      'Bu belgenin yerleşimi, metin çıkarımının tümüyle koruyamadığı ilişkiler içeriyor olabilir. Onaylamadan önce aşağıdaki değerleri kaynakla karşılaştırın.';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason Aşağıdaki değerleri kaynakla karşılaştırın.';
+  }
+
+  @override
+  String get reviewDeadline => 'Son tarih';
+
+  @override
+  String get reviewAmount => 'Tutar';
+
+  @override
+  String get reviewLeftUnset => 'Yok — bunu boş bırakmayı siz seçtiniz';
+
+  @override
+  String get reviewUnclear => 'Belirsiz';
+
+  @override
+  String get reviewNotSet => 'Ayarlanmadı';
+
+  @override
+  String get reviewNoDeadlineFound => 'Bu belgede hiç bulunamadı';
+
+  @override
+  String get reviewNoAmountFound => 'Bu belgede hiç tutar bulunamadı';
+
+  @override
+  String get reviewMultipleDates => 'Action birden çok olası tarih buldu.';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return 'Son tarih $count tarihten biri olabilir. Doğrusunu seçin, başka birini girin ya da boş bırakın.';
+  }
+
+  @override
+  String get reviewChooseDate => 'Bir tarih seçin';
+
+  @override
+  String get reviewMultipleAmounts => 'Action birden fazla olası tutar buldu.';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return 'Burada söz konusu olan tutar $count tanesinden biri olabilir. Birini seçin, başka birini girin ya da boş bırakın.';
+  }
+
+  @override
+  String get reviewChooseAmount => 'Bir tutar seçin';
+
+  @override
+  String get reviewSkipStep => 'Bu adımı atla';
+
+  @override
+  String get reviewKeepStep => 'Bu adımı sakla';
+
+  @override
+  String get reviewEditStep => 'Adımı düzenle';
+
+  @override
+  String get reviewCreateManually => 'Elle oluştur';
+
+  @override
+  String get reviewConfirmAndCreate => 'Onayla ve görevi oluştur';
+
+  @override
+  String get reviewFixHighlighted => 'İşaretli alanları gözden geçirin';
+
+  @override
+  String get reviewSaving => 'Kaydediliyor…';
+
+  @override
+  String get reviewSaveFailed =>
+      'Bu görev kaydedilemedi. Hiçbir şey kaybolmadı — yeniden deneyin.';
+
+  @override
+  String get reviewFieldTitle => 'Başlık';
+
+  @override
+  String get reviewTitleHint => 'Ne olması gerekiyor?';
+
+  @override
+  String get reviewNewStep => 'Yeni adım';
+
+  @override
+  String get reviewStepHint => 'Ne yapılacak';
+
+  @override
+  String get reviewDatesConflict => 'Belgede birden fazla tarih geçiyor.';
+
+  @override
+  String get reviewAmountsConflict => 'Belgede birden fazla tutar geçiyor.';
+
+  @override
+  String get reviewAnotherDate => 'Başka bir tarih — 2026-08-30';
+
+  @override
+  String get reviewBadDate =>
+      'Gerçek bir tarih değil. 2026-08-30 biçimini kullanın.';
+
+  @override
+  String get reviewTypeDate => 'Bir tarih yazın ya da aşağıda boş bırakın.';
+
+  @override
+  String get reviewUseThisDate => 'Bu tarihi kullan';
+
+  @override
+  String get reviewLeaveNoDeadline => 'Son tarih olmadan devam et';
+
+  @override
+  String get reviewAnotherAmount => 'Başka bir tutar — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return 'Bu tutar kullanılamıyor: $reason.';
+  }
+
+  @override
+  String get reviewUseThisAmount => 'Bu tutarı kullan';
+
+  @override
+  String get reviewLeaveNoAmount => 'Tutar olmadan devam et';
+
+  @override
+  String get reviewThisValue => 'Bu değer';
+
+  @override
+  String reviewQuote(String quote) {
+    return '“$quote”';
+  }
+
+  @override
+  String get reviewSeeOnCapture => 'Yakalamanın üzerinde göster';
+
+  @override
+  String get reviewViewSource => 'Kaynağı gör';
+
+  @override
+  String get reviewFromSource => 'Kaynaktan';
+
+  @override
+  String get reviewNotVerified => 'Denetlenmedi';
+
+  @override
+  String get reviewCouldNotVerify =>
+      'Bu, kaynakla karşılaştırılıp denetlenemedi.';
+
+  @override
+  String get reviewLooksRight => 'Doğru görünüyor';
+
+  @override
+  String get reviewStageReading => 'Kaynak okunuyor';
+
+  @override
+  String get reviewStageUnderstanding => 'Önemli ayrıntılar anlaşılıyor';
+
+  @override
+  String get reviewStageChecking =>
+      'Neyin gözden geçirilmesi gerektiği denetleniyor';
+
+  @override
+  String get reviewNothingToDo => 'Şu anda yapmanız gereken bir şey yok.';
+
+  @override
+  String get reviewInformationOnly =>
+      'Bu yalnızca bilgi gibi görünüyor — son tarih, ödeme ya da yanıt isteği bulunamadı.';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      'Bu yalnızca bilgi gibi görünüyor — bu yakalamada son tarih, ödeme ya da yanıt isteği bulunamadı.';
+
+  @override
+  String get reviewSourceKept => 'Kaynak her hâlükârda saklanır.';
+
+  @override
+  String get reviewAddAnyway => 'Yine de bir görev ekle';
+
+  @override
+  String get reviewActionConfirmed => 'Görev onaylandı';
+
+  @override
+  String get reviewCreatedByYou => 'Sizin oluşturdunuz.';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Gözden geçirilmiş $count bilgiden yola çıkarak siz onayladınız.',
+      one: 'Gözden geçirilmiş 1 bilgiden yola çıkarak siz onayladınız.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Gözden geçirilmiş $count bilgiden yola çıkarak siz onayladınız. Bunların $edited tanesini değiştirdiniz.',
+      one:
+          'Gözden geçirilmiş 1 bilgiden yola çıkarak siz onayladınız. Bunların $edited tanesini değiştirdiniz.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => 'Bu cihaza kaydedildi.';
+
+  @override
+  String get evidenceTitle => 'Bunun geldiği yer';
+
+  @override
+  String get evidenceUnverified =>
+      'Action bu kelimeleri okuduğu metinde bulamadı, bu yüzden bu değer denetlenmedi. Ona güvenmeden önce aslıyla karşılaştırın.';
+
+  @override
+  String get evidenceHighlighted =>
+      'Bu kelimeler Action\'ın bu yakalamadan okuduğu metinde geçiyordu ve vurgulama nerede olduğunu gösteriyor.';
+
+  @override
+  String get evidenceNoRegion =>
+      'Bu kelimeler Action\'ın bu yakalamadan okuduğu metinde geçiyordu. Görüntünün tam olarak neresinde durduklarını çıkaramadı ve tahmin yürütmüyor.';
+
+  @override
+  String get evidenceInText =>
+      'Bu kelimeler bu yakalamanın içerdiği metinde geçiyordu.';
+
+  @override
+  String get sourceCapturedAtFormat => 'd MMM, HH:mm';
+
+  @override
+  String get urgencyCritical => 'Kritik';
+
+  @override
+  String get urgencyImportant => 'Önemli';
+
+  @override
+  String get urgencyNormal => 'Normal';
+
+  @override
+  String get urgencyLow => 'Düşük';
+
+  @override
+  String get urgencyUnsure => 'Emin değil';
 }
