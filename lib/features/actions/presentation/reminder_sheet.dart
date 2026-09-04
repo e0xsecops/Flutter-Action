@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../design/components/app_sheet.dart';
+import '../../../l10n/gen/app_l10n.dart';
+import '../../../l10n/enum_labels.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../application/reminder_presets.dart';
@@ -28,7 +30,9 @@ Future<DateTime?> showReminderSheet(
       padding:
           EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
       child: AppSheet(
-        title: initial == null ? 'Add a reminder' : 'Change this reminder',
+        title: initial == null
+            ? AppL10n.of(sheetContext).reminderAddTitle
+            : AppL10n.of(sheetContext).reminderChangeTitle,
         child: _ReminderEditor(action: action, now: now, initial: initial),
       ),
     ),
@@ -105,6 +109,7 @@ class _ReminderEditorState extends State<_ReminderEditor> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     return SingleChildScrollView(
       child: Padding(
@@ -132,16 +137,20 @@ class _ReminderEditorState extends State<_ReminderEditor> {
               children: [
                 Expanded(
                   child: _PickerField(
-                    label: 'Date',
-                    value: DateFormat('EEE d MMM yyyy').format(_chosen),
+                    label: l10n.reminderDateLabel,
+                    value: DateFormat(l10n.reminderFieldDateFormat,
+                            l10n.localeName)
+                        .format(_chosen),
                     onTap: _pickDate,
                   ),
                 ),
                 const SizedBox(width: Space.md),
                 Expanded(
                   child: _PickerField(
-                    label: 'Time',
-                    value: DateFormat('h:mm a').format(_chosen),
+                    label: l10n.reminderTimeLabel,
+                    value: DateFormat(l10n.reminderFieldTimeFormat,
+                            l10n.localeName)
+                        .format(_chosen),
                     onTap: _pickTime,
                   ),
                 ),
@@ -150,15 +159,18 @@ class _ReminderEditorState extends State<_ReminderEditor> {
             const SizedBox(height: Space.lg),
             // The whole promise, spelled out, before anything is created.
             Text(
-              'You will be reminded on '
-              '${DateFormat('EEEE d MMMM').format(_chosen)} at '
-              '${DateFormat('h:mm a').format(_chosen)}.',
+              l10n.reminderSummary(
+                DateFormat(l10n.reminderSummaryDateFormat, l10n.localeName)
+                    .format(_chosen),
+                DateFormat(l10n.reminderFieldTimeFormat, l10n.localeName)
+                    .format(_chosen),
+              ),
               style: text.bodyMedium?.copyWith(color: colors.textSecondary),
             ),
             if (_isPast) ...[
               const SizedBox(height: Space.sm),
               Text(
-                'That time has already passed. Choose a later one.',
+                l10n.reminderTimePastError,
                 style: text.bodySmall?.copyWith(color: colors.danger),
               ),
             ],
@@ -166,7 +178,7 @@ class _ReminderEditorState extends State<_ReminderEditor> {
             FilledButton(
               onPressed:
                   _isPast ? null : () => popSheetOnce(context, _chosen),
-              child: const Text('Set reminder'),
+              child: Text(l10n.reminderSet),
             ),
           ],
         ),
@@ -190,6 +202,7 @@ class _PresetChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     return InkWell(
       onTap: onTap,
@@ -212,7 +225,7 @@ class _PresetChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              preset.label,
+              preset.kind.labelIn(l10n),
               style: text.labelLarge?.copyWith(
                 color: selected ? colors.brand : colors.textPrimary,
               ),
@@ -220,7 +233,8 @@ class _PresetChip extends StatelessWidget {
             // The resolved time, always — so "1 day before" can never quietly
             // mean an hour the user did not pick.
             Text(
-              DateFormat('d MMM, h:mm a').format(preset.at),
+              DateFormat(l10n.reminderPresetFormat, l10n.localeName)
+                  .format(preset.at),
               style: text.bodySmall?.copyWith(color: colors.textTertiary),
             ),
           ],

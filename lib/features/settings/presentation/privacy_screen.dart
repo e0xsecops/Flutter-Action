@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../design/tokens/colors.dart';
@@ -10,6 +11,8 @@ import '../application/settings_providers.dart';
 import 'settings_shell.dart';
 import '../../../core/analytics/app_analytics.dart';
 import '../../../core/analytics/firebase_app_analytics.dart';
+import '../../../core/security/activity_journal.dart';
+import '../../../core/security/activity_providers.dart';
 
 /// Where your information lives — and the controls that act on it.
 ///
@@ -31,14 +34,14 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final owed = ref.watch(pendingCloudDeletionCountProvider);
 
     return SettingsPage(
-      title: 'Privacy & data',
+      title: l10n.privacyTitle,
       slivers: [
-        const SettingsProse(
-          'Action keeps as much as it can on this device. Two things are '
-          'exceptions, and they are both listed below.',
+        SettingsProse(
+          l10n.privacyIntro,
           top: Space.lg,
         ),
         // Above the explanation, not after it. An outstanding deletion is
@@ -52,22 +55,19 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
               onRetry: _retryPending,
             ),
           ),
-        for (final group in privacyDataMap) _Group(group: group),
+        for (final group in privacyDataMapIn(l10n)) _Group(group: group),
         SettingsSection(
-          title: 'Your data',
-          footnote: 'Clearing captures leaves your Actions in place. An '
-              'Action whose capture is gone still works; it simply no longer '
-              'shows what it came from.',
+          title: l10n.privacySectionYourData,
+          footnote: l10n.privacyYourDataFootnote,
           children: [
             SettingsRow(
-              label: 'Clear captures',
-              description: 'Deletes every capture and its image file.',
+              label: l10n.privacyClearCaptures,
+              description: l10n.privacyClearCapturesDescription,
               onTap: _busy ? null : _confirmClearCaptures,
             ),
             SettingsRow(
-              label: 'Delete all my data',
-              description: 'Actions, steps, reminders, captures and the '
-                  'cloud records above.',
+              label: l10n.privacyDeleteAll,
+              description: l10n.privacyDeleteAllDescription,
               destructive: true,
               onTap: _busy ? null : _confirmDeleteEverything,
             ),
@@ -84,47 +84,55 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
     setState(() => _busy = false);
     ref.invalidate(pendingCloudDeletionCountProvider);
     final left = ref.read(privacyDeletionServiceProvider).pending;
+    final l10n = AppL10n.of(context);
     _say(left == null || left.isEmpty
-        ? 'The cloud records have been deleted.'
-        : 'Still could not reach them. Action will try again.');
+        ? l10n.privacyCloudDeleted
+        : l10n.privacyCloudUnreachable);
   }
 
   Future<void> _confirmClearCaptures() async {
+    final l10n = AppL10n.of(context);
     final confirmed = await _confirm(
-      title: 'Clear captures?',
-      body: 'Every capture and its image will be deleted from this device. '
-          'Your Actions stay exactly as they are.',
-      confirmLabel: 'Clear captures',
+      title: l10n.privacyClearCapturesTitle,
+      body: l10n.privacyClearCapturesBody,
+      confirmLabel: l10n.privacyClearCaptures,
     );
     if (confirmed != true || !mounted) return;
 
     setState(() => _busy = true);
     try {
       await ref.read(privacyDeletionServiceProvider).clearCaptures();
+      await ref
+          .read(activityRecorderProvider)
+          .record(ActivityEvent.capturesCleared);
       if (!mounted) return;
-      _say('Captures deleted.');
+      _say(l10n.privacyCapturesDeleted);
     } on Object {
       if (!mounted) return;
-      _say('Some captures could not be deleted. Nothing else was changed.');
+      _say(l10n.privacyCapturesPartlyDeleted);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
   Future<void> _confirmDeleteEverything() async {
+    final l10n = AppL10n.of(context);
     final confirmed = await _confirm(
-      title: 'Delete all your data?',
-      body: 'This deletes every Action, step, reminder and capture on this '
-          'device, and the cloud records listed above. It cannot be undone, '
-          'and there is no backup to restore from.',
-      confirmLabel: 'Delete everything',
+      title: l10n.privacyDeleteAllTitle,
+      body: l10n.privacyDeleteAllBody,
+      confirmLabel: l10n.privacyDeleteEverything,
       destructive: true,
     );
     if (confirmed != true || !mounted) return;
 
     setState(() => _busy = true);
     final analytics = ref.read(appAnalyticsProvider);
+    final activity = ref.read(activityRecorderProvider);
     unawaited(analytics.log(AnalyticsEvents.privacyDeleteStarted));
+    // Recorded before the work starts. If deletion is interrupted, "you asked
+    // for this on Tuesday" is exactly the record the user needs, and one
+    // written only on success would not exist.
+    unawaited(activity.record(ActivityEvent.dataDeletionRequested));
     final outcome =
         await ref.read(privacyDeletionServiceProvider).deleteEverything();
     // Counts only: whether it finished, and whether the cloud could be
@@ -146,6 +154,10 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
         ),
     });
 
+    if (outcome is DeletionComplete) {
+      unawaited(activity.record(ActivityEvent.dataDeletionCompleted));
+    }
+
     if (!mounted) return;
     setState(() => _busy = false);
     ref.invalidate(pendingCloudDeletionCountProvider);
@@ -153,7 +165,7 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
     // Each outcome gets its own sentence. "Deleted" is only ever said when
     // it is actually true of both places.
     _say(switch (outcome) {
-      DeletionComplete() => 'Everything has been deleted.',
+      DeletionComplete() => l10n.privacyDeletedAll,
       DeletionPartial(
         :final cloudCopiesRemaining,
         :final capturesRemain,
@@ -163,8 +175,9 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
           cloudCopiesRemaining,
           capturesRemain,
           cloudNotVerified,
+          l10n,
         ),
-      DeletionFailed() => 'Your data could not be deleted.',
+      DeletionFailed() => l10n.privacyDeleteFailed,
     });
   }
 
@@ -181,22 +194,27 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
     int cloudRemaining,
     bool capturesRemain,
     bool cloudNotVerified,
+    AppL10n l10n,
   ) {
     final leftovers = <String>[
-      if (capturesRemain) 'some captures',
+      if (capturesRemain) l10n.privacyLeftoverCaptures,
       if (cloudRemaining > 0)
-        '$cloudRemaining cloud ${cloudRemaining == 1 ? 'record' : 'records'}',
+        l10n.privacyLeftoverCloudRecords(cloudRemaining),
     ];
     if (leftovers.isEmpty) {
       // Nothing known to be left, but the cloud went unchecked.
-      return 'Everything on this device has been deleted. Action could not '
-          'reach the cloud to confirm nothing is left there, and will check '
-          'again.';
+      return l10n.privacyDeletedUnverified;
     }
+    // Joined through a key rather than with a literal " and ": the
+    // conjunction is a word, and two locales already put it elsewhere in the
+    // sentence.
+    final list = leftovers.length == 1
+        ? leftovers.single
+        : l10n.privacyLeftoverJoin(leftovers.first, leftovers.last);
     final tail = cloudNotVerified
-        ? ' Action could not finish checking the cloud, and will try again.'
-        : ' Action will try again.';
-    return 'Deleted, apart from ${leftovers.join(' and ')}.$tail';
+        ? l10n.privacyCloudCheckIncomplete
+        : l10n.privacyWillTryAgain;
+    return '${l10n.privacyDeletedApartFrom(list)} $tail';
   }
 
   Future<bool?> _confirm({
@@ -214,7 +232,7 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppL10n.of(dialogContext).commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
@@ -238,59 +256,70 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
 /// The data map, public so every line of it can be tested rather than only
 /// the lines that happen to be on screen.
 ///
-/// This is the copy that has to stay true to the code. It is a const in one
+/// This is the copy that has to stay true to the code. It is assembled in one
 /// place so that a change to what the app actually does can be matched by a
 /// change here, and so a test can read all of it at once.
-const privacyDataMap = <({String title, List<String> lines})>[
-  (
-    title: 'On this device',
-    lines: [
-      'Captures — the screenshots, photos and text you add, and the text read '
-          'out of them.',
-      'Actions, their steps, facts and reminders.',
-      'Search. Your searches run here, are never sent anywhere, and are not '
-          'kept after you close the screen.',
-    ],
-  ),
-  (
-    title: 'Sent to be read',
-    lines: [
-      'When you ask Action to interpret a capture, that content is sent to '
-          'the AI service that reads it. This is not on-device AI.',
-      'It is sent only for the capture you chose, and only when you ask for '
-          'it.',
-    ],
-  ),
-  (
-    title: 'Stored in the cloud',
-    lines: [
-      'When you confirm an Action, a short record of it may be saved under an '
-          'anonymous ID belonging to this installation: its title, status, '
-          'urgency, category, deadline, amount, suggested next step and '
-          'timestamps.',
-      'Your captures, the text read from them, an Action’s steps and facts, '
-          'and your reminders are not sent.',
-      'This is not a backup. There is no way to restore it to a new device, '
-          'and losing this installation loses the anonymous ID with it.',
-    ],
-  ),
-  // Day 18. Written to be checkable against the code rather than reassuring:
-  // every claim here corresponds to something the analytics contract
-  // enforces, and the tests fail if it stops being true.
-  (
-    title: 'Diagnostics',
-    lines: [
-      'Action records anonymous counts of what happens in the app — that a '
-          'capture was started, that an extraction worked or did not, that a '
-          'search found nothing, that an Action was completed.',
-      'These are counts, not contents. No title, amount, deadline, reference, '
-          'captured text or search term is ever included, and neither is the '
-          'anonymous ID or any identifier for an Action or capture.',
-      'If the app crashes, the error and where it happened are reported so it '
-          'can be fixed. Action does not attach your data to those reports.',
-    ],
-  ),
-];
+///
+/// A function of the bundle rather than a `const`, because these lines are now
+/// translated — and they are the lines where a translation that loses a clause
+/// stops being a disclosure. `critical_copy_test.dart` holds every one of them
+/// to its English length and to the reassurance words it may not use.
+List<({String title, List<String> lines})> privacyDataMapIn(AppL10n l10n) => [
+      (
+        title: l10n.privacyGroupOnDevice,
+        lines: [
+          l10n.privacyOnDeviceCaptures,
+          l10n.privacyOnDeviceActions,
+          l10n.privacyOnDeviceSearch,
+          // Added when the normalizer was found to be storing EXIF verbatim:
+          // a phone photo carries the coordinates of wherever it was taken,
+          // and Action was keeping them and forwarding them with the image.
+          // Both halves are asserted in test/capture/image_metadata_test.dart.
+          l10n.privacyOnDevicePhotoMetadata,
+        ],
+      ),
+      (
+        title: l10n.privacyGroupSentToRead,
+        lines: [
+          l10n.privacySentToReadWhat,
+          l10n.privacySentToReadWhen,
+        ],
+      ),
+      // V2. The BYOK layer sends content to a third party the user chose, using
+      // their own credential. That is a genuinely different data route from the
+      // built-in reader above, and collapsing the two into one reassuring
+      // paragraph would be the exact dishonesty this screen exists to avoid.
+      (
+        title: l10n.privacyGroupYourProvider,
+        lines: [
+          l10n.privacyProviderWhat,
+          l10n.privacyProviderDirect,
+          l10n.privacyProviderScope,
+          l10n.privacyProviderKey,
+          l10n.privacyProviderLocalTools,
+          l10n.privacyProviderAgreement,
+        ],
+      ),
+      (
+        title: l10n.privacyGroupCloud,
+        lines: [
+          l10n.privacyCloudWhat,
+          l10n.privacyCloudNotSent,
+          l10n.privacyCloudNotBackup,
+        ],
+      ),
+      // Day 18. Written to be checkable against the code rather than
+      // reassuring: every claim here corresponds to something the analytics
+      // contract enforces, and the tests fail if it stops being true.
+      (
+        title: l10n.privacyGroupDiagnostics,
+        lines: [
+          l10n.privacyDiagnosticsWhat,
+          l10n.privacyDiagnosticsCounts,
+          l10n.privacyDiagnosticsCrash,
+        ],
+      ),
+    ];
 
 class _Group extends StatelessWidget {
   const _Group({required this.group});
@@ -363,6 +392,7 @@ class _PendingNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -385,23 +415,22 @@ class _PendingNotice extends StatelessWidget {
                     size: 18, color: colors.urgencyImportant),
                 const SizedBox(width: Space.sm),
                 Expanded(
-                  child: Text('Still to delete', style: text.titleSmall),
+                  child: Text(l10n.privacyPendingTitle,
+                      style: text.titleSmall),
                 ),
               ],
             ),
             const SizedBox(height: Space.sm),
             Text(
-              '$count cloud ${count == 1 ? 'record' : 'records'} could not be '
-              'reached last time. Action will try again on its own, or you '
-              'can retry now.',
+              l10n.privacyPendingBody(count),
               style: text.bodySmall?.copyWith(color: colors.textSecondary),
             ),
             const SizedBox(height: Space.sm),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: TextButton(
                 onPressed: busy ? null : () => onRetry(),
-                child: const Text('Try again'),
+                child: Text(l10n.privacyTryAgain),
               ),
             ),
           ],

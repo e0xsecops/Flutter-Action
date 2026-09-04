@@ -10,6 +10,7 @@ import '../data/auth_identity_service.dart';
 import '../data/drift_action_repository.dart';
 import '../data/drift_reminder_repository.dart';
 import '../data/flutter_local_notification_scheduler.dart';
+import '../../../core/security/protection_providers.dart';
 import '../data/notification_scheduler.dart';
 import '../domain/action_item.dart';
 import '../domain/action_reminder.dart';
@@ -149,6 +150,11 @@ final reminderServiceProvider = Provider<ReminderService>((ref) {
     scheduler: ref.watch(notificationSchedulerProvider),
     clock: ref.watch(appClockProvider),
     timeZoneId: () => ref.read(deviceTimeZoneProvider).id,
+    // Read at arming time, not watched: re-creating the service every time the
+    // setting changed would tear down nothing useful, and a reminder being
+    // armed right now should use the answer as it stands right now.
+    privateNotifications: () =>
+        ref.read(protectionSettingsProvider).privateNotifications,
   );
 });
 
@@ -158,6 +164,8 @@ final reminderReconcilerProvider = Provider<ReminderReconciler>((ref) {
     actions: ref.watch(actionRepositoryProvider),
     scheduler: ref.watch(notificationSchedulerProvider),
     clock: ref.watch(appClockProvider),
+    privateNotifications: () =>
+        ref.read(protectionSettingsProvider).privateNotifications,
   );
 });
 

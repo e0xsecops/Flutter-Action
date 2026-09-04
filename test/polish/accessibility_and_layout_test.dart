@@ -19,6 +19,7 @@ import 'package:action_app/features/settings/presentation/help_screen.dart';
 import 'package:action_app/features/settings/presentation/privacy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:action_app/l10n/gen/app_l10n_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../actions/support/actions_test_support.dart';
@@ -98,11 +99,28 @@ Future<void> pumpApp(
 
 void polishTest(String description, Future<void> Function(WidgetTester) body) {
   testWidgets(description, (tester) async {
-    await body(tester);
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump(const Duration(seconds: 5));
-    tester.view.reset();
+    try {
+      await body(tester);
+    } finally {
+      // In a finally, so a failing test still tears its view down rather than
+      // leaving a resized one behind for every later test in the file.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(seconds: 5));
+      tester.view.reset();
+    }
   });
+}
+
+/// Opens Library and switches to the Done segment.
+///
+/// Completed Actions left Today in V2 — every comparable product keeps finished
+/// work off the daily surface — so anything asserting about a completed Action
+/// goes through here.
+Future<void> openLibraryDone(WidgetTester tester) async {
+  await tester.tap(find.byTooltip('Library'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Done'));
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -139,6 +157,10 @@ void main() {
           status: ActionStatus.completed,
           completedAt: polishNow));
       await pumpApp(tester);
+
+      // Completed work left the daily surface in V2, so this property now
+      // lives where completed Actions do: Library -> Done.
+      await openLibraryDone(tester);
 
       expect(find.byTooltip('Completed: Paid bill'), findsOneWidget);
       expect(find.byTooltip('Mark "Paid bill" as done'), findsNothing);
@@ -196,6 +218,7 @@ void main() {
           status: ActionStatus.completed,
           completedAt: polishNow));
       await pumpApp(tester);
+      await openLibraryDone(tester);
       await tester.tap(find.text('Paid bill'));
       await tester.pumpAndSettle();
 
@@ -272,7 +295,7 @@ void main() {
     // These strings are the product's promises. A refactor that quietly
     // reworded one would be a change of meaning, not of style.
     test('privacy copy still names the two exceptions', () {
-      final all = privacyDataMap.expand((g) => g.lines).join(' ');
+      final all = privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ');
       expect(all, contains('sent to the AI service'));
       expect(all, contains('This is not on-device AI'));
       expect(all, contains('This is not a backup'));
@@ -281,8 +304,8 @@ void main() {
 
     test('nothing anywhere promises a cross-device backup', () {
       final everything = [
-        ...privacyDataMap.expand((g) => g.lines),
-        ...helpEntries.map((e) => '${e.question} ${e.answer}'),
+        ...privacyDataMapIn(AppL10nEn()).expand((g) => g.lines),
+        ...helpEntriesIn(AppL10nEn()).map((e) => '${e.question} ${e.answer}'),
       ].join(' ').toLowerCase();
 
       for (final forbidden in [
@@ -321,9 +344,12 @@ void main() {
     polishTest('an empty Home says what to do next', (tester) async {
       await pumpApp(tester);
 
-      expect(find.text('Nothing needs your attention'), findsOneWidget);
-      expect(find.textContaining('Add a photo, a screenshot, or some text'),
-          findsOneWidget);
+      // V2 replaced the "nothing is here" empty state with one that says what
+      // Action can do and offers a way in. The prohibition below is unchanged
+      // and is the point of this test.
+      expect(find.text('Start with anything'), findsOneWidget);
+      expect(find.text('WHAT ACTION HANDLES'), findsOneWidget);
+      expect(find.text('Capture something'), findsWidgets);
       // The two phrasings this product should never fall back to.
       expect(find.textContaining('Nothing here yet'), findsNothing);
       expect(find.textContaining('Something went wrong'), findsNothing);
@@ -369,6 +395,103 @@ void main() {
 
       await tester.tap(find.byTooltip('Settings'));
       await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+    });
+  });
+
+  // ---------------------------------------------------------------------
+  // V2. The Intelligence screens are held to exactly the bar the rest of the
+  // app is: they must survive 200% text, stop growing on a tablet, and say
+  // what their controls act on.
+  // ---------------------------------------------------------------------
+
+  group('the Intelligence screens meet the same bar', () {
+    Future<void> openStudio(WidgetTester tester) async {
+      await tester.tap(find.byTooltip('Intelligence'));
+      await tester.pumpAndSettle();
+    }
+
+    polishTest('the Studio at 200% does not clip', (tester) async {
+      await pumpApp(tester, textScale: 2.0);
+      await openStudio(tester);
+      expect(tester.takeException(), isNull);
+    });
+
+    polishTest('a tool screen at 200% does not clip', (tester) async {
+      await pumpApp(tester, textScale: 2.0);
+      await openStudio(tester);
+
+      await tester.scrollUntilVisible(
+        find.text('Hide sensitive details'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Hide sensitive details').first);
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+    });
+
+    polishTest('Intelligence settings at 200% does not clip', (tester) async {
+      await pumpApp(tester, textScale: 2.0);
+      await tester.tap(find.byTooltip('Settings'));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('AI provider'), 200);
+      await tester.tap(find.text('AI provider'));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+    });
+
+    polishTest('the Studio stops growing on a tablet', (tester) async {
+      await pumpApp(tester, size: const Size(1400, 1600));
+      await openStudio(tester);
+
+      final body = tester.getSize(find.byType(CustomScrollView).first);
+      // A card list tolerates more width than prose, so it uses the list
+      // breakpoint - the same one Home uses.
+      expect(body.width, lessThanOrEqualTo(Breakpoints.readableList));
+    });
+
+    polishTest('and still fills a phone', (tester) async {
+      await pumpApp(tester, size: const Size(420, 1400));
+      await openStudio(tester);
+
+      final body = tester.getSize(find.byType(CustomScrollView).first);
+      expect(body.width, 420);
+    });
+
+    polishTest('the Intelligence control names itself', (tester) async {
+      await pumpApp(tester);
+      // A screen reader landing on an unlabelled icon says "button".
+      expect(find.byTooltip('Intelligence'), findsOneWidget);
+    });
+
+    polishTest('a tool card announces what it is', (tester) async {
+      await pumpApp(tester);
+      await openStudio(tester);
+
+      await tester.scrollUntilVisible(
+        find.text('Hide sensitive details'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      final semantics = tester.getSemantics(
+        find.bySemanticsLabel(RegExp('Hide sensitive details')).first,
+      );
+      // The card carries its description too, so the announcement says what
+      // the tool does rather than only its name.
+      expect(semantics.label, contains('Find what should not be shared'));
+    });
+
+    polishTest('the Studio renders in dark without throwing', (tester) async {
+      final prefs = InMemoryPreferenceStore({
+        PreferenceKeys.onboardingCompleted: true,
+        PreferenceKeys.themeMode: 'dark',
+      });
+      await pumpApp(tester, prefs: prefs);
+      await openStudio(tester);
 
       expect(tester.takeException(), isNull);
     });

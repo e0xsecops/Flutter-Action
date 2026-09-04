@@ -30,6 +30,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # Material's own strings and, more importantly, the delegates that let the
+  # framework resolve a locale's text direction at all. Without these an app
+  # is LTR by construction: there is no way for Directionality to become RTL,
+  # so every RTL layout bug is invisible rather than absent.
+  flutter_localizations:
+    sdk: flutter
 
   # cupertino_icons was removed at Day 19: it arrives with the Flutter
   # template and nothing in this app imports it. Action uses Material icons
@@ -56,6 +62,30 @@ dependencies:
   flutter_local_notifications: ^22.3.0
   timezone: ^0.11.1
   flutter_timezone: ^5.1.0
+
+  # V2 / BYOK. `http` was already in the lock file transitively; it is a direct
+  # dependency now because the provider adapters talk to OpenAI, Anthropic and
+  # Gemini over plain HTTPS. There is no official Dart SDK for any of the three,
+  # and raw HTTP is what their own docs specify for a language without one.
+  http: ^1.6.0
+  # OS-backed secret storage for the user's own API key: Android Keystore,
+  # iOS Keychain. Wrapped behind `SecretStore` so tests never touch a platform
+  # channel and the package can be replaced without touching call sites.
+  flutter_secure_storage: ^9.2.4
+  # SHA-256 for the file identity tool, and the chunked sink it hashes through
+  # so a large PDF is never held in memory twice. Both were already in the lock
+  # file transitively; they are direct now because Action's own code imports
+  # them. Dart has no SHA-256 in its core libraries, and this is the package the
+  # SDK team maintains — a hand-rolled digest would be exactly the home-grown
+  # cryptography this project has ruled out everywhere else.
+  crypto: ^3.0.6
+  convert: ^3.1.2
+  # App Lock. Wraps Android's BiometricPrompt and the device-credential
+  # fallback, which is the only correct way to do this: Action never sees a
+  # fingerprint, a face or a PIN, and stores nothing about them. It asks the OS
+  # a yes/no question and gets an answer. Requires MainActivity to extend
+  # FlutterFragmentActivity — see the comment there.
+  local_auth: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +115,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # Runs gen-l10n as part of every build, so an ARB edit cannot ship without
+  # the Dart it implies. See l10n.yaml.
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   # assets:

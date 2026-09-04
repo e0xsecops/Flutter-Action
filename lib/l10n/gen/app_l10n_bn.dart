@@ -1,0 +1,2178 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+
+import 'app_l10n.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Bengali Bangla (`bn`).
+class AppL10nBn extends AppL10n {
+  AppL10nBn([String locale = 'bn']) : super(locale);
+
+  @override
+  String get appName => 'Action';
+
+  @override
+  String get commonCancel => 'বাতিল';
+
+  @override
+  String get commonDone => 'হয়ে গেছে';
+
+  @override
+  String get commonSave => 'সেভ';
+
+  @override
+  String get commonClose => 'বন্ধ';
+
+  @override
+  String get commonBack => 'পেছনে';
+
+  @override
+  String get commonRetry => 'আবার চেষ্টা করুন';
+
+  @override
+  String get commonDelete => 'মুছে ফেলুন';
+
+  @override
+  String get commonRemove => 'সরান';
+
+  @override
+  String get commonContinue => 'চালিয়ে যান';
+
+  @override
+  String get commonOpen => 'খুলুন';
+
+  @override
+  String get commonCopy => 'কপি';
+
+  @override
+  String get commonCopied => 'কপি হয়েছে';
+
+  @override
+  String get commonEdit => 'সম্পাদনা';
+
+  @override
+  String get commonAdd => 'যোগ করুন';
+
+  @override
+  String get commonOn => 'চালু';
+
+  @override
+  String get commonOff => 'বন্ধ';
+
+  @override
+  String get commonUnknown => 'অজানা';
+
+  @override
+  String get commonChecking => 'দেখা হচ্ছে…';
+
+  @override
+  String get commonSettings => 'সেটিংস';
+
+  @override
+  String get commonDismiss => 'সরিয়ে দিন';
+
+  @override
+  String get commonUndo => 'আগের অবস্থায়';
+
+  @override
+  String get commonSkip => 'এড়িয়ে যান';
+
+  @override
+  String get commonNotNow => 'এখন নয়';
+
+  @override
+  String get commonSomethingWentWrong => 'কিছু একটা ভুল হয়েছে।';
+
+  @override
+  String get navToday => 'আজ';
+
+  @override
+  String get navLibrary => 'লাইব্রেরি';
+
+  @override
+  String get navIntelligence => 'ইন্টেলিজেন্স';
+
+  @override
+  String get navSearch => 'খুঁজুন';
+
+  @override
+  String get navCapture => 'কিছু ক্যাপচার করুন';
+
+  @override
+  String get todayGreetingMorning => 'শুভ সকাল';
+
+  @override
+  String get todayGreetingAfternoon => 'শুভ অপরাহ্ন';
+
+  @override
+  String get todayGreetingEvening => 'শুভ সন্ধ্যা';
+
+  @override
+  String get todayDateFormat => 'EEEE · d MMMM';
+
+  @override
+  String get todayActionsLoadFailed =>
+      'আপনার কাজগুলো লোড করা যায়নি। সেগুলো এখনও এই ডিভাইসেই আছে।';
+
+  @override
+  String get todaySectionNeedsAttention => 'মনোযোগ দরকার';
+
+  @override
+  String get todaySectionAlsoNeedsAttention => 'এগুলোরও মনোযোগ দরকার';
+
+  @override
+  String get todaySectionWaitingForReview => 'পর্যালোচনার অপেক্ষায়';
+
+  @override
+  String get todaySectionComingUp => 'সামনে আসছে';
+
+  @override
+  String todaySeeAllCaptures(int count) {
+    return 'সব $countটি ক্যাপচার দেখুন';
+  }
+
+  @override
+  String get todaySeeAllInLibrary => 'লাইব্রেরিতে সব দেখুন';
+
+  @override
+  String todayCompletedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি শেষ',
+      one: '১টি শেষ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayCompletedSemantics(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি কাজ শেষ হয়েছে। লাইব্রেরি খুলুন।',
+      one: '১টি কাজ শেষ হয়েছে। লাইব্রেরি খুলুন।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayStartWith => 'শুরু করুন';
+
+  @override
+  String get todayQuickPhoto => 'ছবি';
+
+  @override
+  String get todayQuickScreenshot => 'স্ক্রিনশট';
+
+  @override
+  String get todayQuickText => 'লেখা';
+
+  @override
+  String get todayQuickTools =>
+      'একটি লিঙ্ক যাচাই করুন, বা লেখার ভেতর কী খুঁজুন';
+
+  @override
+  String get briefBadgeNeedsYou => 'আপনাকে দরকার';
+
+  @override
+  String get briefBadgeToReview => 'পর্যালোচনার জন্য';
+
+  @override
+  String get briefBadgeAhead => 'সামনে';
+
+  @override
+  String get briefBadgeStartHere => 'এখান থেকে শুরু';
+
+  @override
+  String get briefBadgeClear => 'সব পরিষ্কার';
+
+  @override
+  String get briefNext => 'পরবর্তী';
+
+  @override
+  String briefOpenAction(String title) {
+    return '$title খুলুন';
+  }
+
+  @override
+  String briefMarkDone(String title) {
+    return '\"$title\" শেষ হিসেবে চিহ্নিত করুন';
+  }
+
+  @override
+  String briefHeadlineNeedsAttention(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি কাজের আপনার মনোযোগ দরকার',
+      one: '১টি কাজের আপনার মনোযোগ দরকার',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefDetailAlsoWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ক্যাপচারও পর্যালোচনার অপেক্ষায়।',
+      one: '১টি ক্যাপচারও পর্যালোচনার অপেক্ষায়।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefHeadlineCapturesWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ক্যাপচার আপনার অপেক্ষায়',
+      one: '১টি ক্যাপচার আপনার অপেক্ষায়',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get briefDetailNothingOverdue => 'কোনো কিছুর সময় পেরোয়নি।';
+
+  @override
+  String get briefHeadlineNothingToday => 'আজ কিছুরই আপনাকে দরকার নেই';
+
+  @override
+  String briefDetailComingUp(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি কাজ সামনে আসছে।',
+      one: '১টি কাজ সামনে আসছে।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get briefHeadlineClear => 'আপনার সব পরিষ্কার';
+
+  @override
+  String get briefDetailClear => 'কিছুরই সময় হয়নি, কিছুই অপেক্ষা করছে না।';
+
+  @override
+  String get briefHeadlineFirstRun => 'যেকোনো কিছু দিয়ে শুরু করুন';
+
+  @override
+  String get briefDetailFirstRun =>
+      'একটি চিঠি, একটি স্ক্রিনশট, একটি নোট — Action বুঝে নেবে সেটি কী।';
+
+  @override
+  String get settingsTitle => 'সেটিংস';
+
+  @override
+  String get settingsSectionPersonalise => 'নিজের মতো করুন';
+
+  @override
+  String get settingsAppearance => 'চেহারা';
+
+  @override
+  String get settingsAppearanceDescription => 'হালকা, গাঢ়, বা ডিভাইস যা করছে।';
+
+  @override
+  String get settingsLanguageDescription =>
+      'Action আপনার সঙ্গে যে ভাষায় কথা বলে।';
+
+  @override
+  String get appearanceSystem => 'সিস্টেম';
+
+  @override
+  String get appearanceLight => 'হালকা';
+
+  @override
+  String get appearanceDark => 'গাঢ়';
+
+  @override
+  String get appearanceSystemDescription => 'ডিভাইসের সেটিং অনুসরণ করুন';
+
+  @override
+  String get appearanceLightDescription => 'সবসময় হালকা';
+
+  @override
+  String get appearanceDarkDescription => 'সবসময় গাঢ়';
+
+  @override
+  String get languageTitle => 'ভাষা';
+
+  @override
+  String get languageSubtitle =>
+      'পরিবর্তন সঙ্গে সঙ্গে কার্যকর হয়। কোথাও কিছু পাঠানো হয় না; পছন্দটি এই ডিভাইসেই রাখা থাকে।';
+
+  @override
+  String get languageSectionChoose => 'একটি ভাষা বেছে নিন';
+
+  @override
+  String get languageSystem => 'সিস্টেম';
+
+  @override
+  String get languageSystemDescription => 'ডিভাইসের ভাষা অনুসরণ করুন';
+
+  @override
+  String get languageDraftNote =>
+      'Action-এর লেখা মূলত ইংরেজিতে তৈরি। বাকি অনুবাদগুলো একটি নির্দিষ্ট শব্দতালিকা মেনে খসড়া করা হয়েছে এবং স্বয়ংক্রিয়ভাবে যাচাই হয়েছে, কিন্তু কোনো মাতৃভাষী এখনও সেগুলো পড়ে দেখেননি। যেখানে শব্দের নির্ভুলতা জরুরি — গোপনীয়তা, নিরাপত্তা, এবং Action কী দাবি করে ও কী করে না — সেখানে ইংরেজিই মূল সূত্র।';
+
+  @override
+  String get ocrScriptTitle => 'লেখা শনাক্তকরণ';
+
+  @override
+  String get ocrScriptSubtitle =>
+      'ছবির দিকে তাকালে Action যে লিপি পড়ে। শনাক্তকরণ এই ডিভাইসেই হয়; পড়ার জন্য কোনো ক্যাপচার কোথাও পাঠানো হয় না।';
+
+  @override
+  String get ocrScriptSectionChoose => 'লিপি';
+
+  @override
+  String get ocrScriptFollowLanguage => 'অ্যাপের ভাষা অনুসরণ করুন';
+
+  @override
+  String ocrScriptFollowLanguageValue(String script) {
+    return 'এখন $script';
+  }
+
+  @override
+  String get ocrScriptLatin => 'রোমান';
+
+  @override
+  String get ocrScriptChinese => 'চীনা';
+
+  @override
+  String get ocrScriptDevanagari => 'দেবনাগরী';
+
+  @override
+  String get ocrScriptJapanese => 'জাপানি';
+
+  @override
+  String get ocrScriptKorean => 'কোরীয়';
+
+  @override
+  String get ocrScriptLatinDescription =>
+      'ইংরেজি, স্প্যানিশ, ফরাসি, জার্মান এবং রোমান অক্ষরে লেখা বাকি ভাষাগুলো।';
+
+  @override
+  String get ocrScriptChineseDescription => 'সরলীকৃত ও প্রচলিত চীনা।';
+
+  @override
+  String get ocrScriptDevanagariDescription =>
+      'হিন্দি, মারাঠি ও নেপালি। বাংলা, তামিল বা তেলুগু নয় — এদের প্রত্যেকের লিপি আলাদা।';
+
+  @override
+  String get ocrScriptJapaneseDescription => 'জাপানি।';
+
+  @override
+  String get ocrScriptKoreanDescription => 'কোরীয়।';
+
+  @override
+  String get ocrScriptFootnote =>
+      'রোমান ছাড়া প্রতিটি পছন্দই রোমান অক্ষরও পড়ে, তাই একটি বেছে নিলে লিপি বদলায় না, যোগ হয়। এই বদল এখন থেকে তোলা ছবির ক্ষেত্রে খাটে, আগে পড়া হয়ে যাওয়া ছবির ক্ষেত্রে নয়।';
+
+  @override
+  String ocrScriptUnreadableTitle(String language) {
+    return 'Action $language লিপি পড়তে পারে না';
+  }
+
+  @override
+  String get ocrScriptUnreadableBody =>
+      'এর জন্য ডিভাইসে কোনো শনাক্তকারী নেই। ছবিতে রোমান অক্ষরে লেখা যা কিছু থাকবে তা তবু পড়া হবে, বাকিটা খালি ফিরবে। ওই লেখা আপনি বরং টাইপ করতে বা পেস্ট করতে পারেন।';
+
+  @override
+  String ocrScriptNoTextHint(String script) {
+    return 'Action এখন $script পড়ার জন্য সেট করা। এই ছবি অন্য কোনো লিপিতে হলে সেটিংসে বদলে নিয়ে আবার পড়ান।';
+  }
+
+  @override
+  String get settingsTextRecognition => 'লেখা শনাক্তকরণ';
+
+  @override
+  String get settingsTextRecognitionDescription =>
+      'ছবি থেকে Action যে লিপি পড়ে।';
+
+  @override
+  String get settingsIntelligenceFootnote =>
+      'AI ছাড়াই Action কাজ করে। নিজের প্রোভাইডার যুক্ত করলে ডকুমেন্ট বিশ্লেষণ, পরিকল্পনা ও খসড়া লেখার টুল যোগ হয়।';
+
+  @override
+  String get settingsAiProvider => 'AI প্রোভাইডার';
+
+  @override
+  String get settingsAiNotConnected =>
+      'যুক্ত নয়। নিজের অ্যাকাউন্ট ও API কী ব্যবহার করুন।';
+
+  @override
+  String settingsAiConnected(String provider) {
+    return '$provider-এর সঙ্গে যুক্ত।';
+  }
+
+  @override
+  String get settingsSectionPrivacySecurity => 'গোপনীয়তা ও নিরাপত্তা';
+
+  @override
+  String get settingsSecurity => 'নিরাপত্তা';
+
+  @override
+  String get settingsWhereInfoLives => 'আপনার তথ্য কোথায় থাকে';
+
+  @override
+  String get settingsWhereInfoLivesDescription =>
+      'কী এই ডিভাইসে থেকে যায়, আর কী যায় না।';
+
+  @override
+  String get protectionAppLock => 'অ্যাপ লক';
+
+  @override
+  String get protectionScreenPrivacy => 'স্ক্রিন গোপনীয়তা';
+
+  @override
+  String get protectionPrivateReminders => 'ব্যক্তিগত রিমাইন্ডার';
+
+  @override
+  String get protectionSummaryNone =>
+      'অ্যাপ লক, স্ক্রিন গোপনীয়তা, আর কী এই ডিভাইস ছেড়ে যায়।';
+
+  @override
+  String protectionSummaryOne(String first) {
+    return '$first চালু আছে।';
+  }
+
+  @override
+  String protectionSummaryTwo(String first, String second) {
+    return '$first ও $second চালু আছে।';
+  }
+
+  @override
+  String protectionSummaryThree(String first, String second, String third) {
+    return '$first, $second ও $third চালু আছে।';
+  }
+
+  @override
+  String get settingsSectionReminders => 'রিমাইন্ডার';
+
+  @override
+  String get settingsRemindersFootnote =>
+      'ব্যাটারি সেটিং ও ডিভাইস কীভাবে ব্যবহার হচ্ছে তার উপর নির্ভর করে অ্যান্ড্রয়েড আপনার নির্ধারিত সময়ের একটু পরে রিমাইন্ডার দেখাতে পারে।';
+
+  @override
+  String get settingsNotifications => 'নোটিফিকেশন';
+
+  @override
+  String get settingsNotificationsOnDescription =>
+      'আপনার সেট করা রিমাইন্ডার দেখানো যাবে।';
+
+  @override
+  String get settingsNotificationsOffDescription =>
+      'Action-এর জন্য বন্ধ, তাই রিমাইন্ডার দেখা যাবে না।';
+
+  @override
+  String get settingsNotificationsUnknown => 'যাচাই করা যায়নি।';
+
+  @override
+  String get settingsNotificationsAllowed => 'অনুমোদিত';
+
+  @override
+  String get settingsOpenSystemSettings => 'সেটিংস খুলুন';
+
+  @override
+  String get settingsActionFootnote =>
+      'Action এলোমেলো তথ্যকে পরিষ্কার পরবর্তী ধাপে বদলে দেয়। সংরক্ষণের আগে সবকিছু আপনি নিজে নিশ্চিত করেন।';
+
+  @override
+  String get settingsHelp => 'সহায়তা';
+
+  @override
+  String get settingsHelpDescription => 'Action কীভাবে কাজ করে, আর কী করবে না।';
+
+  @override
+  String get settingsVersion => 'সংস্করণ';
+
+  @override
+  String get dateShortFormat => 'd MMM';
+
+  @override
+  String get dateLongFormat => 'd MMM yyyy';
+
+  @override
+  String get relativeJustNow => 'এইমাত্র';
+
+  @override
+  String relativeMinutes(int count) {
+    return '$count মিনিট আগে';
+  }
+
+  @override
+  String relativeHours(int count) {
+    return '$count ঘণ্টা আগে';
+  }
+
+  @override
+  String get relativeYesterday => 'গতকাল';
+
+  @override
+  String relativeDays(int count) {
+    return '$count দিন আগে';
+  }
+
+  @override
+  String get libraryTitle => 'লাইব্রেরি';
+
+  @override
+  String get librarySubtitle =>
+      'Action আপনার জন্য যা কিছু রেখেছে, সবই এখানে। আর সবটাই এই ডিভাইসে থাকে।';
+
+  @override
+  String get librarySegmentActions => 'কাজ';
+
+  @override
+  String get librarySegmentCaptures => 'ক্যাপচার';
+
+  @override
+  String get librarySegmentGoals => 'লক্ষ্য';
+
+  @override
+  String get librarySegmentDone => 'সম্পন্ন';
+
+  @override
+  String get libraryNewGoal => 'নতুন লক্ষ্য';
+
+  @override
+  String get libraryNoGoalsTitle => 'এখনও কোনো লক্ষ্য নেই';
+
+  @override
+  String get libraryNoGoalsMessage =>
+      'লক্ষ্য হলো এমন কিছু যা আপনি ঘটাতে চান। কী নেই, কী আটকে আছে, আর প্রথমে কী করতে হবে — Action তা খুঁজে দিতে পারে।';
+
+  @override
+  String get libraryNoDoneTitle => 'এখনও কিছু শেষ হয়নি';
+
+  @override
+  String get libraryNoDoneMessage =>
+      'আপনি যেসব কাজ শেষ করবেন, সেগুলো এখানে রাখা থাকবে।';
+
+  @override
+  String get libraryNoOpenTitle => 'খোলা কোনো কাজ নেই';
+
+  @override
+  String get libraryNoOpenMessage =>
+      'কিছু একটা ক্যাপচার করুন, Action বুঝে নেবে কী করা দরকার।';
+
+  @override
+  String get libraryNoCapturesTitle => 'এখনও কিছু ক্যাপচার করা হয়নি';
+
+  @override
+  String get libraryNoCapturesMessage =>
+      'আপনার যোগ করা ছবি, স্ক্রিনশট আর লেখা প্রথমে এখানেই আসে। আপনি না বলা পর্যন্ত কিছুই বিশ্লেষণ করা হয় না।';
+
+  @override
+  String get libraryGoalNoActions => 'এখান থেকে কিছু তৈরি হয়নি';
+
+  @override
+  String libraryGoalActionCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'এই লক্ষ্য থেকে $countটি কাজ',
+      one: 'এই লক্ষ্য থেকে ১টি কাজ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'কাজ ও ক্যাপচারে খুঁজুন';
+
+  @override
+  String get searchClear => 'মুছুন';
+
+  @override
+  String get searchPrivacyNote =>
+      'এই ডিভাইসেই খোঁজা হয়। আপনি যা টাইপ করেন তার কিছুই বাইরে যায় না।';
+
+  @override
+  String get searchYouCanSearch => 'যা যা খুঁজতে পারেন';
+
+  @override
+  String get searchFieldTitles => 'শিরোনাম';
+
+  @override
+  String get searchFieldTitlesExample => 'গাড়ির বিমা নবায়ন';
+
+  @override
+  String get searchFieldReferences => 'রেফারেন্স নম্বর';
+
+  @override
+  String get searchFieldReferencesExample => 'MTR-4471-08';
+
+  @override
+  String get searchFieldOrganisations => 'প্রতিষ্ঠান';
+
+  @override
+  String get searchFieldOrganisationsExample => 'Northgate';
+
+  @override
+  String get searchFieldSteps => 'কাজের ভেতরের ধাপ';
+
+  @override
+  String get searchFieldStepsExample => 'ফর্মটি আপলোড করুন';
+
+  @override
+  String get searchFieldCaptureText => 'ক্যাপচার থেকে পড়া লেখা';
+
+  @override
+  String get searchFieldCaptureTextExample => 'নবায়নের নোটিশ';
+
+  @override
+  String searchNoMatchesTitle(String query) {
+    return '\"$query\"-এর কোনো মিল নেই';
+  }
+
+  @override
+  String get searchNoMatchesTryFewer =>
+      'কম শব্দ দিয়ে দেখুন, বা রেফারেন্স নম্বরটি যেভাবে আছে ঠিক সেভাবে লিখুন।';
+
+  @override
+  String get searchNoMatchesClearFilters =>
+      'কম শব্দ দিয়ে দেখুন, বা ফিল্টারগুলো মুছে দিন।';
+
+  @override
+  String get searchFilterActive => 'চলমান';
+
+  @override
+  String get searchFilterCompleted => 'সম্পন্ন';
+
+  @override
+  String get searchFilterOverdue => 'সময় পেরিয়েছে';
+
+  @override
+  String get searchFilterThisWeek => 'এই সপ্তাহ';
+
+  @override
+  String get searchFilterCritical => 'জরুরি';
+
+  @override
+  String get searchFilterCreatedByYou => 'আপনার তৈরি';
+
+  @override
+  String get searchFilterArchived => 'সংরক্ষিত';
+
+  @override
+  String get searchFilterClear => 'ফিল্টার মুছুন';
+
+  @override
+  String get searchIncompleteActions =>
+      'আপনার কাজগুলোতে খোঁজা যায়নি, তাই এই ফলাফল অসম্পূর্ণ হতে পারে।';
+
+  @override
+  String get searchIncompleteCaptures =>
+      'আপনার ক্যাপচারগুলোতে খোঁজা যায়নি, তাই এই ফলাফল অসম্পূর্ণ হতে পারে।';
+
+  @override
+  String get searchIncompleteBoth =>
+      'আপনার কাজ বা ক্যাপচার কোনোটিতেই খোঁজা যায়নি, তাই এই ফলাফল অসম্পূর্ণ হতে পারে।';
+
+  @override
+  String get searchMatchTitle => 'শিরোনাম';
+
+  @override
+  String get searchMatchNextStep => 'পরবর্তী ধাপ';
+
+  @override
+  String get searchMatchStep => 'ধাপ';
+
+  @override
+  String get searchMatchSummary => 'সারসংক্ষেপ';
+
+  @override
+  String get searchMatchFromCapture => 'ক্যাপচার থেকে';
+
+  @override
+  String get studioSuggested => 'আপনার শেষ ক্যাপচারের জন্য প্রস্তাবিত';
+
+  @override
+  String get studioRecentlyUsed => 'সম্প্রতি ব্যবহৃত';
+
+  @override
+  String get studioReady => 'প্রস্তুত';
+
+  @override
+  String get studioNotConnected => 'যুক্ত নয়';
+
+  @override
+  String get studioHeroTitle => 'Action ইন্টেলিজেন্স';
+
+  @override
+  String get studioConnectedBlurb =>
+      'একটি ডকুমেন্ট বুঝুন, লক্ষ্য উন্নত করুন, পরিকল্পনা সাজান, উত্তরের খসড়া লিখুন, বা সামনে যা আছে তা যাচাই করুন।';
+
+  @override
+  String studioDisconnectedBlurb(int count) {
+    return 'ডকুমেন্ট বোঝা, পরিকল্পনা ও লেখার জন্য $countটি টুল। ব্যবহার করতে নিজের AI অ্যাকাউন্ট যুক্ত করুন — বিল আপনার প্রোভাইডার নেয়, Action কখনও নয়।';
+  }
+
+  @override
+  String get studioConnectAi => 'AI যুক্ত করুন';
+
+  @override
+  String get studioHowItWorks => 'কীভাবে কাজ করে';
+
+  @override
+  String studioLocalCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'এর $countটি এখনই ওসব ছাড়াই চলে, পুরোপুরি এই ডিভাইসে।',
+      one: 'এর ১টি এখনই ওসব ছাড়াই চলে, পুরোপুরি এই ডিভাইসে।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get studioRunsOnThisDevice => 'এই ডিভাইসেই চলে';
+
+  @override
+  String studioToolSemantics(String title, String description) {
+    return '$title। $description';
+  }
+
+  @override
+  String studioToolSemanticsLocal(String title, String description) {
+    return '$title। $description এই ডিভাইসেই চলে।';
+  }
+
+  @override
+  String get categoryUnderstand => 'বুঝুন';
+
+  @override
+  String get categoryUnderstandBlurb => 'আপনার কাছে যা আছে তার মানে বের করুন।';
+
+  @override
+  String get categoryPlan => 'পরিকল্পনা';
+
+  @override
+  String get categoryPlanBlurb => 'এটিকে করার মতো কিছুতে বদলান।';
+
+  @override
+  String get categoryCreate => 'তৈরি';
+
+  @override
+  String get categoryCreateBlurb => 'লিখুন, উন্নত করুন, অনুবাদ করুন।';
+
+  @override
+  String get categoryExtract => 'বের করুন';
+
+  @override
+  String get categoryExtractBlurb => 'যে বিবরণগুলো জরুরি, সেগুলো টেনে আনুন।';
+
+  @override
+  String get categoryVerify => 'যাচাই';
+
+  @override
+  String get categoryVerifyBlurb => 'সামনে যা আছে তা পরখ করুন।';
+
+  @override
+  String get captureSheetTitle => 'কিছু ক্যাপচার করুন';
+
+  @override
+  String get captureSheetSubtitle =>
+      'যা পুরো পড়তে ইচ্ছে করছে না, Action-কে দিয়ে দিন।';
+
+  @override
+  String get captureTakePhoto => 'ছবি তুলুন';
+
+  @override
+  String get captureTakePhotoSubtitle => 'সামনে থাকা চিঠি, বিল বা নোটিশ';
+
+  @override
+  String get captureChooseImage => 'ছবি বেছে নিন';
+
+  @override
+  String get captureChooseImageSubtitle => 'এই ডিভাইসে থাকা স্ক্রিনশট বা ছবি';
+
+  @override
+  String get capturePasteText => 'লেখা পেস্ট করুন';
+
+  @override
+  String get capturePasteTextSubtitle => 'ইমেইল, মেসেজ বা নোটিশ';
+
+  @override
+  String get captureChoosePdf => 'PDF বেছে নিন';
+
+  @override
+  String get captureChoosePdfSubtitle =>
+      'আপনার কাছে থাকা স্টেটমেন্ট, চিঠি বা ফর্ম';
+
+  @override
+  String get captureFootnote =>
+      'ক্যাপচার এই ডিভাইসেই থাকে। আপনি না বলা পর্যন্ত অনলাইনে কিছুই বিশ্লেষণ করা হয় না।';
+
+  @override
+  String get captureCouldNotOpen => 'ওটা খোলা গেল না। অন্যভাবে চেষ্টা করুন।';
+
+  @override
+  String captureOptionSemantics(String title, String subtitle) {
+    return '$title। $subtitle';
+  }
+
+  @override
+  String get stageReading => 'পড়া হচ্ছে';
+
+  @override
+  String get stageNeedsReview => 'পর্যালোচনা দরকার';
+
+  @override
+  String get stageActionCreated => 'কাজ তৈরি হয়েছে';
+
+  @override
+  String get stageNoText => 'কোনো লেখা পাওয়া যায়নি';
+
+  @override
+  String get stageCouldNotBeRead => 'পড়া যায়নি';
+
+  @override
+  String get stageReadingPreview => 'লেখা পড়া হচ্ছে…';
+
+  @override
+  String get stageFailedPreview => 'এটি এই ডিভাইসে পড়া যায়নি।';
+
+  @override
+  String get provenancePhoto => 'ছবি থেকে নেওয়া';
+
+  @override
+  String get provenanceImage => 'গ্যালারির ছবি থেকে নেওয়া';
+
+  @override
+  String get provenancePastedText => 'পেস্ট করা লেখা থেকে নেওয়া';
+
+  @override
+  String get provenanceDocument => 'ডকুমেন্ট হিসেবে যোগ করা';
+
+  @override
+  String sourceCardMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String metaDone(String when) {
+    return 'শেষ হয়েছে $when';
+  }
+
+  @override
+  String metaOverdue(String date) {
+    return 'সময় পেরিয়েছে · সময় ছিল $date';
+  }
+
+  @override
+  String get metaDueToday => 'আজকের মধ্যে';
+
+  @override
+  String metaDueOn(String date) {
+    return '$date-এর মধ্যে';
+  }
+
+  @override
+  String get metaCreatedByYou => 'আপনার তৈরি';
+
+  @override
+  String get categoryPayment => 'পেমেন্ট';
+
+  @override
+  String get categoryRenewal => 'নবায়ন';
+
+  @override
+  String get categoryAppointment => 'অ্যাপয়েন্টমেন্ট';
+
+  @override
+  String get categoryBooking => 'বুকিং';
+
+  @override
+  String get categoryTravel => 'ভ্রমণ';
+
+  @override
+  String get categoryDeadline => 'সময়সীমা';
+
+  @override
+  String get categoryResponse => 'উত্তর দরকার';
+
+  @override
+  String get categoryDelivery => 'ডেলিভারি';
+
+  @override
+  String get categoryDocument => 'ডকুমেন্ট';
+
+  @override
+  String get categoryNoActionRequired => 'কিছু করার নেই';
+
+  @override
+  String get categoryUnsure => 'নিশ্চিত নয়';
+
+  @override
+  String get errorEnterManually => 'নিজে লিখে দিন';
+
+  @override
+  String get sourceWhatWeRead => 'আমরা যা পড়েছি';
+
+  @override
+  String get sourceDelete => 'ক্যাপচার মুছুন';
+
+  @override
+  String get sourceGone => 'ওই ক্যাপচার আর নেই।';
+
+  @override
+  String get sourceDeleteTitle => 'এই ক্যাপচার মুছে ফেলবেন?';
+
+  @override
+  String get sourceDeleteBody =>
+      'ছবিটি এবং তা থেকে পড়া লেখা এই ডিভাইস থেকে সরে যাবে।';
+
+  @override
+  String get sourceDeleteKeep => 'থাক';
+
+  @override
+  String get sourceOpenAction => 'কাজটি খুলুন';
+
+  @override
+  String sourceOpenActions(int count) {
+    return '$countটি কাজ খুলুন';
+  }
+
+  @override
+  String get sourceCreateAnother => 'এটি থেকে আরেকটি তৈরি করুন';
+
+  @override
+  String get sourceCreateAction => 'এটি থেকে একটি কাজ তৈরি করুন';
+
+  @override
+  String get sourceDoMore => 'এটি দিয়ে আরও কিছু করুন';
+
+  @override
+  String sourceMeta(String provenance, String when) {
+    return '$provenance · $when';
+  }
+
+  @override
+  String sourceDimensions(int width, int height) {
+    return '$width×$height';
+  }
+
+  @override
+  String sourceKilobytes(int size) {
+    return '$size KB';
+  }
+
+  @override
+  String sourceConvertedFrom(String format, String size) {
+    return '$format $size KB থেকে';
+  }
+
+  @override
+  String get sourceTextFound => 'লেখা পাওয়া গেছে';
+
+  @override
+  String sourceOcrStats(int lines, int ms) {
+    return '$lines লাইন · $ms ms';
+  }
+
+  @override
+  String get sourceReadExplainer =>
+      'Action যে লেখা পড়েছে সেটি এই। তা থেকে যা তৈরি হয়েছে তা নিচে।';
+
+  @override
+  String get sourceNotInterpreted =>
+      'এখনও কিছু ব্যাখ্যা করা হয়নি। Action পরামর্শ দেবে এটি দিয়ে কী করা যায়, আর কিছু তৈরি হওয়ার আগে আপনি নিশ্চিত করেন।';
+
+  @override
+  String get sourceNoTextExplainer =>
+      'হাতের লেখায়, খুব কম আলোয়, বা এমন লিপিতে এটি হতে পারে যা এই ডিভাইস এখনও পড়তে পারে না।';
+
+  @override
+  String get sourceReadFailed => 'এটি পড়া গেল না';
+
+  @override
+  String get sourceReadFailedReason => 'লেখা শনাক্তকরণ শেষ হয়নি।';
+
+  @override
+  String get sourceTryReadingAgain => 'আবার পড়ার চেষ্টা করুন';
+
+  @override
+  String get sourceTypeInstead => 'বরং বিবরণ টাইপ করুন';
+
+  @override
+  String get sourceTypeWhatItSays => 'যা লেখা আছে তা টাইপ করুন';
+
+  @override
+  String get sourceTypeHint => 'তারিখ, অঙ্ক, আর কী চাওয়া হচ্ছে।';
+
+  @override
+  String get sourceMadeFromThis => 'এই ক্যাপচার থেকে তৈরি';
+
+  @override
+  String sourceMadeFromThisCount(int count) {
+    return 'এই ক্যাপচার থেকে $countটি তৈরি';
+  }
+
+  @override
+  String get sourceTheDocument => 'নথিটি';
+
+  @override
+  String sourcePageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count পৃষ্ঠা',
+      one: '১ পৃষ্ঠা',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourcePageCountUnknown => 'পৃষ্ঠার সংখ্যা জানা নেই';
+
+  @override
+  String get sourceDocumentNotRead =>
+      'এই নথির ভিতরে কী আছে Action তা পড়েনি। যে সরঞ্জামের এটি দরকার তা চালালে ফাইলটি আপনার যুক্ত করা AI সরবরাহকারীর কাছে যাবে, এবং তার আগে আপনাকে জানানো হবে।';
+
+  @override
+  String get previewSaveFailed => 'ওটি সেভ করা গেল না। আবার চেষ্টা করুন।';
+
+  @override
+  String get previewTitle => 'ক্যাপচারটি দেখে নিন';
+
+  @override
+  String get previewImageFailed => 'ওই ছবিটি খোলা গেল না।';
+
+  @override
+  String get previewHint =>
+      'দেখে নিন লেখা পড়ার মতো আছে আর জরুরি কিছু কেটে যায়নি।';
+
+  @override
+  String get previewRetake => 'আবার তুলুন';
+
+  @override
+  String get pasteTitle => 'লেখা পেস্ট করুন';
+
+  @override
+  String get pasteHint =>
+      'যে ইমেল, বার্তা বা বিজ্ঞপ্তি পুরোটা পড়তে ইচ্ছে করছে না, সেটি পেস্ট করুন।';
+
+  @override
+  String get pasteFootnote =>
+      'যাতে তারিখ, অঙ্ক বা কোনো অনুরোধ আছে, তা ভালো কাজ করে।';
+
+  @override
+  String get pasteEnough => 'মনে হচ্ছে কাজ চালানোর মতো যথেষ্ট।';
+
+  @override
+  String get pasteMore => 'আর একটু লেখা হলে ফল ভালো হবে।';
+
+  @override
+  String get reviewLoadFailed => 'এই ক্যাপচারটি লোড করা গেল না।';
+
+  @override
+  String get reviewConfirmed => 'নিশ্চিত';
+
+  @override
+  String get reviewNeedsReview => 'পর্যালোচনা দরকার';
+
+  @override
+  String get reviewReview => 'পর্যালোচনা করুন';
+
+  @override
+  String get reviewHighConfidence => 'উঁচু আস্থা';
+
+  @override
+  String get reviewConfirmedByYou => 'আপনি নিশ্চিত করেছেন';
+
+  @override
+  String get reviewMissing => 'নেই';
+
+  @override
+  String get reviewNotUnderstood =>
+      'Action এই উৎসের যথেষ্ট অংশ নির্ভরযোগ্যভাবে বুঝতে পারেনি।';
+
+  @override
+  String get reviewNotUnderstoodBody =>
+      'ক্যাপচারটি অক্ষত আছে এবং কিছুই হারায়নি। আপনি নিজেই বিবরণ লিখতে পারেন, আর উৎসটি মিলিয়ে দেখার জন্য জোড়া থাকে।';
+
+  @override
+  String get reviewEnterDetails => 'বিবরণ লিখুন';
+
+  @override
+  String get reviewKeepSource => 'উৎসটি পরে দেখার জন্য রাখুন';
+
+  @override
+  String reviewEngine(String engine) {
+    return 'ইঞ্জিন: $engine';
+  }
+
+  @override
+  String get reviewManualNotice =>
+      'এই কাজটি আপনি নিজেই তৈরি করছেন। আপনি এখানে যা লিখবেন কেবল তাই ব্যবহার হবে।';
+
+  @override
+  String get reviewUntitled => 'শিরোনামহীন কাজ';
+
+  @override
+  String get reviewEditTitle => 'শিরোনাম বদলান';
+
+  @override
+  String reviewNeedsReviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি মান আপনার পর্যালোচনা চায়।',
+      one: 'এটি নিশ্চিত করার আগে ১টি মান আপনার পর্যালোচনা চায়।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewKeyFacts => 'মূল তথ্য';
+
+  @override
+  String get reviewNotFound => 'পাওয়া যায়নি';
+
+  @override
+  String get reviewSuggestedNextStep => 'প্রস্তাবিত পরের ধাপ';
+
+  @override
+  String get reviewWhyThisMatters => 'কেন এটি জরুরি';
+
+  @override
+  String get reviewSteps => 'ধাপ';
+
+  @override
+  String get reviewAddStep => 'ধাপ যোগ করুন';
+
+  @override
+  String get reviewInjectionNotice =>
+      'এই উৎসের কিছু লেখা নথির তথ্য নয়, বরং নির্দেশের মতো দেখাচ্ছিল, তাই Action সেটি বাদ দিয়েছে।';
+
+  @override
+  String get reviewLayoutNotice =>
+      'এই নথির বিন্যাসে এমন সম্পর্ক থাকতে পারে যা লেখা তুলে আনার সময় পুরোপুরি রক্ষা করা যায়নি। নিশ্চিত করার আগে নিচের মানগুলো উৎসের সঙ্গে মিলিয়ে নিন।';
+
+  @override
+  String reviewSignalNotice(String reason) {
+    return '$reason নিচের মানগুলো উৎসের সঙ্গে মিলিয়ে নিন।';
+  }
+
+  @override
+  String get reviewDeadline => 'সময়সীমা';
+
+  @override
+  String get reviewAmount => 'পরিমাণ';
+
+  @override
+  String get reviewLeftUnset => 'কিছু নেই — আপনি এটি ফাঁকা রাখা বেছে নিয়েছেন';
+
+  @override
+  String get reviewUnclear => 'স্পষ্ট নয়';
+
+  @override
+  String get reviewNotSet => 'ঠিক করা হয়নি';
+
+  @override
+  String get reviewNoDeadlineFound => 'এই নথিতে কোনোটি পাওয়া যায়নি';
+
+  @override
+  String get reviewNoAmountFound => 'এই নথিতে কোনো পরিমাণ পাওয়া যায়নি';
+
+  @override
+  String get reviewMultipleDates => 'Action একাধিক সম্ভাব্য তারিখ পেয়েছে।';
+
+  @override
+  String reviewMultipleDatesBody(int count) {
+    return '$countটি তারিখ সময়সীমা হতে পারে। ঠিকটি বেছে নিন, অন্য একটি লিখুন, বা ফাঁকা রাখুন।';
+  }
+
+  @override
+  String get reviewChooseDate => 'একটি তারিখ বেছে নিন';
+
+  @override
+  String get reviewMultipleAmounts =>
+      'Action একের বেশি সম্ভাব্য পরিমাণ পেয়েছে।';
+
+  @override
+  String reviewMultipleAmountsBody(int count) {
+    return '$countটি পরিমাণের কোনোটি এই কাজের হতে পারে। একটি বেছে নিন, অন্য একটি লিখুন, বা ফাঁকা রাখুন।';
+  }
+
+  @override
+  String get reviewChooseAmount => 'একটি পরিমাণ বেছে নিন';
+
+  @override
+  String get reviewSkipStep => 'এই ধাপটি বাদ দিন';
+
+  @override
+  String get reviewKeepStep => 'এই ধাপটি রাখুন';
+
+  @override
+  String get reviewEditStep => 'ধাপ বদলান';
+
+  @override
+  String get reviewCreateManually => 'নিজে তৈরি করুন';
+
+  @override
+  String get reviewConfirmAndCreate => 'নিশ্চিত করে কাজ তৈরি করুন';
+
+  @override
+  String get reviewFixHighlighted => 'চিহ্নিত ঘরগুলো দেখুন';
+
+  @override
+  String get reviewSaving => 'সেভ হচ্ছে…';
+
+  @override
+  String get reviewSaveFailed =>
+      'এই কাজটি সেভ করা গেল না। কিছুই হারায়নি — আবার চেষ্টা করুন।';
+
+  @override
+  String get reviewFieldTitle => 'শিরোনাম';
+
+  @override
+  String get reviewTitleHint => 'কী হওয়া দরকার?';
+
+  @override
+  String get reviewNewStep => 'নতুন ধাপ';
+
+  @override
+  String get reviewStepHint => 'কী করতে হবে';
+
+  @override
+  String get reviewDatesConflict => 'নথিতে একের বেশি তারিখ আছে।';
+
+  @override
+  String get reviewAmountsConflict => 'নথিতে একের বেশি পরিমাণ আছে।';
+
+  @override
+  String get reviewAnotherDate => 'অন্য তারিখ — 2026-08-30';
+
+  @override
+  String get reviewBadDate =>
+      'এটি সত্যিকারের তারিখ নয়। 2026-08-30 ছাঁদে লিখুন।';
+
+  @override
+  String get reviewTypeDate => 'একটি তারিখ টাইপ করুন, বা নিচে ফাঁকা রাখুন।';
+
+  @override
+  String get reviewUseThisDate => 'এই তারিখটি নিন';
+
+  @override
+  String get reviewLeaveNoDeadline => 'সময়সীমা ছাড়াই এগোন';
+
+  @override
+  String get reviewAnotherAmount => 'অন্য পরিমাণ — 780.00';
+
+  @override
+  String reviewAmountError(String reason) {
+    return 'এই পরিমাণ ব্যবহার করা যাবে না: $reason।';
+  }
+
+  @override
+  String get reviewUseThisAmount => 'এই পরিমাণটি নিন';
+
+  @override
+  String get reviewLeaveNoAmount => 'পরিমাণ ছাড়াই এগোন';
+
+  @override
+  String get reviewThisValue => 'এই মান';
+
+  @override
+  String reviewQuote(String quote) {
+    return '“$quote”';
+  }
+
+  @override
+  String get reviewSeeOnCapture => 'ক্যাপচারে দেখুন';
+
+  @override
+  String get reviewViewSource => 'উৎস দেখুন';
+
+  @override
+  String get reviewFromSource => 'উৎস থেকে';
+
+  @override
+  String get reviewNotVerified => 'মিলিয়ে দেখা হয়নি';
+
+  @override
+  String get reviewCouldNotVerify => 'এটি উৎসের সঙ্গে মিলিয়ে দেখা গেল না।';
+
+  @override
+  String get reviewLooksRight => 'ঠিক মনে হচ্ছে';
+
+  @override
+  String get reviewStageReading => 'উৎস পড়া হচ্ছে';
+
+  @override
+  String get reviewStageUnderstanding => 'জরুরি বিবরণ বোঝা হচ্ছে';
+
+  @override
+  String get reviewStageChecking => 'কীসের পর্যালোচনা দরকার তা দেখা হচ্ছে';
+
+  @override
+  String get reviewNothingToDo => 'এই মুহূর্তে আপনার কিছু করার নেই।';
+
+  @override
+  String get reviewInformationOnly =>
+      'এটি কেবল তথ্য বলে মনে হচ্ছে — কোনো সময়সীমা, টাকা বা উত্তরের অনুরোধ পাওয়া যায়নি।';
+
+  @override
+  String get reviewInformationOnlyWithSource =>
+      'এটি কেবল তথ্য বলে মনে হচ্ছে — এই ক্যাপচারে কোনো সময়সীমা, টাকা বা উত্তরের অনুরোধ পাওয়া যায়নি।';
+
+  @override
+  String get reviewSourceKept => 'উৎসটি যেভাবেই হোক রাখা থাকে।';
+
+  @override
+  String get reviewAddAnyway => 'তবুও একটি কাজ যোগ করুন';
+
+  @override
+  String get reviewActionConfirmed => 'কাজ নিশ্চিত হয়েছে';
+
+  @override
+  String get reviewCreatedByYou => 'আপনি তৈরি করেছেন।';
+
+  @override
+  String reviewConfirmedFrom(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি পর্যালোচিত তথ্যের ভিত্তিতে আপনি নিশ্চিত করেছেন।',
+      one: '১টি পর্যালোচিত তথ্যের ভিত্তিতে আপনি নিশ্চিত করেছেন।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewConfirmedFromEdited(int count, int edited) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$countটি পর্যালোচিত তথ্যের ভিত্তিতে আপনি নিশ্চিত করেছেন। এর মধ্যে $editedটি আপনি বদলেছেন।',
+      one:
+          '১টি পর্যালোচিত তথ্যের ভিত্তিতে আপনি নিশ্চিত করেছেন। এর মধ্যে $editedটি আপনি বদলেছেন।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewSavedOnDevice => 'এই ডিভাইসেই সেভ হয়েছে।';
+
+  @override
+  String get detailLoadFailed =>
+      'এই কাজটি লোড করা গেল না। এটি এখনও এই ডিভাইসেই সেভ করা আছে।';
+
+  @override
+  String get detailNotFoundTitle => 'সেই কাজটি আর এখানে নেই';
+
+  @override
+  String get detailNotFoundMessage => 'হয়তো এই ডিভাইসেই এটি মুছে ফেলা হয়েছে।';
+
+  @override
+  String get detailGoBack => 'ফিরে যান';
+
+  @override
+  String get detailMore => 'আরও';
+
+  @override
+  String get detailChangeUrgency => 'জরুরি মাত্রা বদলান';
+
+  @override
+  String get detailAddRecommendedStep => 'প্রস্তাবিত ধাপ যোগ করুন';
+
+  @override
+  String get detailEditRecommendedStep => 'প্রস্তাবিত ধাপ বদলান';
+
+  @override
+  String get detailArchiveTitle => 'এই কাজটি সংরক্ষণে রাখবেন?';
+
+  @override
+  String get detailArchiveBody =>
+      'এটি আপনার তালিকা থেকে সরে যায় কিন্তু মুছে যায় না, আর যে ক্যাপচার থেকে এটি এসেছে সেটিও রাখা থাকে।';
+
+  @override
+  String get detailArchiveConfirm => 'সংরক্ষণে রাখুন';
+
+  @override
+  String get detailArchived => 'সংরক্ষণে';
+
+  @override
+  String detailCompletedOn(String date) {
+    return '$date তারিখে শেষ হয়েছে';
+  }
+
+  @override
+  String get detailSectionDetails => 'বিবরণ';
+
+  @override
+  String get detailSectionReminders => 'মনে করিয়ে দেওয়া';
+
+  @override
+  String get detailAllStepsDone => 'সব ধাপ শেষ';
+
+  @override
+  String get detailNextEyebrow => 'পরবর্তী';
+
+  @override
+  String get detailCompleteQuestion => 'এই কাজটি শেষ করবেন?';
+
+  @override
+  String get detailMarkStepDone => 'ধাপটি শেষ বলে চিহ্নিত করুন';
+
+  @override
+  String get detailCompleteAction => 'এই কাজটি শেষ করুন';
+
+  @override
+  String get detailAddDeadline => 'সময়সীমা যোগ করুন';
+
+  @override
+  String get detailAddAmount => 'পরিমাণ যোগ করুন';
+
+  @override
+  String detailStepsProgress(int completed, int total) {
+    return '$totalটির মধ্যে $completedটি শেষ';
+  }
+
+  @override
+  String get detailNoStepsTitle => 'এখনও কোনো ধাপ নেই';
+
+  @override
+  String get detailNoStepsMessage =>
+      'যে কাজগুলো আপনাকে সত্যিই করতে হবে, সেই ভাগে ভাগ করুন।';
+
+  @override
+  String get detailAddFirstStep => 'প্রথম ধাপ যোগ করুন';
+
+  @override
+  String detailStepCompletedSemantics(String title) {
+    return 'শেষ হওয়া ধাপ: $title';
+  }
+
+  @override
+  String detailStepNextSemantics(String title) {
+    return 'পরের ধাপ: $title';
+  }
+
+  @override
+  String detailStepSemantics(String title) {
+    return 'ধাপ: $title';
+  }
+
+  @override
+  String detailMarkDone(String title) {
+    return '“$title” শেষ বলে চিহ্নিত করুন';
+  }
+
+  @override
+  String detailMarkNotDone(String title) {
+    return '“$title” অসম্পূর্ণ বলে চিহ্নিত করুন';
+  }
+
+  @override
+  String get detailStepOptions => 'ধাপের বিকল্প';
+
+  @override
+  String get detailMoveUp => 'উপরে সরান';
+
+  @override
+  String get detailMoveDown => 'নিচে সরান';
+
+  @override
+  String get detailDeleteStep => 'ধাপ মুছুন';
+
+  @override
+  String get detailDateFormat => 'd MMM';
+
+  @override
+  String get detailDateFormatWithYear => 'd MMM yyyy';
+
+  @override
+  String get stepDeleteTitle => 'এই ধাপটি মুছবেন?';
+
+  @override
+  String get stepDeleteKeep => 'থাক';
+
+  @override
+  String get detailNoRemindersYet => 'এখনও কিছু মনে করিয়ে দেওয়ার নেই।';
+
+  @override
+  String get detailReminderLimit =>
+      'একটি কাজে এর বেশি মনে করিয়ে দেওয়া রাখা যায় না। আরেকটি যোগ করতে একটি সরান।';
+
+  @override
+  String get detailAddReminder => 'মনে করিয়ে দেওয়া যোগ করুন';
+
+  @override
+  String get detailChangeReminder => 'মনে করিয়ে দেওয়া বদলান';
+
+  @override
+  String get detailRemoveReminder => 'মনে করিয়ে দেওয়া সরান';
+
+  @override
+  String get detailReminderFormat => 'EEE d MMM, h:mm a';
+
+  @override
+  String get reminderStatePending => 'এখনও সেট হয়নি';
+
+  @override
+  String get reminderStateNotificationsOff =>
+      'সেভ হয়েছে, কিন্তু বিজ্ঞপ্তি বন্ধ';
+
+  @override
+  String get reminderStateFailed => 'সময় ঠিক করা গেল না';
+
+  @override
+  String get reminderStateRemoving => 'সরানো হচ্ছে…';
+
+  @override
+  String get reminderSetConfirmation =>
+      'মনে করিয়ে দেওয়া সেট হয়েছে। আমরা মনে করিয়ে দেব।';
+
+  @override
+  String get reminderUpdatedConfirmation => 'মনে করিয়ে দেওয়া বদলেছে।';
+
+  @override
+  String get reminderNeedsPermission =>
+      'বিজ্ঞপ্তি বন্ধ আছে, তাই এটি সেভ হয়েছে ঠিকই কিন্তু এখনও আপনাকে জানাতে পারবে না।';
+
+  @override
+  String get reminderScheduleFailed =>
+      'এটি সেভ হয়েছে, কিন্তু Android এর সময় ঠিক করতে চায়নি।';
+
+  @override
+  String get reminderLimitReached =>
+      'সেই কাজে ইতিমধ্যেই সর্বোচ্চ সংখ্যক মনে করিয়ে দেওয়া আছে।';
+
+  @override
+  String get reminderTimeInPast => 'সেই সময় পেরিয়ে গেছে।';
+
+  @override
+  String get reminderAddTitle => 'একটি মনে করিয়ে দেওয়া যোগ করুন';
+
+  @override
+  String get reminderChangeTitle => 'এই মনে করিয়ে দেওয়া বদলান';
+
+  @override
+  String get reminderDateLabel => 'তারিখ';
+
+  @override
+  String get reminderTimeLabel => 'সময়';
+
+  @override
+  String get reminderFieldDateFormat => 'EEE d MMM yyyy';
+
+  @override
+  String get reminderFieldTimeFormat => 'h:mm a';
+
+  @override
+  String get reminderSummaryDateFormat => 'EEEE d MMMM';
+
+  @override
+  String get reminderPresetFormat => 'd MMM, h:mm a';
+
+  @override
+  String reminderSummary(String date, String time) {
+    return 'আপনাকে $date তারিখে $time-এ মনে করিয়ে দেওয়া হবে।';
+  }
+
+  @override
+  String get reminderTimePastError =>
+      'সেই সময় পেরিয়ে গেছে। পরের কোনো সময় বেছে নিন।';
+
+  @override
+  String get reminderSet => 'মনে করিয়ে দেওয়া সেট করুন';
+
+  @override
+  String get reminderPresetInHour => '১ ঘণ্টা পরে';
+
+  @override
+  String get reminderPresetTomorrowMorning => 'কাল সকালে';
+
+  @override
+  String get reminderPresetNextWeek => 'আগামী সপ্তাহে';
+
+  @override
+  String get reminderPresetOnTheDay => 'সেই দিনেই';
+
+  @override
+  String get reminderPresetDayBefore => '১ দিন আগে';
+
+  @override
+  String get reminderPresetWeekBefore => '১ সপ্তাহ আগে';
+
+  @override
+  String get reminderPresetAtDeadline => 'সময়সীমার সময়ে';
+
+  @override
+  String get reminderPresetHourBefore => '১ ঘণ্টা আগে';
+
+  @override
+  String get editNextStepTitle => 'প্রস্তাবিত পরের ধাপ';
+
+  @override
+  String get editNextStepSubtitle => 'পরের কাজের বিষয়ে একটি ছোট বাক্য।';
+
+  @override
+  String get editNextStepHint => 'পরের কাজের ধাপটি কী?';
+
+  @override
+  String get editRemoveSuggestion => 'প্রস্তাব সরান';
+
+  @override
+  String get editUrgencyTitle => 'এটি কতটা জরুরি?';
+
+  @override
+  String get editStepHint => 'করার মতো একটি নির্দিষ্ট কাজ';
+
+  @override
+  String get editAddStep => 'ধাপ যোগ করুন';
+
+  @override
+  String get editDateHint => 'বববব-মম-দদ';
+
+  @override
+  String get editRemoveDeadline => 'সময়সীমা সরান';
+
+  @override
+  String get editAmountHint => '96.40';
+
+  @override
+  String get editSaveAmount => 'পরিমাণ সেভ করুন';
+
+  @override
+  String get editRemoveAmount => 'পরিমাণ সরান';
+
+  @override
+  String get securityTitle => 'নিরাপত্তা ও গোপনীয়তা';
+
+  @override
+  String get securitySectionProtection => 'সুরক্ষা';
+
+  @override
+  String get securityAppLockUnavailable =>
+      'অ্যাপ লকের জন্য এই ডিভাইসে স্ক্রিন লক দরকার। আগে ডিভাইস সেটিংসে একটি পিন, প্যাটার্ন, পাসওয়ার্ড বা আঙুলের ছাপ ঠিক করুন।';
+
+  @override
+  String get securityAppLockOn =>
+      'Action আপনার ডিভাইসকে বলে নিশ্চিত করতে যে এটি আপনিই।';
+
+  @override
+  String get securityAppLockOff =>
+      'Action খুলতে আপনার আঙুলের ছাপ, মুখ বা ডিভাইসের পিন লাগবে।';
+
+  @override
+  String get securityAskAgain => 'আবার জিজ্ঞেস করুন';
+
+  @override
+  String get securityAskAgainDescription =>
+      'লক হওয়ার আগে Action কতক্ষণ পেছনে থাকতে পারবে।';
+
+  @override
+  String get securityScreenPrivacy => 'স্ক্রিন গোপনীয়তা';
+
+  @override
+  String get securityScreenPrivacyDescription =>
+      'Android-কে বলুন স্ক্রিনশট ও স্ক্রিন রেকর্ডিং আটকাতে, আর অ্যাপ সুইচারে Action লুকিয়ে রাখতে।';
+
+  @override
+  String get securityPrivateReminders => 'ব্যক্তিগত মনে করিয়ে দেওয়া';
+
+  @override
+  String get securityPrivateRemindersOn =>
+      'মনে করিয়ে দেওয়া শুধু বলে যে কিছু একটা আপনার অপেক্ষায়।';
+
+  @override
+  String get securityPrivateRemindersOff =>
+      'মনে করিয়ে দেওয়ায় কাজের শিরোনাম দেখায়। সেটি লক স্ক্রিনে না আসতে দিতে এটি চালু করুন।';
+
+  @override
+  String get securityLockNow => 'এখনই লক করুন';
+
+  @override
+  String get securityLockNowDescription => 'অপেক্ষা না করে দরজা বন্ধ করুন।';
+
+  @override
+  String get securitySectionStorage => 'আপনার তথ্য কীভাবে রাখা হয়';
+
+  @override
+  String get securityStorageDataLabel => 'আপনার কাজ, ক্যাপচার ও সেটিংস';
+
+  @override
+  String get securityStorageDataDetail =>
+      'এগুলো এই অ্যাপের নিজস্ব ব্যক্তিগত সংরক্ষণে থাকে, যা অন্য অ্যাপ পড়তে পারে না এবং যা Android ডিভাইস এনক্রিপশনের অংশ হিসেবে এনক্রিপ্ট করে। Action এর উপরে নিজের দ্বিতীয় কোনো স্তর যোগ করে না।';
+
+  @override
+  String get securityStorageKeyLabel => 'আপনার AI সরবরাহকারীর চাবি';
+
+  @override
+  String get securityStorageKeyDetail =>
+      'বাকি সবের সঙ্গে নয়, Android Keystore-এ রাখা হয়, আর সেভ করার পর আর কখনো দেখানো হয় না।';
+
+  @override
+  String get securityStorageGapLabel => 'এটি যা ঢাকে না';
+
+  @override
+  String get securityStorageGapDetail =>
+      'এর কোনোটিই এমন কারো থেকে রক্ষা করে না যে আপনার আনলক করা ডিভাইস ব্যবহার করছে, আর বদলে ফেলা বা রুট করা সিস্টেম সাধারণের চেয়ে বেশি পড়তে পারে। অ্যাপ লক সেই ব্যবস্থাটি যা প্রথমটিতে সাহায্য করে।';
+
+  @override
+  String get securitySectionInformation => 'আপনার তথ্য';
+
+  @override
+  String get securityWhereInfoDescription =>
+      'আপনার তথ্যের প্রতিটি পথ, আর যে দুটি এই ডিভাইস ছেড়ে যায়।';
+
+  @override
+  String get securityAppLockRefused => 'নিশ্চিত করা হয়নি, তাই কিছুই বদলায়নি।';
+
+  @override
+  String get securityAppLockUnavailableToast =>
+      'এই ডিভাইসে কোনো স্ক্রিন লক ঠিক করা নেই। ডিভাইস সেটিংসে একটি পিন, প্যাটার্ন, পাসওয়ার্ড বা আঙুলের ছাপ যোগ করে আবার চেষ্টা করুন।';
+
+  @override
+  String get securityScreenPrivacyRefused =>
+      'এই ডিভাইস স্ক্রিন গোপনীয়তা প্রয়োগ করতে চায়নি, তাই চালু দেখানোর বদলে সেটি বন্ধই রাখা হয়েছে।';
+
+  @override
+  String securityRemindersUpdatedQuiet(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি নির্ধারিত মনে করিয়ে দেওয়া এখন কম বলে।',
+      one: '১টি নির্ধারিত মনে করিয়ে দেওয়া এখন কম বলে।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityRemindersUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি নির্ধারিত মনে করিয়ে দেওয়া হালনাগাদ হয়েছে।',
+      one: '১টি নির্ধারিত মনে করিয়ে দেওয়া হালনাগাদ হয়েছে।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appLockDelayImmediately => 'সঙ্গে সঙ্গে';
+
+  @override
+  String get appLockDelayOneMinute => '১ মিনিট পরে';
+
+  @override
+  String get appLockDelayFiveMinutes => '৫ মিনিট পরে';
+
+  @override
+  String get securityDelayImmediatelyDescription =>
+      'যতবার Action পর্দা ছেড়ে যায়';
+
+  @override
+  String get securityDelayOneMinuteDescription =>
+      'একটি বার্তার উত্তর দেওয়ার মতো সময়';
+
+  @override
+  String get securityDelayFiveMinutesDescription => 'একটি ফোন ধরার মতো সময়';
+
+  @override
+  String get securityHeroProtected => 'সুরক্ষিত রাখা';
+
+  @override
+  String get securityHeroNothingOn => 'কিছুই চালু নেই';
+
+  @override
+  String get securityHeroFootnote =>
+      'এখানকার সবকিছু এই ডিভাইসেই কাজ করে। এই সেটিংসের কোনোটিই কোথাও পাঠানো হয় না, আর কোনোটিই দূর থেকে বদলানো যায় না।';
+
+  @override
+  String get securityHeadlineNone => 'তিনটি সুরক্ষা রয়েছে';
+
+  @override
+  String securityHeadlineOne(String first) {
+    return '$first চালু';
+  }
+
+  @override
+  String securityHeadlineTwo(String first, String second) {
+    return '$first এবং $second চালু';
+  }
+
+  @override
+  String get securityHeadlineAll => 'তিনটি সুরক্ষাই চালু';
+
+  @override
+  String get securityTransfersTitle => 'এই ডিভাইস থেকে কী গেছে';
+
+  @override
+  String get securityTransfersNoProvider =>
+      'কোনো AI সরবরাহকারী যুক্ত নেই, তাই বিশ্লেষণের জন্য কিছুই পাঠানো হচ্ছে না।';
+
+  @override
+  String get securityTransfersDescription =>
+      'যে মুহূর্তে কিছু পাঠানো হয় সেই মুহূর্তেই এখানে লেখা হয়, উত্তর ফিরুক বা না ফিরুক। শুধু সরঞ্জাম, সরবরাহকারী আর আকার — ভেতরে কী ছিল তা কখনোই নয়। এই ডিভাইসে ৯০ দিন রাখা হয় এবং কোথাও পাঠানো হয় না।';
+
+  @override
+  String get securityClear => 'মুছুন';
+
+  @override
+  String get securityNothingSent => 'কিছুই পাঠানো হয়নি';
+
+  @override
+  String get securityNothingSentDescription =>
+      'আপনি যখন এমন সরঞ্জাম চালাবেন যা আপনার AI সরবরাহকারী ব্যবহার করে, সেটি এখানে থাকবে।';
+
+  @override
+  String get securityClearHistoryTitle => 'এই ইতিহাস মুছবেন?';
+
+  @override
+  String get securityClearHistoryBody =>
+      'কী পাঠানো হয়েছিল তার নথি এই ডিভাইস থেকে মুছে যাবে। যা আগেই পাঠানো হয়ে গেছে তা এটি ফিরিয়ে আনে না।';
+
+  @override
+  String get securityUnnamedTool => 'একটি Intelligence সরঞ্জাম';
+
+  @override
+  String get securityYourProvider => 'আপনার AI সরবরাহকারীর কাছে';
+
+  @override
+  String securityTransferPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count পৃষ্ঠা',
+      one: '১ পৃষ্ঠা',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String securityTransferFiles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ফাইল',
+      one: '১টি ফাইল',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get securityTransferShortText => 'ছোট একটুকরো লেখা';
+
+  @override
+  String securityTransferCharacters(int count) {
+    return '$count হাজার অক্ষর';
+  }
+
+  @override
+  String securitySentTo(String provider) {
+    return '$provider-কে পাঠানো হয়েছে।';
+  }
+
+  @override
+  String securitySentToWithSize(String provider, String size) {
+    return '$provider-কে পাঠানো হয়েছে · $size।';
+  }
+
+  @override
+  String relativeWeeks(int count) {
+    return '$count সপ্তাহ আগে';
+  }
+
+  @override
+  String get helpTitle => 'সহায়তা';
+
+  @override
+  String get helpAddQuestion => 'আমি কী যোগ করতে পারি?';
+
+  @override
+  String get helpAddAnswer =>
+      'একটি স্ক্রিনশট, কোনো চিঠি বা বিলের ছবি, বা আপনার পেস্ট করা লেখা। যাতে তারিখ, অঙ্ক বা কোনো অনুরোধ আছে তা সবচেয়ে ভালো চলে।';
+
+  @override
+  String get helpReviewQuestion => 'Action কেন আমাকে পর্যালোচনা করতে বলে?';
+
+  @override
+  String get helpReviewAnswer =>
+      'কারণ নথি পড়া যন্ত্র সেটি ভুল পড়তে পারে, আর চুপচাপ ভুল হয়ে থাকা সময়সীমা কোনো সময়সীমা না থাকার চেয়েও খারাপ। Action দেখায় সে কী পেয়েছে আর কোন শব্দ থেকে পেয়েছে, আর আপনি নিশ্চিত না করা পর্যন্ত কিছুই সেভ হয় না।';
+
+  @override
+  String get helpVaryQuestion => 'আবার চেষ্টা করলে ফল বদলে যায় কেন?';
+
+  @override
+  String get helpVaryAnswer =>
+      'আপনার নথি যে সেবা পড়ে সেটি নির্ধারিত নয়, তাই একই ক্যাপচার একটু আলাদা হয়ে ফিরতে পারে। পর্যালোচনার ধাপটি সে কারণেও আছে — আপনিই সেই অংশ যা বদলায় না।';
+
+  @override
+  String get helpLateQuestion => 'আমার মনে করিয়ে দেওয়া দেরিতে এল কেন?';
+
+  @override
+  String get helpLateAnswer =>
+      'মনে করিয়ে দেওয়া Android দিয়ে নির্ধারিত হয়, আর ঠিক কখন পৌঁছে দেবে তা Android ঠিক করে। ব্যাটারি সাশ্রয়, Doze আর নির্মাতার পাওয়ার সেটিংস যেকোনো একটিকে দেরি করাতে পারে। Action কখনোই মিনিট ধরে মনে করিয়ে দেওয়ার প্রতিশ্রুতি দেয় না।';
+
+  @override
+  String get helpDataQuestion => 'আমার তথ্য কোথায়?';
+
+  @override
+  String get helpDataAnswer =>
+      'প্রায় সবই এই ডিভাইসে: আপনার ক্যাপচার, কাজ, ধাপ, মনে করিয়ে দেওয়া আর খোঁজ। দুটি ব্যতিক্রম — আপনি Action-কে যে লেখা পড়তে বলেন তা যে AI সেবা পড়ে তার কাছে যায়, আর নিশ্চিত করা কাজের একটি সংক্ষিপ্ত নথি বেনামি পরিচয়ে ক্লাউডে রাখা হতে পারে। সেটিংসে গোপনীয়তা ও ডেটা ঠিক কী কী সেই নথিতে থাকে তা বলে দেয়।';
+
+  @override
+  String get helpBackupQuestion => 'এটি কি ব্যাকআপ?';
+
+  @override
+  String get helpBackupAnswer =>
+      'না। ক্লাউডের নথি নতুন ডিভাইসে ফিরিয়ে আনা যায় না, আর লগ ইন করার মতো কোনো অ্যাকাউন্টও নেই। আপনি Action মুছে ফেললে বা এই ডিভাইস হারালে, এতে থাকা তথ্য চলে যায়।';
+
+  @override
+  String get helpCorrectQuestion => 'আমি কোনো কাজ কীভাবে ঠিক করব?';
+
+  @override
+  String get helpCorrectAnswer =>
+      'সেটি খুলে যেকোনো ঘর বদলান — শিরোনাম, সময়সীমা, পরিমাণ বা প্রস্তাবিত পরের ধাপ। ধাপ যেকোনো সময় যোগ, সাজানো, শেষ ও মুছে ফেলা যায়। কোনো কাজ বদলানো AI সেবাকে কখনো কিছু জিজ্ঞেস করে না।';
+
+  @override
+  String get privacyTitle => 'গোপনীয়তা ও ডেটা';
+
+  @override
+  String get privacyIntro =>
+      'Action যতটা পারে ততটা এই ডিভাইসেই রাখে। দুটি জিনিস ব্যতিক্রম, আর দুটিই নিচে দেওয়া আছে।';
+
+  @override
+  String get privacyGroupOnDevice => 'এই ডিভাইসে';
+
+  @override
+  String get privacyOnDeviceCaptures =>
+      'ক্যাপচার — আপনার যোগ করা স্ক্রিনশট, ছবি ও লেখা, আর সেগুলো থেকে পড়া লেখা।';
+
+  @override
+  String get privacyOnDeviceActions =>
+      'কাজ, তাদের ধাপ, তথ্য ও মনে করিয়ে দেওয়া।';
+
+  @override
+  String get privacyOnDeviceSearch =>
+      'খোঁজ। আপনার খোঁজ এখানেই চলে, কোথাও পাঠানো হয় না, আর পর্দা বন্ধ করার পর রাখা হয় না।';
+
+  @override
+  String get privacyOnDevicePhotoMetadata =>
+      'ছবি তার অবস্থান ছাড়াই রাখা হয়। ফোন ছবির ভেতরে যে স্থানাঙ্ক, সময় ও ক্যামেরার বিবরণ লেখে তা ক্যাপচার সেভ হওয়ার আগেই সরিয়ে ফেলা হয়, তাই সেগুলো এখানে থাকে না এবং আপনি কোনো ক্যাপচার আপনার AI সরবরাহকারীকে পাঠালে সেগুলোও যায় না।';
+
+  @override
+  String get privacyGroupSentToRead => 'পড়ার জন্য পাঠানো';
+
+  @override
+  String get privacySentToReadWhat =>
+      'আপনি যখন Action-কে কোনো ক্যাপচার বুঝতে বলেন, সেই লেখা যে AI সেবা পড়ে তার কাছে পাঠানো হয়। এটি ডিভাইসে চলা AI নয়।';
+
+  @override
+  String get privacySentToReadWhen =>
+      'আপনি যে ক্যাপচারটি বেছেছেন কেবল সেটিই পাঠানো হয়, আর কেবল যখন আপনি বলেন।';
+
+  @override
+  String get privacyGroupYourProvider => 'আপনার নিজের AI সরবরাহকারীকে পাঠানো';
+
+  @override
+  String get privacyProviderWhat =>
+      'আপনি সেটিংসে কোনো AI সরবরাহকারী যুক্ত করলে, Intelligence সরঞ্জামগুলো আপনার বেছে নেওয়া লেখা সেই সরবরাহকারীকে পাঠায় — OpenAI, Anthropic, Google বা আপনার বেছে নেওয়া কোনো endpoint — আপনার নিজের API চাবি দিয়ে।';
+
+  @override
+  String get privacyProviderDirect =>
+      'এটি সরাসরি তাদের কাছেই যায়। Action-এর কোনো সার্ভারের ভেতর দিয়ে যায় না।';
+
+  @override
+  String get privacyProviderScope =>
+      'কোনো সরঞ্জামের জন্য আপনি যা বাছেন কেবল তাই পাঠানো হয়, আর কেবল যখন আপনি সেটি চালান। আপনার অন্য কাজ, ক্যাপচার ও উৎস কখনো যুক্ত হয় না, আর পেছনে কখনো কিছু পাঠানো হয় না।';
+
+  @override
+  String get privacyProviderKey =>
+      'আপনার API চাবি এই ডিভাইসের নিরাপদ সংরক্ষণে রাখা হয় এবং কেবল যে সরবরাহকারীর সেটি, তার কাছেই পাঠানো হয়। নিরাপদ সংরক্ষণ আপনার আনলক করা ডিভাইস হাতে পাওয়া কারো জন্য সত্যিকারের বাধা, কিন্তু তা চূড়ান্ত নয়, আর Action এর উল্টো কিছু দাবি করবে না।';
+
+  @override
+  String get privacyProviderLocalTools =>
+      'দুটি সরঞ্জাম কখনোই কিছু পাঠায় না: স্পর্শকাতর বিবরণ আড়াল করা, আর কোনো ফাইল কোথা থেকে এসেছে তা যাচাই করা। দুটিই পুরোপুরি এই ডিভাইসে চলে।';
+
+  @override
+  String get privacyProviderAgreement =>
+      'আপনি যা পাঠান তা নিয়ে আপনার সরবরাহকারী কী করে তা তাদের সঙ্গে আপনার চুক্তিতে ঠিক হয়, Action-এ নয়।';
+
+  @override
+  String get privacyGroupCloud => 'ক্লাউডে রাখা';
+
+  @override
+  String get privacyCloudWhat =>
+      'আপনি কোনো কাজ নিশ্চিত করলে তার একটি সংক্ষিপ্ত নথি এই ইনস্টলেশনের বেনামি পরিচয়ে রাখা হতে পারে: শিরোনাম, অবস্থা, জরুরি মাত্রা, শ্রেণি, সময়সীমা, পরিমাণ, প্রস্তাবিত পরের ধাপ এবং সময়ের ছাপ।';
+
+  @override
+  String get privacyCloudNotSent =>
+      'আপনার ক্যাপচার, সেগুলো থেকে পড়া লেখা, কোনো কাজের ধাপ ও তথ্য, আর আপনার মনে করিয়ে দেওয়া পাঠানো হয় না।';
+
+  @override
+  String get privacyCloudNotBackup =>
+      'এটি ব্যাকআপ নয়। নতুন ডিভাইসে এটি ফিরিয়ে আনার উপায় নেই, আর এই ইনস্টলেশন হারালে বেনামি পরিচয়ও সঙ্গে চলে যায়।';
+
+  @override
+  String get privacyGroupDiagnostics => 'ডায়াগনস্টিকস';
+
+  @override
+  String get privacyDiagnosticsWhat =>
+      'Action অ্যাপে কী ঘটছে তার বেনামি গণনা রাখে — যে একটি ক্যাপচার শুরু হয়েছে, যে একটি নিষ্কাশন কাজ করেছে বা করেনি, যে একটি খোঁজে কিছু মেলেনি, যে একটি কাজ শেষ হয়েছে।';
+
+  @override
+  String get privacyDiagnosticsCounts =>
+      'এগুলো গণনা, বিষয়বস্তু নয়। কোনো শিরোনাম, পরিমাণ, সময়সীমা, নির্দেশ সংখ্যা, ক্যাপচার করা লেখা বা খোঁজের শব্দ কখনো যায় না, বেনামি পরিচয় বা কোনো কাজ বা ক্যাপচারের কোনো শনাক্তকারীও নয়।';
+
+  @override
+  String get privacyDiagnosticsCrash =>
+      'অ্যাপ ক্র্যাশ করলে ত্রুটি আর সেটি কোথায় ঘটেছে তা জানানো হয় যাতে ঠিক করা যায়। Action ওই প্রতিবেদনের সঙ্গে আপনার তথ্য জুড়ে দেয় না।';
+
+  @override
+  String get privacySectionYourData => 'আপনার ডেটা';
+
+  @override
+  String get privacyYourDataFootnote =>
+      'ক্যাপচার মুছলে আপনার কাজ জায়গামতোই থাকে। যে কাজের ক্যাপচার আর নেই সেটিও চলে; কেবল আর দেখায় না যে সেটি কী থেকে এসেছিল।';
+
+  @override
+  String get privacyClearCaptures => 'ক্যাপচার মুছুন';
+
+  @override
+  String get privacyClearCapturesDescription =>
+      'প্রতিটি ক্যাপচার ও তার ছবির ফাইল মুছে দেয়।';
+
+  @override
+  String get privacyDeleteAll => 'আমার সব ডেটা মুছুন';
+
+  @override
+  String get privacyDeleteAllDescription =>
+      'কাজ, ধাপ, মনে করিয়ে দেওয়া, ক্যাপচার আর উপরের ক্লাউড নথি।';
+
+  @override
+  String get privacyClearCapturesTitle => 'ক্যাপচার মুছবেন?';
+
+  @override
+  String get privacyClearCapturesBody =>
+      'প্রতিটি ক্যাপচার আর তার ছবি এই ডিভাইস থেকে মুছে যাবে। আপনার কাজ ঠিক যেমন আছে তেমনই থাকে।';
+
+  @override
+  String get privacyCapturesDeleted => 'ক্যাপচার মুছে ফেলা হয়েছে।';
+
+  @override
+  String get privacyCapturesPartlyDeleted =>
+      'কিছু ক্যাপচার মোছা যায়নি। আর কিছুই বদলানো হয়নি।';
+
+  @override
+  String get privacyDeleteAllTitle => 'আপনার সব ডেটা মুছবেন?';
+
+  @override
+  String get privacyDeleteAllBody =>
+      'এটি এই ডিভাইসের প্রতিটি কাজ, ধাপ, মনে করিয়ে দেওয়া ও ক্যাপচার এবং উপরে দেওয়া ক্লাউড নথি মুছে দেয়। এটি ফেরানো যায় না, আর ফিরিয়ে আনার মতো কোনো ব্যাকআপও নেই।';
+
+  @override
+  String get privacyDeleteEverything => 'সবকিছু মুছুন';
+
+  @override
+  String get privacyDeletedAll => 'সবকিছু মুছে ফেলা হয়েছে।';
+
+  @override
+  String get privacyDeleteFailed => 'আপনার ডেটা মোছা যায়নি।';
+
+  @override
+  String get privacyDeletedUnverified =>
+      'এই ডিভাইসের সবকিছু মুছে ফেলা হয়েছে। সেখানে কিছু বাকি নেই তা নিশ্চিত করতে Action ক্লাউডে পৌঁছাতে পারেনি, আর আবার দেখবে।';
+
+  @override
+  String privacyDeletedApartFrom(String leftovers) {
+    return '$leftovers ছাড়া মুছে ফেলা হয়েছে।';
+  }
+
+  @override
+  String get privacyWillTryAgain => 'Action আবার চেষ্টা করবে।';
+
+  @override
+  String get privacyCloudCheckIncomplete =>
+      'Action ক্লাউড যাচাই শেষ করতে পারেনি, আর আবার চেষ্টা করবে।';
+
+  @override
+  String get privacyLeftoverCaptures => 'কিছু ক্যাপচার';
+
+  @override
+  String privacyLeftoverCloudRecords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ক্লাউড নথি',
+      one: '১টি ক্লাউড নথি',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String privacyLeftoverJoin(String first, String second) {
+    return '$first এবং $second';
+  }
+
+  @override
+  String get privacyCloudDeleted => 'ক্লাউড নথি মুছে ফেলা হয়েছে।';
+
+  @override
+  String get privacyCloudUnreachable =>
+      'এখনো তাদের কাছে পৌঁছানো যায়নি। Action আবার চেষ্টা করবে।';
+
+  @override
+  String get privacyPendingTitle => 'এখনো মুছতে বাকি';
+
+  @override
+  String privacyPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'গতবার $countটি ক্লাউড নথির কাছে পৌঁছানো যায়নি। Action নিজেই আবার চেষ্টা করবে, অথবা আপনি এখনই চেষ্টা করতে পারেন।',
+      one: 'গতবার ১টি ক্লাউড নথির কাছে পৌঁছানো যায়নি। Action নিজেই আবার চেষ্টা করবে, অথবা আপনি এখনই চেষ্টা করতে পারেন।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyTryAgain => 'আবার চেষ্টা করুন';
+
+  @override
+  String get evidenceTitle => 'এটি কোথা থেকে এসেছে';
+
+  @override
+  String get evidenceUnverified =>
+      'Action যে লেখা পড়েছে তাতে এই শব্দগুলো পায়নি, তাই এই মানটি মিলিয়ে দেখা হয়নি। এর উপর ভরসা করার আগে মূলটির সঙ্গে মিলিয়ে নিন।';
+
+  @override
+  String get evidenceHighlighted =>
+      'Action এই ক্যাপচার থেকে যে লেখা পড়েছে তাতে এই শব্দগুলো ছিল, আর চিহ্নটি দেখাচ্ছে কোথায়।';
+
+  @override
+  String get evidenceNoRegion =>
+      'Action এই ক্যাপচার থেকে যে লেখা পড়েছে তাতে এই শব্দগুলো ছিল। ছবির ঠিক কোন জায়গায় সেগুলো আছে তা বের করা যায়নি, আর এখানে আন্দাজ করা হয় না।';
+
+  @override
+  String get evidenceInText => 'এই ক্যাপচারে যে লেখা আছে তাতে এই শব্দগুলো ছিল।';
+
+  @override
+  String get sourceCapturedAtFormat => 'd MMM, HH:mm';
+
+  @override
+  String get urgencyCritical => 'অতি জরুরি';
+
+  @override
+  String get urgencyImportant => 'গুরুত্বপূর্ণ';
+
+  @override
+  String get urgencyNormal => 'সাধারণ';
+
+  @override
+  String get urgencyLow => 'কম';
+
+  @override
+  String get urgencyUnsure => 'নিশ্চিত নয়';
+}

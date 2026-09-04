@@ -4,8 +4,12 @@ import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../../design/tokens/typography.dart';
 import '../domain/extracted_field.dart';
+import '../../capture/domain/source_item.dart';
+import '../application/evidence_regions.dart';
 import '../domain/extraction_evidence.dart';
+import 'evidence_lens.dart';
 import '../domain/extraction_schema.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 /// Shared pieces of the review screen.
 ///
@@ -17,15 +21,27 @@ import '../domain/extraction_schema.dart';
 /// User-readable confidence, mapped from the domain's field review state.
 /// No percentages anywhere — four honest words instead.
 enum ConfidenceDisplay {
-  confirmed('Confirmed by you', Icons.check_circle_outline_rounded),
-  high('High confidence', Icons.verified_outlined),
-  review('Needs review', Icons.help_outline_rounded),
-  missing('Missing', Icons.remove_circle_outline_rounded);
+  confirmed(Icons.check_circle_outline_rounded),
+  high(Icons.verified_outlined),
+  review(Icons.help_outline_rounded),
+  missing(Icons.remove_circle_outline_rounded);
 
-  const ConfidenceDisplay(this.label, this.icon);
+  const ConfidenceDisplay(this.icon);
 
-  final String label;
   final IconData icon;
+
+  /// The four words, in the reader's language.
+  ///
+  /// A method rather than a const field for the usual reason, and the four
+  /// answers matter: "confirmed by you" is a *person's* word and the model
+  /// may not borrow it, "high confidence" is the strongest thing the app will
+  /// say about its own output, and neither may become a number.
+  String labelIn(AppL10n l10n) => switch (this) {
+        ConfidenceDisplay.confirmed => l10n.reviewConfirmedByYou,
+        ConfidenceDisplay.high => l10n.reviewHighConfidence,
+        ConfidenceDisplay.review => l10n.reviewNeedsReview,
+        ConfidenceDisplay.missing => l10n.reviewMissing,
+      };
 
   static ConfidenceDisplay of(ExtractedField field) {
     // A grounded value the validator trusted still reads "high confidence",
@@ -57,10 +73,11 @@ class ConfidenceBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final color = display.colorOf(colors);
     return Semantics(
-      label: display.label,
+      label: display.labelIn(l10n),
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: Space.sm,
@@ -76,7 +93,7 @@ class ConfidenceBadge extends StatelessWidget {
             Icon(display.icon, size: 14, color: color),
             const SizedBox(width: Space.xs),
             Text(
-              display.label,
+              display.labelIn(l10n),
               style: Theme.of(context)
                   .textTheme
                   .labelSmall
@@ -97,22 +114,57 @@ class EvidenceTile extends StatefulWidget {
   const EvidenceTile({
     required this.evidence,
     this.onFirstExpand,
+    this.source,
+    this.label,
     super.key,
   });
 
   final ExtractionEvidence evidence;
   final VoidCallback? onFirstExpand;
 
+  /// The capture this evidence points into. When it has usable geometry the
+  /// tile offers the lens; when it does not, the quote is the whole answer and
+  /// no promise of a highlight is made.
+  final SourceItem? source;
+
+  /// What the evidence supports, for the lens header. Null means the generic
+  /// "This value", resolved at build.
+  final String? label;
+
   @override
   State<EvidenceTile> createState() => _EvidenceTileState();
 }
 
 class _EvidenceTileState extends State<EvidenceTile> {
+  /// The string bundle, from the element's own context.
+  ///
+  /// A getter rather than a local in each method: `State` carries
+  /// `context`, so every instance method can reach it, and nine
+  /// copies of the same lookup is nine places for one of them to
+  /// drift onto a stale context.
+  AppL10n get l10n => AppL10n.of(context);
+
   bool _expanded = false;
   bool _everExpanded = false;
 
+  /// Whether the lens would actually have a region to draw.
+  ///
+  /// Asked here rather than inside the sheet so the affordance and the answer
+  /// cannot disagree.
+  bool get _canShowOnCapture {
+    final source = widget.source;
+    if (source?.imagePath == null) return false;
+    return EvidenceRegions.forEvidence(
+      evidence: widget.evidence,
+      lines: source!.ocr?.lines ?? const [],
+      imageWidth: source.imageWidth,
+      imageHeight: source.imageHeight,
+    ).isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final grounded = widget.evidence.isGrounded;
@@ -143,7 +195,7 @@ class _EvidenceTileState extends State<EvidenceTile> {
                 ),
                 const SizedBox(width: Space.xs),
                 Text(
-                  grounded ? 'From source' : 'Not verified',
+                  grounded ? l10n.reviewFromSource : l10n.reviewNotVerified,
                   style: text.labelSmall?.copyWith(
                     color:
                         grounded ? colors.textTertiary : colors.confidenceReview,
@@ -185,19 +237,47 @@ class _EvidenceTileState extends State<EvidenceTile> {
                     children: [
                       if (!grounded) ...[
                         Text(
-                          'Could not verify this against the source.',
+                          l10n.reviewCouldNotVerify,
                           style: text.bodySmall
                               ?.copyWith(color: colors.confidenceReview),
                         ),
                         const SizedBox(height: Space.xs),
                       ],
                       Text(
-                        '“${widget.evidence.quote}”',
+                        l10n.reviewQuote(widget.evidence.quote),
                         style: text.bodySmall?.copyWith(
                           color: colors.textSecondary,
                           fontStyle: FontStyle.italic,
                         ),
                       ),
+                      // Offered only when there is genuinely something to
+                      // show. A button that opens a sheet saying "Action could
+                      // not work out where" would be worse than no button.
+                      if (_canShowOnCapture) ...[
+                        const SizedBox(height: Space.xs),
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: TextButton.icon(
+                            onPressed: () => showEvidenceLens(
+                              context,
+                              evidence: widget.evidence,
+                              label: widget.label ?? l10n.reviewThisValue,
+                              source: widget.source,
+                            ),
+                            icon: const Icon(Icons.center_focus_strong_outlined,
+                                size: 18),
+                            label: Text(l10n.reviewSeeOnCapture),
+                            style: TextButton.styleFrom(
+                              // The shared theme sizes buttons to full width,
+                              // which is fatal inside a Column of prose.
+                              minimumSize: const Size(0, 40),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Space.sm,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 )
@@ -270,6 +350,7 @@ class FactRow extends StatelessWidget {
     this.onConfirm,
     this.evidence,
     this.onEvidenceViewed,
+    this.source,
     super.key,
   });
 
@@ -282,13 +363,17 @@ class FactRow extends StatelessWidget {
   final ExtractionEvidence? evidence;
   final VoidCallback? onEvidenceViewed;
 
+  /// Passed through to the evidence tile so it can offer the lens.
+  final SourceItem? source;
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(Space.lg, Space.md, Space.sm, 0),
+      padding: const EdgeInsetsDirectional.fromSTEB(Space.lg, Space.md, Space.sm, 0),
       decoration: BoxDecoration(
         color: colors.surfaceElevated,
         borderRadius: Radii.rMd,
@@ -323,13 +408,13 @@ class FactRow extends StatelessWidget {
               ),
               if (onConfirm != null)
                 IconButton(
-                  tooltip: 'Looks right',
+                  tooltip: l10n.reviewLooksRight,
                   onPressed: onConfirm,
                   icon: const Icon(Icons.check_rounded),
                 ),
               if (onEdit != null)
                 IconButton(
-                  tooltip: 'Edit',
+                  tooltip: l10n.commonEdit,
                   onPressed: onEdit,
                   icon: const Icon(Icons.edit_outlined),
                 ),
@@ -337,10 +422,12 @@ class FactRow extends StatelessWidget {
           ),
           if (evidence != null)
             Padding(
-              padding: const EdgeInsets.only(right: Space.sm),
+              padding: const EdgeInsetsDirectional.only(end: Space.sm),
               child: EvidenceTile(
                 evidence: evidence!,
                 onFirstExpand: onEvidenceViewed,
+                source: source,
+                label: label,
               ),
             )
           else

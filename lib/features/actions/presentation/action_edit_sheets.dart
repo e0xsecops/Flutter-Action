@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../design/components/app_sheet.dart';
+import '../../../l10n/gen/app_l10n.dart';
+import '../../../l10n/enum_labels.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../../extraction/data/extraction_validator.dart' show parseStrictIso8601;
@@ -59,12 +61,12 @@ Future<String?> showTitleSheet(BuildContext context, String current) {
       padding: EdgeInsets.only(
           bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
       child: AppSheet(
-        title: 'Title',
+        title: AppL10n.of(sheetContext).reviewFieldTitle,
         child: _TextEditor(
           initial: current,
-          hint: 'What needs to happen?',
+          hint: AppL10n.of(sheetContext).reviewTitleHint,
           maxLength: 200,
-          saveLabel: 'Save',
+          saveLabel: AppL10n.of(sheetContext).commonSave,
         ),
       ),
     ),
@@ -84,14 +86,14 @@ Future<EditOutcome<String>?> showNextStepSheet(
       padding: EdgeInsets.only(
           bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
       child: AppSheet(
-        title: 'Recommended next step',
-        subtitle: 'A short sentence about the next useful move.',
+        title: AppL10n.of(sheetContext).editNextStepTitle,
+        subtitle: AppL10n.of(sheetContext).editNextStepSubtitle,
         child: _TextEditor(
           initial: current ?? '',
-          hint: 'What is the next useful move?',
+          hint: AppL10n.of(sheetContext).editNextStepHint,
           maxLength: 240,
-          saveLabel: 'Save',
-          clearLabel: current == null ? null : 'Remove the suggestion',
+          saveLabel: AppL10n.of(sheetContext).commonSave,
+          clearLabel: current == null ? null : AppL10n.of(sheetContext).editRemoveSuggestion,
         ),
       ),
     ),
@@ -114,7 +116,7 @@ Future<EditOutcome<DateTime>?> showDeadlineSheet(
       padding: EdgeInsets.only(
           bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
       child: AppSheet(
-        title: 'Deadline',
+        title: AppL10n.of(sheetContext).reviewDeadline,
         child: _DeadlineEditor(current: current),
       ),
     ),
@@ -134,7 +136,7 @@ Future<EditOutcome<MoneyValue>?> showAmountSheet(
       padding: EdgeInsets.only(
           bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
       child: AppSheet(
-        title: 'Amount',
+        title: AppL10n.of(sheetContext).reviewAmount,
         child: _AmountEditor(current: current),
       ),
     ),
@@ -150,13 +152,13 @@ Future<ActionUrgency?> showUrgencySheet(
   return showModalBottomSheet<ActionUrgency>(
     context: context,
     builder: (sheetContext) => AppSheet(
-      title: 'How urgent is this?',
+      title: AppL10n.of(sheetContext).editUrgencyTitle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           for (final value in ActionUrgency.values)
             ListTile(
-              title: Text(value.label),
+              title: Text(value.labelIn(AppL10n.of(sheetContext))),
               trailing: value == current
                   ? Icon(Icons.check, color: sheetContext.colors.brand)
                   : null,
@@ -182,12 +184,12 @@ Future<String?> showStepSheet(
       padding: EdgeInsets.only(
           bottom: MediaQuery.viewInsetsOf(sheetContext).bottom),
       child: AppSheet(
-        title: current == null ? 'Add a step' : 'Edit step',
+        title: current == null ? AppL10n.of(sheetContext).reviewAddStep : AppL10n.of(sheetContext).reviewEditStep,
         child: _TextEditor(
           initial: current ?? '',
-          hint: 'One concrete thing to do',
+          hint: AppL10n.of(sheetContext).editStepHint,
           maxLength: 200,
-          saveLabel: current == null ? 'Add step' : 'Save',
+          saveLabel: current == null ? AppL10n.of(sheetContext).editAddStep : AppL10n.of(sheetContext).commonSave,
         ),
       ),
     ),
@@ -310,7 +312,7 @@ class _DeadlineEditorState extends State<_DeadlineEditor> {
     // rolled forward into March.
     final parsed = parseStrictIso8601(text);
     if (parsed == null) {
-      setState(() => _error = 'That is not a real date. Use 2026-08-30.');
+      setState(() => _error = AppL10n.of(context).reviewBadDate);
       return;
     }
     // A deadline that was a plain date stays a plain date: the time
@@ -332,7 +334,8 @@ class _DeadlineEditorState extends State<_DeadlineEditor> {
             controller: _controller,
             autofocus: true,
             keyboardType: TextInputType.datetime,
-            decoration: const InputDecoration(hintText: 'YYYY-MM-DD'),
+            decoration:
+                InputDecoration(hintText: AppL10n.of(context).editDateHint),
             onChanged: (_) {
               if (_error != null) setState(() => _error = null);
             },
@@ -346,13 +349,16 @@ class _DeadlineEditorState extends State<_DeadlineEditor> {
             ),
           ],
           const SizedBox(height: Space.sm),
-          FilledButton(onPressed: _save, child: const Text('Use this date')),
+          FilledButton(
+            onPressed: _save,
+            child: Text(AppL10n.of(context).reviewUseThisDate),
+          ),
           if (widget.current != null) ...[
             const SizedBox(height: Space.xs),
             TextButton(
               onPressed: () =>
                   popSheetOnce(context, const EditCleared<DateTime>()),
-              child: const Text('Remove the deadline'),
+              child: Text(AppL10n.of(context).editRemoveDeadline),
             ),
           ],
         ],
@@ -412,7 +418,8 @@ class _AmountEditorState extends State<_AmountEditor> {
                   autofocus: true,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  decoration: const InputDecoration(hintText: '96.40'),
+                  decoration: InputDecoration(
+                      hintText: AppL10n.of(context).editAmountHint),
                   onChanged: (_) {
                     if (_error != null) setState(() => _error = null);
                   },
@@ -442,13 +449,16 @@ class _AmountEditorState extends State<_AmountEditor> {
             ),
           ],
           const SizedBox(height: Space.sm),
-          FilledButton(onPressed: _save, child: const Text('Save amount')),
+          FilledButton(
+            onPressed: _save,
+            child: Text(AppL10n.of(context).editSaveAmount),
+          ),
           if (widget.current != null) ...[
             const SizedBox(height: Space.xs),
             TextButton(
               onPressed: () =>
                   popSheetOnce(context, const EditCleared<MoneyValue>()),
-              child: const Text('Remove the amount'),
+              child: Text(AppL10n.of(context).editRemoveAmount),
             ),
           ],
         ],

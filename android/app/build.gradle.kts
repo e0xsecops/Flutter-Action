@@ -43,7 +43,14 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        // Pinned rather than inherited from `flutter.targetSdkVersion`.
+        //
+        // That constant lives in the Flutter SDK, so the app's Android contract
+        // could change under a `flutter upgrade` with no diff in this repo —
+        // including the eventual jump to 37, which permanently removes the
+        // large-screen resizability opt-out. Targeting a new API level should
+        // be a commit somebody made on purpose.
+        targetSdk = 36
         // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION
         // is added automatically by Flutter. (https://developer.android.com/studio/build/configure-apk-splits#configure-APK-versions)
         // You can force using the value of versionCode by specifying the `-P force-version-code-ignoring-abi=true`

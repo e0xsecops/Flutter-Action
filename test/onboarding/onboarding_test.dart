@@ -156,7 +156,7 @@ void main() {
 
       expect(find.byType(OnboardingScreen), findsNothing);
       // Home's own greeting, not onboarding's.
-      expect(find.textContaining('Add something'), findsOneWidget);
+      expect(find.byTooltip('Capture something'), findsOneWidget);
     });
 
     onboardingTest('a deep link cannot slip past a fresh install',

@@ -32,6 +32,13 @@
     <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID"
         tools:node="remove" />
 
+    <!-- App Lock. Declared so BiometricPrompt can offer a fingerprint or face
+         where the device has one; the device PIN, pattern or password is the
+         fallback and needs no permission. Action never receives the biometric
+         itself - it asks the OS whether the owner is present and is told yes
+         or no. Nothing about a fingerprint or a face is stored by this app. -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+
     <!-- Deliberately NOT declared: SCHEDULE_EXACT_ALARM and USE_EXACT_ALARM.
          A reminder about a bill does not need second-perfect delivery, and
          those permissions are audited by app stores and (for
@@ -43,7 +50,25 @@
     <application
         android:label="Action"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules">
+        <!-- Backup is off, deliberately, and this is a correctness fix rather
+             than a preference. The privacy screen tells the user there is no
+             way to restore Action to a new device and that losing this
+             installation loses the anonymous ID with it. Android's Auto Backup
+             defaults to on, so without these three attributes the database,
+             the capture files and the preferences would be copied to the
+             user's Google account and that statement would be false.
+
+             allowBackup/fullBackupContent cover cloud backup on every version;
+             data_extraction_rules.xml covers Android 12+ device-to-device
+             transfer, which the flags alone do not. See
+             docs/v2/STORAGE_SECURITY_AUDIT.md.
+
+             If a real backup feature is ever built it belongs here as an
+             explicit, disclosed choice — not as a default nobody decided on. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -64,6 +89,35 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!-- Share-in.
+
+                 Only the types Action can actually do something with. It would
+                 be trivial to add application/pdf and */* here and appear in
+                 every share sheet on the device, and it would be a worse
+                 product: a user who shares a spreadsheet to an app that
+                 volunteered for it and then cannot read it has been misled by
+                 the share sheet itself. PDF belongs here when PDF input
+                 exists, and not before.
+
+                 singleTop on the activity above is what makes a share into an
+                 already-running Action arrive at onNewIntent rather than
+                 stacking a second copy of the app. -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="application/pdf"/>
             </intent-filter>
         </activity>
         <!-- Shows a scheduled reminder when its alarm fires. -->

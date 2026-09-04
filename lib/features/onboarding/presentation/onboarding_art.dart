@@ -252,7 +252,7 @@ class TrackingArt extends StatelessWidget {
                       children: [
                         for (var i = 0; i < 3; i++)
                           Padding(
-                            padding: const EdgeInsets.only(right: Space.xs),
+                            padding: const EdgeInsetsDirectional.only(end: Space.xs),
                             child: Icon(
                               i < stepsDone
                                   ? Icons.check_circle_rounded
@@ -272,7 +272,7 @@ class TrackingArt extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: Space.md),
+              padding: const EdgeInsetsDirectional.only(end: Space.md),
               child: Icon(Icons.notifications_none_rounded,
                   size: 16, color: colors.textTertiary),
             ),

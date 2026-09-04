@@ -1,6 +1,7 @@
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 import '../domain/ocr_result.dart';
+import '../domain/ocr_script.dart';
 import '../domain/text_normalizer.dart';
 
 /// Thrown when recognition could not run at all — a missing file, an
@@ -32,15 +33,42 @@ abstract interface class OcrService {
 /// Google ML Kit, running entirely on the device. No network call is made and
 /// no capture leaves the handset during recognition.
 class MlKitOcrService implements OcrService {
-  MlKitOcrService({TextRecognizer? recognizer})
-      : _recognizer =
-            recognizer ?? TextRecognizer(script: TextRecognitionScript.latin);
+  MlKitOcrService({
+    this.script = OcrScript.latin,
+    TextRecognizer? recognizer,
+  }) : _recognizer = recognizer ?? TextRecognizer(script: _mlKit(script));
+
+  /// The writing system this instance was built to read.
+  ///
+  /// One recogniser per instance rather than one per call: constructing a
+  /// `TextRecognizer` loads a model, and doing that on every capture would put
+  /// the load on the path the user is waiting on. The provider rebuilds the
+  /// service when the preference changes, which moves the cost to the moment
+  /// the user changes the setting.
+  final OcrScript script;
 
   final TextRecognizer _recognizer;
 
-  /// Recorded on every result so that changing recogniser or script later is
-  /// visible in the stored data instead of silently shifting output.
-  static const engineName = 'mlkit_text_v2_latin';
+  /// The plugin's enum, which misspells Devanagari. Mapped here rather than
+  /// adopting the typo into the domain.
+  static TextRecognitionScript _mlKit(OcrScript script) => switch (script) {
+        OcrScript.latin => TextRecognitionScript.latin,
+        OcrScript.chinese => TextRecognitionScript.chinese,
+        OcrScript.devanagari => TextRecognitionScript.devanagiri,
+        OcrScript.japanese => TextRecognitionScript.japanese,
+        OcrScript.korean => TextRecognitionScript.korean,
+      };
+
+  /// Recorded on every result so that a capture read with one model is
+  /// distinguishable later from one read with another — which matters because
+  /// the two can legitimately disagree about the same image, and a stored
+  /// transcript with no record of what produced it cannot be re-examined.
+  ///
+  /// Latin yields `mlkit_text_v2_latin`, which is deliberately the exact
+  /// string every capture stored before scripts were selectable already
+  /// carries: those rows stay correct rather than becoming unattributed.
+  static String engineNameFor(OcrScript script) =>
+      'mlkit_text_v2_${script.engineSuffix}';
 
   @override
   Future<OcrOutcome> recognize(String imagePath) async {
@@ -81,7 +109,7 @@ class MlKitOcrService implements OcrService {
       rawText: recognized.text,
       normalizedText: normalizeOcrText(recognized.text),
       lines: lines,
-      engine: engineName,
+      engine: engineNameFor(script),
       processedAt: startedAt,
       durationMs: DateTime.now().difference(startedAt).inMilliseconds,
     );

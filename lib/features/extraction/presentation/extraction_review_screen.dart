@@ -20,17 +20,22 @@ import '../data/extraction_validator.dart' show parseStrictIso8601;
 import '../domain/action_draft.dart';
 import '../application/action_review_state.dart';
 import '../application/canonical_fields.dart';
+import '../application/evidence_regions.dart';
 import '../application/extraction_providers.dart';
 import '../domain/confirmed_action_draft.dart';
 import '../domain/extracted_field.dart';
 import '../domain/extraction_input.dart';
 import '../domain/extraction_result.dart';
+import '../domain/extraction_evidence.dart';
 import '../domain/extraction_schema.dart';
 import '../domain/escalation.dart';
 import '../domain/money_value.dart';
+import 'evidence_lens.dart';
 import 'review_widgets.dart';
 import '../../../core/analytics/app_analytics.dart';
 import '../../../core/analytics/firebase_app_analytics.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 /// The trust screen: what Action understood, what is uncertain, and exactly
 /// what will exist if the user confirms.
@@ -65,6 +70,14 @@ class ExtractionReviewScreen extends ConsumerStatefulWidget {
 
 class _ExtractionReviewScreenState
     extends ConsumerState<ExtractionReviewScreen> {
+  /// The string bundle, from the element's own context.
+  ///
+  /// A getter rather than a local in each method: `State` carries
+  /// `context`, so every instance method can reach it, and nine
+  /// copies of the same lookup is nine places for one of them to
+  /// drift onto a stale context.
+  AppL10n get l10n => AppL10n.of(context);
+
   ExtractionAttempt _attempt = const ExtractionIdle();
   ActionReviewState? _review;
   ConfirmedActionDraft? _confirmed;
@@ -75,7 +88,11 @@ class _ExtractionReviewScreenState
   bool _saving = false;
   int _stage = 0;
 
-  static final _dateFormat = DateFormat('d MMM yyyy');
+  /// Built per locale rather than once for the class: a static `DateFormat`
+  /// captures whichever locale happened to be current when the class was
+  /// first touched, and then keeps rendering it after a language change.
+  DateFormat get _dateFormat =>
+      DateFormat(l10n.dateLongFormat, l10n.localeName);
 
   @override
   void initState() {
@@ -118,7 +135,7 @@ class _ExtractionReviewScreenState
     } on Object {
       if (!mounted) return;
       setState(() {
-        _attempt = const ExtractionFailed('Could not load this capture.');
+        _attempt = ExtractionFailed(l10n.reviewLoadFailed);
       });
       return;
     }
@@ -128,7 +145,7 @@ class _ExtractionReviewScreenState
     if (item == null) {
       setState(() {
         _attempt =
-            const ExtractionFailed('That capture is no longer available.');
+            ExtractionFailed(l10n.sourceGone);
       });
       return;
     }
@@ -194,6 +211,7 @@ class _ExtractionReviewScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final review = _review;
     final attempt = _attempt;
 
@@ -236,7 +254,9 @@ class _ExtractionReviewScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_confirmed != null ? 'Confirmed' : 'Review'),
+        title: Text(
+          _confirmed != null ? l10n.reviewConfirmed : l10n.reviewReview,
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -262,10 +282,9 @@ class _ExtractionReviewScreenState
       children: [
         ReviewNotice(
           icon: Icons.edit_note_rounded,
-          title: 'Action couldn’t reliably understand enough of this source.',
+          title: l10n.reviewNotUnderstood,
           message:
-              'The capture is safe and nothing was lost. You can enter the '
-              'details yourself, and the source stays attached for reference.',
+              l10n.reviewNotUnderstoodBody,
         ),
         const SizedBox(height: Space.xl),
         FilledButton(
@@ -276,12 +295,12 @@ class _ExtractionReviewScreenState
               original: result,
             ));
           },
-          child: const Text('Enter the details'),
+          child: Text(l10n.reviewEnterDetails),
         ),
         const SizedBox(height: Space.sm),
         TextButton(
           onPressed: () => context.pop(),
-          child: const Text('Keep the source for later'),
+          child: Text(l10n.reviewKeepSource),
         ),
       ],
     );
@@ -309,7 +328,7 @@ class _ExtractionReviewScreenState
             padding: const EdgeInsets.fromLTRB(
                 Space.page, Space.md, Space.page, 0),
             child: Text(
-              'Engine: ${result.engine}',
+              l10n.reviewEngine(result.engine),
               style: text.labelSmall?.copyWith(color: colors.textTertiary),
             ),
           ),
@@ -325,8 +344,7 @@ class _ExtractionReviewScreenState
                 ReviewNotice(
                   icon: Icons.edit_note_rounded,
                   message:
-                      'You are creating this action yourself. Only what you '
-                      'enter here will be used.',
+                      l10n.reviewManualNotice,
                 ),
                 const SizedBox(height: Space.lg),
               ],
@@ -335,7 +353,7 @@ class _ExtractionReviewScreenState
                 children: [
                   Expanded(
                     child: Text(
-                      review.title.isEmpty ? 'Untitled action' : review.title,
+                      review.title.isEmpty ? l10n.reviewUntitled : review.title,
                       style: text.headlineMedium?.copyWith(
                         color: review.title.isEmpty
                             ? colors.textTertiary
@@ -344,7 +362,7 @@ class _ExtractionReviewScreenState
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Edit title',
+                    tooltip: l10n.reviewEditTitle,
                     onPressed: () => _editTitle(review),
                     icon: const Icon(Icons.edit_outlined),
                   ),
@@ -359,9 +377,7 @@ class _ExtractionReviewScreenState
               if (needsReviewCount > 0) ...[
                 const SizedBox(height: Space.md),
                 Text(
-                  needsReviewCount == 1
-                      ? '1 value needs your review before this can be confirmed.'
-                      : '$needsReviewCount values need your review.',
+                  l10n.reviewNeedsReviewCount(needsReviewCount),
                   style:
                       text.bodySmall?.copyWith(color: colors.confidenceReview),
                 ),
@@ -374,7 +390,7 @@ class _ExtractionReviewScreenState
         ..._notices(result),
 
         // C — the key facts.
-        const SectionHeader(title: 'Key facts'),
+        SectionHeader(title: l10n.reviewKeyFacts),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Space.page),
           child: Column(
@@ -386,7 +402,7 @@ class _ExtractionReviewScreenState
                 const SizedBox(height: Space.md),
                 FactRow(
                   label: field.label,
-                  value: field.hasValue ? field.value! : 'Not found',
+                  value: field.hasValue ? field.value! : l10n.reviewNotFound,
                   display: ConfidenceDisplay.of(field),
                   numeric: field.valueType.isStrictlyTyped,
                   onConfirm: (!field.editedByUser &&
@@ -397,6 +413,7 @@ class _ExtractionReviewScreenState
                   onEdit: () => _editField(review, field),
                   evidence: field.evidence,
                   onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+                  source: _sourceItem,
                 ),
               ],
             ],
@@ -405,7 +422,7 @@ class _ExtractionReviewScreenState
 
         // D — what Action suggests doing about it.
         if (review.recommendedNextStep != null) ...[
-          const SectionHeader(title: 'Suggested next step'),
+          SectionHeader(title: l10n.reviewSuggestedNextStep),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Space.page),
             child: Text(review.recommendedNextStep!, style: text.bodyLarge),
@@ -414,7 +431,7 @@ class _ExtractionReviewScreenState
 
         // E — why this matters, only when the validator let it through.
         if (draft?.whyThisMatters != null || draft?.consequence != null) ...[
-          const SectionHeader(title: 'Why this matters'),
+          SectionHeader(title: l10n.reviewWhyThisMatters),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Space.page),
             child: Column(
@@ -432,6 +449,8 @@ class _ExtractionReviewScreenState
                     EvidenceTile(
                       evidence: draft.consequenceEvidence!,
                       onFirstExpand: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+                      source: _sourceItem,
+                      label: l10n.reviewWhyThisMatters,
                     ),
                 ],
               ],
@@ -442,7 +461,7 @@ class _ExtractionReviewScreenState
         // F — the steps that make up the action.
         if (review.steps.isNotEmpty || manual) ...[
           SectionHeader(
-            title: 'Steps',
+            title: l10n.reviewSteps,
             count: review.steps.where((s) => s.included).length,
           ),
           Padding(
@@ -454,7 +473,7 @@ class _ExtractionReviewScreenState
                 TextButton.icon(
                   onPressed: () => _addStep(review),
                   icon: const Icon(Icons.add_rounded, size: 18),
-                  label: const Text('Add a step'),
+                  label: Text(l10n.reviewAddStep),
                 ),
               ],
             ),
@@ -470,20 +489,15 @@ class _ExtractionReviewScreenState
 
     if (result.hasIssue(ExtractionIssueCode.injectionAttemptInDocument) ||
         result.escalation.has(ExtractionEscalationSignal.instructionLikeContent)) {
-      notices.add(const ReviewNotice(
+      notices.add(ReviewNotice(
         icon: Icons.info_outline_rounded,
-        message:
-            'Some text in this source looked like instructions rather than '
-            'document facts, so Action ignored it.',
+        message: l10n.reviewInjectionNotice,
       ));
     }
     if (result.escalation.has(ExtractionEscalationSignal.tableLikeLayout)) {
-      notices.add(const ReviewNotice(
+      notices.add(ReviewNotice(
         icon: Icons.table_chart_outlined,
-        message:
-            'This document’s layout may contain relationships that text '
-            'extraction couldn’t fully preserve. Check the values below '
-            'against the source before confirming.',
+        message: l10n.reviewLayoutNotice,
       ));
     }
     // Every remaining signal already carries a user-safe sentence written
@@ -497,7 +511,7 @@ class _ExtractionReviewScreenState
         .where((s) => !handledSeparately.contains(s))) {
       notices.add(ReviewNotice(
         icon: Icons.visibility_outlined,
-        message: '${signal.reason} Check the values below against the source.',
+        message: l10n.reviewSignalNotice(signal.reason),
       ));
     }
 
@@ -525,9 +539,9 @@ class _ExtractionReviewScreenState
     if (slot.userDecided) {
       final value = slot.effectiveValue;
       return FactRow(
-        label: 'Deadline',
+        label: l10n.reviewDeadline,
         value: value == null
-            ? 'None — you chose to leave this unset'
+            ? l10n.reviewLeftUnset
             : _dateFormat.format(value),
         display: ConfidenceDisplay.confirmed,
         numeric: value != null,
@@ -539,39 +553,46 @@ class _ExtractionReviewScreenState
       case CanonicalStatus.resolved:
         final field = slot.canonical.resolvedField!;
         return FactRow(
-          label: 'Deadline',
+          label: l10n.reviewDeadline,
           value: _dateFormat.format(field.dateValue!),
           display: ConfidenceDisplay.of(field),
           numeric: true,
           onEdit: () => _resolveDue(review),
           evidence: field.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+          source: _sourceItem,
         );
       case CanonicalStatus.ambiguous:
         return _AmbiguityCard(
-          message: 'Action found multiple possible dates.',
-          detail:
-              '${slot.canonical.candidates.length} dates could be the deadline. '
-              'Choose the right one, enter another, or leave it unset.',
-          buttonLabel: 'Choose a date',
+          message: l10n.reviewMultipleDates,
+          detail: l10n.reviewMultipleDatesBody(
+            slot.canonical.candidates.length,
+          ),
+          buttonLabel: l10n.reviewChooseDate,
           color: colors.confidenceReview,
           onResolve: () => _resolveDue(review),
         );
       case CanonicalStatus.unverified:
         final candidate = slot.canonical.candidates.first;
         return FactRow(
-          label: 'Deadline',
-          value: candidate.hasValue ? candidate.value! : 'Unclear',
+          label: l10n.reviewDeadline,
+          value: candidate.hasValue ? candidate.value! : l10n.reviewUnclear,
           display: ConfidenceDisplay.review,
           numeric: true,
           onEdit: () => _resolveDue(review),
           evidence: candidate.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+          source: _sourceItem,
         );
       case CanonicalStatus.absent:
         return FactRow(
-          label: 'Deadline',
-          value: 'None found in this document',
+          label: l10n.reviewDeadline,
+          // In manual mode nothing was searched, so "none found" would be
+          // claiming a search that never happened — over a field the user
+          // simply has not filled in yet.
+          value: review.mode == ReviewMode.manual
+              ? l10n.reviewNotSet
+              : l10n.reviewNoDeadlineFound,
           display: ConfidenceDisplay.missing,
           onEdit: () => _resolveDue(review),
         );
@@ -585,9 +606,9 @@ class _ExtractionReviewScreenState
     if (slot.userDecided) {
       final value = slot.effectiveValue;
       return FactRow(
-        label: 'Amount',
+        label: l10n.reviewAmount,
         value: value == null
-            ? 'None — you chose to leave this unset'
+            ? l10n.reviewLeftUnset
             : '$value',
         display: ConfidenceDisplay.confirmed,
         numeric: value != null,
@@ -599,39 +620,46 @@ class _ExtractionReviewScreenState
       case CanonicalStatus.resolved:
         final field = slot.canonical.resolvedField!;
         return FactRow(
-          label: 'Amount',
+          label: l10n.reviewAmount,
           value: '${field.moneyValue!}',
           display: ConfidenceDisplay.of(field),
           numeric: true,
           onEdit: () => _resolveAmount(review),
           evidence: field.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+          source: _sourceItem,
         );
       case CanonicalStatus.ambiguous:
         return _AmbiguityCard(
-          message: 'Action found more than one possible amount.',
-          detail:
-              '${slot.canonical.candidates.length} amounts could be the one '
-              'this action is about. Choose, enter another, or leave it unset.',
-          buttonLabel: 'Choose an amount',
+          message: l10n.reviewMultipleAmounts,
+          detail: l10n.reviewMultipleAmountsBody(
+            slot.canonical.candidates.length,
+          ),
+          buttonLabel: l10n.reviewChooseAmount,
           color: colors.confidenceReview,
           onResolve: () => _resolveAmount(review),
         );
       case CanonicalStatus.unverified:
         final candidate = slot.canonical.candidates.first;
         return FactRow(
-          label: 'Amount',
-          value: candidate.hasValue ? candidate.value! : 'Unclear',
+          label: l10n.reviewAmount,
+          value: candidate.hasValue ? candidate.value! : l10n.reviewUnclear,
           display: ConfidenceDisplay.review,
           numeric: true,
           onEdit: () => _resolveAmount(review),
           evidence: candidate.evidence,
           onEvidenceViewed: () => _log(AnalyticsEvents.reviewEvidenceViewed),
+          source: _sourceItem,
         );
       case CanonicalStatus.absent:
         return FactRow(
-          label: 'Amount',
-          value: 'None found in this document',
+          label: l10n.reviewAmount,
+          // In manual mode nothing was searched, so "none found" would be
+          // claiming a search that never happened — over a field the user
+          // simply has not filled in yet.
+          value: review.mode == ReviewMode.manual
+              ? l10n.reviewNotSet
+              : l10n.reviewNoDeadlineFound,
           display: ConfidenceDisplay.missing,
           onEdit: () => _resolveAmount(review),
         );
@@ -646,7 +674,7 @@ class _ExtractionReviewScreenState
       child: Row(
         children: [
           IconButton(
-            tooltip: step.included ? 'Skip this step' : 'Keep this step',
+            tooltip: step.included ? l10n.reviewSkipStep : l10n.reviewKeepStep,
             onPressed: () =>
                 _update(review.setStepIncluded(step.id, !step.included)),
             icon: Icon(
@@ -667,7 +695,7 @@ class _ExtractionReviewScreenState
           ),
           if (step.editedByUser)
             Padding(
-              padding: const EdgeInsets.only(right: Space.xs),
+              padding: const EdgeInsetsDirectional.only(end: Space.xs),
               child: Icon(
                 Icons.check_circle_outline_rounded,
                 size: 16,
@@ -675,10 +703,10 @@ class _ExtractionReviewScreenState
               ),
             ),
           IconButton(
-            tooltip: 'Edit step',
+            tooltip: l10n.reviewEditStep,
             onPressed: () async {
               final value = await _promptText(
-                title: 'Edit step',
+                title: l10n.reviewEditStep,
                 initial: step.title,
               );
               if (value == null || !mounted) return;
@@ -701,10 +729,10 @@ class _ExtractionReviewScreenState
     // Manual mode always names its outcome; extracted mode only offers
     // confirmation language once nothing critical is open.
     final label = manual
-        ? 'Create manually'
+        ? l10n.reviewCreateManually
         : review.canConfirm
-            ? 'Confirm & create action'
-            : 'Review highlighted fields';
+            ? l10n.reviewConfirmAndCreate
+            : l10n.reviewFixHighlighted;
 
     return Container(
       decoration: BoxDecoration(
@@ -736,7 +764,7 @@ class _ExtractionReviewScreenState
               ],
               FilledButton(
                 onPressed: _saving ? null : () => _onConfirmPressed(review),
-                child: Text(_saving ? 'Saving…' : label),
+                child: Text(_saving ? l10n.reviewSaving : label),
               ),
             ],
           ),
@@ -773,9 +801,9 @@ class _ExtractionReviewScreenState
       // Review state and edits are untouched; the same draft (same id) is
       // retried on the next tap. No AI re-run, no lost source.
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content:
-              Text('Could not save this action. Nothing was lost — try again.'),
+              Text(l10n.reviewSaveFailed),
         ),
       );
       return;
@@ -795,9 +823,9 @@ class _ExtractionReviewScreenState
 
   Future<void> _editTitle(ActionReviewState review) async {
     final value = await _promptText(
-      title: 'Title',
+      title: l10n.reviewFieldTitle,
       initial: review.title,
-      hint: 'What needs to happen?',
+      hint: l10n.reviewTitleHint,
     );
     if (value == null || !mounted) return;
     _log(AnalyticsEvents.reviewFieldEdited);
@@ -815,7 +843,7 @@ class _ExtractionReviewScreenState
   }
 
   Future<void> _addStep(ActionReviewState review) async {
-    final value = await _promptText(title: 'New step', hint: 'What to do');
+    final value = await _promptText(title: l10n.reviewNewStep, hint: l10n.reviewStepHint);
     if (value == null || value.trim().isEmpty || !mounted) return;
     _log(AnalyticsEvents.reviewFieldEdited);
     _update(review.addManualStep(value));
@@ -878,13 +906,14 @@ class _ExtractionReviewScreenState
           bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
         ),
         child: AppSheet(
-          title: 'Deadline',
+          title: l10n.reviewDeadline,
           subtitle: review.due.canonical.status == CanonicalStatus.ambiguous
-              ? 'The document mentions more than one date.'
+              ? l10n.reviewDatesConflict
               : null,
           child: _DateSlotSheet(
             candidates: review.due.canonical.candidates,
             dateFormat: _dateFormat,
+            source: _sourceItem,
           ),
         ),
       ),
@@ -900,11 +929,14 @@ class _ExtractionReviewScreenState
           bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
         ),
         child: AppSheet(
-          title: 'Amount',
+          title: l10n.reviewAmount,
           subtitle: review.amount.canonical.status == CanonicalStatus.ambiguous
-              ? 'The document mentions more than one amount.'
+              ? l10n.reviewAmountsConflict
               : null,
-          child: _AmountSlotSheet(candidates: review.amount.canonical.candidates),
+          child: _AmountSlotSheet(
+            candidates: review.amount.canonical.candidates,
+            source: _sourceItem,
+          ),
         ),
       ),
     );
@@ -949,6 +981,14 @@ class _TextPrompt extends StatefulWidget {
 }
 
 class _TextPromptState extends State<_TextPrompt> {
+  /// The string bundle, from the element's own context.
+  ///
+  /// A getter rather than a local in each method: `State` carries
+  /// `context`, so every instance method can reach it, and nine
+  /// copies of the same lookup is nine places for one of them to
+  /// drift onto a stale context.
+  AppL10n get l10n => AppL10n.of(context);
+
   late final TextEditingController _controller =
       TextEditingController(text: widget.initial);
 
@@ -960,6 +1000,7 @@ class _TextPromptState extends State<_TextPrompt> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(
           Space.page, Space.sm, Space.page, Space.lg),
@@ -978,7 +1019,7 @@ class _TextPromptState extends State<_TextPrompt> {
           const SizedBox(height: Space.lg),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(_controller.text),
-            child: const Text('Save'),
+            child: Text(l10n.commonSave),
           ),
         ],
       ),
@@ -988,16 +1029,29 @@ class _TextPromptState extends State<_TextPrompt> {
 
 /// Choose between date candidates, enter another, or leave the slot unset.
 class _DateSlotSheet extends StatefulWidget {
-  const _DateSlotSheet({required this.candidates, required this.dateFormat});
+  const _DateSlotSheet({
+    required this.candidates,
+    required this.dateFormat,
+    this.source,
+  });
 
   final List<ExtractedField> candidates;
   final DateFormat dateFormat;
+  final SourceItem? source;
 
   @override
   State<_DateSlotSheet> createState() => _DateSlotSheetState();
 }
 
 class _DateSlotSheetState extends State<_DateSlotSheet> {
+  /// The string bundle, from the element's own context.
+  ///
+  /// A getter rather than a local in each method: `State` carries
+  /// `context`, so every instance method can reach it, and nine
+  /// copies of the same lookup is nine places for one of them to
+  /// drift onto a stale context.
+  AppL10n get l10n => AppL10n.of(context);
+
   final _controller = TextEditingController();
   String? _error;
 
@@ -1009,6 +1063,7 @@ class _DateSlotSheetState extends State<_DateSlotSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     return Padding(
@@ -1025,6 +1080,9 @@ class _DateSlotSheetState extends State<_DateSlotSheet> {
                   : (candidate.value ?? '—'),
               subtitle: candidate.label,
               quote: candidate.evidence?.quote,
+              evidence: candidate.evidence,
+              source: widget.source,
+              label: l10n.reviewDeadline,
               trusted: candidate.isTrustworthy,
               // A candidate with no parseable date cannot be accepted as
               // one — it can only be typed in deliberately below.
@@ -1037,7 +1095,7 @@ class _DateSlotSheetState extends State<_DateSlotSheet> {
             controller: _controller,
             keyboardType: TextInputType.datetime,
             decoration: InputDecoration(
-              hintText: 'Another date — 2026-08-30',
+              hintText: l10n.reviewAnotherDate,
               errorText: _error,
             ),
           ),
@@ -1050,23 +1108,23 @@ class _DateSlotSheetState extends State<_DateSlotSheet> {
               final parsed = typed.isEmpty ? null : parseStrictIso8601(typed);
               if (typed.isNotEmpty && parsed == null) {
                 setState(() {
-                  _error = 'Not a real date. Use the format 2026-08-30.';
+                  _error = l10n.reviewBadDate;
                 });
                 return;
               }
               if (parsed != null) {
                 Navigator.of(context).pop(_SlotEdited(date: parsed));
               } else {
-                setState(() => _error = 'Type a date, or leave it unset below.');
+                setState(() => _error = l10n.reviewTypeDate);
               }
             },
-            child: const Text('Use this date'),
+            child: Text(l10n.reviewUseThisDate),
           ),
           const SizedBox(height: Space.xs),
           TextButton(
             onPressed: () => Navigator.of(context).pop(const _SlotUnset()),
             child: Text(
-              'Leave without a deadline',
+              l10n.reviewLeaveNoDeadline,
               style: text.labelLarge?.copyWith(color: colors.textSecondary),
             ),
           ),
@@ -1078,15 +1136,24 @@ class _DateSlotSheetState extends State<_DateSlotSheet> {
 
 /// Choose between amount candidates, enter another, or leave the slot unset.
 class _AmountSlotSheet extends StatefulWidget {
-  const _AmountSlotSheet({required this.candidates});
+  const _AmountSlotSheet({required this.candidates, this.source});
 
   final List<ExtractedField> candidates;
+  final SourceItem? source;
 
   @override
   State<_AmountSlotSheet> createState() => _AmountSlotSheetState();
 }
 
 class _AmountSlotSheetState extends State<_AmountSlotSheet> {
+  /// The string bundle, from the element's own context.
+  ///
+  /// A getter rather than a local in each method: `State` carries
+  /// `context`, so every instance method can reach it, and nine
+  /// copies of the same lookup is nine places for one of them to
+  /// drift onto a stale context.
+  AppL10n get l10n => AppL10n.of(context);
+
   final _controller = TextEditingController();
   late String _currency = widget.candidates
           .map((c) => c.moneyValue?.currencyCode)
@@ -1103,6 +1170,7 @@ class _AmountSlotSheetState extends State<_AmountSlotSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final currencies = supportedCurrencies.toList()..sort();
@@ -1118,6 +1186,9 @@ class _AmountSlotSheetState extends State<_AmountSlotSheet> {
               title: candidate.moneyValue?.toString() ?? (candidate.value ?? '—'),
               subtitle: candidate.label,
               quote: candidate.evidence?.quote,
+              evidence: candidate.evidence,
+              source: widget.source,
+              label: l10n.reviewAmount,
               trusted: candidate.isTrustworthy,
               onTap: candidate.moneyValue == null
                   ? null
@@ -1133,7 +1204,7 @@ class _AmountSlotSheetState extends State<_AmountSlotSheet> {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    hintText: 'Another amount — 780.00',
+                    hintText: l10n.reviewAnotherAmount,
                     errorText: _error,
                   ),
                 ),
@@ -1160,16 +1231,16 @@ class _AmountSlotSheetState extends State<_AmountSlotSheet> {
                   Navigator.of(context).pop(_SlotEdited(money: value));
                 case MoneyRejected(:final error):
                   setState(() =>
-                      _error = 'Cannot use this amount: ${error.reason}.');
+                      _error = l10n.reviewAmountError(error.reason));
               }
             },
-            child: const Text('Use this amount'),
+            child: Text(l10n.reviewUseThisAmount),
           ),
           const SizedBox(height: Space.xs),
           TextButton(
             onPressed: () => Navigator.of(context).pop(const _SlotUnset()),
             child: Text(
-              'Leave without an amount',
+              l10n.reviewLeaveNoAmount,
               style: text.labelLarge?.copyWith(color: colors.textSecondary),
             ),
           ),
@@ -1186,6 +1257,9 @@ class _CandidateRow extends StatelessWidget {
     required this.trusted,
     required this.onTap,
     this.quote,
+    this.evidence,
+    this.source,
+    this.label,
   });
 
   final String title;
@@ -1194,8 +1268,32 @@ class _CandidateRow extends StatelessWidget {
   final bool trusted;
   final VoidCallback? onTap;
 
+  /// The evidence behind this candidate, so the row can offer the lens.
+  ///
+  /// Choosing between two deadlines is the moment where seeing *where on the
+  /// page* each one sits decides it — one is in a sentence about payment and
+  /// the other is the date at the top of the letter, and the quote alone
+  /// often does not make that obvious.
+  final ExtractionEvidence? evidence;
+  final SourceItem? source;
+  /// Null means the generic "This value", resolved at build.
+  final String? label;
+
+  bool get _canShowOnCapture {
+    final evidence = this.evidence;
+    final source = this.source;
+    if (evidence == null || source?.imagePath == null) return false;
+    return EvidenceRegions.forEvidence(
+      evidence: evidence,
+      lines: source!.ocr?.lines ?? const [],
+      imageWidth: source.imageWidth,
+      imageHeight: source.imageHeight,
+    ).isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     return Padding(
@@ -1224,7 +1322,7 @@ class _CandidateRow extends StatelessWidget {
                   ),
                   if (!trusted)
                     Text(
-                      'Needs review',
+                      l10n.reviewNeedsReview,
                       style: text.labelSmall
                           ?.copyWith(color: colors.confidenceReview),
                     ),
@@ -1237,7 +1335,7 @@ class _CandidateRow extends StatelessWidget {
               if (quote != null && quote!.isNotEmpty) ...[
                 const SizedBox(height: Space.xs),
                 Text(
-                  '“$quote”',
+                  l10n.reviewQuote(quote!),
                   style: text.bodySmall?.copyWith(
                     color: colors.textSecondary,
                     fontStyle: FontStyle.italic,
@@ -1246,6 +1344,31 @@ class _CandidateRow extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
+              if (_canShowOnCapture)
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton.icon(
+                    // Deliberately does not select the candidate. Looking at
+                    // the evidence and choosing are different decisions, and
+                    // conflating them would make the safer action — checking
+                    // first — commit the user to an answer.
+                    onPressed: () => showEvidenceLens(
+                      context,
+                      evidence: evidence!,
+                      label: label ?? l10n.reviewThisValue,
+                      source: source,
+                    ),
+                    icon: const Icon(Icons.center_focus_strong_outlined,
+                        size: 18),
+                    label: Text(l10n.reviewSeeOnCapture),
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(0, 40),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Space.sm,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -1266,12 +1389,14 @@ class _SourceStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final icon = switch (item.type) {
       SourceType.photo => Icons.photo_camera_outlined,
       SourceType.gallery => Icons.image_outlined,
       SourceType.pastedText => Icons.notes_rounded,
+      SourceType.document => Icons.picture_as_pdf_outlined,
     };
     return Container(
       margin: const EdgeInsets.fromLTRB(Space.page, Space.md, Space.page, 0),
@@ -1287,15 +1412,18 @@ class _SourceStrip extends StatelessWidget {
           const SizedBox(width: Space.sm),
           Expanded(
             child: Text(
-              '${item.type.provenanceLabel} · '
-              '${DateFormat('d MMM, HH:mm').format(item.capturedAt)}',
+              l10n.sourceMeta(
+                item.type.provenanceIn(l10n),
+                DateFormat(l10n.sourceCapturedAtFormat, l10n.localeName)
+                    .format(item.capturedAt),
+              ),
               style: text.labelSmall?.copyWith(color: colors.textSecondary),
               overflow: TextOverflow.ellipsis,
             ),
           ),
           TextButton(
             onPressed: onViewSource,
-            child: const Text('View source'),
+            child: Text(l10n.reviewViewSource),
           ),
         ],
       ),
@@ -1310,6 +1438,7 @@ class _UnderstandingMeta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final urgency = draft.urgency;
@@ -1333,7 +1462,7 @@ class _UnderstandingMeta extends StatelessWidget {
             borderRadius: Radii.rSm,
           ),
           child: Text(
-            urgency.label,
+            urgency.labelIn(l10n),
             style: text.labelSmall?.copyWith(
               color: colors.surface,
               letterSpacing: 0,
@@ -1342,7 +1471,7 @@ class _UnderstandingMeta extends StatelessWidget {
         ),
         const SizedBox(width: Space.sm),
         Text(
-          category.label,
+          category.labelIn(l10n),
           style: text.labelMedium?.copyWith(color: colors.textSecondary),
         ),
       ],
@@ -1402,14 +1531,17 @@ class _ProcessingView extends StatelessWidget {
 
   final int stage;
 
-  static const _stages = [
-    'Reading source',
-    'Understanding important details',
-    'Checking what needs review',
-  ];
+  /// Resolved at build rather than held const: the three lines are prose,
+  /// and a const list cannot ask the locale anything.
+  static List<String> _stages(AppL10n l10n) => [
+        l10n.reviewStageReading,
+        l10n.reviewStageUnderstanding,
+        l10n.reviewStageChecking,
+      ];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     return Center(
@@ -1419,7 +1551,7 @@ class _ProcessingView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final (index, label) in _stages.indexed)
+            for (final (index, label) in _stages(l10n).indexed)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: Space.sm),
                 child: Row(
@@ -1477,6 +1609,7 @@ class _NoActionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     return Center(
@@ -1502,22 +1635,25 @@ class _NoActionView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Space.xl),
-            Text('Nothing you need to do right now.',
+            Text(l10n.reviewNothingToDo,
                 style: text.headlineSmall, textAlign: TextAlign.center),
             const SizedBox(height: Space.sm),
             Text(
-              'This looks like information only — no deadline, payment or '
-              'reply was found${item != null ? ' in this ${item!.type == SourceType.pastedText ? 'text' : 'capture'}' : ''}. '
-              'The source is kept either way.',
+              // Two whole sentences rather than one built by substitution.
+              // The English original slotted "in this capture" into the middle
+              // of a clause; the phrase inflects with the verb in several of
+              // the twenty, and no translator can fix that from the ARB.
+              '${item != null ? l10n.reviewInformationOnlyWithSource : l10n.reviewInformationOnly} '
+              '${l10n.reviewSourceKept}',
               style: text.bodyMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: Space.xxl),
-            FilledButton(onPressed: onDone, child: const Text('Done')),
+            FilledButton(onPressed: onDone, child: Text(l10n.commonDone)),
             const SizedBox(height: Space.sm),
             TextButton(
               onPressed: onAddAnyway,
-              child: const Text('Add an action anyway'),
+              child: Text(l10n.reviewAddAnyway),
             ),
           ],
         ),
@@ -1534,6 +1670,7 @@ class _SuccessView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     return Center(
@@ -1559,13 +1696,13 @@ class _SuccessView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Space.xl),
-            Text('Action confirmed', style: text.headlineSmall),
+            Text(l10n.reviewActionConfirmed, style: text.headlineSmall),
             const SizedBox(height: Space.sm),
             Text(draft.title, style: text.bodyLarge, textAlign: TextAlign.center),
             const SizedBox(height: Space.md),
             if (draft.dueAt != null)
               Text(
-                'Due ${dateFormat.format(draft.dueAt!)}',
+                l10n.metaDueOn(dateFormat.format(draft.dueAt!)),
                 style: text.bodyMedium?.copyWith(fontFeatures: AppText.numeric),
               ),
             if (draft.amount != null)
@@ -1576,23 +1713,26 @@ class _SuccessView extends StatelessWidget {
             const SizedBox(height: Space.md),
             Text(
               draft.manuallyCreated
-                  ? 'Created by you.'
-                  : 'Confirmed by you from ${draft.facts.length} reviewed '
-                      'fact${draft.facts.length == 1 ? '' : 's'}'
-                      '${draft.editedFactCount > 0 ? ', ${draft.editedFactCount} edited' : ''}.',
+                  ? l10n.reviewCreatedByYou
+                  : draft.editedFactCount > 0
+                      ? l10n.reviewConfirmedFromEdited(
+                          draft.facts.length,
+                          draft.editedFactCount,
+                        )
+                      : l10n.reviewConfirmedFrom(draft.facts.length),
               style: text.bodySmall,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: Space.xs),
             Text(
-              'Saved on this device.',
+              l10n.reviewSavedOnDevice,
               style: text.labelSmall?.copyWith(color: colors.textTertiary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: Space.xxl),
             FilledButton(
               onPressed: () => context.pop(),
-              child: const Text('Done'),
+              child: Text(l10n.commonDone),
             ),
           ],
         ),

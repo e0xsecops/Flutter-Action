@@ -1,0 +1,1423 @@
+{
+  "@@locale": "en",
+  "appName": "Action",
+  "@appName": {
+    "description": "The product name. Not translated — it is the brand and the launcher label."
+  },
+  "commonCancel": "Cancel",
+  "commonDone": "Done",
+  "commonSave": "Save",
+  "commonClose": "Close",
+  "commonBack": "Back",
+  "commonRetry": "Try again",
+  "commonDelete": "Delete",
+  "commonRemove": "Remove",
+  "commonContinue": "Continue",
+  "commonOpen": "Open",
+  "commonCopy": "Copy",
+  "commonCopied": "Copied",
+  "commonEdit": "Edit",
+  "commonAdd": "Add",
+  "commonOn": "On",
+  "commonOff": "Off",
+  "commonUnknown": "Unknown",
+  "commonChecking": "Checking…",
+  "commonSettings": "Settings",
+  "commonDismiss": "Dismiss",
+  "commonUndo": "Undo",
+  "commonSkip": "Skip",
+  "commonNotNow": "Not now",
+  "commonSomethingWentWrong": "Something went wrong.",
+  "navToday": "Today",
+  "@navToday": {
+    "description": "Bottom navigation: the daily surface. Must stay one short word."
+  },
+  "navLibrary": "Library",
+  "@navLibrary": {
+    "description": "Bottom navigation: everything captured and created. One short word."
+  },
+  "navIntelligence": "Intelligence",
+  "@navIntelligence": {
+    "description": "Bottom navigation: the AI tool workspace. Deliberately NOT 'AI' — the user's mental model is getting help understanding something, not operating a model."
+  },
+  "navSearch": "Search",
+  "@navSearch": {
+    "description": "Bottom navigation: local search. One short word."
+  },
+  "navCapture": "Capture something",
+  "@navCapture": {
+    "description": "The raised centre control. Label and tooltip for the act of adding anything to Action."
+  },
+  "todayGreetingMorning": "Good morning",
+  "todayGreetingAfternoon": "Good afternoon",
+  "todayGreetingEvening": "Good evening",
+  "todayDateFormat": "EEEE · d MMMM",
+  "@todayDateFormat": {
+    "description": "An ICU skeleton passed to DateFormat, not prose. Translators may reorder the fields for their locale but must keep only pattern characters — any letter typed here is a format token, not text."
+  },
+  "todayActionsLoadFailed": "Your actions couldn't be loaded. They are still stored on this device.",
+  "@todayActionsLoadFailed": {
+    "description": "Shown when the local database cannot be read. SAFETY: must not imply the data was lost — it says the data is still stored."
+  },
+  "todaySectionNeedsAttention": "Needs attention",
+  "todaySectionAlsoNeedsAttention": "Also needs attention",
+  "todaySectionWaitingForReview": "Waiting for review",
+  "todaySectionComingUp": "Coming up",
+  "todaySeeAllCaptures": "See all {count} captures",
+  "@todaySeeAllCaptures": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todaySeeAllInLibrary": "See all in Library",
+  "todayCompletedCount": "{count, plural, =1{1 done} other{{count} done}}",
+  "@todayCompletedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayCompletedSemantics": "{count, plural, =1{1 action completed. Open the library.} other{{count} actions completed. Open the library.}}",
+  "@todayCompletedSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStartWith": "START WITH",
+  "@todayStartWith": {
+    "description": "An eyebrow label above three capture shortcuts. Rendered as typed — if the language has no uppercase, write it normally."
+  },
+  "todayQuickPhoto": "Photo",
+  "todayQuickScreenshot": "Screenshot",
+  "todayQuickText": "Text",
+  "todayQuickTools": "Check a link, or find keys in some text",
+  "@todayQuickTools": {
+    "description": "Links to the two tools that need no AI provider. Names the tools rather than saying 'explore', because it is a promise the app keeps with nothing connected."
+  },
+  "briefBadgeNeedsYou": "NEEDS YOU",
+  "briefBadgeToReview": "TO REVIEW",
+  "briefBadgeAhead": "AHEAD",
+  "briefBadgeStartHere": "START HERE",
+  "briefBadgeClear": "CLEAR",
+  "briefNext": "NEXT",
+  "@briefNext": {
+    "description": "Label before the next step of the highlighted Action."
+  },
+  "briefOpenAction": "Open {title}",
+  "@briefOpenAction": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "briefMarkDone": "Mark \"{title}\" as done",
+  "@briefMarkDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "briefHeadlineNeedsAttention": "{count, plural, =1{1 action needs your attention} other{{count} actions need your attention}}",
+  "@briefHeadlineNeedsAttention": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "briefDetailAlsoWaiting": "{count, plural, =1{1 capture is also waiting for review.} other{{count} captures are also waiting for review.}}",
+  "@briefDetailAlsoWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "briefHeadlineCapturesWaiting": "{count, plural, =1{1 capture is waiting for you} other{{count} captures are waiting for you}}",
+  "@briefHeadlineCapturesWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "briefDetailNothingOverdue": "Nothing is overdue.",
+  "briefHeadlineNothingToday": "Nothing needs you today",
+  "briefDetailComingUp": "{count, plural, =1{1 action is coming up.} other{{count} actions are coming up.}}",
+  "@briefDetailComingUp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "briefHeadlineClear": "You're clear",
+  "briefDetailClear": "Nothing is due and nothing is waiting.",
+  "briefHeadlineFirstRun": "Start with anything",
+  "@briefHeadlineFirstRun": {
+    "description": "First-run headline. SAFETY: must tell the person what to do, never describe the app's own emptiness. 'Nothing here yet' and its equivalents are banned across the product."
+  },
+  "briefDetailFirstRun": "A letter, a screenshot, a note — Action works out what it is.",
+  "settingsTitle": "Settings",
+  "settingsSectionPersonalise": "Personalise",
+  "settingsAppearance": "Appearance",
+  "settingsAppearanceDescription": "Light, dark, or whatever the device is doing.",
+  "settingsLanguageDescription": "The language Action speaks to you in.",
+  "appearanceSystem": "System",
+  "appearanceLight": "Light",
+  "appearanceDark": "Dark",
+  "appearanceSystemDescription": "Match the device setting",
+  "appearanceLightDescription": "Always light",
+  "appearanceDarkDescription": "Always dark",
+  "languageTitle": "Language",
+  "languageSubtitle": "Changes apply straight away. Nothing is sent anywhere; the choice is stored on this device.",
+  "@languageSubtitle": {
+    "description": "SAFETY: the second clause is a data-flow claim and must stay true — the language preference is written to local preferences only."
+  },
+  "languageSectionChoose": "Choose a language",
+  "languageSystem": "System",
+  "languageSystemDescription": "Follow the device's language",
+  "languageDraftNote": "English is the language Action's wording was written in. The other translations were drafted against a fixed glossary and checked automatically, and have not yet been reviewed by a native speaker. Where the exact wording matters — privacy, security, what Action will and will not claim — English remains the reference.",
+  "@languageDraftNote": {
+    "description": "SAFETY: this is the honest disclosure about translation quality. It must not be softened into a claim that the translations are professionally certified, and it must keep the sentence pointing at English as the reference for privacy and security wording."
+  },
+  "ocrScriptTitle": "Text recognition",
+  "ocrScriptSubtitle": "The writing system Action reads when it looks at a photo. Recognition happens on this device; no capture is sent anywhere to be read.",
+  "@ocrScriptSubtitle": {
+    "description": "SAFETY: carries two claims that must both survive — which writing system is read, and that reading happens on the device. Never soften the second into 'privately' or 'securely'; the point is the literal fact that no capture leaves the handset to be read."
+  },
+  "ocrScriptSectionChoose": "Writing system",
+  "ocrScriptFollowLanguage": "Follow the app language",
+  "ocrScriptFollowLanguageValue": "Currently {script}",
+  "@ocrScriptFollowLanguageValue": {
+    "placeholders": {
+      "script": {
+        "type": "String"
+      }
+    }
+  },
+  "ocrScriptLatin": "Latin",
+  "ocrScriptChinese": "Chinese",
+  "ocrScriptDevanagari": "Devanagari",
+  "ocrScriptJapanese": "Japanese",
+  "ocrScriptKorean": "Korean",
+  "ocrScriptLatinDescription": "English, Spanish, French, German and the other languages written in Latin letters.",
+  "ocrScriptChineseDescription": "Simplified and Traditional Chinese.",
+  "ocrScriptDevanagariDescription": "Hindi, Marathi and Nepali. Not Bengali, Tamil or Telugu — each of those is a different writing system.",
+  "@ocrScriptDevanagariDescription": {
+    "description": "SAFETY: names a script, not a country or a region. The second sentence prevents a reader from choosing this for Bengali and getting empty results with no explanation."
+  },
+  "ocrScriptJapaneseDescription": "Japanese.",
+  "ocrScriptKoreanDescription": "Korean.",
+  "ocrScriptFootnote": "Every choice except Latin also reads Latin letters, so picking one adds a writing system instead of swapping it. Changing this affects photos taken from now on, not ones already read.",
+  "@ocrScriptFootnote": {
+    "description": "SAFETY: two separate claims, both required. The choice is additive, and it is not retroactive. Dropping either leaves the user with a wrong model of what the setting did."
+  },
+  "ocrScriptUnreadableTitle": "Action cannot read the {language} script",
+  "@ocrScriptUnreadableTitle": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    },
+    "description": "SAFETY: a plain statement of a missing capability. It must stay a statement of fact — not 'not yet supported', which implies a date nobody has promised."
+  },
+  "ocrScriptUnreadableBody": "There is no on-device recogniser for it. Photos will still be read for anything written in Latin letters, and the rest will come back empty. You can type or paste that text instead.",
+  "@ocrScriptUnreadableBody": {
+    "description": "SAFETY: three claims that must all survive — no recogniser exists, Latin is still read, and there is a manual way through. Dropping the third leaves the user with a dead end."
+  },
+  "ocrScriptNoTextHint": "Action is set to read {script}. If this photo is in another writing system, change it in Settings and read it again.",
+  "@ocrScriptNoTextHint": {
+    "placeholders": {
+      "script": {
+        "type": "String"
+      }
+    },
+    "description": "SAFETY: shown when recognition found nothing. It must name the current setting rather than implying the capture was unreadable in general."
+  },
+  "settingsTextRecognition": "Text recognition",
+  "settingsTextRecognitionDescription": "The writing system Action reads from photos.",
+  "settingsIntelligenceFootnote": "Action works without AI. Connecting your own provider adds document analysis, planning and drafting tools.",
+  "@settingsIntelligenceFootnote": {
+    "description": "SAFETY: must keep the first sentence — that the product is useful with nothing connected."
+  },
+  "settingsAiProvider": "AI provider",
+  "settingsAiNotConnected": "Not connected. Use your own account and API key.",
+  "settingsAiConnected": "Connected to {provider}.",
+  "@settingsAiConnected": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSectionPrivacySecurity": "Privacy & security",
+  "settingsSecurity": "Security",
+  "settingsWhereInfoLives": "Where your information lives",
+  "settingsWhereInfoLivesDescription": "What stays on this device, and what does not.",
+  "protectionAppLock": "App Lock",
+  "protectionScreenPrivacy": "screen privacy",
+  "protectionPrivateReminders": "private reminders",
+  "protectionSummaryNone": "App Lock, screen privacy and what leaves this device.",
+  "protectionSummaryOne": "{first} is on.",
+  "@protectionSummaryOne": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      }
+    }
+  },
+  "protectionSummaryTwo": "{first} and {second} are on.",
+  "@protectionSummaryTwo": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "protectionSummaryThree": "{first}, {second} and {third} are on.",
+  "@protectionSummaryThree": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "third": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSectionReminders": "Reminders",
+  "settingsRemindersFootnote": "Android may deliver a reminder a little later than the time you set, depending on battery settings and how the device is being used.",
+  "@settingsRemindersFootnote": {
+    "description": "SAFETY: an honest limitation. Must not be reworded into a promise of on-time delivery."
+  },
+  "settingsNotifications": "Notifications",
+  "settingsNotificationsOnDescription": "Reminders you set can be shown.",
+  "settingsNotificationsOffDescription": "Turned off for Action, so reminders will not appear.",
+  "settingsNotificationsUnknown": "Could not be checked.",
+  "settingsNotificationsAllowed": "Allowed",
+  "settingsOpenSystemSettings": "Open settings",
+  "settingsActionFootnote": "Action turns messy information into clear next steps. You confirm everything before it is saved.",
+  "@settingsActionFootnote": {
+    "description": "SAFETY: the second sentence is a product guarantee — nothing is saved without the user confirming it. It must survive translation as a statement about the user confirming, not about Action checking."
+  },
+  "settingsHelp": "Help",
+  "settingsHelpDescription": "How Action works, and what it will not do.",
+  "settingsVersion": "Version",
+  "dateShortFormat": "d MMM",
+  "@dateShortFormat": {
+    "description": "An ICU date skeleton, not prose. Day and abbreviated month. Reorder for the locale; every letter is a format token."
+  },
+  "dateLongFormat": "d MMM yyyy",
+  "@dateLongFormat": {
+    "description": "ICU skeleton: day, abbreviated month, year."
+  },
+  "relativeJustNow": "Just now",
+  "relativeMinutes": "{count}m ago",
+  "@relativeMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeHours": "{count}h ago",
+  "@relativeHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "relativeYesterday": "Yesterday",
+  "relativeDays": "{count}d ago",
+  "@relativeDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryTitle": "Library",
+  "librarySubtitle": "Everything Action is holding for you. All of it stays on this device.",
+  "@librarySubtitle": {
+    "description": "SAFETY: a data-flow claim about the Library's contents. Captures, Actions and Goals are local; it must not be softened into 'is kept private' or strengthened into a claim about everything in the app."
+  },
+  "librarySegmentActions": "Actions",
+  "librarySegmentCaptures": "Captures",
+  "librarySegmentGoals": "Goals",
+  "librarySegmentDone": "Done",
+  "libraryNewGoal": "New goal",
+  "libraryNoGoalsTitle": "No goals yet",
+  "libraryNoGoalsMessage": "A goal is something you want to happen. Action can find what is missing, what blocks it, and what to do first.",
+  "libraryNoDoneTitle": "Nothing completed yet",
+  "libraryNoDoneMessage": "Actions you finish will be kept here.",
+  "libraryNoOpenTitle": "No open actions",
+  "libraryNoOpenMessage": "Capture something and Action will work out what needs doing.",
+  "libraryNoCapturesTitle": "Nothing captured yet",
+  "libraryNoCapturesMessage": "Photos, screenshots and text you add land here first. Nothing is analysed until you ask.",
+  "@libraryNoCapturesMessage": {
+    "description": "SAFETY: the second sentence is the product's central promise — no analysis happens without an explicit request. It must not become 'nothing is shared' or 'analysis happens automatically'."
+  },
+  "libraryGoalNoActions": "Nothing made from it yet",
+  "libraryGoalActionCount": "{count, plural, =1{1 action from this goal} other{{count} actions from this goal}}",
+  "@libraryGoalActionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchHint": "Search actions and captures",
+  "searchClear": "Clear",
+  "searchPrivacyNote": "Searched on this device. Nothing you type here leaves it.",
+  "@searchPrivacyNote": {
+    "description": "SAFETY: the strongest data-flow claim in the product and literally true — search runs against the local database and no query is logged or sent. Must stay an absolute statement about the query never leaving."
+  },
+  "searchYouCanSearch": "YOU CAN SEARCH",
+  "searchFieldTitles": "Titles",
+  "searchFieldTitlesExample": "Renew the car insurance",
+  "searchFieldReferences": "Reference numbers",
+  "searchFieldReferencesExample": "MTR-4471-08",
+  "searchFieldOrganisations": "Organisations",
+  "searchFieldOrganisationsExample": "Northgate",
+  "searchFieldSteps": "Steps inside an Action",
+  "searchFieldStepsExample": "Upload the form",
+  "searchFieldCaptureText": "The text read from a capture",
+  "searchFieldCaptureTextExample": "renewal notice",
+  "searchNoMatchesTitle": "No matches for \"{query}\"",
+  "@searchNoMatchesTitle": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchNoMatchesTryFewer": "Try fewer words, or a reference number exactly as it appears.",
+  "searchNoMatchesClearFilters": "Try fewer words, or clear the filters.",
+  "searchFilterActive": "Active",
+  "searchFilterCompleted": "Completed",
+  "searchFilterOverdue": "Overdue",
+  "searchFilterThisWeek": "This week",
+  "searchFilterCritical": "Critical",
+  "searchFilterCreatedByYou": "Created by you",
+  "searchFilterArchived": "Archived",
+  "searchFilterClear": "Clear filters",
+  "searchIncompleteActions": "Couldn't search your actions, so these results may be incomplete.",
+  "@searchIncompleteActions": {
+    "description": "SAFETY: says the search was incomplete rather than letting an empty result read as 'nothing found'. The distinction must survive."
+  },
+  "searchIncompleteCaptures": "Couldn't search your captures, so these results may be incomplete.",
+  "searchIncompleteBoth": "Couldn't search your actions or your captures, so these results may be incomplete.",
+  "searchMatchTitle": "Title",
+  "searchMatchNextStep": "Next step",
+  "searchMatchStep": "Step",
+  "searchMatchSummary": "Summary",
+  "searchMatchFromCapture": "From capture",
+  "studioSuggested": "Suggested for your last capture",
+  "studioRecentlyUsed": "Recently used",
+  "studioReady": "READY",
+  "studioNotConnected": "NOT CONNECTED",
+  "studioHeroTitle": "Action Intelligence",
+  "studioConnectedBlurb": "Understand a document, improve a goal, build a plan, draft a reply, or check what you are looking at.",
+  "studioDisconnectedBlurb": "{count} tools for understanding documents, planning and writing. Connect your own AI account to use them — you are billed by your provider, never by Action.",
+  "@studioDisconnectedBlurb": {
+    "description": "SAFETY: the billing sentence is a commercial statement of fact — Action never bills for AI use, the user's own provider does. It must not become vague about who charges.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "studioConnectAi": "Connect AI",
+  "studioHowItWorks": "How it works",
+  "studioLocalCount": "{count, plural, =1{1 of them already works without any of that, entirely on this device.} other{{count} of them already work without any of that, entirely on this device.}}",
+  "@studioLocalCount": {
+    "description": "SAFETY: 'entirely on this device' is a data-flow claim about the local tools. It is true of exactly the tools counted here.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "studioRunsOnThisDevice": "Runs on this device",
+  "studioToolSemantics": "{title}. {description}",
+  "@studioToolSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "studioToolSemanticsLocal": "{title}. {description} Runs on this device.",
+  "@studioToolSemanticsLocal": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryUnderstand": "Understand",
+  "categoryUnderstandBlurb": "Make sense of what you have.",
+  "categoryPlan": "Plan",
+  "categoryPlanBlurb": "Turn it into something you can do.",
+  "categoryCreate": "Create",
+  "categoryCreateBlurb": "Write it, improve it, translate it.",
+  "categoryExtract": "Extract",
+  "categoryExtractBlurb": "Pull out the details that matter.",
+  "categoryVerify": "Verify",
+  "categoryVerifyBlurb": "Check what you are looking at.",
+  "captureSheetTitle": "Capture something",
+  "captureSheetSubtitle": "Hand Action anything you would rather not read through.",
+  "captureTakePhoto": "Take a photo",
+  "captureTakePhotoSubtitle": "A letter, bill or notice in front of you",
+  "captureChooseImage": "Choose an image",
+  "captureChooseImageSubtitle": "A screenshot or photo already on this device",
+  "capturePasteText": "Paste text",
+  "capturePasteTextSubtitle": "An email, message or notice",
+  "captureChoosePdf": "Choose a PDF",
+  "captureChoosePdfSubtitle": "A statement, letter or form you already have",
+  "captureFootnote": "Captures stay on this device. Nothing is analysed online until you ask for it.",
+  "@captureFootnote": {
+    "description": "SAFETY: two separate claims — captures are stored locally, and no network analysis happens without an explicit request. Both must survive as absolutes."
+  },
+  "captureCouldNotOpen": "Couldn't open that. Try another way.",
+  "captureOptionSemantics": "{title}. {subtitle}",
+  "@captureOptionSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "subtitle": {
+        "type": "String"
+      }
+    }
+  },
+  "stageReading": "Reading",
+  "stageNeedsReview": "Needs review",
+  "stageActionCreated": "Action created",
+  "stageNoText": "No text found",
+  "stageCouldNotBeRead": "Couldn't be read",
+  "stageReadingPreview": "Reading the text…",
+  "stageFailedPreview": "This couldn't be read on this device.",
+  "provenancePhoto": "Captured from photo",
+  "provenanceImage": "Captured from image",
+  "provenancePastedText": "Captured from pasted text",
+  "provenanceDocument": "Added as a document",
+  "sourceCardMeta": "{provenance} · {when}",
+  "@sourceCardMeta": {
+    "placeholders": {
+      "provenance": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "metaDone": "Done {when}",
+  "@metaDone": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "metaOverdue": "Overdue · was due {date}",
+  "@metaOverdue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "metaDueToday": "Due today",
+  "metaDueOn": "Due {date}",
+  "@metaDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "metaCreatedByYou": "Created by you",
+  "categoryPayment": "Payment",
+  "categoryRenewal": "Renewal",
+  "categoryAppointment": "Appointment",
+  "categoryBooking": "Booking",
+  "categoryTravel": "Travel",
+  "categoryDeadline": "Deadline",
+  "categoryResponse": "Reply needed",
+  "categoryDelivery": "Delivery",
+  "categoryDocument": "Document",
+  "categoryNoActionRequired": "No action needed",
+  "categoryUnsure": "Not sure",
+  "@categoryUnsure": {
+    "description": "SAFETY: the category Action assigns when it could not tell. Must stay an admission of uncertainty, never a neutral 'other' or 'general'."
+  },
+  "errorEnterManually": "Enter it manually",
+  "sourceWhatWeRead": "What we read",
+  "sourceDelete": "Delete capture",
+  "sourceGone": "That capture is no longer available.",
+  "sourceDeleteTitle": "Delete this capture?",
+  "sourceDeleteBody": "The image and the text read from it are removed from this device.",
+  "sourceDeleteKeep": "Keep",
+  "sourceOpenAction": "Open the action",
+  "sourceOpenActions": "Open {count} actions",
+  "@sourceOpenActions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceCreateAnother": "Create another from this",
+  "sourceCreateAction": "Create an action from this",
+  "sourceDoMore": "Do more with this",
+  "sourceMeta": "{provenance} · {when}",
+  "@sourceMeta": {
+    "placeholders": {
+      "provenance": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceDimensions": "{width}×{height}",
+  "@sourceDimensions": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      },
+      "height": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceKilobytes": "{size} KB",
+  "@sourceKilobytes": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceConvertedFrom": "from {format} {size} KB",
+  "@sourceConvertedFrom": {
+    "placeholders": {
+      "format": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceTextFound": "Text found",
+  "sourceOcrStats": "{lines} lines · {ms} ms",
+  "@sourceOcrStats": {
+    "placeholders": {
+      "lines": {
+        "type": "int"
+      },
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceReadExplainer": "This is the text Action read. What was made from it is below.",
+  "sourceNotInterpreted": "Nothing has been interpreted yet. Action will suggest what to do with this, and you confirm before anything is created.",
+  "@sourceNotInterpreted": {
+    "description": "SAFETY: the second clause is the confirm-before-create guarantee. It must stay a statement that the user confirms first."
+  },
+  "sourceNoTextExplainer": "This can happen with handwriting, very low light, or a script this device cannot read yet.",
+  "@sourceNoTextExplainer": {
+    "description": "SAFETY: names the real limits of on-device OCR, including scripts it cannot read. Must not be softened into a temporary glitch."
+  },
+  "sourceReadFailed": "Couldn't read this",
+  "sourceReadFailedReason": "Text recognition did not complete.",
+  "sourceTryReadingAgain": "Try reading again",
+  "sourceTypeInstead": "Type the details instead",
+  "sourceTypeWhatItSays": "Type what it says",
+  "sourceTypeHint": "Dates, amounts, and what is being asked for.",
+  "sourceMadeFromThis": "Made from this capture",
+  "sourceMadeFromThisCount": "{count} made from this capture",
+  "@sourceMadeFromThisCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sourceTheDocument": "The document",
+  "sourcePageCount": "{count, plural, =1{1 page} other{{count} pages}}",
+  "@sourcePageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sourcePageCountUnknown": "Page count unknown",
+  "sourceDocumentNotRead": "Action has not read what is inside this document. When you run a tool that needs to, the file goes to the AI provider you connected and you will be told before it does.",
+  "@sourceDocumentNotRead": {
+    "description": "SAFETY: the central data-flow disclosure for PDFs. Two claims: Action has not read the contents, and the file leaves only on an explicit tool run with a warning first. Both must survive."
+  },
+  "previewSaveFailed": "Couldn't save that. Try again.",
+  "previewTitle": "Check the capture",
+  "previewImageFailed": "That image couldn't be opened.",
+  "previewHint": "Make sure the text is readable and nothing important is cut off.",
+  "previewRetake": "Retake",
+  "pasteTitle": "Paste text",
+  "pasteHint": "Paste the email, message, or notice you would rather not read through.",
+  "pasteFootnote": "Anything with a date, an amount, or a request works well.",
+  "pasteEnough": "Looks like enough to work with.",
+  "pasteMore": "A little more text will give a better result.",
+  "reviewLoadFailed": "Could not load this capture.",
+  "reviewConfirmed": "Confirmed",
+  "reviewNeedsReview": "Needs review",
+  "reviewReview": "Review",
+  "reviewHighConfidence": "High confidence",
+  "reviewConfirmedByYou": "Confirmed by you",
+  "reviewMissing": "Missing",
+  "reviewNotUnderstood": "Action couldn’t reliably understand enough of this source.",
+  "@reviewNotUnderstood": {
+    "description": "SAFETY: an admission that extraction failed. Must not become a claim that the source was unreadable or that data was lost."
+  },
+  "reviewNotUnderstoodBody": "The capture is safe and nothing was lost. You can enter the details yourself, and the source stays attached for reference.",
+  "reviewEnterDetails": "Enter the details",
+  "reviewKeepSource": "Keep the source for later",
+  "reviewEngine": "Engine: {engine}",
+  "@reviewEngine": {
+    "description": "Debug-build diagnostic line.",
+    "placeholders": {
+      "engine": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewManualNotice": "You are creating this action yourself. Only what you enter here will be used.",
+  "@reviewManualNotice": {
+    "description": "SAFETY: states that a manual entry involves no extraction at all. Must not imply Action contributed anything."
+  },
+  "reviewUntitled": "Untitled action",
+  "reviewEditTitle": "Edit title",
+  "reviewNeedsReviewCount": "{count, plural, =1{1 value needs your review before this can be confirmed.} other{{count} values need your review.}}",
+  "@reviewNeedsReviewCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewKeyFacts": "Key facts",
+  "reviewNotFound": "Not found",
+  "reviewSuggestedNextStep": "Suggested next step",
+  "reviewWhyThisMatters": "Why this matters",
+  "reviewSteps": "Steps",
+  "reviewAddStep": "Add a step",
+  "reviewInjectionNotice": "Some text in this source looked like instructions rather than document facts, so Action ignored it.",
+  "@reviewInjectionNotice": {
+    "description": "SAFETY: the prompt-injection disclosure. Must stay a statement that instructions embedded in a document were ignored, never that they were followed or sanitised."
+  },
+  "reviewLayoutNotice": "This document’s layout may contain relationships that text extraction couldn’t fully preserve. Check the values below against the source before confirming.",
+  "reviewSignalNotice": "{reason} Check the values below against the source.",
+  "@reviewSignalNotice": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewDeadline": "Deadline",
+  "reviewAmount": "Amount",
+  "reviewLeftUnset": "None — you chose to leave this unset",
+  "reviewUnclear": "Unclear",
+  "reviewNotSet": "Not set",
+  "reviewNoDeadlineFound": "None found in this document",
+  "reviewNoAmountFound": "None found in this document",
+  "reviewMultipleDates": "Action found multiple possible dates.",
+  "reviewMultipleDatesBody": "{count} dates could be the deadline. Choose the right one, enter another, or leave it unset.",
+  "@reviewMultipleDatesBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewChooseDate": "Choose a date",
+  "reviewMultipleAmounts": "Action found more than one possible amount.",
+  "reviewMultipleAmountsBody": "{count} amounts could be the one this action is about. Choose, enter another, or leave it unset.",
+  "@reviewMultipleAmountsBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewChooseAmount": "Choose an amount",
+  "reviewSkipStep": "Skip this step",
+  "reviewKeepStep": "Keep this step",
+  "reviewEditStep": "Edit step",
+  "reviewCreateManually": "Create manually",
+  "reviewConfirmAndCreate": "Confirm & create action",
+  "reviewFixHighlighted": "Review highlighted fields",
+  "reviewSaving": "Saving…",
+  "reviewSaveFailed": "Could not save this action. Nothing was lost — try again.",
+  "reviewFieldTitle": "Title",
+  "reviewTitleHint": "What needs to happen?",
+  "reviewNewStep": "New step",
+  "reviewStepHint": "What to do",
+  "reviewDatesConflict": "The document mentions more than one date.",
+  "reviewAmountsConflict": "The document mentions more than one amount.",
+  "reviewAnotherDate": "Another date — 2026-08-30",
+  "@reviewAnotherDate": {
+    "description": "The example date is the ISO format the field parses; keep the digits and the dashes exactly."
+  },
+  "reviewBadDate": "Not a real date. Use the format 2026-08-30.",
+  "reviewTypeDate": "Type a date, or leave it unset below.",
+  "reviewUseThisDate": "Use this date",
+  "reviewLeaveNoDeadline": "Leave without a deadline",
+  "reviewAnotherAmount": "Another amount — 780.00",
+  "reviewAmountError": "Cannot use this amount: {reason}.",
+  "@reviewAmountError": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewUseThisAmount": "Use this amount",
+  "reviewLeaveNoAmount": "Leave without an amount",
+  "reviewThisValue": "This value",
+  "reviewQuote": "“{quote}”",
+  "@reviewQuote": {
+    "placeholders": {
+      "quote": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewSeeOnCapture": "See it on the capture",
+  "reviewViewSource": "View source",
+  "reviewFromSource": "From source",
+  "reviewNotVerified": "Not verified",
+  "reviewCouldNotVerify": "Could not verify this against the source.",
+  "@reviewCouldNotVerify": {
+    "description": "SAFETY: says verification failed. Must never be softened into 'probably correct'."
+  },
+  "reviewLooksRight": "Looks right",
+  "reviewStageReading": "Reading source",
+  "reviewStageUnderstanding": "Understanding important details",
+  "reviewStageChecking": "Checking what needs review",
+  "reviewNothingToDo": "Nothing you need to do right now.",
+  "reviewInformationOnly": "This looks like information only — no deadline, payment or reply was found.",
+  "reviewInformationOnlyWithSource": "This looks like information only — no deadline, payment or reply was found in this capture.",
+  "reviewSourceKept": "The source is kept either way.",
+  "reviewAddAnyway": "Add an action anyway",
+  "reviewActionConfirmed": "Action confirmed",
+  "reviewCreatedByYou": "Created by you.",
+  "reviewConfirmedFrom": "{count, plural, =1{Confirmed by you from 1 reviewed fact.} other{Confirmed by you from {count} reviewed facts.}}",
+  "@reviewConfirmedFrom": {
+    "description": "SAFETY: attributes the confirmation to the user, not to Action.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewConfirmedFromEdited": "{count, plural, =1{Confirmed by you from 1 reviewed fact. You changed {edited} of them.} other{Confirmed by you from {count} reviewed facts. You changed {edited} of them.}}",
+  "@reviewConfirmedFromEdited": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "edited": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewSavedOnDevice": "Saved on this device.",
+  "detailLoadFailed": "This action could not be loaded. It is still stored on this device.",
+  "@detailLoadFailed": {
+    "description": "SAFETY: keeps the reassurance that matters - the failure is in loading, not in storing. Dropping the second clause turns a display problem into apparent data loss."
+  },
+  "detailNotFoundTitle": "That action is no longer here",
+  "detailNotFoundMessage": "It may have been deleted on this device.",
+  "detailGoBack": "Go back",
+  "detailMore": "More",
+  "detailChangeUrgency": "Change urgency",
+  "detailAddRecommendedStep": "Add a recommended step",
+  "detailEditRecommendedStep": "Edit recommended step",
+  "detailArchiveTitle": "Archive this action?",
+  "detailArchiveBody": "It leaves your list but is not deleted, and the capture it came from is kept.",
+  "@detailArchiveBody": {
+    "description": "SAFETY: two claims that must both survive - the action is not deleted, and the capture is kept. This is the sentence someone reads before deciding, and half of it is worse than none of it."
+  },
+  "detailArchiveConfirm": "Archive",
+  "detailArchived": "Archived",
+  "detailCompletedOn": "Completed {date}",
+  "@detailCompletedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "detailSectionDetails": "Details",
+  "detailSectionReminders": "Reminders",
+  "detailAllStepsDone": "All steps done",
+  "detailNextEyebrow": "Next",
+  "detailCompleteQuestion": "Complete this action?",
+  "detailMarkStepDone": "Mark step done",
+  "detailCompleteAction": "Complete this action",
+  "detailAddDeadline": "Add a deadline",
+  "detailAddAmount": "Add an amount",
+  "detailStepsProgress": "{completed} of {total} done",
+  "@detailStepsProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "detailNoStepsTitle": "No steps yet",
+  "detailNoStepsMessage": "Break this into the moves you actually have to make.",
+  "detailAddFirstStep": "Add first step",
+  "detailStepCompletedSemantics": "Completed step: {title}",
+  "@detailStepCompletedSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailStepNextSemantics": "Next step: {title}",
+  "@detailStepNextSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailStepSemantics": "Step: {title}",
+  "@detailStepSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailMarkDone": "Mark \"{title}\" as done",
+  "@detailMarkDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailMarkNotDone": "Mark \"{title}\" as not done",
+  "@detailMarkNotDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "detailStepOptions": "Step options",
+  "detailMoveUp": "Move up",
+  "detailMoveDown": "Move down",
+  "detailDeleteStep": "Delete step",
+  "detailDateFormat": "d MMM",
+  "@detailDateFormat": {
+    "description": "An intl date pattern, not prose. Pattern letters (d, M, y) are syntax; only their arrangement and any literal separators should change."
+  },
+  "detailDateFormatWithYear": "d MMM yyyy",
+  "@detailDateFormatWithYear": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "stepDeleteTitle": "Delete this step?",
+  "stepDeleteKeep": "Keep it",
+  "detailNoRemindersYet": "No reminders yet.",
+  "detailReminderLimit": "That is the most reminders one action can have. Remove one to add another.",
+  "detailAddReminder": "Add reminder",
+  "detailChangeReminder": "Change reminder",
+  "detailRemoveReminder": "Remove reminder",
+  "detailReminderFormat": "EEE d MMM, h:mm a",
+  "@detailReminderFormat": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "reminderStatePending": "Not set up yet",
+  "reminderStateNotificationsOff": "Saved, but notifications are off",
+  "@reminderStateNotificationsOff": {
+    "description": "SAFETY: the reminder exists and will not fire. Both halves are required; 'saved' alone reads as working."
+  },
+  "reminderStateFailed": "Couldn't be scheduled",
+  "reminderStateRemoving": "Removing…",
+  "reminderSetConfirmation": "Reminder set. We'll nudge you.",
+  "reminderUpdatedConfirmation": "Reminder updated.",
+  "reminderNeedsPermission": "Notifications are off, so this reminder is saved but cannot alert you yet.",
+  "@reminderNeedsPermission": {
+    "description": "SAFETY: saved and will-alert are different promises. The sentence must keep both - that it was stored, and that it cannot notify."
+  },
+  "reminderScheduleFailed": "This reminder is saved, but Android wouldn't schedule it.",
+  "@reminderScheduleFailed": {
+    "description": "SAFETY: same rule as reminderNeedsPermission: stored is not the same as working, and the user is owed both facts."
+  },
+  "reminderLimitReached": "That action already has the maximum number of reminders.",
+  "reminderTimeInPast": "That time has already passed.",
+  "reminderAddTitle": "Add a reminder",
+  "reminderChangeTitle": "Change this reminder",
+  "reminderDateLabel": "Date",
+  "reminderTimeLabel": "Time",
+  "reminderFieldDateFormat": "EEE d MMM yyyy",
+  "@reminderFieldDateFormat": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "reminderFieldTimeFormat": "h:mm a",
+  "@reminderFieldTimeFormat": {
+    "description": "An intl time pattern, not prose. A locale that uses a 24-hour clock should say HH:mm and drop the a."
+  },
+  "reminderSummaryDateFormat": "EEEE d MMMM",
+  "@reminderSummaryDateFormat": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "reminderPresetFormat": "d MMM, h:mm a",
+  "@reminderPresetFormat": {
+    "description": "An intl date pattern, not prose. See detailDateFormat."
+  },
+  "reminderSummary": "You will be reminded on {date} at {time}.",
+  "@reminderSummary": {
+    "description": "SAFETY: the whole promise, spelled out before anything is created. The date and the time must both remain, because a relative phrase alone hides which hour was chosen.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderTimePastError": "That time has already passed. Choose a later one.",
+  "reminderSet": "Set reminder",
+  "reminderPresetInHour": "In 1 hour",
+  "reminderPresetTomorrowMorning": "Tomorrow morning",
+  "reminderPresetNextWeek": "Next week",
+  "reminderPresetOnTheDay": "On the day",
+  "reminderPresetDayBefore": "1 day before",
+  "reminderPresetWeekBefore": "1 week before",
+  "reminderPresetAtDeadline": "At the deadline",
+  "reminderPresetHourBefore": "1 hour before",
+  "editNextStepTitle": "Recommended next step",
+  "editNextStepSubtitle": "A short sentence about the next useful move.",
+  "editNextStepHint": "What is the next useful move?",
+  "editRemoveSuggestion": "Remove the suggestion",
+  "editUrgencyTitle": "How urgent is this?",
+  "editStepHint": "One concrete thing to do",
+  "editAddStep": "Add step",
+  "editDateHint": "YYYY-MM-DD",
+  "@editDateHint": {
+    "description": "The shape of the date the field accepts, shown as a hint. The letters stand for year, month and day and should be the letters a reader of this language would expect."
+  },
+  "editRemoveDeadline": "Remove the deadline",
+  "editAmountHint": "96.40",
+  "@editAmountHint": {
+    "description": "An example amount shown as a hint. Use the decimal separator this locale actually writes."
+  },
+  "editSaveAmount": "Save amount",
+  "editRemoveAmount": "Remove the amount",
+  "securityTitle": "Security & privacy",
+  "securitySectionProtection": "Protection",
+  "securityAppLockUnavailable": "App Lock needs a screen lock on this device. Set a PIN, pattern, password or fingerprint in your device settings first.",
+  "@securityAppLockUnavailable": {
+    "description": "SAFETY: says why the control is unavailable and how to make it available. Both halves are needed; without the second the user is told no and left with nowhere to go."
+  },
+  "securityAppLockOn": "Action asks your device to confirm it is you.",
+  "@securityAppLockOn": {
+    "description": "SAFETY: states who does the confirming. Action never sees a biometric, and the sentence must not drift into implying that it does."
+  },
+  "securityAppLockOff": "Require your fingerprint, face or device PIN to open Action.",
+  "securityAskAgain": "Ask again",
+  "securityAskAgainDescription": "How long Action may be in the background before it locks.",
+  "securityScreenPrivacy": "Screen privacy",
+  "securityScreenPrivacyDescription": "Ask Android to block screenshots and screen recording, and to hide Action in the app switcher.",
+  "@securityScreenPrivacyDescription": {
+    "description": "SAFETY: the verb is 'ask'. Android may refuse, and the copy must not promise a block this app cannot enforce."
+  },
+  "securityPrivateReminders": "Private reminders",
+  "securityPrivateRemindersOn": "Reminders say only that something needs you.",
+  "securityPrivateRemindersOff": "Reminders show the Action title. Turn this on to keep it off your lock screen.",
+  "securityLockNow": "Lock now",
+  "securityLockNowDescription": "Close the door without waiting.",
+  "securitySectionStorage": "How your data is stored",
+  "securityStorageDataLabel": "Your Actions, captures and settings",
+  "securityStorageDataDetail": "They sit in this app's own private storage, which other apps cannot read and which Android encrypts as part of the device's encryption. Action does not add a second layer of its own on top.",
+  "@securityStorageDataDetail": {
+    "description": "SAFETY: three claims, and the third is the one that must never be dropped: Action adds no encryption of its own. Losing it turns an honest description into a claim of an encrypted vault that does not exist."
+  },
+  "securityStorageKeyLabel": "Your AI provider key",
+  "securityStorageKeyDetail": "Held in the Android Keystore rather than with everything else, and never shown again after you save it.",
+  "@securityStorageKeyDetail": {
+    "description": "SAFETY: names the mechanism rather than calling the key safe. Keep both facts: where it is held, and that it is never displayed again."
+  },
+  "securityStorageGapLabel": "What that does not cover",
+  "securityStorageGapDetail": "None of it is a defence against someone using your unlocked device, and a modified or rooted system can read more than a normal one. App Lock is the control that helps with the first of those.",
+  "@securityStorageGapDetail": {
+    "description": "SAFETY: the limits of the protection, stated plainly. All three parts are required - the unlocked device, the rooted system, and which control addresses which. This paragraph exists so the page cannot be read as a promise."
+  },
+  "securitySectionInformation": "Your information",
+  "securityWhereInfoDescription": "Every route your data can take, and the two that leave this device.",
+  "securityAppLockRefused": "Not confirmed, so nothing changed.",
+  "securityAppLockUnavailableToast": "This device has no screen lock set up. Add a PIN, pattern, password or fingerprint in your device settings, then try again.",
+  "@securityAppLockUnavailableToast": {
+    "description": "SAFETY: same rule as securityAppLockUnavailable: the refusal and the remedy travel together."
+  },
+  "securityScreenPrivacyRefused": "This device would not apply screen privacy, so it has been left off rather than shown as on.",
+  "@securityScreenPrivacyRefused": {
+    "description": "SAFETY: the switch stays off when the platform refuses. Both halves are required - that the device declined, and that the app did not pretend otherwise."
+  },
+  "securityRemindersUpdatedQuiet": "{count, plural, =1{1 scheduled reminder updated to say less.} other{{count} scheduled reminders updated to say less.}}",
+  "@securityRemindersUpdatedQuiet": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "securityRemindersUpdated": "{count, plural, =1{1 scheduled reminder updated.} other{{count} scheduled reminders updated.}}",
+  "@securityRemindersUpdated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appLockDelayImmediately": "Immediately",
+  "appLockDelayOneMinute": "After 1 minute",
+  "appLockDelayFiveMinutes": "After 5 minutes",
+  "securityDelayImmediatelyDescription": "Every time Action leaves the screen",
+  "securityDelayOneMinuteDescription": "Long enough to answer a message",
+  "securityDelayFiveMinutesDescription": "Long enough to take a call",
+  "securityHeroProtected": "Protected",
+  "securityHeroNothingOn": "Nothing turned on",
+  "securityHeroFootnote": "Everything here works on this device. None of these settings is sent anywhere, and none of them can be changed remotely.",
+  "@securityHeroFootnote": {
+    "description": "SAFETY: two claims: nothing is sent, and nothing can be changed remotely. Both are properties of the code and both must survive."
+  },
+  "securityHeadlineNone": "Three protections are available",
+  "securityHeadlineOne": "{first} is on",
+  "@securityHeadlineOne": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      }
+    }
+  },
+  "securityHeadlineTwo": "{first} and {second} are on",
+  "@securityHeadlineTwo": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "securityHeadlineAll": "All three protections are on",
+  "securityTransfersTitle": "What left this device",
+  "securityTransfersNoProvider": "No AI provider is connected, so nothing is being sent for analysis at all.",
+  "@securityTransfersNoProvider": {
+    "description": "SAFETY: a statement about the present state, not a promise about the future. It must stay conditional on no provider being connected."
+  },
+  "securityTransfersDescription": "Recorded here the moment something is sent, whether or not it came back. Only the tool, the provider and the size — never what was in it. Kept for 90 days on this device and sent nowhere.",
+  "@securityTransfersDescription": {
+    "description": "SAFETY: four claims and every one is testable: recorded at send time rather than on success, contents never recorded, kept 90 days, never uploaded. This is the paragraph the whole receipts feature rests on."
+  },
+  "securityClear": "Clear",
+  "securityNothingSent": "Nothing has been sent",
+  "securityNothingSentDescription": "When you run a tool that uses your AI provider, it will be listed here.",
+  "securityClearHistoryTitle": "Clear this history?",
+  "securityClearHistoryBody": "The record of what was sent will be deleted from this device. It does not undo anything that was already sent.",
+  "@securityClearHistoryBody": {
+    "description": "SAFETY: clearing the receipt does not unsend anything. The second sentence is the entire point and must not be lost."
+  },
+  "securityUnnamedTool": "An Intelligence tool",
+  "securityYourProvider": "your AI provider",
+  "securityTransferPages": "{count, plural, =1{1 page} other{{count} pages}}",
+  "@securityTransferPages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "securityTransferFiles": "{count, plural, =1{1 file} other{{count} files}}",
+  "@securityTransferFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "securityTransferShortText": "a short piece of text",
+  "securityTransferCharacters": "{count}k characters",
+  "@securityTransferCharacters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "securitySentTo": "Sent to {provider}.",
+  "@securitySentTo": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "securitySentToWithSize": "Sent to {provider} · {size}.",
+  "@securitySentToWithSize": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "relativeWeeks": "{count}w ago",
+  "@relativeWeeks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "helpTitle": "Help",
+  "helpAddQuestion": "What can I add?",
+  "helpAddAnswer": "A screenshot, a photo of a letter or bill, or text you paste in. Anything with a date, an amount or a request works best.",
+  "helpReviewQuestion": "Why does Action ask me to review?",
+  "helpReviewAnswer": "Because a machine reading a document can misread it, and a deadline that is quietly wrong is worse than no deadline at all. Action shows what it found and the words it came from, and nothing is saved until you confirm it.",
+  "@helpReviewAnswer": {
+    "description": "SAFETY: the reason the review step exists. It must keep both halves - that a misread is possible, and that nothing is saved without confirmation."
+  },
+  "helpVaryQuestion": "Why do the results change if I try again?",
+  "helpVaryAnswer": "The service that reads your document is not deterministic, so the same capture can come back slightly differently. That is also why the review step exists — you are the part that does not change.",
+  "@helpVaryAnswer": {
+    "description": "SAFETY: an admission that output varies. Never soften it into a claim of consistency the service does not provide."
+  },
+  "helpLateQuestion": "Why was my reminder late?",
+  "helpLateAnswer": "Reminders are scheduled with Android, and Android decides exactly when to deliver them. Battery saving, Doze and manufacturer power settings can all delay one. Action never promises a reminder to the minute.",
+  "@helpLateAnswer": {
+    "description": "SAFETY: the final sentence is a refusal to promise punctual delivery, and it is the point of the answer."
+  },
+  "helpDataQuestion": "Where is my data?",
+  "helpDataAnswer": "Almost all of it is on this device: your captures, Actions, steps, reminders and searches. Two exceptions — the content you ask Action to read is sent to the AI service that reads it, and a short record of a confirmed Action may be stored in the cloud under an anonymous ID. Privacy & data in Settings lists exactly what that record contains.",
+  "@helpDataAnswer": {
+    "description": "SAFETY: names both exceptions explicitly. Losing either turns a truthful summary into a claim that everything stays local."
+  },
+  "helpBackupQuestion": "Is this a backup?",
+  "helpBackupAnswer": "No. The cloud record cannot be restored to a new device, and there is no account to sign in to. If you uninstall Action or lose this device, the data on it is gone.",
+  "@helpBackupAnswer": {
+    "description": "SAFETY: says no, and says what that means. This answer exists so nobody relies on the cloud record as a backup."
+  },
+  "helpCorrectQuestion": "How do I correct an Action?",
+  "helpCorrectAnswer": "Open it and edit any field — the title, the deadline, the amount or the suggested next step. You can add, reorder, complete and delete steps at any time. Editing an Action never asks the AI service anything.",
+  "@helpCorrectAnswer": {
+    "description": "SAFETY: the last sentence is a privacy claim: editing sends nothing. Keep it."
+  },
+  "privacyTitle": "Privacy & data",
+  "privacyIntro": "Action keeps as much as it can on this device. Two things are exceptions, and they are both listed below.",
+  "@privacyIntro": {
+    "description": "SAFETY: promises that the exceptions are listed, and there are exactly two. Do not generalise it into a claim that everything stays local."
+  },
+  "privacyGroupOnDevice": "On this device",
+  "privacyOnDeviceCaptures": "Captures — the screenshots, photos and text you add, and the text read out of them.",
+  "privacyOnDeviceActions": "Actions, their steps, facts and reminders.",
+  "privacyOnDeviceSearch": "Search. Your searches run here, are never sent anywhere, and are not kept after you close the screen.",
+  "@privacyOnDeviceSearch": {
+    "description": "SAFETY: three claims about search: it runs locally, it is never transmitted, it is not retained. All three are enforced in code and all three must survive."
+  },
+  "privacyOnDevicePhotoMetadata": "Photos are stored without their location. The coordinates, time and camera details a phone writes into a picture are removed before the capture is saved, so they are not kept here and not included when you send a capture to your AI provider.",
+  "@privacyOnDevicePhotoMetadata": {
+    "description": "SAFETY: two claims: the metadata is removed before storage, and it is therefore absent when a capture is sent onward. Both are asserted in test/capture/image_metadata_test.dart."
+  },
+  "privacyGroupSentToRead": "Sent to be read",
+  "privacySentToReadWhat": "When you ask Action to interpret a capture, that content is sent to the AI service that reads it. This is not on-device AI.",
+  "@privacySentToReadWhat": {
+    "description": "SAFETY: the second sentence prevents the first from being read as local processing. It is the most easily lost claim on this screen."
+  },
+  "privacySentToReadWhen": "It is sent only for the capture you chose, and only when you ask for it.",
+  "@privacySentToReadWhen": {
+    "description": "SAFETY: two limits, both required: only the chosen capture, and only on an explicit request. Nothing is ever sent in the background."
+  },
+  "privacyGroupYourProvider": "Sent to your own AI provider",
+  "privacyProviderWhat": "If you connect an AI provider in Settings, the Intelligence tools send the content you select to that provider — OpenAI, Anthropic, Google or an endpoint you chose — using your own API key.",
+  "@privacyProviderWhat": {
+    "description": "SAFETY: names the providers and the fact that the user's own key is used. Provider names are proper nouns and stay untranslated."
+  },
+  "privacyProviderDirect": "It goes to them directly. It does not pass through any server belonging to Action.",
+  "@privacyProviderDirect": {
+    "description": "SAFETY: both sentences are required. The second is the claim that matters and the one a shortened translation would drop."
+  },
+  "privacyProviderScope": "Only what you pick for a tool is sent, and only when you run it. Your other Actions, captures and sources are never included, and nothing is ever sent in the background.",
+  "@privacyProviderScope": {
+    "description": "SAFETY: three limits and none of them is decorative: chosen content only, on an explicit run only, and never in the background."
+  },
+  "privacyProviderKey": "Your API key is kept in this device’s secure storage and is sent only to the provider it belongs to. Secure storage is a real obstacle to anyone with your unlocked device, but it is not absolute, and Action will not claim otherwise.",
+  "@privacyProviderKey": {
+    "description": "SAFETY: the qualification is the point. Secure storage is described as a real but limited obstacle; a translation that stops after the first sentence turns a measured statement into a guarantee."
+  },
+  "privacyProviderLocalTools": "Two tools never send anything: hiding sensitive details, and checking where a file came from. Both run entirely on this device.",
+  "privacyProviderAgreement": "What your provider does with what you send is governed by your agreement with them, not by Action.",
+  "@privacyProviderAgreement": {
+    "description": "SAFETY: a limit of responsibility, stated plainly. It must not become a reassurance about what the provider does."
+  },
+  "privacyGroupCloud": "Stored in the cloud",
+  "privacyCloudWhat": "When you confirm an Action, a short record of it may be saved under an anonymous ID belonging to this installation: its title, status, urgency, category, deadline, amount, suggested next step and timestamps.",
+  "@privacyCloudWhat": {
+    "description": "SAFETY: an exhaustive list of what is uploaded. Shortening it would make the disclosure incomplete, which is the one thing it cannot be."
+  },
+  "privacyCloudNotSent": "Your captures, the text read from them, an Action’s steps and facts, and your reminders are not sent.",
+  "@privacyCloudNotSent": {
+    "description": "SAFETY: the complement of privacyCloudWhat. Every item named here is one the code does not upload."
+  },
+  "privacyCloudNotBackup": "This is not a backup. There is no way to restore it to a new device, and losing this installation loses the anonymous ID with it.",
+  "@privacyCloudNotBackup": {
+    "description": "SAFETY: says no to a reasonable assumption, and says why. Both halves required."
+  },
+  "privacyGroupDiagnostics": "Diagnostics",
+  "privacyDiagnosticsWhat": "Action records anonymous counts of what happens in the app — that a capture was started, that an extraction worked or did not, that a search found nothing, that an Action was completed.",
+  "privacyDiagnosticsCounts": "These are counts, not contents. No title, amount, deadline, reference, captured text or search term is ever included, and neither is the anonymous ID or any identifier for an Action or capture.",
+  "@privacyDiagnosticsCounts": {
+    "description": "SAFETY: the whole analytics contract in one sentence, and every clause of it is enforced on the way in. Nothing here is a generalisation that can be compressed."
+  },
+  "privacyDiagnosticsCrash": "If the app crashes, the error and where it happened are reported so it can be fixed. Action does not attach your data to those reports.",
+  "@privacyDiagnosticsCrash": {
+    "description": "SAFETY: the second sentence is the limit and must survive."
+  },
+  "privacySectionYourData": "Your data",
+  "privacyYourDataFootnote": "Clearing captures leaves your Actions in place. An Action whose capture is gone still works; it simply no longer shows what it came from.",
+  "privacyClearCaptures": "Clear captures",
+  "privacyClearCapturesDescription": "Deletes every capture and its image file.",
+  "privacyDeleteAll": "Delete all my data",
+  "privacyDeleteAllDescription": "Actions, steps, reminders, captures and the cloud records above.",
+  "privacyClearCapturesTitle": "Clear captures?",
+  "privacyClearCapturesBody": "Every capture and its image will be deleted from this device. Your Actions stay exactly as they are.",
+  "@privacyClearCapturesBody": {
+    "description": "SAFETY: says what is destroyed and what is not. The second sentence is why someone is willing to press the button."
+  },
+  "privacyCapturesDeleted": "Captures deleted.",
+  "privacyCapturesPartlyDeleted": "Some captures could not be deleted. Nothing else was changed.",
+  "@privacyCapturesPartlyDeleted": {
+    "description": "SAFETY: a partial failure reported as one. Never collapse it into a success message."
+  },
+  "privacyDeleteAllTitle": "Delete all your data?",
+  "privacyDeleteAllBody": "This deletes every Action, step, reminder and capture on this device, and the cloud records listed above. It cannot be undone, and there is no backup to restore from.",
+  "@privacyDeleteAllBody": {
+    "description": "SAFETY: the last clause is the one that stops someone assuming a backup exists. All three parts are required."
+  },
+  "privacyDeleteEverything": "Delete everything",
+  "privacyDeletedAll": "Everything has been deleted.",
+  "@privacyDeletedAll": {
+    "description": "SAFETY: said only when it is true of the device and the cloud both. It must not become a general success message."
+  },
+  "privacyDeleteFailed": "Your data could not be deleted.",
+  "privacyDeletedUnverified": "Everything on this device has been deleted. Action could not reach the cloud to confirm nothing is left there, and will check again.",
+  "@privacyDeletedUnverified": {
+    "description": "SAFETY: the subtle case: local deletion succeeded and the cloud could not be checked. Reporting this as complete deletion would be the exact lie this screen exists to avoid."
+  },
+  "privacyDeletedApartFrom": "Deleted, apart from {leftovers}.",
+  "@privacyDeletedApartFrom": {
+    "placeholders": {
+      "leftovers": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyWillTryAgain": "Action will try again.",
+  "privacyCloudCheckIncomplete": "Action could not finish checking the cloud, and will try again.",
+  "privacyLeftoverCaptures": "some captures",
+  "privacyLeftoverCloudRecords": "{count, plural, =1{1 cloud record} other{{count} cloud records}}",
+  "@privacyLeftoverCloudRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "privacyLeftoverJoin": "{first} and {second}",
+  "@privacyLeftoverJoin": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyCloudDeleted": "The cloud records have been deleted.",
+  "privacyCloudUnreachable": "Still could not reach them. Action will try again.",
+  "privacyPendingTitle": "Still to delete",
+  "privacyPendingBody": "{count, plural, =1{1 cloud record could not be reached last time. Action will try again on its own, or you can retry now.} other{{count} cloud records could not be reached last time. Action will try again on its own, or you can retry now.}}",
+  "@privacyPendingBody": {
+    "description": "SAFETY: an outstanding obligation, stated with the count. It must keep both remedies - that Action retries on its own, and that the user can retry now.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "privacyTryAgain": "Try again",
+  "evidenceTitle": "Where this came from",
+  "evidenceUnverified": "Action could not find these words in the text it read, so this value has not been verified. Check it against the original before you rely on it.",
+  "@evidenceUnverified": {
+    "description": "SAFETY: the strongest 'do not trust this yet' statement in the product. It must keep both halves — not verified, and check the original."
+  },
+  "evidenceHighlighted": "These words were found in the text Action read from this capture, and the highlight shows where.",
+  "evidenceNoRegion": "These words were found in the text Action read from this capture. It could not work out exactly where on the image they sit, so it is not guessing.",
+  "@evidenceNoRegion": {
+    "description": "SAFETY: the fail-closed statement for region mapping — Action refuses to point at a place it cannot support. 'It is not guessing' must survive."
+  },
+  "evidenceInText": "These words were found in the text this capture contains.",
+  "sourceCapturedAtFormat": "d MMM, HH:mm",
+  "@sourceCapturedAtFormat": {
+    "description": "ICU skeleton: day, abbreviated month, 24-hour time."
+  },
+  "urgencyCritical": "Critical",
+  "urgencyImportant": "Important",
+  "urgencyNormal": "Normal",
+  "urgencyLow": "Low",
+  "urgencyUnsure": "Not sure",
+  "@urgencyUnsure": {
+    "description": "SAFETY: the urgency Action assigns when the document did not establish one. It must stay an admission of not knowing — never rendered as a calm \"Low\"."
+  }
+}

@@ -15,8 +15,11 @@ import 'package:action_app/features/settings/application/settings_providers.dart
 import 'package:action_app/features/settings/data/system_settings_launcher.dart';
 import 'package:action_app/features/settings/presentation/help_screen.dart';
 import 'package:action_app/features/settings/presentation/privacy_screen.dart';
+import 'package:action_app/design/components/app_sheet.dart';
+import 'package:action_app/features/settings/presentation/settings_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:action_app/l10n/gen/app_l10n_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../actions/support/actions_test_support.dart';
@@ -117,7 +120,29 @@ Future<void> openSettings(WidgetTester tester) async {
 }
 
 String _privacyText() =>
-    privacyDataMap.expand((g) => g.lines).join(' ');
+    privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ');
+
+/// The value shown on the right of a named settings row.
+///
+/// Rows are label/value pairs and several rows can carry the same value —
+/// Appearance and Language both read "System" on a fresh install. Asserting
+/// on the value alone therefore says nothing about which row it belongs to,
+/// and breaks the first time an unrelated row acquires the same word.
+String valueOfRow(WidgetTester tester, String label) {
+  final row = tester.widget<SettingsRow>(
+    find.ancestor(of: find.text(label), matching: find.byType(SettingsRow)),
+  );
+  return row.value ?? '';
+}
+
+/// Text inside the open bottom sheet rather than on the page behind it.
+///
+/// The appearance chooser repeats the words that are already on the row it
+/// was opened from, so an unqualified finder matches both.
+Finder inSheet(String text) => find.descendant(
+      of: find.byType(AppSheet),
+      matching: find.text(text),
+    );
 
 /// The data controls sit below the data map, which is the right order for
 /// reading and means a test has to scroll to reach them.
@@ -155,15 +180,19 @@ void main() {
       expect(find.text('Appearance'), findsOneWidget);
     });
 
-    settingsTest('it is four small groups, not a wall of switches',
+    settingsTest('it is five small groups, not a wall of switches',
         (tester) async {
       await pumpApp(tester, onboardedPreferences());
       await openSettings(tester);
 
-      expect(find.text('PREFERENCES'), findsOneWidget);
+      // V2 split the old "Privacy & data" row in two: the controls that
+      // actually protect something now live behind Security, and the
+      // explanation of where data goes stays where it was.
+      expect(find.text('PERSONALISE'), findsOneWidget);
+      expect(find.text('INTELLIGENCE'), findsOneWidget);
+      expect(find.text('PRIVACY & SECURITY'), findsOneWidget);
       expect(find.text('REMINDERS'), findsOneWidget);
-      expect(find.text('PRIVACY & DATA'), findsOneWidget);
-      expect(find.text('HELP'), findsOneWidget);
+      expect(find.text('ACTION'), findsOneWidget);
       // No developer configuration is on show.
       expect(find.textContaining('Firestore'), findsNothing);
       expect(find.textContaining('schemaVersion'), findsNothing);
@@ -175,7 +204,12 @@ void main() {
       await pumpApp(tester, onboardedPreferences());
       await openSettings(tester);
 
-      expect(find.text('System'), findsOneWidget);
+      // Two rows read "System" now — Appearance and Language, both following
+      // the device by default — so this asserts on the row rather than on the
+      // word. A bare find.text here passed for one reason and then failed for
+      // an unrelated correct change, which is the definition of a brittle
+      // assertion.
+      expect(valueOfRow(tester, 'Appearance'), 'System');
     });
 
     settingsTest('choosing dark applies immediately', (tester) async {
@@ -185,7 +219,7 @@ void main() {
 
       await tester.tap(find.text('Appearance'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Dark'));
+      await tester.tap(inSheet('Dark'));
       await tester.pumpAndSettle();
 
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -199,7 +233,7 @@ void main() {
       await openSettings(tester);
       await tester.tap(find.text('Appearance'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Dark'));
+      await tester.tap(inSheet('Dark'));
       await tester.pumpAndSettle();
 
       await tester.pumpWidget(const SizedBox.shrink());
@@ -218,11 +252,11 @@ void main() {
       });
       await pumpApp(tester, prefs);
       await openSettings(tester);
-      expect(find.text('Dark'), findsOneWidget);
+      expect(valueOfRow(tester, 'Appearance'), 'Dark');
 
       await tester.tap(find.text('Appearance'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('System'));
+      await tester.tap(inSheet('System'));
       await tester.pumpAndSettle();
 
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -307,7 +341,7 @@ void main() {
     // The list builds lazily, so these read the copy itself rather than the
     // handful of entries that happen to fit on screen.
     test('answers the questions people actually ask', () {
-      final questions = helpEntries.map((e) => e.question).toList();
+      final questions = helpEntriesIn(AppL10nEn()).map((e) => e.question).toList();
       expect(questions, contains('Is this a backup?'));
       expect(questions, contains('Why was my reminder late?'));
       expect(questions, contains('Where is my data?'));
@@ -315,7 +349,7 @@ void main() {
     });
 
     test('invents no support channel anywhere in it', () {
-      for (final entry in helpEntries) {
+      for (final entry in helpEntriesIn(AppL10nEn())) {
         final text = '${entry.question} ${entry.answer}';
         expect(text, isNot(contains('@')));
         expect(text.toLowerCase(), isNot(contains('contact us')));
@@ -324,7 +358,7 @@ void main() {
     });
 
     test('does not promise what the architecture cannot deliver', () {
-      final all = helpEntries.map((e) => e.answer).join(' ').toLowerCase();
+      final all = helpEntriesIn(AppL10nEn()).map((e) => e.answer).join(' ').toLowerCase();
       expect(all, isNot(contains('guaranteed')));
       expect(all, isNot(contains('cloud backup')));
       expect(all, isNot(contains('syncs across')));
@@ -341,13 +375,23 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    settingsTest('names the two things that leave the device', (tester) async {
+    settingsTest('names every route data can take off the device',
+        (tester) async {
       await pumpApp(tester, onboardedPreferences());
       await openPrivacy(tester);
 
-      expect(find.text('On this device'), findsOneWidget);
-      expect(find.text('Sent to be read'), findsOneWidget);
-      expect(find.text('Stored in the cloud'), findsOneWidget);
+      // Four now, not three: V2 added the user's own AI provider, which is a
+      // genuinely different route from the built-in reader. The page is a lazy
+      // list, so each heading is scrolled to rather than assumed on screen.
+      for (final heading in [
+        'On this device',
+        'Sent to be read',
+        'Sent to your own AI provider',
+        'Stored in the cloud',
+      ]) {
+        await tester.scrollUntilVisible(find.text(heading), 200);
+        expect(find.text(heading), findsOneWidget, reason: heading);
+      }
     });
 
     // Copy assertions read the map itself: the page is long, and a widget
@@ -374,7 +418,7 @@ void main() {
     });
 
     test('names exactly what the mirror carries', () {
-      final cloud = privacyDataMap
+      final cloud = privacyDataMapIn(AppL10nEn())
           .firstWhere((g) => g.title == 'Stored in the cloud')
           .lines
           .join(' ');
@@ -480,6 +524,15 @@ void main() {
       await openSettings(tester);
       expect(tester.takeException(), isNull);
 
+      // At 1.8x the page is taller than the viewport, and Settings is a lazy
+      // sliver list, so the privacy row is not built until it is scrolled to.
+      // Scrolling first keeps this asserting what it always asserted - that
+      // the page survives large text and privacy is still reachable - rather
+      // than depending on the row happening to sit above the fold.
+      await tester.scrollUntilVisible(
+        find.text('Where your information lives'),
+        200,
+      );
       await tester.tap(find.text('Where your information lives'));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);

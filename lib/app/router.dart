@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,30 +12,49 @@ import '../features/capture/presentation/source_detail_screen.dart';
 import '../features/extraction/domain/extraction_result.dart';
 import '../features/extraction/presentation/extraction_review_screen.dart';
 import '../features/home/presentation/home_screen.dart';
+import '../features/intelligence/presentation/intelligence_settings_screen.dart';
+import '../features/intelligence/presentation/studio_screen.dart';
+import '../features/intelligence/presentation/tool_run_screen.dart';
+import '../features/library/presentation/library_screen.dart';
 import '../features/onboarding/application/onboarding_controller.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/search/presentation/search_screen.dart';
+import '../features/goals/presentation/goal_workspace_screen.dart';
 import '../features/settings/presentation/help_screen.dart';
+import '../features/settings/presentation/language_screen.dart';
 import '../features/settings/presentation/privacy_screen.dart';
+import '../features/settings/presentation/security_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/settings/presentation/text_recognition_screen.dart';
+import 'action_shell.dart';
 
 /// Route paths in one place so navigation is never stringly-typed.
-///
-/// Only routes with a real screen behind them live here. The rest of the map
-/// (action detail, review, settings, search) arrives with the features that
-/// need it rather than as dead entries.
 abstract final class Routes {
+  // The four shell destinations. Each is the root of its own branch, so moving
+  // between them preserves where the user was in each.
   static const home = '/';
+  static const library = '/library';
+  static const studio = '/studio';
+  static const search = '/search';
+
   static const onboarding = '/onboarding';
   static const capturePreview = '/capture/preview';
   static const captureText = '/capture/text';
   static const sourcePattern = '/source/:id';
   static const sourceReviewPattern = '/source/:id/review';
   static const actionPattern = '/action/:id';
-  static const search = '/search';
   static const settings = '/settings';
+  static const settingsSecurity = '/settings/security';
   static const settingsPrivacy = '/settings/privacy';
   static const settingsHelp = '/settings/help';
+  static const settingsLanguage = '/settings/language';
+  static const settingsTextRecognition = '/settings/text-recognition';
+  static const settingsIntelligence = '/settings/intelligence';
+
+  /// Deliberately not nested under `/studio`. A tool run is a focused task that
+  /// pushes above the shell, not a page inside the Intelligence branch — and a
+  /// path that merely *looks* nested invites exactly that confusion.
+  static const toolPattern = '/tool/:id';
 
   /// Debug builds only — see the route table.
   static const diagnostics = '/diagnostics';
@@ -43,7 +63,30 @@ abstract final class Routes {
   static String source(String id) => '/source/$id';
   static String sourceReview(String id) => '/source/$id/review';
   static String action(String id) => '/action/$id';
+
+  /// A tool, optionally already pointed at a source or an Action. The context
+  /// travels as a query parameter so a link into a tool survives a restart the
+  /// same way an Action deep link does.
+  static String tool(
+    String id, {
+    String? sourceId,
+    String? actionId,
+    String? goalId,
+  }) {
+    final query = <String>[
+      if (sourceId != null) 'source=$sourceId',
+      if (actionId != null) 'action=$actionId',
+      if (goalId != null) 'goal=$goalId',
+    ];
+    return query.isEmpty ? '/tool/$id' : '/tool/$id?${query.join('&')}';
+  }
+
+  static const goalPattern = '/goal/:id';
+
+  static String goal(String id) => '/goal/$id';
 }
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 final routerProvider = Provider<GoRouter>((ref) {
   // Read, not watch: rebuilding the router would rebuild the whole navigator
@@ -51,12 +94,14 @@ final routerProvider = Provider<GoRouter>((ref) {
   // every navigation by the redirect below, which is enough — the flag only
   // ever moves once, and the screen that moves it navigates explicitly.
   return GoRouter(
+    navigatorKey: _rootNavigatorKey,
     initialLocation: ref.read(onboardingControllerProvider)
         ? Routes.home
         : Routes.onboarding,
     // A guard rather than a one-time decision, so onboarding cannot be
     // skipped by a deep link into `/action/:id` on a fresh install, and
-    // cannot be re-entered by one afterwards.
+    // cannot be re-entered by one afterwards. It sits above the shell, so it
+    // still covers every branch.
     redirect: (context, state) {
       final completed = ref.read(onboardingControllerProvider);
       final atOnboarding = state.matchedLocation == Routes.onboarding;
@@ -69,12 +114,53 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.onboarding,
         builder: (context, state) => const OnboardingScreen(),
       ),
-      GoRoute(
-        path: Routes.home,
-        builder: (context, state) => const HomeScreen(),
+
+      // The persistent shell. Four branches, each with its own Navigator so
+      // scroll position and stack survive a trip to another destination.
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            ActionShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.home,
+                builder: (context, state) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.library,
+                builder: (context, state) => const LibraryScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.studio,
+                builder: (context, state) => const StudioScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.search,
+                builder: (context, state) => const SearchScreen(),
+              ),
+            ],
+          ),
+        ],
       ),
+
+      // Everything below pushes *above* the shell: focused tasks that want the
+      // full screen and a back button, not destinations you switch between.
       GoRoute(
         path: Routes.capturePreview,
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final args = state.extra;
           // Reachable with no arguments via a restored stack or a deep link.
@@ -86,44 +172,23 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.captureText,
-        builder: (context, state) => const PasteTextScreen(),
+        parentNavigatorKey: _rootNavigatorKey,
+        // `extra` carries text shared in from another app. Anything else that
+        // reaches this route — a restored stack, a deep link — gets the empty
+        // screen rather than a cast that throws.
+        builder: (context, state) => PasteTextScreen(
+          initialText: state.extra is String ? state.extra as String : null,
+        ),
       ),
       GoRoute(
         path: Routes.sourcePattern,
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) =>
             SourceDetailScreen(id: state.pathParameters['id']!),
       ),
       GoRoute(
-        path: Routes.search,
-        builder: (context, state) => const SearchScreen(),
-      ),
-      GoRoute(
-        path: Routes.settings,
-        builder: (context, state) => const SettingsScreen(),
-        routes: [
-          // Nested, so the back stack reads Settings -> Privacy rather than
-          // dropping the user onto Home from a sub-page.
-          GoRoute(
-            path: 'privacy',
-            builder: (context, state) => const PrivacyScreen(),
-          ),
-          GoRoute(
-            path: 'help',
-            builder: (context, state) => const HelpScreen(),
-          ),
-        ],
-      ),
-      GoRoute(
-        // Deep-linkable by design: the id in the path is the durable local
-        // Action id, so a link to one still resolves after a restart. An id
-        // that no longer exists gets a real not-found state from the screen
-        // rather than a silent bounce to Home.
-        path: Routes.actionPattern,
-        builder: (context, state) =>
-            ActionDetailScreen(id: state.pathParameters['id']!),
-      ),
-      GoRoute(
         path: Routes.sourceReviewPattern,
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           // A pre-computed result may arrive as `extra`, but only debug
           // builds honour it — it exists so the fixture harness can drive
@@ -137,15 +202,77 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
+      GoRoute(
+        // Deep-linkable by design: the id in the path is the durable local
+        // Action id, so a link to one still resolves after a restart. An id
+        // that no longer exists gets a real not-found state from the screen
+        // rather than a silent bounce to Home.
+        path: Routes.actionPattern,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) =>
+            ActionDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: Routes.toolPattern,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => ToolRunScreen(
+          toolId: state.pathParameters['id']!,
+          sourceId: state.uri.queryParameters['source'],
+          actionId: state.uri.queryParameters['action'],
+          goalId: state.uri.queryParameters['goal'],
+        ),
+      ),
+      GoRoute(
+        path: Routes.goalPattern,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) =>
+            GoalWorkspaceScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: Routes.settings,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SettingsScreen(),
+        routes: [
+          // Nested, so the back stack reads Settings -> Privacy rather than
+          // dropping the user onto Home from a sub-page.
+          GoRoute(
+            path: 'security',
+            builder: (context, state) => const SecurityScreen(),
+          ),
+          GoRoute(
+            path: 'privacy',
+            builder: (context, state) => const PrivacyScreen(),
+          ),
+          GoRoute(
+            path: 'help',
+            builder: (context, state) => const HelpScreen(),
+          ),
+          GoRoute(
+            path: 'language',
+            builder: (context, state) => const LanguageScreen(),
+          ),
+          GoRoute(
+            path: 'text-recognition',
+            builder: (context, state) => const TextRecognitionScreen(),
+          ),
+          GoRoute(
+            path: 'intelligence',
+            builder: (context, state) => const IntelligenceSettingsScreen(),
+          ),
+        ],
+      ),
+
       // Registered only in debug builds so the harness cannot be reached in a
       // release APK even by a crafted link.
       if (kDebugMode) ...[
         GoRoute(
           path: Routes.diagnostics,
+          parentNavigatorKey: _rootNavigatorKey,
           builder: (context, state) => const OcrDiagnosticsScreen(),
         ),
         GoRoute(
           path: Routes.extractionDiagnostics,
+          parentNavigatorKey: _rootNavigatorKey,
           builder: (context, state) => const ExtractionDiagnosticsScreen(),
         ),
       ],
