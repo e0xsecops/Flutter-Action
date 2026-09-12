@@ -91,7 +91,7 @@ class AppL10nJa extends AppL10n {
   String get navLibrary => 'ライブラリ';
 
   @override
-  String get navIntelligence => 'インテリジェンス';
+  String get navIntelligence => '知能';
 
   @override
   String get navSearch => '検索';
