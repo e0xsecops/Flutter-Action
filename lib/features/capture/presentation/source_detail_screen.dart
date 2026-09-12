@@ -223,13 +223,14 @@ class _IntelligenceStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final tools = recommendedFor(item);
     if (tools.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(AppL10n.of(context).sourceDoMore, style: text.titleSmall),
+        Text(l10n.sourceDoMore, style: text.titleSmall),
         const SizedBox(height: Space.md),
         Wrap(
           spacing: Space.sm,
@@ -237,7 +238,7 @@ class _IntelligenceStrip extends StatelessWidget {
           children: [
             for (final tool in tools)
               ActionChip(
-                label: Text(tool.title),
+                label: Text(tool.titleIn(l10n)),
                 onPressed: () => context.push(
                   Routes.tool(tool.id, sourceId: item.id),
                 ),

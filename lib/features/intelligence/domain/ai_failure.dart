@@ -11,6 +11,7 @@
 library;
 
 import '../../../core/security/secret_redactor.dart';
+import 'ai_capabilities.dart';
 
 enum AiFailureKind {
   /// No provider connected yet. Not an error — an invitation.
@@ -59,7 +60,69 @@ enum AiFailureKind {
   insecureEndpoint,
 
   /// Nothing above fits.
-  unknown,
+  unknown;
+
+  /// The sentence a person is shown for this failure, in canonical English.
+  ///
+  /// **Why the copy belongs to the kind and not to the `throw`.** Three
+  /// adapters raise the same conditions from three different envelopes. A
+  /// wording written at each throw site drifts between them — and, worse, it
+  /// cannot be translated at all, because a literal built inside `data/` has
+  /// no locale to build itself from. The kind travels; the sentence should
+  /// travel with it.
+  ///
+  /// This is the English original, kept here for logs, bug reports and the
+  /// domain tests that assert wording without pumping a widget tree. What a
+  /// person actually reads is `AiFailureKindL10n.messageIn(l10n)` in
+  /// `lib/l10n/enum_labels.dart`, for the reason every other enum in this app
+  /// keeps its English and its translation apart: a `const` value cannot
+  /// depend on a locale.
+  ///
+  /// [missing] is read only by [unsupportedCapability], the one kind whose
+  /// sentence has to name something the failure carries.
+  ///
+  /// [inputTooLarge] returns the sentence for text over the cap. The other
+  /// local limits — a document, its page count, a batch of attachments —
+  /// name the file and the number, so they are worded at the check that knows
+  /// them rather than here.
+  String message({Iterable<AiCapability> missing = const []}) {
+    assert(
+      this != AiFailureKind.unsupportedCapability || missing.isNotEmpty,
+      'unsupportedCapability exists to name what the chosen model cannot do. '
+      'With nothing missing the sentence has a hole in it: pass the '
+      'capabilities the model was missing.',
+    );
+    return switch (this) {
+      AiFailureKind.notConfigured =>
+        'Connect an AI provider to use this tool.',
+      AiFailureKind.invalidKey =>
+        'That API key was not accepted by the provider.',
+      AiFailureKind.quotaExceeded =>
+        'Your provider account is out of credit or has hit its quota.',
+      AiFailureKind.rateLimited =>
+        'Your provider is rate-limiting requests. Try again shortly.',
+      AiFailureKind.networkUnavailable =>
+        "Action couldn't reach your AI provider. Check your connection.",
+      AiFailureKind.unsupportedModel =>
+        'That model is not available to your key. Choose another in Settings.',
+      AiFailureKind.unsupportedCapability =>
+        'The model you chose cannot read ${describeCapabilities(missing)}. '
+            'Pick another model in Settings.',
+      AiFailureKind.contextTooLarge =>
+        'That was too much content for this model to read at once.',
+      AiFailureKind.inputTooLarge =>
+        'That is more text than can be analysed at once.',
+      AiFailureKind.providerUnavailable =>
+        'Your AI provider is having trouble. Try again shortly.',
+      AiFailureKind.malformedResponse =>
+        'That provider sent back something Action could not read.',
+      AiFailureKind.cancelled => 'Stopped.',
+      AiFailureKind.insecureEndpoint =>
+        'That endpoint must be an https:// address.',
+      AiFailureKind.unknown =>
+        'Something went wrong talking to your AI provider.',
+    };
+  }
 }
 
 /// A failure, safe to show and safe to log.
@@ -89,6 +152,13 @@ class AiProviderFailure implements Exception {
 
   /// Populated for [AiFailureKind.unsupportedCapability] so the UI can name
   /// what the chosen model is missing instead of saying "unsupported".
+  ///
+  /// Strings, and English ones: the adapter names the capabilities before it
+  /// throws, which is the wrong side of the boundary for a translated build.
+  /// Typed as `List<AiCapability>` these would reach the screen as values the
+  /// reader's own language can name, through `AiCapabilityListL10n`. Nothing
+  /// in `lib/` reads this field today, so that change is still free — it
+  /// stops being free the moment something does.
   final List<String> missingCapabilities;
 
   /// Present when the provider told us how long to wait.

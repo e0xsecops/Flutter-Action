@@ -2241,4 +2241,2249 @@ class AppL10nAr extends AppL10n {
 
   @override
   String get urgencyUnsure => 'غير مؤكَّد';
+
+  @override
+  String get detailSaveFailed => 'تعذّر حفظ ذلك. لم يضِع شيء — حاول مرة أخرى.';
+
+  @override
+  String get detailSectionCreatedFrom => 'أُنشئ من';
+
+  @override
+  String get detailSourceChecking => 'جارٍ البحث عن الالتقاط الأصلي…';
+
+  @override
+  String get detailSourceUnavailable => 'لم يعد الالتقاط الأصلي متاحًا.';
+
+  @override
+  String get detailReopenAction => 'إعادة فتح الإجراء';
+
+  @override
+  String get detailMarkActionComplete => 'تعليم الإجراء كمنجز';
+
+  @override
+  String get detailGetHelp => 'احصل على مساعدة في هذا';
+
+  @override
+  String get detailSectionHistory => 'السجل';
+
+  @override
+  String get detailHistoryShowLess => 'عرض أقل';
+
+  @override
+  String detailHistoryShowAll(int count) {
+    return 'عرض الكل ($count)';
+  }
+
+  @override
+  String get detailHistoryCreated => 'أُنشئ';
+
+  @override
+  String detailHistoryCreatedWithSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أُنشئ بـ$count خطوة',
+      many: 'أُنشئ بـ$count خطوة',
+      few: 'أُنشئ بـ$count خطوات',
+      two: 'أُنشئ بخطوتين',
+      one: 'أُنشئ بخطوة واحدة',
+      zero: 'أُنشئ بلا خطوات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get detailHistoryReviewed => 'أكّدت التفاصيل بنفسك';
+
+  @override
+  String detailHistoryStepFinished(String title) {
+    return 'أنجزتَ «$title»';
+  }
+
+  @override
+  String get detailHistoryAStep => 'خطوة';
+
+  @override
+  String get detailHistoryReminderSet => 'ضبطتَ تذكيرًا';
+
+  @override
+  String detailHistoryReminderSetFor(String when) {
+    return 'ضبطتَ تذكيرًا لموعد $when';
+  }
+
+  @override
+  String get detailHistoryCompleted => 'عُلِّم كمنجز';
+
+  @override
+  String get detailHistoryChanged => 'آخر تغيير';
+
+  @override
+  String get detailHistoryTimestampFormat => 'd MMM yyyy، HH:mm';
+
+  @override
+  String get aiProviderCustom => 'مخصّص (متوافق مع واجهة OpenAI)';
+
+  @override
+  String get aiCapabilityText => 'النصوص';
+
+  @override
+  String get aiCapabilityImages => 'الصور';
+
+  @override
+  String get aiCapabilityDocuments => 'المستندات';
+
+  @override
+  String get aiCapabilityStructuredResults => 'النتائج المهيكلة';
+
+  @override
+  String get aiCapabilityStreaming => 'البث التدريجي';
+
+  @override
+  String get aiCapabilitySystemInstructions => 'تعليمات النظام';
+
+  @override
+  String get aiCapabilityEvidenceCitations => 'اقتباسات الدليل';
+
+  @override
+  String get aiCapabilityLongDocuments => 'المستندات الطويلة';
+
+  @override
+  String aiCapabilityListJoin(String a, String b) {
+    return '$a، $b';
+  }
+
+  @override
+  String aiCapabilityListTwo(String a, String b) {
+    return '$a أو $b';
+  }
+
+  @override
+  String aiCapabilityListMore(String head, String last) {
+    return '$head أو $last';
+  }
+
+  @override
+  String get aiFailureNotConfigured =>
+      'اربط مزوّد ذكاء اصطناعي لاستخدام هذه الأداة.';
+
+  @override
+  String get aiFailureInvalidKey => 'لم يقبل المزوّد مفتاح API ذاك.';
+
+  @override
+  String get aiFailureQuotaExceeded =>
+      'حسابك لدى المزوّد إمّا نفد رصيده أو بلغ حصّته.';
+
+  @override
+  String get aiFailureRateLimited =>
+      'مزوّدك يحدّ من معدّل الطلبات. أعد المحاولة بعد قليل.';
+
+  @override
+  String get aiFailureNetworkUnavailable =>
+      'تعذّر على Action الوصول إلى مزوّد الذكاء الاصطناعي الخاص بك. تحقّق من اتصالك.';
+
+  @override
+  String get aiFailureUnsupportedModel =>
+      'ذلك النموذج غير متاح لمفتاحك. اختر غيره من الإعدادات.';
+
+  @override
+  String aiFailureUnsupportedCapability(String capabilities) {
+    return 'لا يستطيع النموذج الذي اخترته قراءة $capabilities. اختر نموذجًا آخر من الإعدادات.';
+  }
+
+  @override
+  String get aiFailureContextTooLarge =>
+      'كان ذلك محتوى أكثر مما يستطيع هذا النموذج قراءته دفعة واحدة.';
+
+  @override
+  String get aiFailureInputTooLargeText =>
+      'هذا نص أكثر مما يمكن تحليله دفعة واحدة.';
+
+  @override
+  String get aiFailureProviderUnavailable =>
+      'يواجه مزوّد الذكاء الاصطناعي الخاص بك مشكلة. أعد المحاولة بعد قليل.';
+
+  @override
+  String get aiFailureMalformedResponse =>
+      'أعاد ذلك المزوّد شيئًا لم يستطع Action قراءته.';
+
+  @override
+  String get aiFailureCancelled => 'أوقفتَه.';
+
+  @override
+  String get aiFailureInsecureEndpoint =>
+      'يجب أن يكون ذلك الـendpoint عنوان https://.';
+
+  @override
+  String get aiFailureUnknown =>
+      'حدث خطأ ما أثناء التواصل مع مزوّد الذكاء الاصطناعي الخاص بك.';
+
+  @override
+  String get appLockTitle => 'Action مقفل';
+
+  @override
+  String get appLockPrompt =>
+      'أكّد أنك أنت للمتابعة. يطلب Action ذلك من جهازك — وهو لا يرى بصمتك ولا وجهك ولا رمز PIN أبدًا.';
+
+  @override
+  String get appLockUnlocking => 'جارٍ فتح القفل…';
+
+  @override
+  String get appLockNotConfirmed =>
+      'لم يتم التأكيد. أعد المحاولة متى كنت مستعدًا.';
+
+  @override
+  String get appLockCannotConfirm =>
+      'لا يستطيع جهازك الآن أن يؤكّد أنك أنت. تحقّق من أن قفل الشاشة ما زال مضبوطًا في إعدادات الجهاز.';
+
+  @override
+  String get appLockWaiting => 'بالانتظار…';
+
+  @override
+  String get appLockUnlock => 'فتح القفل';
+
+  @override
+  String get appLockReasonUnlock => 'فتح قفل Action';
+
+  @override
+  String get appLockReasonEnable => 'أكّد أنك أنت قبل تفعيل قفل التطبيق';
+
+  @override
+  String get appLockReasonDisable => 'أكّد أنك أنت قبل إيقاف قفل التطبيق';
+
+  @override
+  String get todayCapabilityHeading => 'ما الذي يتولّاه Action';
+
+  @override
+  String get todayCapabilityDocumentTitle => 'رسالة أو فاتورة';
+
+  @override
+  String get todayCapabilityDocumentBlurb =>
+      'يقرؤها Action ويجد الموعد النهائي والمبلغ والرقم المرجعي.';
+
+  @override
+  String get todayCapabilityScreenshotTitle => 'لقطة شاشة لديك';
+
+  @override
+  String get todayCapabilityScreenshotBlurb =>
+      'حوّل رسالة كنت ستنساها إلى شيء يمكنك اتخاذ إجراء بشأنه.';
+
+  @override
+  String get todayCapabilityTextTitle => 'بعض النص';
+
+  @override
+  String get todayCapabilityTextBlurb =>
+      'الصق أي شيء. ويستنتج Action ما هو وما الذي يطلبه منك.';
+
+  @override
+  String get todayCapabilityConfirmTitle => 'أنت تؤكّد كل شيء';
+
+  @override
+  String get todayCapabilityConfirmBlurb =>
+      'لا يصير شيء إجراءً قبل أن ترى الدليل وتوافق.';
+
+  @override
+  String get todayCapabilityExploreIntelligence => 'استكشف الذكاء';
+
+  @override
+  String get documentRejectedEmpty => 'ذلك الملف فارغ.';
+
+  @override
+  String documentRejectedTooLarge(String size) {
+    return 'حجم ذلك المستند $size، وهو أكبر مما يستطيع Action العمل عليه.';
+  }
+
+  @override
+  String get documentRejectedNotAPdf =>
+      'هذا ليس ملف PDF مهما كان اسمه. ويقرأ Action ملفات PDF والصور.';
+
+  @override
+  String get documentRejectedUnreadable => 'تعذّرت قراءة ذلك المستند.';
+
+  @override
+  String get pdfRejectedNotAPdf => 'ذلك الملف ليس PDF مهما كان اسمه.';
+
+  @override
+  String get pdfRejectedEncrypted =>
+      'ملف PDF ذاك محمي بكلمة مرور، فلا يستطيع Action قراءته.';
+
+  @override
+  String get pdfRejectedDamaged => 'تعذّرت قراءة ملف PDF ذاك. وقد يكون ناقصًا.';
+
+  @override
+  String get shareRejectedEmpty => 'لم يكن في تلك المشاركة شيء يُقرأ.';
+
+  @override
+  String get shareRejectedUnsupportedType =>
+      'يستطيع Action أخذ النصوص والصور وملفات PDF. وكان ذلك شيئًا آخر.';
+
+  @override
+  String get shareRejectedContentMismatch =>
+      'ذلك الملف ليس من النوع الذي يقول إنه منه، ولذلك لم يفتحه Action.';
+
+  @override
+  String get shareRejectedTooLarge => 'ذلك الملف أكبر من أن يعمل عليه Action.';
+
+  @override
+  String get shareRejectedUnreadable => 'تعذّرت قراءة ذلك الملف.';
+
+  @override
+  String get captureFailureRecognition => 'تعذّر تشغيل التعرّف على النص.';
+
+  @override
+  String get captureFailureImageFormat =>
+      'تعذّرت قراءة صيغة تلك الصورة على هذا الجهاز.';
+
+  @override
+  String get connectSheetTitle => 'اربط الذكاء الاصطناعي الخاص بك';
+
+  @override
+  String get connectSheetSubtitle =>
+      'أنت تستخدم حسابك ومفتاح API الخاصين بك لدى المزوّد. ويحفظ Action المفتاح في التخزين الآمن لهذا الجهاز.';
+
+  @override
+  String get connectErrorKeyMissing => 'الصق مفتاح API الخاص بك للمتابعة.';
+
+  @override
+  String get connectErrorModelMissing => 'اختر نموذجًا، أو اكتب معرّف نموذج.';
+
+  @override
+  String get connectErrorEndpointMissing => 'أضف عنوان الـendpoint الخاص بك.';
+
+  @override
+  String get connectErrorSecureStorageUnavailable =>
+      'تعذّر فتح التخزين الآمن لهذا الجهاز، فلم يُحفظ المفتاح.';
+
+  @override
+  String get connectTestSucceeded => 'تم الربط.';
+
+  @override
+  String connectTestSucceededWithModels(int count) {
+    return 'تم الربط. عدد النماذج المتاحة: $count.';
+  }
+
+  @override
+  String get connectProviderLabel => 'المزوّد';
+
+  @override
+  String get connectEndpointLabel => 'Endpoint';
+
+  @override
+  String get connectEndpointHttpsNote =>
+      'يجب أن يكون عنوانًا بصيغة https://. ولن يرسل Action مستنداتك عبر اتصال غير مشفَّر.';
+
+  @override
+  String get connectApiKeyLabel => 'مفتاح API';
+
+  @override
+  String get connectApiKeyHint => 'الصق مفتاحك';
+
+  @override
+  String get connectKeyPrivacyNote =>
+      'يبقى مفتاحك على هذا الجهاز. ولا يرسله Action إلى أي جهة أبدًا سوى المزوّد الذي اخترته، ولا يستطيع عرضه عليك مرة أخرى بعد الحفظ.';
+
+  @override
+  String get connectModelLabel => 'النموذج';
+
+  @override
+  String get connectModelIdHint => 'معرّف النموذج';
+
+  @override
+  String get connectModelFreeTextNote =>
+      'يوقف المزوّدون معرّفات نماذج ويضيفون غيرها. وإن لم يكن المعرّف الذي تريده مدرجًا، فاكتبه هنا.';
+
+  @override
+  String get connectAndTest => 'اربط واختبر';
+
+  @override
+  String get connectSaveWithoutTesting => 'احفظ دون اختبار';
+
+  @override
+  String get toolWarningFactsNotChecked =>
+      'تعذّر على Action مقارنة هذا بالنص الأصلي، ولذلك لم تُفحص المبالغ والتواريخ التي فيه.';
+
+  @override
+  String get toolTitleRewrite => 'حسّن هذه الكتابة';
+
+  @override
+  String get toolDescriptionRewrite =>
+      'أوضح أو أقصر أو أكثر رسمية — مع إبقاء المعلومات كما هي.';
+
+  @override
+  String get toolModeRewriteClearer => 'أوضح';
+
+  @override
+  String get toolModeRewriteProfessional => 'أكثر مهنية';
+
+  @override
+  String get toolModeRewriteShorter => 'أقصر';
+
+  @override
+  String get toolModeRewritePersuasive => 'أكثر إقناعًا';
+
+  @override
+  String get toolModeRewriteSimpler => 'أبسط';
+
+  @override
+  String get toolModeRewriteStructured => 'أكثر تنظيمًا';
+
+  @override
+  String get toolModeRewriteGrammarOnly => 'القواعد فقط';
+
+  @override
+  String get toolSectionWhatChanged => 'ما الذي تغيّر';
+
+  @override
+  String get toolSectionNote => 'ملاحظة';
+
+  @override
+  String get toolSectionAlreadyClearBody =>
+      'كان هذا واضحًا أصلًا. والتغييرات أدناه طفيفة.';
+
+  @override
+  String get toolSectionImprovedText => 'النص المحسَّن';
+
+  @override
+  String get toolTitleDraftReply => 'اكتب مسودة رد';
+
+  @override
+  String get toolDescriptionDraftReply => 'رد يمكنك تعديله وإرساله بنفسك.';
+
+  @override
+  String get toolModeReplyProfessional => 'مهني';
+
+  @override
+  String get toolModeReplyConcise => 'موجز';
+
+  @override
+  String get toolModeReplyFriendly => 'ودود';
+
+  @override
+  String get toolModeReplyFormal => 'رسمي';
+
+  @override
+  String get toolModeReplyClarification => 'اطلب توضيحًا';
+
+  @override
+  String get toolModeReplyConfirmation => 'أكّد الاستلام';
+
+  @override
+  String get toolModeReplyDispute => 'اعترض على هذا';
+
+  @override
+  String get toolSectionSubject => 'الموضوع';
+
+  @override
+  String get toolSectionDraftReply => 'مسودة الرد';
+
+  @override
+  String get toolSectionPlaceholders => 'عليك ملء هذه الفراغات';
+
+  @override
+  String toolSectionDraftWithSubject(String subject) {
+    return 'مسودة — $subject';
+  }
+
+  @override
+  String get toolWarningDraftNotSent =>
+      'هذه مسودة. لا يرسل Action شيئًا — اقرأها وعدّلها وأرسلها بنفسك.';
+
+  @override
+  String get toolTitleTranslate => 'ترجم';
+
+  @override
+  String get toolDescriptionTranslate =>
+      'لغة أخرى، مع إبقاء الأرقام والأسماء كما هي.';
+
+  @override
+  String get toolSectionTranslation => 'الترجمة';
+
+  @override
+  String toolSectionTranslationFromTo(String from, String to) {
+    return 'من $from إلى $to';
+  }
+
+  @override
+  String get toolSectionKeptInOriginal => 'أُبقيت كما في الأصل';
+
+  @override
+  String get toolWarningTranslationNotCertified =>
+      'ترجمة للفهم، وليست ترجمة معتمدة.';
+
+  @override
+  String get toolTitleStructuredData => 'استخرج جدولًا';
+
+  @override
+  String get toolDescriptionStructuredData => 'صفوف وحقول وأرقام يمكنك نسخها.';
+
+  @override
+  String get toolSectionTable => 'الجدول';
+
+  @override
+  String get toolSectionFields => 'الحقول';
+
+  @override
+  String get toolSectionTableCsv => 'الجدول (CSV)';
+
+  @override
+  String get toolWarningTableLayoutUncertain =>
+      'تعذّرت قراءة تخطيط أعمدة هذا الجدول قراءة موثوقة. تحقّق من أن الصفوف متقابلة بشكل صحيح قبل استخدامها.';
+
+  @override
+  String get toolTitleDeadlineFinder => 'ابحث عن المواعيد النهائية';
+
+  @override
+  String get toolDescriptionDeadlineFinder =>
+      'ما المستحق، ومتى، وماذا يحدث إن لم يُنفَّذ.';
+
+  @override
+  String toolSectionDeadlineCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count موعد نهائي',
+      many: '$count موعدًا نهائيًا',
+      few: '$count مواعيد نهائية',
+      two: 'موعدان نهائيان',
+      one: 'موعد نهائي واحد',
+      zero: 'لا مواعيد نهائية',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionNothingDue => 'لا شيء مستحق';
+
+  @override
+  String get toolSectionNothingDueBody =>
+      'لم يجد Action مواعيد نهائية ولا التزامات في هذا المحتوى.';
+
+  @override
+  String get toolWarningNothingScheduledAutomatically =>
+      'لا يُجدوَل شيء حتى تختاره. ولا تُضبط التذكيرات تلقائيًا أبدًا.';
+
+  @override
+  String toolLabelDeadlineConsequence(String consequence) {
+    return 'إن لم يُنفَّذ: $consequence';
+  }
+
+  @override
+  String toolLabelDeadlineRequiredItems(String items) {
+    return 'تحتاج: $items';
+  }
+
+  @override
+  String get moneyErrorEmpty => 'لم يُذكر أي مبلغ';
+
+  @override
+  String get moneyErrorMalformed => 'المبلغ ليس رقمًا مجرّدًا';
+
+  @override
+  String get moneyErrorNegative => 'المبلغ السالب ليس مبلغًا مستحق الدفع';
+
+  @override
+  String get moneyErrorTooManyDecimals => 'خانات عشرية أكثر مما لهذه العملة';
+
+  @override
+  String get moneyErrorUnsupportedCurrency => 'رمز العملة ليس مما نعرفه';
+
+  @override
+  String get moneyErrorOutOfRange => 'المبلغ كبير على نحو غير معقول';
+
+  @override
+  String get escalationOcrFailed =>
+      'تعذّر تشغيل التعرّف على النص في هذا الالتقاط إطلاقًا.';
+
+  @override
+  String get escalationNoTextRecognised =>
+      'يبدو هذا مستندًا، لكن لم يجر التعرّف على أي نص.';
+
+  @override
+  String get escalationThinText =>
+      'النص الذي جرى التعرّف عليه أقل بكثير مما يقتضيه مستند بهذا الحجم.';
+
+  @override
+  String get escalationLowLineConfidence =>
+      'أبلغ محرّك التعرّف عن ثقة منخفضة في عدة أسطر.';
+
+  @override
+  String get escalationTableLikeLayout =>
+      'يبدو التخطيط جدولًا، وقراءته سطرًا سطرًا تُضيّع معرفة أي قيمة تخص أي صف.';
+
+  @override
+  String get escalationFragmentedLayout =>
+      'عاد النص في صورة أجزاء صغيرة كثيرة، ولذلك فالبنية غير واضحة.';
+
+  @override
+  String get escalationMalformedText =>
+      'كثير من النص الذي جرى التعرّف عليه ليس كلمات أو أرقامًا مقروءة.';
+
+  @override
+  String get escalationConflictingDates =>
+      'أكثر من تاريخ معروض على أنه الموعد النهائي.';
+
+  @override
+  String get escalationConflictingAmounts =>
+      'أكثر من مبلغ معروض على أنه المبلغ المستحق.';
+
+  @override
+  String get escalationUnresolvedGrounding =>
+      'تعذّرت مطابقة بعض القيم بنص المستند.';
+
+  @override
+  String get escalationInstructionLikeContent =>
+      'يحتوي المستند على نص مكتوب كأنه تعليمات للتطبيق. ويُعامَل على أنه محتوى مستند، لا تعليمات أبدًا.';
+
+  @override
+  String get providerFailureNetwork =>
+      'تعذّر على Action الوصول إلى الخدمة. تحقّق من اتصالك.';
+
+  @override
+  String get providerFailureTimedOut =>
+      'استغرقت الخدمة وقتًا أطول من اللازم للرد.';
+
+  @override
+  String get providerFailureServiceUnavailable =>
+      'الخدمة غير متاحة مؤقتًا. أعد المحاولة لاحقًا.';
+
+  @override
+  String get providerFailureUnauthorized =>
+      'هذا التطبيق غير مخوَّل باستخدام الخدمة في الوقت الحالي.';
+
+  @override
+  String get providerFailureBlocked => 'رفضت الخدمة معالجة هذا المستند.';
+
+  @override
+  String get providerFailureUnknown =>
+      'تعذّر على Action قراءة هذا المستند. وقد تنجح إعادة المحاولة.';
+
+  @override
+  String get reviewBlockerTitle => 'أعطِ هذا الإجراء عنوانًا.';
+
+  @override
+  String get reviewBlockerDate =>
+      'اختر التاريخ الذي هو الموعد النهائي الحقيقي، أو اتركه غير محدَّد.';
+
+  @override
+  String get reviewBlockerAmount => 'اختر المبلغ الصحيح، أو اتركه غير محدَّد.';
+
+  @override
+  String get reviewBlockerStepTitle => 'الخطوات التي تُبقيها تحتاج عنوانًا.';
+
+  @override
+  String citationPage(int page) {
+    String _temp0 = intl.Intl.pluralLogic(
+      page,
+      locale: localeName,
+      other: 'صفحة $page',
+      many: 'صفحة $page',
+      few: 'صفحة $page',
+      two: 'صفحة $page',
+      one: 'صفحة $page',
+      zero: 'صفحة $page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String citationPageRange(int start, int end) {
+    return 'الصفحات من $start إلى $end';
+  }
+
+  @override
+  String rewriteDroppedFacts(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'لم يعد النص الناتج يحتوي على $values. راجعه قبل استخدامه.',
+      many: 'لم يعد النص الناتج يحتوي على $values. راجعه قبل استخدامه.',
+      few: 'لم يعد النص الناتج يحتوي على $values. راجعه قبل استخدامه.',
+      two: 'لم يعد النص الناتج يحتوي على $values. راجعه قبل استخدامه.',
+      one: 'لم يعد النص الناتج يحتوي على $values. راجعه قبل استخدامه.',
+      zero: 'لم يعد النص الناتج يحتوي على $values. راجعه قبل استخدامه.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rewriteDroppedFactsMore(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'لم يعد النص الناتج يحتوي على $values و$count قيمة أخرى. راجعه قبل استخدامه.',
+      many:
+          'لم يعد النص الناتج يحتوي على $values و$count قيمة أخرى. راجعه قبل استخدامه.',
+      few:
+          'لم يعد النص الناتج يحتوي على $values و$count قيم أخرى. راجعه قبل استخدامه.',
+      two:
+          'لم يعد النص الناتج يحتوي على $values وقيمتين أخريين. راجعه قبل استخدامه.',
+      one:
+          'لم يعد النص الناتج يحتوي على $values وقيمة واحدة أخرى. راجعه قبل استخدامه.',
+      zero: 'لم يعد النص الناتج يحتوي على $values. راجعه قبل استخدامه.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get listSeparator => '، ';
+
+  @override
+  String get goalStatusReached => 'تحقَّق';
+
+  @override
+  String get goalNewSheetTitle => 'ما الذي تريد أن يحدث؟';
+
+  @override
+  String get goalNewSheetSubtitle =>
+      'جملة واحدة تكفي. ويمكنك إضافة التفاصيل لاحقًا.';
+
+  @override
+  String get goalTitleHint => 'تجديد تأمين السيارة دون دفع مبلغ زائد.';
+
+  @override
+  String get goalCreateAction => 'إنشاء هدف';
+
+  @override
+  String get goalTitleSheetTitle => 'ما الذي تريده';
+
+  @override
+  String get goalOutcomeSheetTitle => 'كيف يبدو الإنجاز';
+
+  @override
+  String get goalContextSheetTitle => 'أين وصلت الأمور';
+
+  @override
+  String get goalOutcomeHint => 'السيارة مؤمَّنة والأوراق مُقدَّمة.';
+
+  @override
+  String get goalContextHint => 'لديّ عرضا سعر والتجديد في الثامن عشر.';
+
+  @override
+  String get goalWorkspaceTitle => 'الهدف';
+
+  @override
+  String get goalUnmarkReached => 'أزِل علامة التحقّق التي وضعتَها';
+
+  @override
+  String get goalMarkReached => 'تعليم الهدف كمتحقّق';
+
+  @override
+  String get goalNotFound => 'ذلك الهدف لم يعد هنا.';
+
+  @override
+  String get goalDeleteTitle => 'حذف هذا الهدف؟';
+
+  @override
+  String get goalDeleteBody =>
+      'يُحذف الهدف من هذا الجهاز. وتبقى أي إجراءات أُنشئت منه كما هي تمامًا.';
+
+  @override
+  String get goalOutcomeLabel => 'كيف يبدو الإنجاز';
+
+  @override
+  String get goalOutcomeEmpty =>
+      'لم تكتبه بعد. والتخطيط للهدف أسهل متى قلتَ ما الذي يعنيه إنجازه.';
+
+  @override
+  String get goalContextLabel => 'أين وصلت الأمور';
+
+  @override
+  String get goalContextEmpty =>
+      'لم يُكتب شيء بعد. ما حدث حتى الآن، وما يقف في الطريق.';
+
+  @override
+  String get goalTitleLabel => 'ما الذي تريده';
+
+  @override
+  String get goalEditTooltip => 'تعديل الهدف';
+
+  @override
+  String get goalToolsLabel => 'ما الذي يستطيع Action فعله';
+
+  @override
+  String get goalToolsNotReady =>
+      'اكتب مزيدًا عمّا تريده، عندئذٍ يكون لدى هذه الأدوات ما تعمل عليه.';
+
+  @override
+  String get toolGoalOptimizerTitle => 'حسّن هدفًا';
+
+  @override
+  String get toolActionPlanTitle => 'ابنِ خطة';
+
+  @override
+  String get resultFactUnconfirmed => 'غير مؤكَّد';
+
+  @override
+  String get resultSuggestedSteps => 'خطوات مقترحة';
+
+  @override
+  String get resultSuggestedAction => 'إجراء مقترح';
+
+  @override
+  String get resultWorthAsking => 'أسئلة يجدر طرحها';
+
+  @override
+  String get resultSuggestedDeadlines => 'مواعيد نهائية مقترحة';
+
+  @override
+  String get resultSuggestions => 'اقتراحات';
+
+  @override
+  String resultSupportingQuotes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count اقتباس داعم',
+      many: '$count اقتباسًا داعمًا',
+      few: '$count اقتباسات داعمة',
+      two: 'اقتباسان داعمان',
+      one: 'اقتباس داعم واحد',
+      zero: 'لا اقتباسات داعمة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get resultEvidenceFromSelectedSource => 'من المصدر الذي اخترته';
+
+  @override
+  String resultEvidenceLocation(String source, String page) {
+    return '$source، $page';
+  }
+
+  @override
+  String get toolRunStagePreparing => 'جارٍ تحضير مستندك';
+
+  @override
+  String get toolRunStageReading => 'جارٍ قراءة الصفحات التي اخترتها';
+
+  @override
+  String get toolRunStageAnalysing => 'جارٍ التحليل';
+
+  @override
+  String get toolRunStageBuilding => 'جارٍ تجهيز مراجعتك';
+
+  @override
+  String get toolRunStageDone => 'انتهى';
+
+  @override
+  String get toolRunStageFailed => 'لم يكتمل ذلك';
+
+  @override
+  String get toolRunStageCancelled => 'أوقفتَه';
+
+  @override
+  String get toolRunFailureLocalCheckFailed => 'تعذّر فحص ذلك.';
+
+  @override
+  String get toolRunFailureProviderRetired =>
+      'لم يعد مزوّد الذكاء الاصطناعي ذاك متاحًا في هذه النسخة.';
+
+  @override
+  String get toolRunFailureUnusableReply =>
+      'لم يعد ذلك الرد في صورة صالحة للاستخدام. أعد المحاولة.';
+
+  @override
+  String get toolRunFailureQuestionRequired => 'اكتب سؤالًا أولًا.';
+
+  @override
+  String get toolRunFailureInputRequired => 'اختر شيئًا لتعمل عليه هذه الأداة.';
+
+  @override
+  String get toolWarningReplyTruncated =>
+      'انقطع هذا الرد قبل أن ينتهي، ولذلك قد يكون ناقصًا.';
+
+  @override
+  String get toolWarningNoSupportingQuotes =>
+      'لم يُعِد نموذجك أي اقتباسات داعمة، ولذلك لا شيء هنا مدعوم بدليل. قارنه بالمستند قبل أن تتصرّف بناءً عليه.';
+
+  @override
+  String get aiSettingsRemoveTitle => 'إزالة هذا الربط؟';
+
+  @override
+  String get aiSettingsRemoveBody =>
+      'سيحذف Action مفتاح API الخاص بك من هذا الجهاز ويتوقف عن استخدام ميزات الذكاء الاصطناعي. ولا يتأثر حسابك لدى المزوّد.';
+
+  @override
+  String get aiSettingsProviderLabel => 'المزوّد';
+
+  @override
+  String get aiSettingsProviderFootnoteConnected =>
+      'يحاسبك مزوّدك على ما تستخدمه. ولا يرسل Action أي طلب من تلقاء نفسه أبدًا.';
+
+  @override
+  String get aiSettingsConnectLabel => 'اربط مزوّد ذكاء اصطناعي';
+
+  @override
+  String get aiSettingsConnectDescription =>
+      'استخدم حسابك ومفتاح API الخاصين بك مع OpenAI أو Anthropic أو Google Gemini، أو مع endpoint متوافق.';
+
+  @override
+  String get aiSettingsModelLabel => 'النموذج';
+
+  @override
+  String get aiSettingsEndpointLabel => 'Endpoint';
+
+  @override
+  String get aiSettingsApiKeyLabel => 'مفتاح API';
+
+  @override
+  String get aiSettingsKeyStored => 'محفوظ في التخزين الآمن لهذا الجهاز.';
+
+  @override
+  String get aiSettingsKeyMissing =>
+      'لم يُعثر على مفتاح على هذا الجهاز. اربط من جديد لإضافة واحد.';
+
+  @override
+  String get aiSettingsTestLabel => 'اختبار الاتصال';
+
+  @override
+  String get aiSettingsProviderUnavailable =>
+      'ذلك المزوّد غير متاح في هذه النسخة.';
+
+  @override
+  String aiSettingsTestConnectedModels(int count) {
+    return 'تم الربط. عدد النماذج المتاحة: $count.';
+  }
+
+  @override
+  String get aiSettingsTestButton => 'اختبار';
+
+  @override
+  String get aiSettingsChangeProvider => 'تغيير المزوّد أو النموذج';
+
+  @override
+  String get aiSettingsRemoveKey => 'إزالة المفتاح';
+
+  @override
+  String get aiSettingsSectionPrivacy => 'الخصوصية';
+
+  @override
+  String get aiSettingsWhatGetsSentLabel => 'ما الذي يُرسل';
+
+  @override
+  String get aiSettingsWhereItGoesLabel => 'إلى أين يذهب';
+
+  @override
+  String get aiSettingsWhereItGoesNoProvider =>
+      'لا يُرسل شيء حتى تربط مزوّدًا.';
+
+  @override
+  String aiSettingsWhereItGoesProvider(String provider) {
+    return 'مباشرة إلى $provider، باستخدام مفتاحك. ولا يمر عبر خوادم Action.';
+  }
+
+  @override
+  String get aiSettingsSectionData => 'البيانات';
+
+  @override
+  String get aiSettingsDataFootnote =>
+      'يتذكّر Action أي الأدوات استخدمتَ، ولا يتذكّر أبدًا ما استخدمتها عليه.';
+
+  @override
+  String get aiSettingsRecentToolsLabel => 'الأدوات المستخدمة مؤخرًا';
+
+  @override
+  String get aiSettingsRecentToolsNone => 'لا شيء';
+
+  @override
+  String get reminderNotificationTitle => 'تذكير Action';
+
+  @override
+  String get reminderNotificationPrivateBody => 'لديك شيء يحتاج مراجعتك.';
+
+  @override
+  String get reminderChannelName => 'تذكيرات Action';
+
+  @override
+  String get reminderChannelDescription =>
+      'التذكيرات التي تضبطها بنفسك لإجراءاتك.';
+
+  @override
+  String get onboardingStart => 'ابدأ باستخدام Action';
+
+  @override
+  String onboardingProgressSemantics(int current, int total) {
+    return 'الخطوة $current من $total';
+  }
+
+  @override
+  String get onboardingCaptureTitle => 'حوّل المعلومات إلى إجراء';
+
+  @override
+  String get onboardingCaptureBody =>
+      'أضف لقطة شاشة أو صورة أو نصًا وصلك. يقرؤه Action ويستنتج ما الذي يطلبه منك.';
+
+  @override
+  String get onboardingReviewTitle => 'لا يُحفظ شيء حتى تؤكّده أنت';
+
+  @override
+  String get onboardingReviewBody =>
+      'يعرض لك Action ما وجده والكلمات التي جاء منها. وأنت تصحّح ما كان خطأ. وإلى أن تؤكّده، هو اقتراح — لا معلومة، ولا إجراء.';
+
+  @override
+  String get onboardingTrackingTitle => 'ابقَ على اطّلاع بما يهم';
+
+  @override
+  String get onboardingTrackingBody =>
+      'يقدّم «يحتاج انتباهك» ما فات موعده أو اقترب. ويحتفظ كل إجراء بخطوته التالية وتقدّمه وأي تذكير تضبطه له.';
+
+  @override
+  String get onboardingPrivacyBody => 'ما يجدر أن تعرفه قبل أن تبدأ:';
+
+  @override
+  String get onboardingPrivacyOnDevice =>
+      'إجراءاتك والتقاطاتك وتذكيراتك وعمليات بحثك مخزّنة على هذا الجهاز. ويعمل البحث والتذكيرات دون اتصال.';
+
+  @override
+  String get onboardingPrivacySentToRead =>
+      'عندما تطلب من Action قراءة شيء، يُرسل ذلك المحتوى إلى خدمة الذكاء الاصطناعي التي تفسّره.';
+
+  @override
+  String get onboardingPrivacyCloud =>
+      'قد يُحفظ سجل قصير لإجراء مؤكَّد — عنوانه وتواريخه ومبلغه وخطوته المقترحة — في السحابة تحت معرّف مجهول يخص هذا الجهاز. أما التقاطاتك وخطواتك وتذكيراتك فلا تُحفظ.';
+
+  @override
+  String get onboardingPrivacyNotBackup =>
+      'ذلك السجل ليس نسخة احتياطية. ولا يستطيع استعادة أي شيء إلى جهاز جديد.';
+
+  @override
+  String toolSectionBlockerCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count عائق',
+      many: '$count عائقًا',
+      few: '$count عوائق',
+      two: 'عائقان',
+      one: 'عائق واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCouldBeSimpler => 'يمكن أن يكون أبسط';
+
+  @override
+  String get toolDescriptionGoalOptimizer =>
+      'ما الناقص، وما الذي يعيقه، وما تبدأ به.';
+
+  @override
+  String toolSectionStepDependsOn(String step) {
+    return 'بعد: $step';
+  }
+
+  @override
+  String get toolSectionThePlan => 'الخطة';
+
+  @override
+  String get toolDescriptionActionPlan =>
+      'مجموعة خطوات مرتّبة يمكنك تحويلها إلى إجراءات.';
+
+  @override
+  String get toolTitleSmartChecklist => 'اصنع قائمة تحقُّق';
+
+  @override
+  String get toolDescriptionSmartChecklist => 'كل ما يطلبه هذا منك، بالترتيب.';
+
+  @override
+  String toolSectionMissingDetailCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تفصيل ناقص',
+      many: '$count تفصيلًا ناقصًا',
+      few: '$count تفاصيل ناقصة',
+      two: 'تفصيلان ناقصان',
+      one: 'تفصيل واحد ناقص',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionContradictions => 'هذه تتعارض فيما بينها';
+
+  @override
+  String get toolTitleMissingInformation => 'المعلومات الناقصة';
+
+  @override
+  String get toolDescriptionMissingInformation =>
+      'الثغرات، والأسئلة التي تطرحها بشأنها.';
+
+  @override
+  String get aiAdapterTimedOut => 'استغرق ذلك وقتًا أطول من اللازم، فأُوقف.';
+
+  @override
+  String get aiAdapterSecureConnectionFailed =>
+      'فشل الاتصال الآمن بمزوّد الذكاء الاصطناعي الخاص بك.';
+
+  @override
+  String get aiAdapterModelOrEndpointNotFound =>
+      'لم يستطع Action العثور على ذلك النموذج أو الـendpoint.';
+
+  @override
+  String get aiAdapterRequestRejected =>
+      'رفض مزوّد الذكاء الاصطناعي الخاص بك ذلك الطلب.';
+
+  @override
+  String get aiAdapterSecureStorageUnavailable =>
+      'لم يستطع Action فتح التخزين الآمن لهذا الجهاز.';
+
+  @override
+  String get aiAdapterEndpointMissing =>
+      'أضف عنوان الـendpoint الخاص بك من الإعدادات.';
+
+  @override
+  String get aiAdapterReplyIncomplete => 'كان ذلك الرد ناقصًا. أعد المحاولة.';
+
+  @override
+  String get aiAdapterContentDeclined => 'رفض مزوّدك معالجة ذلك المحتوى.';
+
+  @override
+  String aiAdapterTooManyAttachments(int limit) {
+    return 'هذا أكثر من $limit ملفات دفعة واحدة. اختر عددًا أقل.';
+  }
+
+  @override
+  String get aiAdapterImageTooLarge => 'إحدى تلك الصور أكبر من أن تُحلَّل.';
+
+  @override
+  String aiAdapterDocumentTooLarge(String filename, int limit) {
+    return '«$filename» أكبر من أن يُحلَّل. والحد الأقصى $limit MB.';
+  }
+
+  @override
+  String aiAdapterDocumentTooManyPages(String filename, int count, int limit) {
+    return '«$filename» فيه $count صفحة. ويقرأ Action حتى $limit صفحة دفعة واحدة — اختر نطاقًا.';
+  }
+
+  @override
+  String get aiAdapterSelectionTooLarge =>
+      'ما اخترته أكبر من أن يُرسل في طلب واحد.';
+
+  @override
+  String get toolRunNotAvailableTitle => 'تلك الأداة غير متاحة';
+
+  @override
+  String get toolRunNotAvailableMessage =>
+      'ربما أُزيلت في نسخة أحدث من Action.';
+
+  @override
+  String get toolRunNoSourcesYet =>
+      'لا شيء للعمل عليه بعد. التقط شيئًا، أو الصق نصًا في الأسفل.';
+
+  @override
+  String get toolRunChooseSourcesToCompare => 'اختر ما تريد مقارنته';
+
+  @override
+  String get toolRunChooseSource => 'اختر مصدرًا';
+
+  @override
+  String get toolRunQuestionLabel => 'سؤالك';
+
+  @override
+  String get toolRunQuestionHint => 'ما الموعد النهائي؟';
+
+  @override
+  String get toolRunFreeTextLabel => 'أو الصق نصًا';
+
+  @override
+  String get toolRunFreeTextHint => 'الصق أو اكتب هنا';
+
+  @override
+  String get toolRunModeLabel => 'الأسلوب';
+
+  @override
+  String get toolRunRunLocally => 'افحص على هذا الجهاز';
+
+  @override
+  String get toolRunRun => 'شغّل';
+
+  @override
+  String get toolRunStop => 'أوقف';
+
+  @override
+  String get toolRunRunAgain => 'شغّل مرة أخرى';
+
+  @override
+  String get toolRunWorkingOn => 'العمل على:';
+
+  @override
+  String toolRunFirstUseTitle(String provider) {
+    return 'إرسال هذا إلى $provider؟';
+  }
+
+  @override
+  String toolRunFirstUseBody(String provider) {
+    return 'سيُرسل المحتوى الذي اخترته إلى $provider لمعالجته، باستخدام مفتاح API الخاص بك.';
+  }
+
+  @override
+  String get toolRunFirstUseKeyStays =>
+      'يبقى مفتاحك على هذا الجهاز. ولا يرسل Action شيئًا في الخلفية، ولا يرسل إجراءاتك أو مصادرك الأخرى.';
+
+  @override
+  String get toolRunScopeTitle => 'قبل أن يُشغَّل هذا';
+
+  @override
+  String toolRunScopePages(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ستُحلَّل $count صفحة باستخدام اتصالك بـ$provider.',
+      many: 'ستُحلَّل $count صفحة باستخدام اتصالك بـ$provider.',
+      few: 'ستُحلَّل $count صفحات باستخدام اتصالك بـ$provider.',
+      two: 'ستُحلَّل صفحتان باستخدام اتصالك بـ$provider.',
+      one: 'ستُحلَّل صفحة واحدة باستخدام اتصالك بـ$provider.',
+      zero: 'لن تُحلَّل أي صفحة باستخدام اتصالك بـ$provider.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunScopeFiles(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'سيُحلَّل $count ملف باستخدام اتصالك بـ$provider.',
+      many: 'سيُحلَّل $count ملفًا باستخدام اتصالك بـ$provider.',
+      few: 'ستُحلَّل $count ملفات باستخدام اتصالك بـ$provider.',
+      two: 'سيُحلَّل ملفان باستخدام اتصالك بـ$provider.',
+      one: 'سيُحلَّل ملف واحد باستخدام اتصالك بـ$provider.',
+      zero: 'لن يُحلَّل أي ملف باستخدام اتصالك بـ$provider.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunScopeText(String provider) {
+    return 'سيُرسل النص الذي اخترته عبر اتصالك بـ$provider.';
+  }
+
+  @override
+  String get toolRunNeedsProviderTitle =>
+      'اربط مزوّد ذكاء اصطناعي لاستخدام هذه الأداة';
+
+  @override
+  String get toolRunNeedsProviderBody =>
+      'أنت تستخدم حسابك ومفتاح API الخاصين بك لدى المزوّد.';
+
+  @override
+  String toolRunActionCreatedFromSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أُنشئ إجراء من $count خطوة.',
+      many: 'أُنشئ إجراء من $count خطوة.',
+      few: 'أُنشئ إجراء من $count خطوات.',
+      two: 'أُنشئ إجراء من خطوتين.',
+      one: 'أُنشئ إجراء من خطوة واحدة.',
+      zero: 'أُنشئ إجراء دون خطوات.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunStepsAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'أُضيفت $count خطوة.',
+      many: 'أُضيفت $count خطوة.',
+      few: 'أُضيفت $count خطوات.',
+      two: 'أُضيفت خطوتان.',
+      one: 'أُضيفت خطوة واحدة.',
+      zero: 'لم تُضف أي خطوة.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunSaveCreateActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count خطوة',
+      many: '$count خطوة',
+      few: '$count خطوات',
+      two: 'خطوتان',
+      one: 'خطوة واحدة',
+      zero: 'بلا خطوات',
+    );
+    return 'إنشاء إجراء · $_temp0';
+  }
+
+  @override
+  String toolRunSaveAddToActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count خطوة',
+      many: '$count خطوة',
+      few: '$count خطوات',
+      two: 'خطوتان',
+      one: 'خطوة واحدة',
+      zero: 'بلا خطوات',
+    );
+    return 'إضافة إلى هذا الإجراء · $_temp0';
+  }
+
+  @override
+  String get sourceTypeLabelPhoto => 'صورة';
+
+  @override
+  String get sourceTypeLabelScreenshot => 'لقطة شاشة';
+
+  @override
+  String get sourceTypeLabelPastedText => 'نص ملصوق';
+
+  @override
+  String get sourceTypeLabelDocument => 'مستند';
+
+  @override
+  String get toolModeClearer => 'أوضح';
+
+  @override
+  String get toolModeMoreProfessional => 'أكثر مهنية';
+
+  @override
+  String get toolModeShorter => 'أقصر';
+
+  @override
+  String get toolModeSimpler => 'أبسط';
+
+  @override
+  String get toolModeMoreStructured => 'أكثر تنظيمًا';
+
+  @override
+  String get toolModeMorePersuasive => 'أكثر إقناعًا';
+
+  @override
+  String get toolModeGrammarOnly => 'القواعد فقط';
+
+  @override
+  String get toolModeProfessional => 'مهني';
+
+  @override
+  String get toolModeConcise => 'موجز';
+
+  @override
+  String get toolModeFriendly => 'ودود';
+
+  @override
+  String get toolModeFormal => 'رسمي';
+
+  @override
+  String get toolModeAskForClarification => 'اطلب توضيحًا';
+
+  @override
+  String get toolModeConfirm => 'أكّد الاستلام';
+
+  @override
+  String get toolModeDispute => 'اعترض على هذا';
+
+  @override
+  String get toolModeQuick => 'لمحة سريعة';
+
+  @override
+  String get toolModeDetailed => 'مفصّل';
+
+  @override
+  String get toolModeExecutive => 'تنفيذي';
+
+  @override
+  String get toolModeKeyPoints => 'النقاط الأساسية';
+
+  @override
+  String get toolModeActionFocused => 'مركّز على الإجراءات';
+
+  @override
+  String toolWarningEvidenceNotFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count تفصيل مقتبس لم يُعثر عليه في ما اخترته، ولذلك عُلِّم بأنه غير مؤكَّد.',
+      many:
+          '$count تفصيلًا مقتبسًا لم يُعثر عليه في ما اخترته، ولذلك عُلِّم بأنه غير مؤكَّد.',
+      few:
+          '$count تفاصيل مقتبسة لم يُعثر عليها في ما اخترته، ولذلك عُلِّمت بأنها غير مؤكَّدة.',
+      two: 'تفصيلان مقتبسان لم يُعثر عليهما في ما اخترته، ولذلك عُلِّما بأنهما غير مؤكَّدين.',
+      one: 'تفصيل واحد مقتبس لم يُعثر عليه في ما اخترته، ولذلك عُلِّم بأنه غير مؤكَّد.',
+      zero:
+          '$count تفصيل مقتبس لم يُعثر عليه في ما اخترته، ولذلك عُلِّم بأنه غير مؤكَّد.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolWarningEvidenceUnverifiable =>
+      'تعذّر على Action مقارنة هذه الاقتباسات بالملف نفسه، ولذلك لم تُطابَق.';
+
+  @override
+  String triageBadgeOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'متأخر · $count يوم',
+      many: 'متأخر · $count يومًا',
+      few: 'متأخر · $count أيام',
+      two: 'متأخر · يومان',
+      one: 'متأخر · يوم واحد',
+      zero: 'متأخر · $count يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageBadgeDueTomorrow => 'مستحق غدًا';
+
+  @override
+  String get triageBadgeReminderSoon => 'تذكير قريبًا';
+
+  @override
+  String triageSpokenOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'متأخر بـ$count يوم',
+      many: 'متأخر بـ$count يومًا',
+      few: 'متأخر بـ$count أيام',
+      two: 'متأخر بيومين',
+      one: 'متأخر بيوم واحد',
+      zero: 'متأخر بـ$count يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String triageSemanticLabel(String status, String title) {
+    return '$status، $title';
+  }
+
+  @override
+  String get triageExplanationDone => 'هذا منجز.';
+
+  @override
+  String get triageExplanationNothingPressing =>
+      'هذا هنا لأن لا شيء فيه مُلِحّ بعد.';
+
+  @override
+  String triageExplanationNeedsAttention(String reason) {
+    return '$reason، ولذلك يحتاج إلى انتباهك.';
+  }
+
+  @override
+  String triageExplanationUpcoming(String reason) {
+    return '$reason، ولذلك يظهر أدنى في القائمة.';
+  }
+
+  @override
+  String get triageReasonOverdue => 'هذا متأخر';
+
+  @override
+  String get triageReasonDeadlinePassed => 'موعده النهائي قد مضى';
+
+  @override
+  String triageReasonOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'هذا متأخر بـ$count يوم',
+      many: 'هذا متأخر بـ$count يومًا',
+      few: 'هذا متأخر بـ$count أيام',
+      two: 'هذا متأخر بيومين',
+      one: 'هذا متأخر بيوم واحد',
+      zero: 'هذا متأخر بـ$count يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageReasonDueToday => 'هذا مستحق اليوم';
+
+  @override
+  String get triageReasonCriticalDueSoon =>
+      'أنت وسمته بأنه حرِج وموعده النهائي قريب';
+
+  @override
+  String get triageReasonAllStepsDone => 'كل الخطوات تمّت، ولم يبقَ إلا إنهاؤه';
+
+  @override
+  String get triageReasonDueTomorrow => 'هذا مستحق غدًا';
+
+  @override
+  String get triageReasonReminderSoon =>
+      'أنت ضبطت له تذكيرًا خلال اليوم القادم';
+
+  @override
+  String get triageReasonDueWithinThreeDays => 'هذا مستحق خلال ثلاثة أيام';
+
+  @override
+  String get triageReasonCriticalNoDeadline =>
+      'أنت وسمته بأنه حرِج، وليس له موعد نهائي';
+
+  @override
+  String get triageReasonDueWithinSevenDays => 'هذا مستحق خلال أسبوع';
+
+  @override
+  String get triageReasonImportant => 'أنت وسمته بأنه مهم';
+
+  @override
+  String get triageReasonDueLater => 'موعده النهائي أبعد';
+
+  @override
+  String get triageReasonNoDeadline => 'ليس له موعد نهائي ولا شيء فيه مُلِحّ';
+
+  @override
+  String cardCompletedTooltip(String title) {
+    return 'منجز: $title';
+  }
+
+  @override
+  String get toolTitleDocumentIntelligence => 'افهم هذا المستند';
+
+  @override
+  String get toolDescriptionDocumentIntelligence =>
+      'ما هو، وما المهم فيه، وما العمل بشأنه.';
+
+  @override
+  String get toolSectionWhatThisIs => 'ما هذا المستند';
+
+  @override
+  String get toolSectionWhatMatters => 'ما المهم فيه';
+
+  @override
+  String get toolSectionKeyDetails => 'التفاصيل الأساسية';
+
+  @override
+  String get toolTitleAskDocument => 'اسأل عن مصدر';
+
+  @override
+  String get toolDescriptionAskDocument =>
+      'إجابات مستندة إلى ما اخترته — أو لا شيء.';
+
+  @override
+  String get toolSectionNoAnswer => 'لا إجابة في هذا المحتوى';
+
+  @override
+  String get toolSectionNoAnswerBody =>
+      'لم يجد Action ذلك في المستند الذي اخترته.';
+
+  @override
+  String get toolSectionAnswer => 'الإجابة';
+
+  @override
+  String get toolSectionFromTheDocument => 'من المستند';
+
+  @override
+  String get toolWarningQuoteNotFound =>
+      'الاقتباس الذي تستند إليه هذه الإجابة ليس موجودًا في المحتوى الذي اخترته. عامِل الإجابة على أنها غير موثوقة.';
+
+  @override
+  String get toolTitleSmartSummary => 'لخّص';
+
+  @override
+  String get toolDescriptionSmartSummary =>
+      'النسخة القصيرة — أو النسخة التي تغيّر ما عليك فعله.';
+
+  @override
+  String get toolSectionKeyPoints => 'النقاط الأساسية';
+
+  @override
+  String get toolTitleCompareDocuments => 'قارن المستندات';
+
+  @override
+  String get toolDescriptionCompareDocuments =>
+      'ما الذي تغيّر، وما الذي يتعارض، وما الذي لم يُعثر عليه.';
+
+  @override
+  String get toolSectionWhatDiffers => 'ما الذي يختلف';
+
+  @override
+  String get toolSectionConflicts => 'التعارضات';
+
+  @override
+  String get toolSectionOnlyInOne => 'ما ورد في واحد منها فقط';
+
+  @override
+  String get toolSectionInCommon => 'المشترك بينها';
+
+  @override
+  String get sensitiveKindEmail => 'عنوان بريد إلكتروني';
+
+  @override
+  String get sensitiveKindPhone => 'رقم هاتف';
+
+  @override
+  String get sensitiveKindPaymentCard => 'رقم بطاقة دفع';
+
+  @override
+  String get sensitiveKindIban => 'حساب بنكي (IBAN)';
+
+  @override
+  String get sensitiveKindNationalId => 'رقم هوية وطنية';
+
+  @override
+  String get sensitiveKindPostcode => 'رمز بريدي';
+
+  @override
+  String get sensitiveKindAccountNumber => 'رقم حساب';
+
+  @override
+  String get sensitiveKindReference => 'رقم مرجعي';
+
+  @override
+  String get sensitiveKindDateOfBirth => 'تاريخ الميلاد';
+
+  @override
+  String get sensitiveKindUrl => 'عنوان ويب';
+
+  @override
+  String get verdictVerifiedProvenance => 'يتوفّر إثبات منشأ مُتحقَّق منه';
+
+  @override
+  String get verdictVerifiedProvenanceExplainer =>
+      'يحمل هذا الملف توقيعًا جرى فحصه فاجتاز الفحص.';
+
+  @override
+  String get verdictSignalsSynthetic =>
+      'إشارات تتوافق مع محتوى مولَّد بالذكاء الاصطناعي';
+
+  @override
+  String get verdictSignalsSyntheticExplainer =>
+      'يقول هذا الملف إنه أُنشئ بأداة توليدية. والبيانات الوصفية يمكن تعديلها أو إزالتها، فهذا ما يدّعيه الملف، وليس دليلًا.';
+
+  @override
+  String get verdictSignalsEdited => 'إشارات تتوافق مع محتوى جرى تعديله';
+
+  @override
+  String get verdictSignalsEditedExplainer =>
+      'يقول هذا الملف إنه مرّ ببرنامج تحرير. وهذا أمر عادي في الصور، ولا يعني بحد ذاته أن شيئًا قد زُوِّر.';
+
+  @override
+  String get verdictNoReliableProvenance => 'لم يُعثر على بيانات منشأ موثوقة';
+
+  @override
+  String get verdictNoReliableProvenanceExplainer =>
+      'لا توجد بيانات منشأ في هذا الملف. وهذا أمر عادي — إذ تزيلها معظم الخدمات — وهو لا يدل على شيء.';
+
+  @override
+  String get verdictInconclusive => 'غير حاسم';
+
+  @override
+  String get verdictInconclusiveExplainer =>
+      'ليس هنا ما يكفي من المعلومات لتحديد من أين جاء هذا.';
+
+  @override
+  String get authenticitySignalCamera => 'الكاميرا';
+
+  @override
+  String get authenticitySignalSoftware => 'البرنامج';
+
+  @override
+  String get authenticitySignalDescription => 'الوصف';
+
+  @override
+  String get authenticitySignalCopyright => 'حقوق النشر';
+
+  @override
+  String get authenticitySignalLocation => 'الموقع';
+
+  @override
+  String get authenticitySignalLocationValue =>
+      'توجد بيانات موقع في هذا الملف.';
+
+  @override
+  String get authenticitySignalContentCredentials =>
+      'بيانات اعتماد المحتوى (Content Credentials)';
+
+  @override
+  String get authenticitySignalContentCredentialsValue =>
+      'لم يُفحص — لا يحتوي هذا الإصدار على أداة للتحقّق من التوقيع.';
+
+  @override
+  String get authenticitySignalFile => 'الملف';
+
+  @override
+  String get authenticitySignalFileUnreadableValue => 'تعذّرت قراءته كصورة.';
+
+  @override
+  String get authenticitySignalFileUnrecognisedValue =>
+      'ليست صيغة صورة معروفة.';
+
+  @override
+  String get authenticitySignalText => 'النص';
+
+  @override
+  String get authenticitySignalTextValue =>
+      'النص وحده لا يمكنه أن يبيّن بموثوقية ما إذا كان قد استُخدم فيه ذكاء اصطناعي. ولا يخمّن Action.';
+
+  @override
+  String get fileTypePng => 'صورة PNG';
+
+  @override
+  String get fileTypeJpeg => 'صورة JPEG';
+
+  @override
+  String get fileTypeGif => 'صورة GIF';
+
+  @override
+  String get fileTypeWebp => 'صورة WebP';
+
+  @override
+  String get fileTypeWav => 'تسجيل WAV';
+
+  @override
+  String get fileTypePdf => 'مستند PDF';
+
+  @override
+  String get fileTypeHeic => 'صورة HEIC';
+
+  @override
+  String get fileTypeVideo => 'ملف فيديو';
+
+  @override
+  String get fileTypeTiff => 'صورة TIFF';
+
+  @override
+  String get fileTypeBitmap => 'صورة نقطية';
+
+  @override
+  String get fileTypeRtf => 'مستند RTF';
+
+  @override
+  String get fileTypeZip => 'أرشيف Zip';
+
+  @override
+  String get fileTypeGzip => 'أرشيف gzip';
+
+  @override
+  String get fileTypeSevenZip => 'أرشيف 7-Zip';
+
+  @override
+  String get fileTypeRar => 'أرشيف RAR';
+
+  @override
+  String get fileTypeWindowsProgram => 'برنامج Windows';
+
+  @override
+  String get fileTypeLinuxProgram => 'برنامج Linux';
+
+  @override
+  String get fileTypePostScript => 'مستند PostScript';
+
+  @override
+  String get fileTypeOgg => 'تسجيل Ogg';
+
+  @override
+  String get fileTypeMp3 => 'تسجيل MP3';
+
+  @override
+  String get fileTypePlainText => 'نص عادي';
+
+  @override
+  String fileMismatchNote(String extension, String contents) {
+    return 'اسم هذا الملف \".$extension\" لكن محتواه $contents. وقد يكون ذلك خطأً غير مقصود، وهو أيضًا الطريقة التي يُفتح بها ملف ببرنامج غير الذي توقّعته.';
+  }
+
+  @override
+  String fileSizeBytes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count بايت',
+      many: '$count بايتًا',
+      few: '$count بايتات',
+      two: 'بايتان',
+      one: 'بايت واحد',
+      zero: '$count بايت',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileSizeKilobytes(String size) {
+    return '$size ك.ب';
+  }
+
+  @override
+  String fileSizeMegabytes(String size) {
+    return '$size م.ب';
+  }
+
+  @override
+  String fileSizeGigabytes(String size) {
+    return '$size ج.ب';
+  }
+
+  @override
+  String get credentialKindPrivateKey => 'مفتاح خاص';
+
+  @override
+  String get credentialKindApiKey => 'مفتاح API';
+
+  @override
+  String get credentialKindConnectionString => 'سلسلة اتصال';
+
+  @override
+  String get credentialKindAccessToken => 'رمز وصول';
+
+  @override
+  String get credentialKindAuthorizationHeader => 'ترويسة Authorization';
+
+  @override
+  String get credentialKindPasswordOrKey => 'كلمة مرور أو مفتاح';
+
+  @override
+  String get credentialKindPossibleSecret => 'سرّ محتمل';
+
+  @override
+  String get credentialAdvicePrivateKey =>
+      'أزل هذا قبل المشاركة، واستبدل زوج المفاتيح. فالمفتاح الخاص لا يمكن أن يعود آمنًا بعد أن يُرى.';
+
+  @override
+  String get credentialAdviceProviderApiKey =>
+      'ألغِ هذا المفتاح لدى المزوّد وأصدر غيره. وإزالته من المستند لا تُعطّله.';
+
+  @override
+  String get credentialAdviceConnectionString =>
+      'هذه تحمل كلمة المرور والعنوان الذي تفتحه معًا. غيّر كلمة المرور إن كنت قد شاركتها من قبل.';
+
+  @override
+  String get credentialAdviceJsonWebToken =>
+      'الرموز المماثلة تنتهي صلاحيتها غالبًا، لكن ليس دائمًا. عامله على أنه فعّال ما لم تكن تعرف متى تنتهي صلاحيته.';
+
+  @override
+  String get credentialAdviceAuthorizationHeader =>
+      'أزل قيمة الترويسة. فسجلّات الطلبات الملصوقة من أكثر الطرق شيوعًا في مشاركة رمز فعّال دون قصد.';
+
+  @override
+  String get credentialAdviceKeyedAssignment =>
+      'انقل هذا إلى متغيّر بيئة أو إلى مخزن أسرار، وغيّر القيمة إن كنت قد شاركت الملف.';
+
+  @override
+  String get credentialAdviceHighEntropyString =>
+      'لا يستطيع Action تحديد ما هذا. تحقّق منه قبل المشاركة — فقد يكون معرّفًا أو مجموع تحقّق بالقدر نفسه.';
+
+  @override
+  String get credentialLabelAnthropicApiKey => 'مفتاح API من Anthropic';
+
+  @override
+  String get credentialLabelOpenAiProjectKey => 'مفتاح مشروع من OpenAI';
+
+  @override
+  String get credentialLabelOpenAiStyleApiKey => 'مفتاح API بنمط OpenAI';
+
+  @override
+  String get credentialLabelGoogleApiKey => 'مفتاح API من Google';
+
+  @override
+  String get credentialLabelGoogleOAuthToken => 'رمز OAuth من Google';
+
+  @override
+  String get credentialLabelGitHubToken => 'رمز GitHub';
+
+  @override
+  String get credentialLabelSlackToken => 'رمز Slack';
+
+  @override
+  String get credentialLabelAwsAccessKeyId => 'معرّف مفتاح وصول AWS';
+
+  @override
+  String get credentialLabelGitLabToken => 'رمز GitLab';
+
+  @override
+  String get credentialLabelNpmToken => 'رمز npm';
+
+  @override
+  String get credentialLabelPassphrase => 'عبارة مرور';
+
+  @override
+  String get credentialLabelPassword => 'كلمة مرور';
+
+  @override
+  String get credentialLabelRefreshToken => 'رمز التحديث';
+
+  @override
+  String get credentialLabelToken => 'رمز مميّز';
+
+  @override
+  String get credentialLabelClientSecret => 'سرّ العميل';
+
+  @override
+  String get credentialLabelCredential => 'بيانات اعتماد';
+
+  @override
+  String get credentialLabelSecret => 'سرّ';
+
+  @override
+  String get linkVerdictNoObviousSignals => 'لا مؤشرات ظاهرة';
+
+  @override
+  String get linkVerdictWorthChecking => 'يستحق نظرة';
+
+  @override
+  String get linkVerdictTreatWithCaution => 'تعامل معه بحذر';
+
+  @override
+  String get linkSummaryNoObviousSignals =>
+      'لا شيء غير معتاد في طريقة كتابة هذا الرابط. وهذا ليس مثل معرفة أنّ الصفحة جديرة بالثقة — وحدك من يمكنه الحكم على ما إذا كنت تتوقّع هذا الرابط.';
+
+  @override
+  String get linkSummaryWorthChecking =>
+      'في هذا الرابط أمر واحد يستحق النظر قبل أن تفتحه.';
+
+  @override
+  String get linkSummaryTreatWithCaution =>
+      'عدة أمور في طريقة كتابة هذا الرابط تستحق التحقق قبل أن تفتحه.';
+
+  @override
+  String get linkSignalNotHttps => 'غير مشفَّر';
+
+  @override
+  String get linkSignalNonWebScheme => 'ليس رابط ويب';
+
+  @override
+  String get linkSignalEmbeddedCredentials => 'كلمة مرور داخل الرابط';
+
+  @override
+  String get linkSignalMisleadingAuthority => 'العنوان الحقيقي مخفيّ';
+
+  @override
+  String get linkSignalIpLiteralHost => 'عنوان رقمي';
+
+  @override
+  String get linkSignalPunycodeHost => 'أحرف مرمَّزة في الاسم';
+
+  @override
+  String get linkSignalMixedScriptHost => 'أبجديات مختلطة في الاسم';
+
+  @override
+  String get linkSignalEncodedHost => 'رموز هروب في الاسم';
+
+  @override
+  String get linkSignalUnusualPort => 'منفذ غير معتاد';
+
+  @override
+  String get linkSignalDeepSubdomain => 'أجزاء كثيرة في الاسم';
+
+  @override
+  String get linkSignalPublicSuffixInSubdomain => 'اسم مألوف في غير موضعه';
+
+  @override
+  String get linkSignalShortener => 'رابط مختصَر';
+
+  @override
+  String get linkSignalExecutableTarget => 'ينزّل برنامجًا';
+
+  @override
+  String get linkSignalRedirectParameter => 'قد ينقلك إلى مكان آخر';
+
+  @override
+  String get linkSignalVeryLongUrl => 'طويل جدًا';
+
+  @override
+  String get linkSignalUnparseable => 'رابط تعذّرت قراءته';
+
+  @override
+  String get linkDetailNotHttps =>
+      'يستخدم هذا الرابط http، فكل ما تكتبه في الصفحة يمكن أن يُقرأ في الطريق إليها.';
+
+  @override
+  String linkDetailNonWebScheme(String scheme) {
+    return 'يبدأ هذا بـ«$scheme:» لا بصفحة ويب. وقد يطلب من تطبيق آخر أن يفعل شيئًا.';
+  }
+
+  @override
+  String get linkDetailEmbeddedCredentials =>
+      'اسم مستخدم وكلمة مرور مكتوبان داخل هذا الرابط. وأينما شُورِك الرابط، انتقلا معه.';
+
+  @override
+  String linkDetailMisleadingAuthority(String host) {
+    return 'يتجاهل المتصفّح كل ما قبل «@». والوجهة الحقيقية هي «$host».';
+  }
+
+  @override
+  String linkDetailIpLiteralHost(String host) {
+    return 'يذهب هذا إلى «$host» — عنوان خام لا اسم. والمواقع الشرعية تكاد تستخدم اسمًا دائمًا.';
+  }
+
+  @override
+  String get linkDetailPunycodeHost =>
+      'يحتوي اسم الموقع على أحرف غير لاتينية، مخزَّنة بترميز. وهذا أمر عادي في لغات كثيرة، وهو أيضًا ما يتيح جعل اسم يبدو كاسم مألوف.';
+
+  @override
+  String get linkDetailMixedScriptHost =>
+      'يمزج اسم الموقع أحرفًا لاتينية بأحرف من أبجدية أخرى تبدو مطابقة لها. اقرأه حرفًا حرفًا.';
+
+  @override
+  String get linkDetailEncodedHost =>
+      'يحتوي اسم الموقع على رموز هروب، وليس هذا موضعها. ويمكنها أن تخفي ما يقوله الاسم فعلًا.';
+
+  @override
+  String linkDetailUnusualPort(String port) {
+    return 'يتّصل هذا عبر المنفذ $port بدلًا من المنفذ المعتاد. وهذا شائع في خوادم الاختبار وغير معتاد في المواقع العامة.';
+  }
+
+  @override
+  String linkDetailDeepSubdomain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'للاسم $count جزء. والجزآن الأخيران وحدهما يحدّدان من يدير الموقع؛ أما البقية فيمكن ضبطها على أي شيء.',
+      many:
+          'للاسم $count جزءًا. والجزآن الأخيران وحدهما يحدّدان من يدير الموقع؛ أما البقية فيمكن ضبطها على أي شيء.',
+      few:
+          'للاسم $count أجزاء. والجزآن الأخيران وحدهما يحدّدان من يدير الموقع؛ أما البقية فيمكن ضبطها على أي شيء.',
+      two: 'للاسم جزآن. والجزآن الأخيران وحدهما يحدّدان من يدير الموقع؛ أما البقية فيمكن ضبطها على أي شيء.',
+      one: 'للاسم جزء واحد. والجزآن الأخيران وحدهما يحدّدان من يدير الموقع؛ أما البقية فيمكن ضبطها على أي شيء.',
+      zero: 'لا أجزاء في الاسم. والجزآن الأخيران وحدهما يحدّدان من يدير الموقع؛ أما البقية فيمكن ضبطها على أي شيء.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String linkDetailPublicSuffixInSubdomain(String suffix, String host) {
+    return 'يحتوي هذا الاسم على «.$suffix.» في وسطه، ما يجعل بدايته تبدو وكأنها الموقع. والموقع في الحقيقة هو «$host».';
+  }
+
+  @override
+  String get linkDetailShortener =>
+      'تخفي خدمة الاختصار الوجهة الحقيقية. ولا يمكنك معرفة إلى أين يذهب هذا دون فتحه.';
+
+  @override
+  String linkDetailExecutableTarget(String fileExtension) {
+    return 'ينتهي هذا الرابط بـ«$fileExtension»، فهو ينزّل شيئًا يمكن أن يعمل على جهازك، لا صفحة تقرؤها.';
+  }
+
+  @override
+  String linkDetailRedirectParameter(String parameter, String host) {
+    return 'يحمل هذا الرابط عنوانًا ثانيًا في خانة «$parameter»، وفتحه قد يأخذك إلى مكان غير «$host».';
+  }
+
+  @override
+  String get linkDetailVeryLongUrl =>
+      'الروابط الطويلة أصعب في القراءة، والجزء الذي يحدّد الوجهة قد يُدفع خارج مجال النظر.';
+
+  @override
+  String get linkDetailUnparseable =>
+      'لم يستطع Action قراءة هذا كعنوان ويب. وكن حذرًا مع الروابط التي لا تبدو روابط.';
+
+  @override
+  String get toolTitleRedaction => 'إخفاء التفاصيل الحساسة';
+
+  @override
+  String get toolDescriptionRedaction =>
+      'اعثر على ما لا ينبغي مشاركته، واصنع نسخة خالية منه.';
+
+  @override
+  String get toolSectionRedactionNothingToScan => 'لا شيء لفحصه';
+
+  @override
+  String get toolSectionRedactionNothingToScanBody =>
+      'تقرأ هذه الأداة النصوص. اختر ملاحظة أو رسالة ملصوقة أو التقاطًا قُرئ نصه.';
+
+  @override
+  String get toolSectionRedactionNothingFound => 'لم يُعثر على شيء ظاهر';
+
+  @override
+  String get toolSectionRedactionNothingFoundBody =>
+      'لم يجد Action في هذا النص عناوين بريد إلكتروني ولا أرقام هواتف ولا أرقام بطاقات ولا أرقامًا مرجعية.';
+
+  @override
+  String toolSectionRedactionFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count شيء يستحق الإخفاء',
+      many: '$count شيئًا يستحق الإخفاء',
+      few: '$count أشياء تستحق الإخفاء',
+      two: 'شيئان يستحقان الإخفاء',
+      one: 'شيء واحد يستحق الإخفاء',
+      zero: 'لا شيء يستحق الإخفاء',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionRedactedCopy => 'نسخة منقَّحة';
+
+  @override
+  String get toolWarningRedactionCoverage =>
+      'تعثر هذه الأداة على أنماط مثل عناوين البريد وأرقام الهواتف وأرقام الحسابات. ولن تلتقط كل ما هو حسّاس — اقرأ النسخة قبل أن تشاركها.';
+
+  @override
+  String get toolWarningRedactionFormatLimit =>
+      'لا يستطيع Action تنقيح الصور ولا ملفات PDF. فتغطية شيء داخل صورة تُبقي الأصل تحتها، ولذلك لا تُعرض هذه الإمكانية.';
+
+  @override
+  String get toolTitleAuthenticity => 'افحص مصدر هذا';
+
+  @override
+  String get toolDescriptionAuthenticity => 'ما يصرّح به الملف عن أصله.';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspect => 'لا شيء لمعاينته';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspectBody =>
+      'اختر صورة أو نصًا.';
+
+  @override
+  String get toolSectionAuthenticityFileSignals => 'ما يقوله هذا الملف عن نفسه';
+
+  @override
+  String get toolSectionAuthenticityFileItself => 'الملف نفسه';
+
+  @override
+  String get toolSectionFileContents => 'المحتوى';
+
+  @override
+  String get toolSectionFileUnknownFormat => 'صيغة لا يعرفها Action';
+
+  @override
+  String get toolSectionFileSize => 'الحجم';
+
+  @override
+  String get toolSectionFileDigest => 'SHA-256';
+
+  @override
+  String get toolWarningAuthenticityNotProof =>
+      'يعرض هذا ما يصرّح به الملف عن نفسه. والبيانات الوصفية يمكن تعديلها أو إزالتها، فليس أيٌّ منها دليلًا. لا تستخدم هذا لاتهام أحد.';
+
+  @override
+  String get toolTitleCredentialScanner => 'ابحث عن المفاتيح وكلمات المرور';
+
+  @override
+  String get toolDescriptionCredentialScanner =>
+      'اعثر على بيانات الاعتماد قبل أن تشارك شيئًا.';
+
+  @override
+  String get toolSectionCredentialNothingToCheck => 'لا نصّ للفحص';
+
+  @override
+  String get toolSectionCredentialNothingToCheckBody =>
+      'الصق نصًا، أو اختر التقاطًا قُرئ نصه. وهذه الأداة تقرأ النصوص فقط.';
+
+  @override
+  String get toolSectionCredentialNoneFound => 'لم يُعثر على بيانات اعتماد';
+
+  @override
+  String get toolSectionCredentialNoneFoundBody =>
+      'لم يجد Action في هذا النص شيئًا على هيئة مفتاح API أو مفتاح خاص أو رمز مميّز أو كلمة مرور.';
+
+  @override
+  String toolSectionCredentialFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'عُثر على $count من بيانات الاعتماد',
+      many: 'عُثر على $count من بيانات الاعتماد',
+      few: 'عُثر على $count من بيانات الاعتماد',
+      two: 'عُثر على بيانات اعتماد اثنتين',
+      one: 'عُثر على بيانات اعتماد واحدة',
+      zero: 'لم يُعثر على بيانات اعتماد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolSectionCredentialPossibleFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count شيء قد يكون سرًّا',
+      many: '$count شيئًا قد يكون سرًّا',
+      few: '$count أشياء قد تكون أسرارًا',
+      two: 'شيئان قد يكونان سرَّين',
+      one: 'شيء واحد قد يكون سرًّا',
+      zero: 'لا شيء قد يكون سرًّا',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCredentialRedactedCopy =>
+      'نسخة أُزيلت منها بيانات الاعتماد';
+
+  @override
+  String get toolWarningCredentialRevoke =>
+      'إزالة مفتاح من مستند لا تُعطّله. وإذا كان أحدها قد شُورِك بالفعل، فأبطِل صلاحيته لدى المزوّد وأصدر واحدًا جديدًا.';
+
+  @override
+  String get toolWarningCredentialCoverage =>
+      'تعثر هذه الأداة على بيانات الاعتماد ذات الهيئة المعروفة. أما كلمة مرور مكتوبة داخل جملة فلن يُعثر عليها، فاقرأ النص أيضًا.';
+
+  @override
+  String get toolTitleLinkInspector => 'افحص رابطًا';
+
+  @override
+  String get toolDescriptionLinkInspector =>
+      'ما يكشفه العنوان عن نفسه قبل أن تفتحه.';
+
+  @override
+  String get toolSectionLinkNoneFound => 'لم يُعثر على روابط';
+
+  @override
+  String get toolSectionLinkNoneFoundBody =>
+      'الصق رابطًا، أو اختر التقاطًا يحتوي على رابط.';
+
+  @override
+  String toolSectionLinkFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count رابط في هذا النص',
+      many: '$count رابطًا في هذا النص',
+      few: '$count روابط في هذا النص',
+      two: 'الرابطان في هذا النص',
+      one: 'الرابط في هذا النص',
+      zero: 'لا روابط في هذا النص',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionLinkUnreadableHost => 'تعذّرت قراءته';
+
+  @override
+  String toolSectionLinkObservationLine(String summary, String detail) {
+    return '$summary.‏ $detail';
+  }
+
+  @override
+  String get toolSectionLinkNothingUnusual =>
+      'لا شيء غير معتاد في طريقة كتابتها';
+
+  @override
+  String get toolSectionLinkNothingUnusualBody =>
+      'وهذا ليس مثل معرفة أنّ الصفحات جديرة بالثقة. وحدك من يمكنه الحكم على ما إذا كنت تتوقّعها.';
+
+  @override
+  String get toolWarningLinkAddressOnly =>
+      'يقرأ Action العنوان فقط. فهو لا يفتح الرابط، ولا يستعلم عن الموقع، ولا يسأل أي خدمة سمعة — لأن فعل ذلك يرسل تصفّحك إلى جهة أخرى.';
+
+  @override
+  String get toolWarningLinkNoSignals =>
+      'الرابط الذي لا مؤشرات فيه يمكن أن يكون ضارًا رغم ذلك. تجد هذه الأداة مشكلات في طريقة كتابة العنوان، وهذا ليس كل ما ينبغي معرفته عن وجهته.';
+
+  @override
+  String get toolSectionObjective => 'هدفك';
+
+  @override
+  String get toolSectionCurrentState => 'ما وصل إليه الهدف';
+
+  @override
+  String get toolSectionRecommendedNextStep => 'الخطوة التالية المقترحة';
+
+  @override
+  String get toolSectionCredentialAdvice => 'ما عليك فعله';
+
+  @override
+  String get toolSectionSummary => 'الملخّص';
+
+  @override
+  String get toolDetailSeparator => '‏ — ‏';
 }

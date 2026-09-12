@@ -11,6 +11,14 @@
 /// words, each one tappable and each one leading somewhere real. No marketing
 /// copy, no illustration of a person at a desk, and nothing claimed that the
 /// app cannot do.
+///
+/// **Why the promises are safety keys.** Three of the four blurbs are the
+/// first thing a new user is told about what automated reading does, and each
+/// one is deliberately weak: Action *reads* and *finds*, it *works out* what
+/// something is, and nothing becomes a task until the person has seen the
+/// evidence and said yes. Those verbs are the product's position, so the ARB
+/// entries carry `SAFETY:` descriptions naming the clauses a translation may
+/// not drop.
 library;
 
 import 'package:flutter/material.dart';
@@ -20,6 +28,8 @@ import 'package:go_router/go_router.dart';
 import '../../../app/router.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/casing.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../../capture/presentation/capture_sheet.dart';
 
 /// One thing Action does.
@@ -36,32 +46,33 @@ class _Capability {
 }
 
 /// Four, not ten. A list long enough to skim is a list nobody reads.
-const _capabilities = [
-  _Capability(
-    icon: Icons.description_outlined,
-    title: 'A letter or bill',
-    blurb: 'Action reads it and finds the deadline, the amount and the '
-        'reference.',
-  ),
-  _Capability(
-    icon: Icons.photo_outlined,
-    title: 'A screenshot',
-    blurb: 'Turn a message you would otherwise forget into something you can '
-        'act on.',
-  ),
-  _Capability(
-    icon: Icons.notes_rounded,
-    title: 'Some text',
-    blurb: 'Paste anything. Action works out what it is and what it asks of '
-        'you.',
-  ),
-  _Capability(
-    icon: Icons.fact_check_outlined,
-    title: 'You confirm everything',
-    blurb: 'Nothing becomes a task until you have seen the evidence and said '
-        'yes.',
-  ),
-];
+///
+/// Built from the bundle on each build rather than held in a top-level `const`
+/// list: the titles and blurbs are translated now, and a `const` cannot depend
+/// on the locale. The icons are the only part of a row that is the same in
+/// every language.
+List<_Capability> _capabilitiesFor(AppL10n l10n) => [
+      _Capability(
+        icon: Icons.description_outlined,
+        title: l10n.todayCapabilityDocumentTitle,
+        blurb: l10n.todayCapabilityDocumentBlurb,
+      ),
+      _Capability(
+        icon: Icons.photo_outlined,
+        title: l10n.todayCapabilityScreenshotTitle,
+        blurb: l10n.todayCapabilityScreenshotBlurb,
+      ),
+      _Capability(
+        icon: Icons.notes_rounded,
+        title: l10n.todayCapabilityTextTitle,
+        blurb: l10n.todayCapabilityTextBlurb,
+      ),
+      _Capability(
+        icon: Icons.fact_check_outlined,
+        title: l10n.todayCapabilityConfirmTitle,
+        blurb: l10n.todayCapabilityConfirmBlurb,
+      ),
+    ];
 
 class CapabilityPreview extends ConsumerWidget {
   const CapabilityPreview({super.key});
@@ -70,6 +81,7 @@ class CapabilityPreview extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -81,17 +93,27 @@ class CapabilityPreview extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'WHAT ACTION HANDLES',
-            style: text.labelSmall?.copyWith(
-              color: colors.textTertiary,
-              letterSpacing: 1.1,
-              fontWeight: FontWeight.w700,
+          // The eyebrow is stored in sentence case and uppercased here, not
+          // stored shouting. Dart's `toUpperCase` maps Turkish dotted `i` to
+          // `I`, which a Turkish reader reads as a misspelling; `eyebrowCase`
+          // is the helper that knows the exception, and in the scripts with no
+          // uppercase at all it is a no-op and the style carries on size,
+          // weight and tracking. `header: true` matches the QuickStart eyebrow
+          // on the same screen, so a screen reader announces both as headings.
+          Semantics(
+            header: true,
+            child: Text(
+              eyebrowCase(l10n.todayCapabilityHeading, l10n.localeName),
+              style: text.labelSmall?.copyWith(
+                color: colors.textTertiary,
+                letterSpacing: 1.1,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           const SizedBox(height: Space.md),
 
-          for (final capability in _capabilities) ...[
+          for (final capability in _capabilitiesFor(l10n)) ...[
             _CapabilityRow(capability: capability),
             const SizedBox(height: Space.md),
           ],
@@ -100,12 +122,15 @@ class CapabilityPreview extends ConsumerWidget {
           FilledButton.icon(
             onPressed: () => startCapture(context, ref),
             icon: const Icon(Icons.add_rounded, size: 20),
-            label: const Text('Capture something'),
+            // The same label the raised centre control carries, deliberately:
+            // this button does the same thing, and a second phrasing for it
+            // would read as a second feature.
+            label: Text(l10n.navCapture),
           ),
           const SizedBox(height: Space.sm),
           OutlinedButton(
             onPressed: () => context.go(Routes.studio),
-            child: const Text('Explore Intelligence'),
+            child: Text(l10n.todayCapabilityExploreIntelligence),
           ),
         ],
       ),

@@ -37,14 +37,17 @@ abstract class ByokProvider implements AiProvider {
     } on Object catch (error) {
       throw AiProviderFailure(
         AiFailureKind.notConfigured,
-        message: "Action couldn't open this device's secure storage.",
+        message: AiAdapterMessage.secureStorageUnavailable.text(),
         technicalDetail: error.toString(),
       );
     }
     if (key == null || key.isEmpty) {
       throw AiProviderFailure(
         AiFailureKind.notConfigured,
-        message: 'Connect an AI provider to use this.',
+        // The kind's own sentence, which says "to use this tool" where this
+        // throw used to say "to use this". One word, and it is the word that
+        // makes the sentence stand on its own in a snack bar.
+        message: AiFailureKind.notConfigured.message(),
       );
     }
     return key;
@@ -60,12 +63,15 @@ abstract class ByokProvider implements AiProvider {
     final missing = capabilities.missingFrom(request.requiredCapabilities);
     if (missing.isEmpty) return;
 
-    final names = missing.map(describeCapability).toList()..sort();
     throw AiProviderFailure(
       AiFailureKind.unsupportedCapability,
-      message: 'The model you chose cannot read ${_list(names)}. '
-          'Pick another model in Settings.',
-      missingCapabilities: names,
+      // Both the sentence and the list inside it come from the domain now.
+      // This used to hand-roll the ', ' / ' or ' join and sort the nouns
+      // alphabetically — an English sort, which ordered the sentence one way
+      // here and another way in `AiCapabilityListL10n.describeIn`, where the
+      // order is the enum's. Same source, same order, in every language.
+      message: AiFailureKind.unsupportedCapability.message(missing: missing),
+      missingCapabilities: missing.map(describeCapability).toList(),
     );
   }
 
@@ -81,8 +87,8 @@ abstract class ByokProvider implements AiProvider {
     if (attachments > AiLimits.maxAttachments) {
       throw AiProviderFailure(
         AiFailureKind.inputTooLarge,
-        message: 'That is more than ${AiLimits.maxAttachments} files at once. '
-            'Select fewer.',
+        message: AiAdapterMessage.tooManyAttachments
+            .text(limit: AiLimits.maxAttachments),
       );
     }
 
@@ -97,23 +103,28 @@ abstract class ByokProvider implements AiProvider {
           if (bytes.length > AiLimits.maxImageBytes) {
             throw AiProviderFailure(
               AiFailureKind.inputTooLarge,
-              message: 'One of those images is too large to analyse.',
+              message: AiAdapterMessage.imageTooLarge.text(),
             );
           }
         case AiDocumentPart(:final bytes, :final pageCount, :final filename):
           if (bytes.length > AiLimits.maxDocumentBytes) {
             throw AiProviderFailure(
               AiFailureKind.inputTooLarge,
-              message: '"$filename" is too large to analyse. '
-                  'The limit is ${AiLimits.maxDocumentBytes ~/ (1024 * 1024)} MB.',
+              message: AiAdapterMessage.documentTooLarge.text(
+                filename: filename,
+                limit: AiLimits.maxDocumentBytes ~/ (1024 * 1024),
+              ),
             );
           }
           if (pageCount != null && pageCount > AiLimits.maxDocumentPages) {
             // Never silently truncate. The user chooses which pages.
             throw AiProviderFailure(
               AiFailureKind.inputTooLarge,
-              message: '"$filename" has $pageCount pages. Action reads up to '
-                  '${AiLimits.maxDocumentPages} at a time — choose a range.',
+              message: AiAdapterMessage.documentTooManyPages.text(
+                filename: filename,
+                count: pageCount,
+                limit: AiLimits.maxDocumentPages,
+              ),
             );
           }
       }
@@ -122,13 +133,13 @@ abstract class ByokProvider implements AiProvider {
     if (textChars > AiLimits.maxTextCharacters) {
       throw AiProviderFailure(
         AiFailureKind.inputTooLarge,
-        message: 'That is more text than can be analysed at once.',
+        message: AiFailureKind.inputTooLarge.message(),
       );
     }
     if (request.payloadBytes > AiLimits.maxRequestBytes) {
       throw AiProviderFailure(
         AiFailureKind.inputTooLarge,
-        message: 'That selection is too large to send in one request.',
+        message: AiAdapterMessage.selectionTooLarge.text(),
       );
     }
   }
@@ -139,6 +150,44 @@ abstract class ByokProvider implements AiProvider {
     assertWithinLimits(request);
     return requireSecret(config);
   }
+
+  /// The result every adapter returns when model discovery succeeded.
+  ///
+  /// **Why it moved here.** All four adapters built these two sentences
+  /// themselves, from four identical ternaries — the kind of duplication that
+  /// stays identical right up until someone edits three of the copies.
+  ///
+  /// The claim is deliberately the narrow one: the provider answered a request
+  /// with this key, and reported this many models. Not that the key is valid
+  /// for anything else, not that the chosen model works, not that anything is
+  /// secure.
+  ///
+  /// **What the user actually reads is not this string.** Both screens that
+  /// run a test — `connect_provider_sheet.dart` and
+  /// `intelligence_settings_screen.dart` — recompose the sentence from
+  /// [AiConnectionCheck.models] against their own bundle
+  /// (`connectTestSucceeded` / `connectTestSucceededWithModels`,
+  /// `aiSettingsTestConnectedModels`), because a count belongs in an ICU plural
+  /// and `data/` has no locale to build one from. This English is what remains
+  /// for logs, fixtures and any caller that has no `BuildContext`.
+  AiConnectionCheck connectedCheck(List<AiModelDescriptor> models) =>
+      AiConnectionCheck(
+        ok: true,
+        message: models.isEmpty
+            ? 'Connected.'
+            : 'Connected. ${models.length} models available.',
+        models: models,
+      );
+
+  /// The result every adapter returns when the test call failed.
+  ///
+  /// [AiConnectionCheck] carries a finished sentence and nothing else, so the
+  /// [AiFailureKind] that produced it — the one thing a screen could have
+  /// translated — is dropped here. Both test screens say so in a comment and
+  /// show this English. See the note on [connectedCheck]; the fix is a `kind`
+  /// field on [AiConnectionCheck], which is not this file's to add.
+  AiConnectionCheck failedCheck(AiProviderFailure failure) =>
+      AiConnectionCheck(ok: false, message: failure.message);
 
   /// The full system instruction: injection rules first, then the tool's own.
   String systemTextFor(AiRequest request) =>
@@ -175,9 +224,4 @@ abstract class ByokProvider implements AiProvider {
   }
 
   static String base64Of(Uint8List bytes) => base64Encode(bytes);
-
-  static String _list(List<String> items) {
-    if (items.length == 1) return items.single;
-    return '${items.sublist(0, items.length - 1).join(', ')} or ${items.last}';
-  }
 }

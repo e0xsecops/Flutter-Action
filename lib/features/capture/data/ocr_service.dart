@@ -19,6 +19,46 @@ class OcrFailure implements Exception {
   String toString() => 'OcrFailure($message)';
 }
 
+/// Why a capture could not be read, in the two ways that reach a stored record.
+///
+/// **Why the enum and the sentence both exist.** Both messages end up in
+/// `SourceItem.failureReason`, which is a plain string on disk. It is written
+/// once, at capture time, and a record captured while the phone was in Spanish
+/// must not still be Spanish after the user switches to Arabic — so what gets
+/// stored stays the canonical English, and this maps it back to a case a screen
+/// can ask for in the reader's language.
+///
+/// [forStoredMessage] is what makes that work for rows that already exist: it
+/// recognises the English Action itself wrote, and returns null for anything
+/// else so the caller shows what was stored rather than dropping it.
+enum CaptureReadFailure {
+  /// Recognition could not run at all — a missing file, an unreadable buffer,
+  /// a platform failure. Deliberately not "found no text", which is a
+  /// successful read of a photo of a wall and has its own copy.
+  recognitionDidNotRun('Text recognition could not run.'),
+
+  /// An image format this device's decoder does not handle. The bytes are
+  /// kept, so the capture survives and can still be typed in by hand.
+  imageFormatUnreadable("That image format couldn't be read on this device.");
+
+  const CaptureReadFailure(this.canonicalMessage);
+
+  /// The exact English written to storage. The widget tests assert these
+  /// strings and [forStoredMessage] matches against them, so the two cannot be
+  /// allowed to drift — which is why both call sites read them from here
+  /// rather than repeating a literal.
+  final String canonicalMessage;
+
+  /// The case [stored] came from, or null when Action did not write it.
+  static CaptureReadFailure? forStoredMessage(String? stored) {
+    if (stored == null) return null;
+    for (final failure in values) {
+      if (failure.canonicalMessage == stored) return failure;
+    }
+    return null;
+  }
+}
+
 /// On-device text recognition.
 ///
 /// Behind an interface so tests run against fixed transcripts: ML Kit needs a
@@ -80,7 +120,10 @@ class MlKitOcrService implements OcrService {
         InputImage.fromFilePath(imagePath),
       );
     } on Object catch (error) {
-      throw OcrFailure('Text recognition could not run.', cause: error);
+      throw OcrFailure(
+        CaptureReadFailure.recognitionDidNotRun.canonicalMessage,
+        cause: error,
+      );
     }
 
     final lines = <OcrLine>[];

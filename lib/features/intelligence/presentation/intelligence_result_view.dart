@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import '../../../design/components/glass_surface.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../domain/intelligence_result.dart';
 
 class IntelligenceResultView extends StatelessWidget {
@@ -74,6 +76,7 @@ class _WarningBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final isCaution = warning.level == IntelligenceWarningLevel.caution;
     final tint = isCaution ? colors.urgencyImportant : colors.textSecondary;
 
@@ -98,7 +101,7 @@ class _WarningBanner extends StatelessWidget {
           const SizedBox(width: Space.sm),
           Expanded(
             child: Text(
-              warning.message,
+              warning.messageIn(l10n),
               style: text.bodySmall?.copyWith(color: colors.textPrimary),
             ),
           ),
@@ -116,19 +119,22 @@ class _SectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(section.title, style: text.titleSmall),
+        Text(section.titleIn(l10n), style: text.titleSmall),
         const SizedBox(height: Space.sm),
         switch (section.kind) {
           IntelligenceSectionKind.prose => SelectableText(
-              section.body ?? '',
+              section.bodyIn(l10n) ?? '',
               style: text.bodyLarge,
             ),
-          IntelligenceSectionKind.quote => _Quote(text: section.body ?? ''),
-          IntelligenceSectionKind.bullets => _Bullets(items: section.bullets),
+          IntelligenceSectionKind.quote =>
+            _Quote(text: section.bodyIn(l10n) ?? ''),
+          IntelligenceSectionKind.bullets =>
+            _Bullets(items: section.bulletsIn(l10n)),
           IntelligenceSectionKind.facts => _Facts(facts: section.facts),
           IntelligenceSectionKind.table => _Table(
               columns: section.columns,
@@ -216,6 +222,7 @@ class _Facts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final text = Theme.of(context).textTheme;
     final colors = context.colors;
 
@@ -232,14 +239,18 @@ class _Facts extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Text(fact.label, style: text.bodySmall),
+                      child: Text(fact.labelIn(l10n), style: text.bodySmall),
                     ),
                     // Uncertainty is a visible property of the fact, not a
                     // footnote somewhere else. A value Action could not
                     // confirm must not look like one it could.
+                    //
+                    // Sighted readers get colour and a glyph; the label is the
+                    // whole claim for anyone using a screen reader, which is
+                    // why it is translated rather than left in English.
                     if (fact.uncertain)
                       Semantics(
-                        label: 'Unconfirmed',
+                        label: l10n.resultFactUnconfirmed,
                         child: Icon(
                           Icons.help_outline,
                           size: 16,
@@ -248,9 +259,9 @@ class _Facts extends StatelessWidget {
                       ),
                   ],
                 ),
-                if (fact.value.isNotEmpty)
+                if (fact.valueIn(l10n).isNotEmpty)
                   SelectableText(
-                    fact.value,
+                    fact.valueIn(l10n),
                     style: text.bodyLarge?.copyWith(
                       fontFeatures: AppTextFeatures.numeric,
                     ),
@@ -325,6 +336,29 @@ class _Table extends StatelessWidget {
   }
 }
 
+/// Where a citation says it came from, in the reader's language.
+///
+/// This is the job [IntelligenceCitation.locationLabel] used to do, moved up
+/// into the presentation layer because neither half of it could be translated
+/// down in the domain: the unknown case was an English constant, and the join
+/// between document and page was an ASCII `', '`, which is the wrong separator
+/// in Arabic (`، `) and in Chinese and Japanese (`、`). Both are now decisions
+/// the bundle makes.
+///
+/// The page label itself still arrives already composed in English from
+/// `AiCitation.pageLabel` ("page 3"). That one is not fixable from here — the
+/// citation carries the finished string, not the page numbers.
+String _locationLabel(AppL10n l10n, IntelligenceCitation citation) {
+  final source = citation.sourceLabel;
+  final page = citation.pageLabel;
+  if (source != null && page != null) {
+    return l10n.resultEvidenceLocation(source, page);
+  }
+  // No document and no page still has to say something honest about where the
+  // quote came from, without naming a location nobody checked.
+  return source ?? page ?? l10n.resultEvidenceFromSelectedSource;
+}
+
 class _EvidenceChip extends StatelessWidget {
   const _EvidenceChip({required this.citation});
 
@@ -332,6 +366,7 @@ class _EvidenceChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -344,7 +379,7 @@ class _EvidenceChip extends StatelessWidget {
           const SizedBox(width: Space.xs),
           Flexible(
             child: Text(
-              citation.locationLabel,
+              _locationLabel(l10n, citation),
               style: text.bodySmall?.copyWith(
                 color: colors.confidenceConfirmed,
               ),
@@ -370,12 +405,13 @@ class _SuggestionsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final text = Theme.of(context).textTheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(_headingFor(suggestions), style: text.titleSmall),
+        Text(_headingFor(l10n, suggestions), style: text.titleSmall),
         const SizedBox(height: Space.sm),
         for (final suggestion in suggestions)
           Padding(
@@ -403,12 +439,14 @@ class _SuggestionsView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(suggestion.title, style: text.titleSmall),
-                        if (suggestion.detail != null)
+                        Text(
+                          suggestion.titleIn(l10n),
+                          style: text.titleSmall,
+                        ),
+                        if (suggestion.detailIn(l10n) case final detail?)
                           Padding(
                             padding: const EdgeInsets.only(top: Space.xxs),
-                            child:
-                                Text(suggestion.detail!, style: text.bodySmall),
+                            child: Text(detail, style: text.bodySmall),
                           ),
                         if (suggestion.citation != null)
                           Padding(
@@ -428,17 +466,17 @@ class _SuggestionsView extends StatelessWidget {
   }
 
   /// Names what accepting these would do, so the checkbox is not ambiguous.
-  static String _headingFor(List<IntelligenceSuggestion> suggestions) {
+  ///
+  /// The per-kind wording lives with the other enum labels, in
+  /// `lib/l10n/enum_labels.dart`; only the mixed-list fallback is decided here,
+  /// because it is a property of this list rather than of any one kind.
+  static String _headingFor(
+    AppL10n l10n,
+    List<IntelligenceSuggestion> suggestions,
+  ) {
     final kinds = suggestions.map((s) => s.kind).toSet();
-    if (kinds.length == 1) {
-      return switch (kinds.single) {
-        IntelligenceSuggestionKind.step => 'Suggested steps',
-        IntelligenceSuggestionKind.action => 'Suggested action',
-        IntelligenceSuggestionKind.question => 'Worth asking',
-        IntelligenceSuggestionKind.deadline => 'Suggested deadlines',
-      };
-    }
-    return 'Suggestions';
+    if (kinds.length == 1) return kinds.single.headingIn(l10n);
+    return l10n.resultSuggestions;
   }
 }
 
@@ -449,6 +487,7 @@ class _EvidenceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final text = Theme.of(context).textTheme;
 
     return ExpansionTile(
@@ -456,10 +495,11 @@ class _EvidenceView extends StatelessWidget {
       childrenPadding: EdgeInsets.zero,
       shape: const Border(),
       collapsedShape: const Border(),
+      // Counting in Dart would have been counting in English. Arabic has six
+      // plural categories and Polish and Russian three, so the count and its
+      // noun are chosen together by the bundle.
       title: Text(
-        citations.length == 1
-            ? '1 supporting quote'
-            : '${citations.length} supporting quotes',
+        l10n.resultSupportingQuotes(citations.length),
         style: text.titleSmall,
       ),
       children: [
@@ -469,7 +509,7 @@ class _EvidenceView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(citation.locationLabel, style: text.bodySmall),
+                Text(_locationLabel(l10n, citation), style: text.bodySmall),
                 const SizedBox(height: Space.xs),
                 _Quote(text: citation.quotedText),
               ],

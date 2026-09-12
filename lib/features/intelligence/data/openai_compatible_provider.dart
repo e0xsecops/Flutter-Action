@@ -55,14 +55,14 @@ class OpenAiCompatibleProvider extends ByokProvider {
     if (raw.isEmpty) {
       throw AiProviderFailure(
         AiFailureKind.notConfigured,
-        message: 'Add the address of your AI endpoint in Settings.',
+        message: AiAdapterMessage.endpointMissing.text(),
       );
     }
     final base = validateEndpoint(raw, allowCleartext: allowCleartext);
     if (base == null) {
       throw AiProviderFailure(
         AiFailureKind.insecureEndpoint,
-        message: 'That endpoint must be an https:// address.',
+        message: AiFailureKind.insecureEndpoint.message(),
       );
     }
     final normalized =
@@ -99,15 +99,9 @@ class OpenAiCompatibleProvider extends ByokProvider {
                 capabilities: AiCapabilities.textOnly,
               ))
           .toList();
-      return AiConnectionCheck(
-        ok: true,
-        message: models.isEmpty
-            ? 'Connected.'
-            : 'Connected. ${models.length} models available.',
-        models: models,
-      );
+      return connectedCheck(models);
     } on AiProviderFailure catch (failure) {
-      return AiConnectionCheck(ok: false, message: failure.message);
+      return failedCheck(failure);
     }
   }
 
@@ -165,7 +159,11 @@ class OpenAiCompatibleProvider extends ByokProvider {
     if (choices is! List || choices.isEmpty) {
       throw AiProviderFailure(
         AiFailureKind.malformedResponse,
-        message: 'That endpoint sent back something Action could not read.',
+        // Was "That endpoint sent back …" here and "That provider sent back …"
+        // in `ai_http.dart` — the same sentence with one noun swapped, which
+        // is a near-duplicate the bundle should not carry twice. The kind's
+        // own wording covers both, and a user's own server is a provider.
+        message: AiFailureKind.malformedResponse.message(),
         technicalDetail: 'no choices array',
       );
     }

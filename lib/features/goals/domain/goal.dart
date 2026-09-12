@@ -24,6 +24,21 @@ library;
 /// judgement — nothing here infers it from how many linked Actions are done,
 /// because a goal can be met without finishing every task it produced, and
 /// finishing every task does not always mean the goal was met.
+///
+/// **The member names are storage, not copy.** `name` is what `Goal.toJson`
+/// writes and what [fromName] reads back out of a record an older build left
+/// behind, so these three words are fixed English forever and must never move
+/// with the locale — translating a stored status would orphan every existing
+/// Goal on the next launch.
+///
+/// What a person reads is `status.labelIn(l10n)`, from
+/// `lib/l10n/enum_labels.dart`, and there [achieved] reads **"Reached"**. The
+/// two are deliberately different: `achieved` is the token already sitting in
+/// users' JSON, while every string this product has ever shown for the state
+/// says *reached*. That word also has to stay clear of the Action vocabulary —
+/// "Done", "Completed" — because a goal the user marked reached and a task the
+/// user finished are different claims, and the whole reason this enum carries
+/// the comment above is that Action refuses to derive one from the other.
 enum GoalStatus {
   active,
   achieved,

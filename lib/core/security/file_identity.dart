@@ -26,16 +26,52 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 
+/// The file types this recogniser knows by name.
+///
+/// The enum exists so a screen can look up a translated name for a type. The
+/// English [DetectedFileType.label] stays the canonical one — it is what a log
+/// line and a fixture test read, and neither of those has a locale.
+enum DetectedFileKind {
+  png,
+  jpeg,
+  gif,
+  webp,
+  wav,
+  pdf,
+  heic,
+  video,
+  tiff,
+  bitmap,
+  rtf,
+  zip,
+  gzip,
+  sevenZip,
+  rar,
+  windowsProgram,
+  linuxProgram,
+  postScript,
+  ogg,
+  mp3,
+  plainText,
+}
+
 /// A file type recognised from its leading bytes.
 class DetectedFileType {
   const DetectedFileType({
+    required this.kind,
     required this.label,
     required this.mimeType,
     required this.extensions,
     this.container = false,
   });
 
-  /// What to call it on screen.
+  /// Which known type this is. Stable across locales; see [DetectedFileKind].
+  final DetectedFileKind kind;
+
+  /// What to call it on screen, in English.
+  ///
+  /// Read by tests and diagnostics. A screen shows the translated name instead
+  /// — see `DetectedFileKindL10n.labelIn` in `lib/l10n/enum_labels.dart`.
   final String label;
 
   final String mimeType;
@@ -92,7 +128,11 @@ class FileIdentity {
     return !type.extensions.contains(declared);
   }
 
-  /// The sentence shown when the name and the content disagree.
+  /// The sentence shown when the name and the content disagree, in English.
+  ///
+  /// The canonical wording, which the tests assert against. What a person
+  /// reads comes from `FileIdentityL10n.mismatchNoteIn` in
+  /// `lib/l10n/enum_labels.dart`, which is this sentence in their language.
   String? get mismatchNote {
     if (!extensionMismatch) return null;
     return 'This file is named ".$declaredExtension" but its contents are '
@@ -126,7 +166,13 @@ class FileIdentity {
   String get readableSize => formatBytes(sizeBytes);
 }
 
-/// Bytes as a person reads them.
+/// Bytes as an English-speaking person reads them.
+///
+/// Kept for logs, diagnostics and the size tests, which compare against fixed
+/// strings and have no locale. On screen use `formatBytesIn` from
+/// `lib/l10n/enum_labels.dart`: it picks the same unit but renders the number
+/// and the unit in the reader's language, and says "1 byte" rather than the
+/// "1 bytes" this one produces.
 String formatBytes(int bytes) {
   if (bytes < 1024) return '$bytes bytes';
   const units = ['KB', 'MB', 'GB'];
@@ -217,6 +263,7 @@ abstract final class FileIdentifier {
 
     if (startsWith(const [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.png,
         label: 'a PNG image',
         mimeType: 'image/png',
         extensions: ['png'],
@@ -224,6 +271,7 @@ abstract final class FileIdentifier {
     }
     if (startsWith(const [0xFF, 0xD8, 0xFF])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.jpeg,
         label: 'a JPEG image',
         mimeType: 'image/jpeg',
         extensions: ['jpg', 'jpeg', 'jpe'],
@@ -231,6 +279,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('GIF87a') || ascii('GIF89a')) {
       return const DetectedFileType(
+        kind: DetectedFileKind.gif,
         label: 'a GIF image',
         mimeType: 'image/gif',
         extensions: ['gif'],
@@ -238,6 +287,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('RIFF') && ascii('WEBP', offset: 8)) {
       return const DetectedFileType(
+        kind: DetectedFileKind.webp,
         label: 'a WebP image',
         mimeType: 'image/webp',
         extensions: ['webp'],
@@ -245,6 +295,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('RIFF') && ascii('WAVE', offset: 8)) {
       return const DetectedFileType(
+        kind: DetectedFileKind.wav,
         label: 'a WAV recording',
         mimeType: 'audio/wav',
         extensions: ['wav'],
@@ -252,6 +303,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('%PDF-')) {
       return const DetectedFileType(
+        kind: DetectedFileKind.pdf,
         label: 'a PDF document',
         mimeType: 'application/pdf',
         extensions: ['pdf'],
@@ -263,12 +315,14 @@ abstract final class FileIdentifier {
       );
       if (brand.startsWith('hei') || brand.startsWith('mif')) {
         return const DetectedFileType(
+          kind: DetectedFileKind.heic,
           label: 'a HEIC image',
           mimeType: 'image/heic',
           extensions: ['heic', 'heif'],
         );
       }
       return const DetectedFileType(
+        kind: DetectedFileKind.video,
         label: 'a video file',
         mimeType: 'video/mp4',
         extensions: ['mp4', 'm4v', 'm4a', 'mov', '3gp'],
@@ -277,6 +331,7 @@ abstract final class FileIdentifier {
     if (startsWith(const [0x49, 0x49, 0x2A, 0x00]) ||
         startsWith(const [0x4D, 0x4D, 0x00, 0x2A])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.tiff,
         label: 'a TIFF image',
         mimeType: 'image/tiff',
         extensions: ['tif', 'tiff'],
@@ -284,6 +339,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('BM')) {
       return const DetectedFileType(
+        kind: DetectedFileKind.bitmap,
         label: 'a bitmap image',
         mimeType: 'image/bmp',
         extensions: ['bmp'],
@@ -291,6 +347,7 @@ abstract final class FileIdentifier {
     }
     if (ascii(r'{\rtf')) {
       return const DetectedFileType(
+        kind: DetectedFileKind.rtf,
         label: 'an RTF document',
         mimeType: 'application/rtf',
         extensions: ['rtf'],
@@ -299,6 +356,7 @@ abstract final class FileIdentifier {
     if (startsWith(const [0x50, 0x4B, 0x03, 0x04]) ||
         startsWith(const [0x50, 0x4B, 0x05, 0x06])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.zip,
         label: 'a Zip archive',
         mimeType: 'application/zip',
         // Every modern office format and every Android package is a Zip.
@@ -311,6 +369,7 @@ abstract final class FileIdentifier {
     }
     if (startsWith(const [0x1F, 0x8B])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.gzip,
         label: 'a gzip archive',
         mimeType: 'application/gzip',
         extensions: ['gz', 'tgz'],
@@ -319,6 +378,7 @@ abstract final class FileIdentifier {
     }
     if (startsWith(const [0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.sevenZip,
         label: 'a 7-Zip archive',
         mimeType: 'application/x-7z-compressed',
         extensions: ['7z'],
@@ -327,6 +387,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('Rar!')) {
       return const DetectedFileType(
+        kind: DetectedFileKind.rar,
         label: 'a RAR archive',
         mimeType: 'application/vnd.rar',
         extensions: ['rar'],
@@ -337,6 +398,7 @@ abstract final class FileIdentifier {
     // worth showing a person, not because Action judges the file.
     if (startsWith(const [0x4D, 0x5A])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.windowsProgram,
         label: 'a Windows program',
         mimeType: 'application/vnd.microsoft.portable-executable',
         extensions: ['exe', 'dll', 'sys', 'msi', 'scr'],
@@ -344,6 +406,7 @@ abstract final class FileIdentifier {
     }
     if (startsWith(const [0x7F, 0x45, 0x4C, 0x46])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.linuxProgram,
         label: 'a Linux program',
         mimeType: 'application/x-elf',
         extensions: ['elf', 'so', 'bin', 'o'],
@@ -351,6 +414,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('%!PS')) {
       return const DetectedFileType(
+        kind: DetectedFileKind.postScript,
         label: 'a PostScript document',
         mimeType: 'application/postscript',
         extensions: ['ps', 'eps'],
@@ -358,6 +422,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('OggS')) {
       return const DetectedFileType(
+        kind: DetectedFileKind.ogg,
         label: 'an Ogg recording',
         mimeType: 'audio/ogg',
         extensions: ['ogg', 'oga', 'opus'],
@@ -365,6 +430,7 @@ abstract final class FileIdentifier {
     }
     if (ascii('ID3') || startsWith(const [0xFF, 0xFB])) {
       return const DetectedFileType(
+        kind: DetectedFileKind.mp3,
         label: 'an MP3 recording',
         mimeType: 'audio/mpeg',
         extensions: ['mp3'],
@@ -373,6 +439,7 @@ abstract final class FileIdentifier {
 
     if (_looksLikeText(header)) {
       return const DetectedFileType(
+        kind: DetectedFileKind.plainText,
         label: 'plain text',
         mimeType: 'text/plain',
         // Text is the ultimate container: source code, CSV, JSON, Markdown and

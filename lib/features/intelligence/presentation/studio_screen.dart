@@ -319,8 +319,10 @@ class _ToolCard extends StatelessWidget {
       // Name and purpose together: a screen reader landing on fifteen of these
       // should hear what each one does, not fifteen titles.
       label: tool.isLocal
-          ? l10n.studioToolSemanticsLocal(tool.title, tool.shortDescription)
-          : l10n.studioToolSemantics(tool.title, tool.shortDescription),
+          ? l10n.studioToolSemanticsLocal(
+              tool.titleIn(l10n), tool.shortDescriptionIn(l10n))
+          : l10n.studioToolSemantics(
+              tool.titleIn(l10n), tool.shortDescriptionIn(l10n)),
       child: Material(
       color: colors.surfaceElevated,
       borderRadius: Radii.rLg,
@@ -350,9 +352,9 @@ class _ToolCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(tool.title, style: text.titleSmall),
+                    Text(tool.titleIn(l10n), style: text.titleSmall),
                     const SizedBox(height: Space.xxs),
-                    Text(tool.shortDescription, style: text.bodySmall),
+                    Text(tool.shortDescriptionIn(l10n), style: text.bodySmall),
                   ],
                 ),
               ),

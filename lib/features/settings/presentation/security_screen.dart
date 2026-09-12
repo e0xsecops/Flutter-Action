@@ -437,10 +437,13 @@ class _TransferRow extends StatelessWidget {
     // holds only identifiers, which is what keeps content out of it.
     final tool = entry.toolId == null
         ? null
-        : ToolRegistry.byId(entry.toolId!)?.title;
+        : ToolRegistry.byId(entry.toolId!)?.titleIn(l10n);
+    // `labelIn`, not `label`. Three of the four are trademarks and come back
+    // unchanged; the fourth is the words "Custom (OpenAI-compatible)", which
+    // are prose and were reaching this row in English in every locale.
     final provider = entry.providerId == null
         ? null
-        : AiProviderKind.fromId(entry.providerId!)?.label;
+        : AiProviderKind.fromId(entry.providerId!)?.labelIn(l10n);
 
     return SettingsRow(
       label: tool ?? l10n.securityUnnamedTool,

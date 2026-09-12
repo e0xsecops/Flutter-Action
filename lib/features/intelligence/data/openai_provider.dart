@@ -13,6 +13,7 @@ import '../domain/ai_provider.dart';
 import '../domain/ai_provider_config.dart';
 import '../domain/ai_request.dart';
 import '../domain/ai_response.dart';
+import 'ai_http.dart';
 import 'byok_provider.dart';
 
 const String _defaultBase = 'https://api.openai.com/v1';
@@ -111,15 +112,9 @@ class OpenAiProvider extends ByokProvider {
                 capabilities: capabilitiesFor(id),
               ))
           .toList();
-      return AiConnectionCheck(
-        ok: true,
-        message: models.isEmpty
-            ? 'Connected.'
-            : 'Connected. ${models.length} models available.',
-        models: models,
-      );
+      return connectedCheck(models);
     } on AiProviderFailure catch (failure) {
-      return AiConnectionCheck(ok: false, message: failure.message);
+      return failedCheck(failure);
     }
   }
 
@@ -204,7 +199,7 @@ class OpenAiProvider extends ByokProvider {
     if (output is! List) {
       throw AiProviderFailure(
         AiFailureKind.malformedResponse,
-        message: 'That reply was incomplete. Try again.',
+        message: AiAdapterMessage.replyIncomplete.text(),
         technicalDetail: 'no output array',
       );
     }

@@ -26,6 +26,11 @@ enum SensitiveKind {
   url,
 }
 
+/// What to call this kind, in English.
+///
+/// Canonical: it is what a domain test asserts, and what the default
+/// [SensitiveMatch.replacement] is built from. On screen use
+/// `SensitiveKindL10n.labelIn` from `lib/l10n/enum_labels.dart`.
 String describeSensitiveKind(SensitiveKind kind) => switch (kind) {
       SensitiveKind.email => 'Email address',
       SensitiveKind.phone => 'Phone number',
@@ -53,8 +58,14 @@ class SensitiveMatch {
   final int start;
   final int end;
 
-  /// What replaces it. Keeps the shape so the document stays readable, without
-  /// keeping enough to reconstruct the value.
+  /// What replaces it, in English. Keeps the shape so the document stays
+  /// readable, without keeping enough to reconstruct the value.
+  ///
+  /// The marker ends up inside a document the user reads and shares, so on
+  /// screen it should be their language: pass `replacementFor` to
+  /// [SensitiveScanner.redact] with `SensitiveKindL10n.redactionMarkerIn`.
+  /// That route also cases the marker correctly for Turkish, which this
+  /// [String.toUpperCase] does not.
   String get replacement => '[${describeSensitiveKind(kind).toUpperCase()}]';
 }
 
@@ -147,13 +158,26 @@ abstract final class SensitiveScanner {
   ///
   /// Only [selected] matches are replaced, so the user stays in control of what
   /// goes. Replacement runs back to front so earlier offsets stay valid.
-  static String redact(String text, List<SensitiveMatch> selected) {
+  ///
+  /// [replacementFor] supplies the marker text. It exists so a screen can hand
+  /// in the translated marker without this file — which is domain code and has
+  /// no locale — having to know about one. Omitted, every match uses its
+  /// English [SensitiveMatch.replacement].
+  static String redact(
+    String text,
+    List<SensitiveMatch> selected, {
+    String Function(SensitiveMatch match)? replacementFor,
+  }) {
     final ordered = [...selected]..sort((a, b) => b.start.compareTo(a.start));
     final buffer = StringBuffer();
     var result = text;
     for (final match in ordered) {
       if (match.start < 0 || match.end > result.length) continue;
-      result = result.replaceRange(match.start, match.end, match.replacement);
+      result = result.replaceRange(
+        match.start,
+        match.end,
+        replacementFor?.call(match) ?? match.replacement,
+      );
     }
     buffer.write(result);
     return buffer.toString();

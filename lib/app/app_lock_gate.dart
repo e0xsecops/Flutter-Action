@@ -21,6 +21,7 @@ import '../core/security/device_lock.dart';
 import '../design/ambient/ambient_background.dart';
 import '../design/tokens/colors.dart';
 import '../design/tokens/dimens.dart';
+import '../l10n/gen/app_l10n.dart';
 import '../core/security/protection_providers.dart';
 
 class AppLockGate extends ConsumerStatefulWidget {
@@ -138,8 +139,13 @@ class _LockScreenState extends ConsumerState<_LockScreen> {
 
   Future<void> _ask() async {
     if (_asking || !mounted) return;
+    // Read before the await: the reason is shown by the OS in its own dialog,
+    // so it has to travel from here — the notifier has no BuildContext and
+    // must not grow one.
+    final reason = AppL10n.of(context).appLockReasonUnlock;
     setState(() => _asking = true);
-    final outcome = await ref.read(appLockedProvider.notifier).unlock();
+    final outcome =
+        await ref.read(appLockedProvider.notifier).unlock(reason: reason);
     if (!mounted) return;
     setState(() {
       _asking = false;
@@ -151,6 +157,7 @@ class _LockScreenState extends ConsumerState<_LockScreen> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
 
     return AmbientBackground(
       child: Scaffold(
@@ -179,10 +186,10 @@ class _LockScreenState extends ConsumerState<_LockScreen> {
                       ),
                     ),
                     const SizedBox(height: Space.xl),
-                    Text('Action is locked', style: text.headlineSmall),
+                    Text(l10n.appLockTitle, style: text.headlineSmall),
                     const SizedBox(height: Space.sm),
                     Text(
-                      _message(_lastOutcome),
+                      _message(l10n, _lastOutcome),
                       textAlign: TextAlign.center,
                       style: text.bodyMedium
                           ?.copyWith(color: colors.textSecondary),
@@ -190,7 +197,9 @@ class _LockScreenState extends ConsumerState<_LockScreen> {
                     const SizedBox(height: Space.xxl),
                     FilledButton(
                       onPressed: _asking ? null : _ask,
-                      child: Text(_asking ? 'Waiting…' : 'Unlock'),
+                      child: Text(
+                        _asking ? l10n.appLockWaiting : l10n.appLockUnlock,
+                      ),
                     ),
                   ],
                 ),
@@ -207,15 +216,11 @@ class _LockScreenState extends ConsumerState<_LockScreen> {
   /// The unavailable case is the one that matters: someone who removed their
   /// device PIN after enabling App Lock would otherwise be told "that didn't
   /// work" forever with no hint of where the problem actually is.
-  static String _message(DeviceAuthOutcome? outcome) => switch (outcome) {
-        null =>
-          'Confirm it is you to continue. Action asks your device — it never '
-              'sees your fingerprint, face or PIN.',
-        DeviceAuthOutcome.succeeded => 'Unlocking…',
-        DeviceAuthOutcome.failed =>
-          'That was not confirmed. Try again when you are ready.',
-        DeviceAuthOutcome.unavailable =>
-          'Your device cannot confirm it is you right now. Check that a '
-              'screen lock is still set up in your device settings.',
+  static String _message(AppL10n l10n, DeviceAuthOutcome? outcome) =>
+      switch (outcome) {
+        null => l10n.appLockPrompt,
+        DeviceAuthOutcome.succeeded => l10n.appLockUnlocking,
+        DeviceAuthOutcome.failed => l10n.appLockNotConfirmed,
+        DeviceAuthOutcome.unavailable => l10n.appLockCannotConfirm,
       };
 }

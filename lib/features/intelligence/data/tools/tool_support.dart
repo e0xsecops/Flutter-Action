@@ -14,6 +14,7 @@ import 'dart:convert';
 
 import '../../domain/ai_response.dart';
 import '../../domain/intelligence_result.dart';
+import '../../domain/tool_copy.dart';
 import '../../domain/intelligence_tool.dart';
 import '../evidence_verifier.dart';
 
@@ -221,11 +222,13 @@ List<IntelligenceWarning> evidenceWarnings(
               'is marked uncertain.'
           : '$notFound quoted details could not be found in what you selected, '
               'so they are marked uncertain.',
+      ToolCounted(ToolCountedId.warningEvidenceNotFound, notFound),
     ));
   } else if (!verifier.canVerify && evidence.isNotEmpty) {
     warnings.add(const IntelligenceWarning.note(
       "Action couldn't check these quotes against the file itself, so they "
       'have not been verified.',
+      ToolPhrase(ToolPhraseId.warningEvidenceUnverifiable),
     ));
   }
   return warnings;

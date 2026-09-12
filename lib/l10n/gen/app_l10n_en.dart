@@ -2183,4 +2183,2173 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get urgencyUnsure => 'Not sure';
+
+  @override
+  String get detailSaveFailed =>
+      'That didn\'t save. Nothing was lost — try again.';
+
+  @override
+  String get detailSectionCreatedFrom => 'Created from';
+
+  @override
+  String get detailSourceChecking => 'Checking the original capture…';
+
+  @override
+  String get detailSourceUnavailable =>
+      'The original capture is no longer available.';
+
+  @override
+  String get detailReopenAction => 'Reopen action';
+
+  @override
+  String get detailMarkActionComplete => 'Mark action complete';
+
+  @override
+  String get detailGetHelp => 'Get help with this';
+
+  @override
+  String get detailSectionHistory => 'History';
+
+  @override
+  String get detailHistoryShowLess => 'Show less';
+
+  @override
+  String detailHistoryShowAll(int count) {
+    return 'Show all $count';
+  }
+
+  @override
+  String get detailHistoryCreated => 'Created';
+
+  @override
+  String detailHistoryCreatedWithSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Created with $count steps',
+      one: 'Created with 1 step',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get detailHistoryReviewed => 'You confirmed the details';
+
+  @override
+  String detailHistoryStepFinished(String title) {
+    return 'Finished “$title”';
+  }
+
+  @override
+  String get detailHistoryAStep => 'a step';
+
+  @override
+  String get detailHistoryReminderSet => 'You set a reminder';
+
+  @override
+  String detailHistoryReminderSetFor(String when) {
+    return 'You set a reminder for $when';
+  }
+
+  @override
+  String get detailHistoryCompleted => 'Marked done';
+
+  @override
+  String get detailHistoryChanged => 'Last changed';
+
+  @override
+  String get detailHistoryTimestampFormat => 'd MMM yyyy, HH:mm';
+
+  @override
+  String get aiProviderCustom => 'Custom (OpenAI-compatible)';
+
+  @override
+  String get aiCapabilityText => 'text';
+
+  @override
+  String get aiCapabilityImages => 'images';
+
+  @override
+  String get aiCapabilityDocuments => 'documents';
+
+  @override
+  String get aiCapabilityStructuredResults => 'structured results';
+
+  @override
+  String get aiCapabilityStreaming => 'streaming';
+
+  @override
+  String get aiCapabilitySystemInstructions => 'system instructions';
+
+  @override
+  String get aiCapabilityEvidenceCitations => 'evidence citations';
+
+  @override
+  String get aiCapabilityLongDocuments => 'long documents';
+
+  @override
+  String aiCapabilityListJoin(String a, String b) {
+    return '$a, $b';
+  }
+
+  @override
+  String aiCapabilityListTwo(String a, String b) {
+    return '$a or $b';
+  }
+
+  @override
+  String aiCapabilityListMore(String head, String last) {
+    return '$head or $last';
+  }
+
+  @override
+  String get aiFailureNotConfigured =>
+      'Connect an AI provider to use this tool.';
+
+  @override
+  String get aiFailureInvalidKey =>
+      'That API key was not accepted by the provider.';
+
+  @override
+  String get aiFailureQuotaExceeded =>
+      'Your provider account is out of credit or has hit its quota.';
+
+  @override
+  String get aiFailureRateLimited =>
+      'Your provider is rate-limiting requests. Try again shortly.';
+
+  @override
+  String get aiFailureNetworkUnavailable =>
+      'Action couldn\'t reach your AI provider. Check your connection.';
+
+  @override
+  String get aiFailureUnsupportedModel =>
+      'That model is not available to your key. Choose another in Settings.';
+
+  @override
+  String aiFailureUnsupportedCapability(String capabilities) {
+    return 'The model you chose cannot read $capabilities. Pick another model in Settings.';
+  }
+
+  @override
+  String get aiFailureContextTooLarge =>
+      'That was too much content for this model to read at once.';
+
+  @override
+  String get aiFailureInputTooLargeText =>
+      'That is more text than can be analysed at once.';
+
+  @override
+  String get aiFailureProviderUnavailable =>
+      'Your AI provider is having trouble. Try again shortly.';
+
+  @override
+  String get aiFailureMalformedResponse =>
+      'That provider sent back something Action could not read.';
+
+  @override
+  String get aiFailureCancelled => 'Stopped.';
+
+  @override
+  String get aiFailureInsecureEndpoint =>
+      'That endpoint must be an https:// address.';
+
+  @override
+  String get aiFailureUnknown =>
+      'Something went wrong talking to your AI provider.';
+
+  @override
+  String get appLockTitle => 'Action is locked';
+
+  @override
+  String get appLockPrompt =>
+      'Confirm it is you to continue. Action asks your device — it never sees your fingerprint, face or PIN.';
+
+  @override
+  String get appLockUnlocking => 'Unlocking…';
+
+  @override
+  String get appLockNotConfirmed =>
+      'That was not confirmed. Try again when you are ready.';
+
+  @override
+  String get appLockCannotConfirm =>
+      'Your device cannot confirm it is you right now. Check that a screen lock is still set up in your device settings.';
+
+  @override
+  String get appLockWaiting => 'Waiting…';
+
+  @override
+  String get appLockUnlock => 'Unlock';
+
+  @override
+  String get appLockReasonUnlock => 'Unlock Action';
+
+  @override
+  String get appLockReasonEnable =>
+      'Confirm it is you before turning on App Lock';
+
+  @override
+  String get appLockReasonDisable =>
+      'Confirm it is you before turning off App Lock';
+
+  @override
+  String get todayCapabilityHeading => 'What Action handles';
+
+  @override
+  String get todayCapabilityDocumentTitle => 'A letter or bill';
+
+  @override
+  String get todayCapabilityDocumentBlurb =>
+      'Action reads it and finds the deadline, the amount and the reference.';
+
+  @override
+  String get todayCapabilityScreenshotTitle => 'A screenshot';
+
+  @override
+  String get todayCapabilityScreenshotBlurb =>
+      'Turn a message you would otherwise forget into something you can act on.';
+
+  @override
+  String get todayCapabilityTextTitle => 'Some text';
+
+  @override
+  String get todayCapabilityTextBlurb =>
+      'Paste anything. Action works out what it is and what it asks of you.';
+
+  @override
+  String get todayCapabilityConfirmTitle => 'You confirm everything';
+
+  @override
+  String get todayCapabilityConfirmBlurb =>
+      'Nothing becomes a task until you have seen the evidence and said yes.';
+
+  @override
+  String get todayCapabilityExploreIntelligence => 'Explore Intelligence';
+
+  @override
+  String get documentRejectedEmpty => 'That file is empty.';
+
+  @override
+  String documentRejectedTooLarge(String size) {
+    return 'That document is $size, which is larger than Action can work with.';
+  }
+
+  @override
+  String get documentRejectedNotAPdf =>
+      'That is not a PDF, whatever it is called. Action reads PDFs and images.';
+
+  @override
+  String get documentRejectedUnreadable => 'That document could not be read.';
+
+  @override
+  String get pdfRejectedNotAPdf =>
+      'That file is not a PDF, whatever it is called.';
+
+  @override
+  String get pdfRejectedEncrypted =>
+      'That PDF is password-protected, so Action cannot read it.';
+
+  @override
+  String get pdfRejectedDamaged =>
+      'That PDF could not be read. It may be incomplete.';
+
+  @override
+  String get shareRejectedEmpty => 'There was nothing in that share to read.';
+
+  @override
+  String get shareRejectedUnsupportedType =>
+      'Action can take text, images and PDFs. That was something else.';
+
+  @override
+  String get shareRejectedContentMismatch =>
+      'That file is not the kind of file it says it is, so Action has not opened it.';
+
+  @override
+  String get shareRejectedTooLarge =>
+      'That file is too large for Action to work with.';
+
+  @override
+  String get shareRejectedUnreadable => 'That file could not be read.';
+
+  @override
+  String get captureFailureRecognition => 'Text recognition could not run.';
+
+  @override
+  String get captureFailureImageFormat =>
+      'That image format couldn\'t be read on this device.';
+
+  @override
+  String get connectSheetTitle => 'Connect your AI';
+
+  @override
+  String get connectSheetSubtitle =>
+      'You use your own provider account and API key. Action stores the key in this device’s secure storage.';
+
+  @override
+  String get connectErrorKeyMissing => 'Paste your API key to continue.';
+
+  @override
+  String get connectErrorModelMissing => 'Choose a model, or type a model id.';
+
+  @override
+  String get connectErrorEndpointMissing => 'Add the address of your endpoint.';
+
+  @override
+  String get connectErrorSecureStorageUnavailable =>
+      'This device\'s secure storage could not be opened, so the key was not saved.';
+
+  @override
+  String get connectTestSucceeded => 'Connected.';
+
+  @override
+  String connectTestSucceededWithModels(int count) {
+    return 'Connected. $count models available.';
+  }
+
+  @override
+  String get connectProviderLabel => 'Provider';
+
+  @override
+  String get connectEndpointLabel => 'Endpoint';
+
+  @override
+  String get connectEndpointHttpsNote =>
+      'Must be an https:// address. Action will not send your documents over an unencrypted connection.';
+
+  @override
+  String get connectApiKeyLabel => 'API key';
+
+  @override
+  String get connectApiKeyHint => 'Paste your key';
+
+  @override
+  String get connectKeyPrivacyNote =>
+      'Your key stays on this device. Action never sends it anywhere except to the provider you chose, and cannot show it to you again after saving.';
+
+  @override
+  String get connectModelLabel => 'Model';
+
+  @override
+  String get connectModelIdHint => 'Model id';
+
+  @override
+  String get connectModelFreeTextNote =>
+      'Providers retire model ids and add new ones. If the one you want is not listed, type it here.';
+
+  @override
+  String get connectAndTest => 'Connect and test';
+
+  @override
+  String get connectSaveWithoutTesting => 'Save without testing';
+
+  @override
+  String get toolWarningFactsNotChecked =>
+      'Action couldn\'t compare this against the original text, so the amounts and dates in it have not been checked.';
+
+  @override
+  String get toolTitleRewrite => 'Improve this writing';
+
+  @override
+  String get toolDescriptionRewrite =>
+      'Clearer, shorter or more formal — facts kept intact.';
+
+  @override
+  String get toolModeRewriteClearer => 'Clearer';
+
+  @override
+  String get toolModeRewriteProfessional => 'More professional';
+
+  @override
+  String get toolModeRewriteShorter => 'Shorter';
+
+  @override
+  String get toolModeRewritePersuasive => 'More persuasive';
+
+  @override
+  String get toolModeRewriteSimpler => 'Simpler';
+
+  @override
+  String get toolModeRewriteStructured => 'More structured';
+
+  @override
+  String get toolModeRewriteGrammarOnly => 'Grammar only';
+
+  @override
+  String get toolSectionWhatChanged => 'What changed';
+
+  @override
+  String get toolSectionNote => 'Note';
+
+  @override
+  String get toolSectionAlreadyClearBody =>
+      'This was already clear. The changes below are minor.';
+
+  @override
+  String get toolSectionImprovedText => 'Improved text';
+
+  @override
+  String get toolTitleDraftReply => 'Draft a reply';
+
+  @override
+  String get toolDescriptionDraftReply =>
+      'A response you can edit and send yourself.';
+
+  @override
+  String get toolModeReplyProfessional => 'Professional';
+
+  @override
+  String get toolModeReplyConcise => 'Concise';
+
+  @override
+  String get toolModeReplyFriendly => 'Friendly';
+
+  @override
+  String get toolModeReplyFormal => 'Formal';
+
+  @override
+  String get toolModeReplyClarification => 'Ask for clarification';
+
+  @override
+  String get toolModeReplyConfirmation => 'Confirm';
+
+  @override
+  String get toolModeReplyDispute => 'Dispute this';
+
+  @override
+  String get toolSectionSubject => 'Subject';
+
+  @override
+  String get toolSectionDraftReply => 'Draft reply';
+
+  @override
+  String get toolSectionPlaceholders => 'You need to fill these in';
+
+  @override
+  String toolSectionDraftWithSubject(String subject) {
+    return 'Draft — $subject';
+  }
+
+  @override
+  String get toolWarningDraftNotSent =>
+      'This is a draft. Action does not send anything — read it, edit it, and send it yourself.';
+
+  @override
+  String get toolTitleTranslate => 'Translate';
+
+  @override
+  String get toolDescriptionTranslate =>
+      'Another language, with the numbers and names kept intact.';
+
+  @override
+  String get toolSectionTranslation => 'Translation';
+
+  @override
+  String toolSectionTranslationFromTo(String from, String to) {
+    return 'From $from to $to';
+  }
+
+  @override
+  String get toolSectionKeptInOriginal => 'Kept in the original';
+
+  @override
+  String get toolWarningTranslationNotCertified =>
+      'A translation for understanding, not a certified translation.';
+
+  @override
+  String get toolTitleStructuredData => 'Extract a table';
+
+  @override
+  String get toolDescriptionStructuredData =>
+      'Rows, fields and figures you can copy out.';
+
+  @override
+  String get toolSectionTable => 'Table';
+
+  @override
+  String get toolSectionFields => 'Fields';
+
+  @override
+  String get toolSectionTableCsv => 'Table (CSV)';
+
+  @override
+  String get toolWarningTableLayoutUncertain =>
+      'The column layout of this table could not be read reliably. Check the rows line up before using them.';
+
+  @override
+  String get toolTitleDeadlineFinder => 'Find deadlines';
+
+  @override
+  String get toolDescriptionDeadlineFinder =>
+      'What is due, when, and what happens if it is not.';
+
+  @override
+  String toolSectionDeadlineCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count deadlines',
+      one: '1 deadline',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionNothingDue => 'Nothing due';
+
+  @override
+  String get toolSectionNothingDueBody =>
+      'Action found no deadlines or obligations in this material.';
+
+  @override
+  String get toolWarningNothingScheduledAutomatically =>
+      'Nothing is scheduled until you choose it. Reminders are never set automatically.';
+
+  @override
+  String toolLabelDeadlineConsequence(String consequence) {
+    return 'If not: $consequence';
+  }
+
+  @override
+  String toolLabelDeadlineRequiredItems(String items) {
+    return 'You need: $items';
+  }
+
+  @override
+  String get moneyErrorEmpty => 'no amount given';
+
+  @override
+  String get moneyErrorMalformed => 'the amount is not a plain number';
+
+  @override
+  String get moneyErrorNegative => 'a negative amount is not a payable sum';
+
+  @override
+  String get moneyErrorTooManyDecimals =>
+      'more decimal places than the currency has';
+
+  @override
+  String get moneyErrorUnsupportedCurrency =>
+      'the currency code is not one we recognise';
+
+  @override
+  String get moneyErrorOutOfRange => 'the amount is implausibly large';
+
+  @override
+  String get escalationOcrFailed =>
+      'Recognition could not run on this capture at all.';
+
+  @override
+  String get escalationNoTextRecognised =>
+      'This looks like a document, but no text was recognised.';
+
+  @override
+  String get escalationThinText =>
+      'Far too little text was recognised for a document this size.';
+
+  @override
+  String get escalationLowLineConfidence =>
+      'The recogniser reported low confidence on several lines.';
+
+  @override
+  String get escalationTableLikeLayout =>
+      'The layout looks like a table, and reading it line by line loses which value belongs to which row.';
+
+  @override
+  String get escalationFragmentedLayout =>
+      'The text came back as many tiny fragments, so the structure is unclear.';
+
+  @override
+  String get escalationMalformedText =>
+      'Much of the recognised text is not readable words or numbers.';
+
+  @override
+  String get escalationConflictingDates =>
+      'More than one date is presented as a deadline.';
+
+  @override
+  String get escalationConflictingAmounts =>
+      'More than one amount is presented as the sum due.';
+
+  @override
+  String get escalationUnresolvedGrounding =>
+      'Some values could not be traced back to the document text.';
+
+  @override
+  String get escalationInstructionLikeContent =>
+      'The document contains text written as if it were instructions to the app. It is treated as document content, never as instructions.';
+
+  @override
+  String get providerFailureNetwork =>
+      'Action could not reach the service. Check your connection.';
+
+  @override
+  String get providerFailureTimedOut => 'The service took too long to answer.';
+
+  @override
+  String get providerFailureServiceUnavailable =>
+      'The service is temporarily unavailable. Try again later.';
+
+  @override
+  String get providerFailureUnauthorized =>
+      'This app is not authorised to use the service right now.';
+
+  @override
+  String get providerFailureBlocked =>
+      'The service declined to process this document.';
+
+  @override
+  String get providerFailureUnknown =>
+      'Action could not read this document. Trying again may work.';
+
+  @override
+  String get reviewBlockerTitle => 'Give this action a title.';
+
+  @override
+  String get reviewBlockerDate =>
+      'Choose which date is the real deadline, or leave it unset.';
+
+  @override
+  String get reviewBlockerAmount =>
+      'Choose which amount is right, or leave it unset.';
+
+  @override
+  String get reviewBlockerStepTitle => 'Steps you keep need a title.';
+
+  @override
+  String citationPage(int page) {
+    String _temp0 = intl.Intl.pluralLogic(
+      page,
+      locale: localeName,
+      other: 'page $page',
+      one: 'page 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String citationPageRange(int start, int end) {
+    return 'pages $start–$end';
+  }
+
+  @override
+  String rewriteDroppedFacts(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'The rewrite no longer contains $values. Check it before using this.',
+      one:
+          'The rewrite no longer contains $values. Check it before using this.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rewriteDroppedFactsMore(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'The rewrite no longer contains $values and $count more. Check it before using this.',
+      one:
+          'The rewrite no longer contains $values and 1 more. Check it before using this.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get listSeparator => ', ';
+
+  @override
+  String get goalStatusReached => 'Reached';
+
+  @override
+  String get goalNewSheetTitle => 'What do you want to happen?';
+
+  @override
+  String get goalNewSheetSubtitle =>
+      'One sentence is enough. You can add the details after.';
+
+  @override
+  String get goalTitleHint => 'Renew the car insurance without overpaying.';
+
+  @override
+  String get goalCreateAction => 'Create goal';
+
+  @override
+  String get goalTitleSheetTitle => 'What you want';
+
+  @override
+  String get goalOutcomeSheetTitle => 'What done looks like';
+
+  @override
+  String get goalContextSheetTitle => 'Where it stands';
+
+  @override
+  String get goalOutcomeHint =>
+      'The car is insured and the paperwork is filed.';
+
+  @override
+  String get goalContextHint =>
+      'I have two quotes and the renewal is on the 18th.';
+
+  @override
+  String get goalWorkspaceTitle => 'Goal';
+
+  @override
+  String get goalUnmarkReached => 'Not reached after all';
+
+  @override
+  String get goalMarkReached => 'Mark as reached';
+
+  @override
+  String get goalNotFound => 'That goal is no longer here.';
+
+  @override
+  String get goalDeleteTitle => 'Delete this goal?';
+
+  @override
+  String get goalDeleteBody =>
+      'The goal is removed from this device. Any Actions made from it stay exactly as they are.';
+
+  @override
+  String get goalOutcomeLabel => 'What done looks like';
+
+  @override
+  String get goalOutcomeEmpty =>
+      'Not written yet. A goal is easier to plan when you have said what finishing it means.';
+
+  @override
+  String get goalContextLabel => 'Where it stands';
+
+  @override
+  String get goalContextEmpty =>
+      'Nothing written yet. What has happened so far, and what is in the way.';
+
+  @override
+  String get goalTitleLabel => 'What you want';
+
+  @override
+  String get goalEditTooltip => 'Edit goal';
+
+  @override
+  String get goalToolsLabel => 'What Action can do';
+
+  @override
+  String get goalToolsNotReady =>
+      'Write a little more about what you want, and these will have something to work with.';
+
+  @override
+  String get toolGoalOptimizerTitle => 'Improve a goal';
+
+  @override
+  String get toolActionPlanTitle => 'Build a plan';
+
+  @override
+  String get resultFactUnconfirmed => 'Unconfirmed';
+
+  @override
+  String get resultSuggestedSteps => 'Suggested steps';
+
+  @override
+  String get resultSuggestedAction => 'Suggested action';
+
+  @override
+  String get resultWorthAsking => 'Worth asking';
+
+  @override
+  String get resultSuggestedDeadlines => 'Suggested deadlines';
+
+  @override
+  String get resultSuggestions => 'Suggestions';
+
+  @override
+  String resultSupportingQuotes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count supporting quotes',
+      one: '1 supporting quote',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get resultEvidenceFromSelectedSource => 'From the selected source';
+
+  @override
+  String resultEvidenceLocation(String source, String page) {
+    return '$source, $page';
+  }
+
+  @override
+  String get toolRunStagePreparing => 'Preparing your document';
+
+  @override
+  String get toolRunStageReading => 'Reading the selected pages';
+
+  @override
+  String get toolRunStageAnalysing => 'Analysing';
+
+  @override
+  String get toolRunStageBuilding => 'Building your review';
+
+  @override
+  String get toolRunStageDone => 'Done';
+
+  @override
+  String get toolRunStageFailed => 'That didn\'t finish';
+
+  @override
+  String get toolRunStageCancelled => 'Stopped';
+
+  @override
+  String get toolRunFailureLocalCheckFailed => 'That couldn\'t be checked.';
+
+  @override
+  String get toolRunFailureProviderRetired =>
+      'That AI provider is no longer available in this version.';
+
+  @override
+  String get toolRunFailureUnusableReply =>
+      'That reply did not come back in a usable form. Try again.';
+
+  @override
+  String get toolRunFailureQuestionRequired => 'Type a question first.';
+
+  @override
+  String get toolRunFailureInputRequired =>
+      'Choose something for this tool to work on.';
+
+  @override
+  String get toolWarningReplyTruncated =>
+      'This reply was cut short, so it may be incomplete.';
+
+  @override
+  String get toolWarningNoSupportingQuotes =>
+      'Your model returned no supporting quotes, so nothing here is evidenced. Check it against the document before acting on it.';
+
+  @override
+  String get aiSettingsRemoveTitle => 'Remove this connection?';
+
+  @override
+  String get aiSettingsRemoveBody =>
+      'Action will delete your API key from this device and stop using AI features. Your provider account is not affected.';
+
+  @override
+  String get aiSettingsProviderLabel => 'Provider';
+
+  @override
+  String get aiSettingsProviderFootnoteConnected =>
+      'You are billed by your provider for what you use. Action never makes a request on its own.';
+
+  @override
+  String get aiSettingsConnectLabel => 'Connect an AI provider';
+
+  @override
+  String get aiSettingsConnectDescription =>
+      'Use your own account and API key with OpenAI, Anthropic, Google Gemini, or a compatible endpoint.';
+
+  @override
+  String get aiSettingsModelLabel => 'Model';
+
+  @override
+  String get aiSettingsEndpointLabel => 'Endpoint';
+
+  @override
+  String get aiSettingsApiKeyLabel => 'API key';
+
+  @override
+  String get aiSettingsKeyStored => 'Stored in this device’s secure storage.';
+
+  @override
+  String get aiSettingsKeyMissing =>
+      'No key found on this device. Connect again to add one.';
+
+  @override
+  String get aiSettingsTestLabel => 'Test connection';
+
+  @override
+  String get aiSettingsProviderUnavailable =>
+      'That provider is not available in this version.';
+
+  @override
+  String aiSettingsTestConnectedModels(int count) {
+    return 'Connected. $count models available.';
+  }
+
+  @override
+  String get aiSettingsTestButton => 'Test';
+
+  @override
+  String get aiSettingsChangeProvider => 'Change provider or model';
+
+  @override
+  String get aiSettingsRemoveKey => 'Remove key';
+
+  @override
+  String get aiSettingsSectionPrivacy => 'Privacy';
+
+  @override
+  String get aiSettingsWhatGetsSentLabel => 'What gets sent';
+
+  @override
+  String get aiSettingsWhereItGoesLabel => 'Where it goes';
+
+  @override
+  String get aiSettingsWhereItGoesNoProvider =>
+      'Nothing is sent until you connect a provider.';
+
+  @override
+  String aiSettingsWhereItGoesProvider(String provider) {
+    return 'Directly to $provider, using your key. It does not pass through Action’s servers.';
+  }
+
+  @override
+  String get aiSettingsSectionData => 'Data';
+
+  @override
+  String get aiSettingsDataFootnote =>
+      'Action remembers which tools you used, never what you used them on.';
+
+  @override
+  String get aiSettingsRecentToolsLabel => 'Recently used tools';
+
+  @override
+  String get aiSettingsRecentToolsNone => 'None';
+
+  @override
+  String get reminderNotificationTitle => 'Action reminder';
+
+  @override
+  String get reminderNotificationPrivateBody => 'You have something to review.';
+
+  @override
+  String get reminderChannelName => 'Action reminders';
+
+  @override
+  String get reminderChannelDescription =>
+      'Reminders you set yourself for your actions.';
+
+  @override
+  String get onboardingStart => 'Start using Action';
+
+  @override
+  String onboardingProgressSemantics(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get onboardingCaptureTitle => 'Turn information into action';
+
+  @override
+  String get onboardingCaptureBody =>
+      'Add a screenshot, a photo or text you have been sent. Action reads it and works out what it is asking you to do.';
+
+  @override
+  String get onboardingReviewTitle => 'Nothing is saved until you confirm it';
+
+  @override
+  String get onboardingReviewBody =>
+      'Action shows you what it found and the words it came from. You fix anything that is wrong. Until you confirm, it is a suggestion — not a fact, and not an Action.';
+
+  @override
+  String get onboardingTrackingTitle => 'Stay on top of what matters';
+
+  @override
+  String get onboardingTrackingBody =>
+      'Needs attention brings forward what is overdue or close. Every Action keeps its next step, its progress and any reminder you set for it.';
+
+  @override
+  String get onboardingPrivacyBody => 'Worth knowing before you start:';
+
+  @override
+  String get onboardingPrivacyOnDevice =>
+      'Your Actions, captures, reminders and searches are stored on this device. Search and reminders work without a connection.';
+
+  @override
+  String get onboardingPrivacySentToRead =>
+      'When you ask Action to read something, that content is sent to the AI service that interprets it.';
+
+  @override
+  String get onboardingPrivacyCloud =>
+      'A short record of a confirmed Action — its title, dates, amount and suggested step — may be saved to the cloud under an anonymous ID for this device. Your captures, steps and reminders are not.';
+
+  @override
+  String get onboardingPrivacyNotBackup =>
+      'That record is not a backup. It cannot restore anything to a new device.';
+
+  @override
+  String toolSectionBlockerCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count blockers',
+      one: '1 blocker',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCouldBeSimpler => 'Could be simpler';
+
+  @override
+  String get toolDescriptionGoalOptimizer =>
+      'What is missing, what blocks it, what to do first.';
+
+  @override
+  String toolSectionStepDependsOn(String step) {
+    return 'After: $step';
+  }
+
+  @override
+  String get toolSectionThePlan => 'The plan';
+
+  @override
+  String get toolDescriptionActionPlan =>
+      'An ordered set of steps you can turn into Actions.';
+
+  @override
+  String get toolTitleSmartChecklist => 'Make a checklist';
+
+  @override
+  String get toolDescriptionSmartChecklist =>
+      'Everything this asks of you, in order.';
+
+  @override
+  String toolSectionMissingDetailCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count missing details',
+      one: '1 missing detail',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionContradictions => 'These disagree with each other';
+
+  @override
+  String get toolTitleMissingInformation => 'What is missing';
+
+  @override
+  String get toolDescriptionMissingInformation =>
+      'The gaps, and what to ask about them.';
+
+  @override
+  String get aiAdapterTimedOut => 'That took too long and was stopped.';
+
+  @override
+  String get aiAdapterSecureConnectionFailed =>
+      'The secure connection to your AI provider failed.';
+
+  @override
+  String get aiAdapterModelOrEndpointNotFound =>
+      'Action could not find that model or endpoint.';
+
+  @override
+  String get aiAdapterRequestRejected =>
+      'Your AI provider rejected that request.';
+
+  @override
+  String get aiAdapterSecureStorageUnavailable =>
+      'Action couldn\'t open this device\'s secure storage.';
+
+  @override
+  String get aiAdapterEndpointMissing =>
+      'Add the address of your AI endpoint in Settings.';
+
+  @override
+  String get aiAdapterReplyIncomplete =>
+      'That reply was incomplete. Try again.';
+
+  @override
+  String get aiAdapterContentDeclined =>
+      'Your provider declined to process that content.';
+
+  @override
+  String aiAdapterTooManyAttachments(int limit) {
+    return 'That is more than $limit files at once. Select fewer.';
+  }
+
+  @override
+  String get aiAdapterImageTooLarge =>
+      'One of those images is too large to analyse.';
+
+  @override
+  String aiAdapterDocumentTooLarge(String filename, int limit) {
+    return '\"$filename\" is too large to analyse. The limit is $limit MB.';
+  }
+
+  @override
+  String aiAdapterDocumentTooManyPages(String filename, int count, int limit) {
+    return '\"$filename\" has $count pages. Action reads up to $limit at a time — choose a range.';
+  }
+
+  @override
+  String get aiAdapterSelectionTooLarge =>
+      'That selection is too large to send in one request.';
+
+  @override
+  String get toolRunNotAvailableTitle => 'That tool is not available';
+
+  @override
+  String get toolRunNotAvailableMessage =>
+      'It may have been removed in a newer version of Action.';
+
+  @override
+  String get toolRunNoSourcesYet =>
+      'Nothing to work on yet. Capture something, or paste some text below.';
+
+  @override
+  String get toolRunChooseSourcesToCompare => 'Choose what to compare';
+
+  @override
+  String get toolRunChooseSource => 'Choose a source';
+
+  @override
+  String get toolRunQuestionLabel => 'Your question';
+
+  @override
+  String get toolRunQuestionHint => 'What is the deadline?';
+
+  @override
+  String get toolRunFreeTextLabel => 'Or paste some text';
+
+  @override
+  String get toolRunFreeTextHint => 'Paste or type here';
+
+  @override
+  String get toolRunModeLabel => 'Style';
+
+  @override
+  String get toolRunRunLocally => 'Check on this device';
+
+  @override
+  String get toolRunRun => 'Run';
+
+  @override
+  String get toolRunStop => 'Stop';
+
+  @override
+  String get toolRunRunAgain => 'Run again';
+
+  @override
+  String get toolRunWorkingOn => 'Working on';
+
+  @override
+  String toolRunFirstUseTitle(String provider) {
+    return 'Send this to $provider?';
+  }
+
+  @override
+  String toolRunFirstUseBody(String provider) {
+    return 'The content you selected will be sent to $provider for processing, using your API key.';
+  }
+
+  @override
+  String get toolRunFirstUseKeyStays =>
+      'Your key stays on this device. Action does not send anything in the background, and does not send your other Actions or sources.';
+
+  @override
+  String get toolRunScopeTitle => 'Before this runs';
+
+  @override
+  String toolRunScopePages(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0 will be analysed using your $provider connection.';
+  }
+
+  @override
+  String toolRunScopeFiles(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count files',
+      one: '1 file',
+    );
+    return '$_temp0 will be analysed using your $provider connection.';
+  }
+
+  @override
+  String toolRunScopeText(String provider) {
+    return 'The text you selected will be sent to your $provider connection.';
+  }
+
+  @override
+  String get toolRunNeedsProviderTitle =>
+      'Connect an AI provider to use this tool';
+
+  @override
+  String get toolRunNeedsProviderBody =>
+      'You use your own provider account and API key.';
+
+  @override
+  String toolRunActionCreatedFromSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return 'Action created from $_temp0.';
+  }
+
+  @override
+  String toolRunStepsAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return '$_temp0 added.';
+  }
+
+  @override
+  String toolRunSaveCreateActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return 'Create an action · $_temp0';
+  }
+
+  @override
+  String toolRunSaveAddToActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count steps',
+      one: '1 step',
+    );
+    return 'Add to this action · $_temp0';
+  }
+
+  @override
+  String get sourceTypeLabelPhoto => 'Photo';
+
+  @override
+  String get sourceTypeLabelScreenshot => 'Screenshot';
+
+  @override
+  String get sourceTypeLabelPastedText => 'Pasted note';
+
+  @override
+  String get sourceTypeLabelDocument => 'Document';
+
+  @override
+  String get toolModeClearer => 'Clearer';
+
+  @override
+  String get toolModeMoreProfessional => 'More professional';
+
+  @override
+  String get toolModeShorter => 'Shorter';
+
+  @override
+  String get toolModeSimpler => 'Simpler';
+
+  @override
+  String get toolModeMoreStructured => 'More structured';
+
+  @override
+  String get toolModeMorePersuasive => 'More persuasive';
+
+  @override
+  String get toolModeGrammarOnly => 'Grammar only';
+
+  @override
+  String get toolModeProfessional => 'Professional';
+
+  @override
+  String get toolModeConcise => 'Concise';
+
+  @override
+  String get toolModeFriendly => 'Friendly';
+
+  @override
+  String get toolModeFormal => 'Formal';
+
+  @override
+  String get toolModeAskForClarification => 'Ask for clarification';
+
+  @override
+  String get toolModeConfirm => 'Confirm';
+
+  @override
+  String get toolModeDispute => 'Dispute this';
+
+  @override
+  String get toolModeQuick => 'Quick';
+
+  @override
+  String get toolModeDetailed => 'Detailed';
+
+  @override
+  String get toolModeExecutive => 'Executive';
+
+  @override
+  String get toolModeKeyPoints => 'Key points';
+
+  @override
+  String get toolModeActionFocused => 'Action-focused';
+
+  @override
+  String toolWarningEvidenceNotFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count quoted details could not be found in what you selected, so they are marked uncertain.',
+      one: 'One quoted detail could not be found in what you selected, so it is marked uncertain.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolWarningEvidenceUnverifiable =>
+      'Action couldn\'t check these quotes against the file itself, so they have not been verified.';
+
+  @override
+  String triageBadgeOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Overdue · $count days',
+      one: 'Overdue · 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageBadgeDueTomorrow => 'Due tomorrow';
+
+  @override
+  String get triageBadgeReminderSoon => 'Reminder soon';
+
+  @override
+  String triageSpokenOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Overdue by $count days',
+      one: 'Overdue by 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String triageSemanticLabel(String status, String title) {
+    return '$status. $title';
+  }
+
+  @override
+  String get triageExplanationDone => 'This is done.';
+
+  @override
+  String get triageExplanationNothingPressing =>
+      'This is here because nothing about it is pressing yet.';
+
+  @override
+  String triageExplanationNeedsAttention(String reason) {
+    return 'This needs attention because $reason.';
+  }
+
+  @override
+  String triageExplanationUpcoming(String reason) {
+    return 'This is further down because $reason.';
+  }
+
+  @override
+  String get triageReasonOverdue => 'it is overdue';
+
+  @override
+  String get triageReasonDeadlinePassed => 'its deadline has passed';
+
+  @override
+  String triageReasonOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'it is $count days overdue',
+      one: 'it is one day overdue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageReasonDueToday => 'it is due today';
+
+  @override
+  String get triageReasonCriticalDueSoon =>
+      'you marked it critical and its deadline is close';
+
+  @override
+  String get triageReasonAllStepsDone =>
+      'every step is done — it just needs finishing';
+
+  @override
+  String get triageReasonDueTomorrow => 'it is due tomorrow';
+
+  @override
+  String get triageReasonReminderSoon =>
+      'you set a reminder for it within the next day';
+
+  @override
+  String get triageReasonDueWithinThreeDays => 'it is due within three days';
+
+  @override
+  String get triageReasonCriticalNoDeadline =>
+      'you marked it critical, and it has no deadline';
+
+  @override
+  String get triageReasonDueWithinSevenDays => 'it is due within a week';
+
+  @override
+  String get triageReasonImportant => 'you marked it important';
+
+  @override
+  String get triageReasonDueLater => 'its deadline is further away';
+
+  @override
+  String get triageReasonNoDeadline =>
+      'it has no deadline and nothing is pressing';
+
+  @override
+  String cardCompletedTooltip(String title) {
+    return 'Completed: $title';
+  }
+
+  @override
+  String get toolTitleDocumentIntelligence => 'Understand this document';
+
+  @override
+  String get toolDescriptionDocumentIntelligence =>
+      'What it is, what matters, and what to do about it.';
+
+  @override
+  String get toolSectionWhatThisIs => 'What this is';
+
+  @override
+  String get toolSectionWhatMatters => 'What matters';
+
+  @override
+  String get toolSectionKeyDetails => 'Key details';
+
+  @override
+  String get toolTitleAskDocument => 'Ask about a source';
+
+  @override
+  String get toolDescriptionAskDocument =>
+      'Answers grounded in what you selected — or nothing.';
+
+  @override
+  String get toolSectionNoAnswer => 'No answer in this material';
+
+  @override
+  String get toolSectionNoAnswerBody =>
+      'Action couldn\'t find that in the selected document.';
+
+  @override
+  String get toolSectionAnswer => 'Answer';
+
+  @override
+  String get toolSectionFromTheDocument => 'From the document';
+
+  @override
+  String get toolWarningQuoteNotFound =>
+      'The quote behind this answer is not in the selected material. Treat the answer as unreliable.';
+
+  @override
+  String get toolTitleSmartSummary => 'Summarise';
+
+  @override
+  String get toolDescriptionSmartSummary =>
+      'The short version — or the version that affects you.';
+
+  @override
+  String get toolSectionKeyPoints => 'Key points';
+
+  @override
+  String get toolTitleCompareDocuments => 'Compare documents';
+
+  @override
+  String get toolDescriptionCompareDocuments =>
+      'What changed, what conflicts, what is missing.';
+
+  @override
+  String get toolSectionWhatDiffers => 'What differs';
+
+  @override
+  String get toolSectionConflicts => 'Conflicts';
+
+  @override
+  String get toolSectionOnlyInOne => 'Only in one of them';
+
+  @override
+  String get toolSectionInCommon => 'In common';
+
+  @override
+  String get sensitiveKindEmail => 'Email address';
+
+  @override
+  String get sensitiveKindPhone => 'Phone number';
+
+  @override
+  String get sensitiveKindPaymentCard => 'Payment card number';
+
+  @override
+  String get sensitiveKindIban => 'Bank account (IBAN)';
+
+  @override
+  String get sensitiveKindNationalId => 'National identity number';
+
+  @override
+  String get sensitiveKindPostcode => 'Postcode';
+
+  @override
+  String get sensitiveKindAccountNumber => 'Account number';
+
+  @override
+  String get sensitiveKindReference => 'Reference number';
+
+  @override
+  String get sensitiveKindDateOfBirth => 'Date of birth';
+
+  @override
+  String get sensitiveKindUrl => 'Web address';
+
+  @override
+  String get verdictVerifiedProvenance => 'Verified provenance available';
+
+  @override
+  String get verdictVerifiedProvenanceExplainer =>
+      'This file carries a signature that was checked and held up.';
+
+  @override
+  String get verdictSignalsSynthetic =>
+      'Signals consistent with AI-generated content';
+
+  @override
+  String get verdictSignalsSyntheticExplainer =>
+      'This file says it was made with a generative tool. Metadata can be edited or removed, so this is what the file claims, not proof.';
+
+  @override
+  String get verdictSignalsEdited => 'Signals consistent with edited content';
+
+  @override
+  String get verdictSignalsEditedExplainer =>
+      'This file says it passed through editing software. That is ordinary for photographs and does not by itself mean anything was faked.';
+
+  @override
+  String get verdictNoReliableProvenance => 'No reliable provenance found';
+
+  @override
+  String get verdictNoReliableProvenanceExplainer =>
+      'There is no provenance information in this file. That is normal — most services strip it — and it is not a sign of anything.';
+
+  @override
+  String get verdictInconclusive => 'Inconclusive';
+
+  @override
+  String get verdictInconclusiveExplainer =>
+      'There is not enough information here to say where this came from.';
+
+  @override
+  String get authenticitySignalCamera => 'Camera';
+
+  @override
+  String get authenticitySignalSoftware => 'Software';
+
+  @override
+  String get authenticitySignalDescription => 'Description';
+
+  @override
+  String get authenticitySignalCopyright => 'Copyright';
+
+  @override
+  String get authenticitySignalLocation => 'Location';
+
+  @override
+  String get authenticitySignalLocationValue =>
+      'Location data is present in this file.';
+
+  @override
+  String get authenticitySignalContentCredentials => 'Content Credentials';
+
+  @override
+  String get authenticitySignalContentCredentialsValue =>
+      'Not checked — this build has no signature verifier.';
+
+  @override
+  String get authenticitySignalFile => 'File';
+
+  @override
+  String get authenticitySignalFileUnreadableValue =>
+      'Could not be read as an image.';
+
+  @override
+  String get authenticitySignalFileUnrecognisedValue =>
+      'Not a recognised image format.';
+
+  @override
+  String get authenticitySignalText => 'Text';
+
+  @override
+  String get authenticitySignalTextValue =>
+      'Text alone cannot reliably show whether AI was used. Action does not guess.';
+
+  @override
+  String get fileTypePng => 'a PNG image';
+
+  @override
+  String get fileTypeJpeg => 'a JPEG image';
+
+  @override
+  String get fileTypeGif => 'a GIF image';
+
+  @override
+  String get fileTypeWebp => 'a WebP image';
+
+  @override
+  String get fileTypeWav => 'a WAV recording';
+
+  @override
+  String get fileTypePdf => 'a PDF document';
+
+  @override
+  String get fileTypeHeic => 'a HEIC image';
+
+  @override
+  String get fileTypeVideo => 'a video file';
+
+  @override
+  String get fileTypeTiff => 'a TIFF image';
+
+  @override
+  String get fileTypeBitmap => 'a bitmap image';
+
+  @override
+  String get fileTypeRtf => 'an RTF document';
+
+  @override
+  String get fileTypeZip => 'a Zip archive';
+
+  @override
+  String get fileTypeGzip => 'a gzip archive';
+
+  @override
+  String get fileTypeSevenZip => 'a 7-Zip archive';
+
+  @override
+  String get fileTypeRar => 'a RAR archive';
+
+  @override
+  String get fileTypeWindowsProgram => 'a Windows program';
+
+  @override
+  String get fileTypeLinuxProgram => 'a Linux program';
+
+  @override
+  String get fileTypePostScript => 'a PostScript document';
+
+  @override
+  String get fileTypeOgg => 'an Ogg recording';
+
+  @override
+  String get fileTypeMp3 => 'an MP3 recording';
+
+  @override
+  String get fileTypePlainText => 'plain text';
+
+  @override
+  String fileMismatchNote(String extension, String contents) {
+    return 'This file is named \".$extension\" but its contents are $contents. That can be an honest mistake, and it is also how a file gets opened by something other than what you expected.';
+  }
+
+  @override
+  String fileSizeBytes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bytes',
+      one: '1 byte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileSizeKilobytes(String size) {
+    return '$size KB';
+  }
+
+  @override
+  String fileSizeMegabytes(String size) {
+    return '$size MB';
+  }
+
+  @override
+  String fileSizeGigabytes(String size) {
+    return '$size GB';
+  }
+
+  @override
+  String get credentialKindPrivateKey => 'Private key';
+
+  @override
+  String get credentialKindApiKey => 'API key';
+
+  @override
+  String get credentialKindConnectionString => 'Connection string';
+
+  @override
+  String get credentialKindAccessToken => 'Access token';
+
+  @override
+  String get credentialKindAuthorizationHeader => 'Authorization header';
+
+  @override
+  String get credentialKindPasswordOrKey => 'Password or key';
+
+  @override
+  String get credentialKindPossibleSecret => 'Possible secret';
+
+  @override
+  String get credentialAdvicePrivateKey =>
+      'Remove this before sharing, and replace the key pair. A private key cannot be made safe again once it has been seen.';
+
+  @override
+  String get credentialAdviceProviderApiKey =>
+      'Revoke this key with the provider and issue a new one. Removing it from the document does not disable it.';
+
+  @override
+  String get credentialAdviceConnectionString =>
+      'This carries a password and the address it opens. Change the password if this has already been shared.';
+
+  @override
+  String get credentialAdviceJsonWebToken =>
+      'Tokens like this often expire, but not always. Treat it as live unless you know when it expires.';
+
+  @override
+  String get credentialAdviceAuthorizationHeader =>
+      'Remove the header value. Pasted request logs are one of the most common ways a working token gets shared by accident.';
+
+  @override
+  String get credentialAdviceKeyedAssignment =>
+      'Move this into an environment variable or a secret store, and change the value if the file has been shared.';
+
+  @override
+  String get credentialAdviceHighEntropyString =>
+      'Action cannot tell what this is. Check it before sharing — it may equally be an identifier or a checksum.';
+
+  @override
+  String get credentialLabelAnthropicApiKey => 'Anthropic API key';
+
+  @override
+  String get credentialLabelOpenAiProjectKey => 'OpenAI project key';
+
+  @override
+  String get credentialLabelOpenAiStyleApiKey => 'OpenAI-style API key';
+
+  @override
+  String get credentialLabelGoogleApiKey => 'Google API key';
+
+  @override
+  String get credentialLabelGoogleOAuthToken => 'Google OAuth token';
+
+  @override
+  String get credentialLabelGitHubToken => 'GitHub token';
+
+  @override
+  String get credentialLabelSlackToken => 'Slack token';
+
+  @override
+  String get credentialLabelAwsAccessKeyId => 'AWS access key ID';
+
+  @override
+  String get credentialLabelGitLabToken => 'GitLab token';
+
+  @override
+  String get credentialLabelNpmToken => 'npm token';
+
+  @override
+  String get credentialLabelPassphrase => 'Passphrase';
+
+  @override
+  String get credentialLabelPassword => 'Password';
+
+  @override
+  String get credentialLabelRefreshToken => 'Refresh token';
+
+  @override
+  String get credentialLabelToken => 'Token';
+
+  @override
+  String get credentialLabelClientSecret => 'Client secret';
+
+  @override
+  String get credentialLabelCredential => 'Credential';
+
+  @override
+  String get credentialLabelSecret => 'Secret';
+
+  @override
+  String get linkVerdictNoObviousSignals => 'No obvious signals';
+
+  @override
+  String get linkVerdictWorthChecking => 'Worth checking';
+
+  @override
+  String get linkVerdictTreatWithCaution => 'Treat with caution';
+
+  @override
+  String get linkSummaryNoObviousSignals =>
+      'Nothing unusual in how this link is written. That is not the same as knowing the page is trustworthy — only you can judge whether you expected it.';
+
+  @override
+  String get linkSummaryWorthChecking =>
+      'One thing about this link is worth a look before you open it.';
+
+  @override
+  String get linkSummaryTreatWithCaution =>
+      'Several things about how this link is written are worth checking before you open it.';
+
+  @override
+  String get linkSignalNotHttps => 'Not encrypted';
+
+  @override
+  String get linkSignalNonWebScheme => 'Not a web link';
+
+  @override
+  String get linkSignalEmbeddedCredentials => 'Password in the link';
+
+  @override
+  String get linkSignalMisleadingAuthority => 'Hidden real address';
+
+  @override
+  String get linkSignalIpLiteralHost => 'Numeric address';
+
+  @override
+  String get linkSignalPunycodeHost => 'Encoded characters in the name';
+
+  @override
+  String get linkSignalMixedScriptHost => 'Mixed alphabets in the name';
+
+  @override
+  String get linkSignalEncodedHost => 'Escaped characters in the name';
+
+  @override
+  String get linkSignalUnusualPort => 'Unusual port';
+
+  @override
+  String get linkSignalDeepSubdomain => 'Many parts in the name';
+
+  @override
+  String get linkSignalPublicSuffixInSubdomain =>
+      'Familiar name in the wrong place';
+
+  @override
+  String get linkSignalShortener => 'Shortened link';
+
+  @override
+  String get linkSignalExecutableTarget => 'Downloads a program';
+
+  @override
+  String get linkSignalRedirectParameter => 'Sends you on somewhere else';
+
+  @override
+  String get linkSignalVeryLongUrl => 'Very long';
+
+  @override
+  String get linkSignalUnparseable => 'Not a readable link';
+
+  @override
+  String get linkDetailNotHttps =>
+      'This link uses http, so anything you type into the page can be read on the way there.';
+
+  @override
+  String linkDetailNonWebScheme(String scheme) {
+    return 'This opens with \"$scheme:\" rather than a web page. It may ask another app to do something.';
+  }
+
+  @override
+  String get linkDetailEmbeddedCredentials =>
+      'A username and password are written into this link. Anywhere it is shared, they go with it.';
+
+  @override
+  String linkDetailMisleadingAuthority(String host) {
+    return 'Everything before the \"@\" is ignored by the browser. The real destination is \"$host\".';
+  }
+
+  @override
+  String linkDetailIpLiteralHost(String host) {
+    return 'This goes to \"$host\" — a raw address rather than a name. Legitimate sites almost always use a name.';
+  }
+
+  @override
+  String get linkDetailPunycodeHost =>
+      'The site name contains non-Latin characters, stored encoded. This is normal for many languages, and it is also how a name can be made to look like a familiar one.';
+
+  @override
+  String get linkDetailMixedScriptHost =>
+      'The site name mixes Latin letters with letters from another alphabet that look the same. Read it character by character.';
+
+  @override
+  String get linkDetailEncodedHost =>
+      'The site name contains escape codes, which is not where they belong. They can hide what the name actually says.';
+
+  @override
+  String linkDetailUnusualPort(String port) {
+    return 'This connects on port $port rather than the usual one. That is common for test servers and unusual for public sites.';
+  }
+
+  @override
+  String linkDetailDeepSubdomain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'The name has $count parts. Only the last two decide who runs the site; the rest can be set to anything.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String linkDetailPublicSuffixInSubdomain(String suffix, String host) {
+    return 'This name contains \".$suffix.\" in the middle, which makes the beginning look like the site. The site is actually \"$host\".';
+  }
+
+  @override
+  String get linkDetailShortener =>
+      'A shortening service hides the real destination. You cannot tell where this goes without opening it.';
+
+  @override
+  String linkDetailExecutableTarget(String fileExtension) {
+    return 'This link ends in \"$fileExtension\", so it downloads something that can run on your device rather than a page to read.';
+  }
+
+  @override
+  String linkDetailRedirectParameter(String parameter, String host) {
+    return 'This link carries a second address in its \"$parameter\" setting, so opening it may take you somewhere other than \"$host\".';
+  }
+
+  @override
+  String get linkDetailVeryLongUrl =>
+      'Long links are harder to read, and the part that decides the destination can be pushed out of sight.';
+
+  @override
+  String get linkDetailUnparseable =>
+      'Action could not read this as a web address. Be careful with links that do not look like links.';
+
+  @override
+  String get toolTitleRedaction => 'Hide sensitive details';
+
+  @override
+  String get toolDescriptionRedaction =>
+      'Find what should not be shared, and make a clean copy.';
+
+  @override
+  String get toolSectionRedactionNothingToScan => 'Nothing to scan';
+
+  @override
+  String get toolSectionRedactionNothingToScanBody =>
+      'This tool reads text. Select a note, a pasted message, or a capture whose text has been read.';
+
+  @override
+  String get toolSectionRedactionNothingFound => 'Nothing obvious found';
+
+  @override
+  String get toolSectionRedactionNothingFoundBody =>
+      'Action found no email addresses, phone numbers, card numbers or reference numbers in this text.';
+
+  @override
+  String toolSectionRedactionFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things worth hiding',
+      one: '1 thing worth hiding',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionRedactedCopy => 'Redacted copy';
+
+  @override
+  String get toolWarningRedactionCoverage =>
+      'This finds patterns like emails, phone numbers and account numbers. It will not catch everything sensitive — read the copy before you share it.';
+
+  @override
+  String get toolWarningRedactionFormatLimit =>
+      'Action cannot redact images or PDF files. Covering something in a picture would leave the original underneath it, so it is not offered.';
+
+  @override
+  String get toolTitleAuthenticity => 'Check where this came from';
+
+  @override
+  String get toolDescriptionAuthenticity =>
+      'What a file declares about its own origin.';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspect => 'Nothing to inspect';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspectBody =>
+      'Select an image or some text.';
+
+  @override
+  String get toolSectionAuthenticityFileSignals =>
+      'What this file says about itself';
+
+  @override
+  String get toolSectionAuthenticityFileItself => 'The file itself';
+
+  @override
+  String get toolSectionFileContents => 'Contents';
+
+  @override
+  String get toolSectionFileUnknownFormat => 'Not a format Action knows';
+
+  @override
+  String get toolSectionFileSize => 'Size';
+
+  @override
+  String get toolSectionFileDigest => 'SHA-256';
+
+  @override
+  String get toolWarningAuthenticityNotProof =>
+      'This reports what a file declares about itself. Metadata can be edited or stripped, so none of it is proof. Do not use this to accuse anyone.';
+
+  @override
+  String get toolTitleCredentialScanner => 'Check for keys and passwords';
+
+  @override
+  String get toolDescriptionCredentialScanner =>
+      'Find credentials before you share something.';
+
+  @override
+  String get toolSectionCredentialNothingToCheck => 'Nothing to check';
+
+  @override
+  String get toolSectionCredentialNothingToCheckBody =>
+      'Paste some text, or choose a capture whose text has been read. This tool reads text only.';
+
+  @override
+  String get toolSectionCredentialNoneFound => 'No credentials found';
+
+  @override
+  String get toolSectionCredentialNoneFoundBody =>
+      'Action did not find anything shaped like an API key, a private key, a token or a password in this text.';
+
+  @override
+  String toolSectionCredentialFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count credentials found',
+      one: '1 credential found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolSectionCredentialPossibleFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things that might be secrets',
+      one: '1 thing that might be a secret',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCredentialRedactedCopy =>
+      'Copy with the credentials removed';
+
+  @override
+  String get toolWarningCredentialRevoke =>
+      'Removing a key from a document does not disable it. If one of these has already been shared, revoke it with the provider and issue a new one.';
+
+  @override
+  String get toolWarningCredentialCoverage =>
+      'This finds credentials with a recognisable shape. A password written out in a sentence will not be found, so read the text as well.';
+
+  @override
+  String get toolTitleLinkInspector => 'Check a link';
+
+  @override
+  String get toolDescriptionLinkInspector =>
+      'What an address gives away before you open it.';
+
+  @override
+  String get toolSectionLinkNoneFound => 'No links found';
+
+  @override
+  String get toolSectionLinkNoneFoundBody =>
+      'Paste a link, or choose a capture that contains one.';
+
+  @override
+  String toolSectionLinkFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count links in this text',
+      one: 'The link in this text',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionLinkUnreadableHost => 'Unreadable';
+
+  @override
+  String toolSectionLinkObservationLine(String summary, String detail) {
+    return '$summary. $detail';
+  }
+
+  @override
+  String get toolSectionLinkNothingUnusual =>
+      'Nothing unusual in how these are written';
+
+  @override
+  String get toolSectionLinkNothingUnusualBody =>
+      'That is not the same as knowing the pages are trustworthy. Only you can judge whether you expected them.';
+
+  @override
+  String get toolWarningLinkAddressOnly =>
+      'Action reads the address only. It does not open the link, look up the site, or check any reputation service — doing that would send your browsing somewhere.';
+
+  @override
+  String get toolWarningLinkNoSignals =>
+      'A link with no signals can still be harmful. This finds problems in how an address is written, which is not everything there is to know about where it goes.';
+
+  @override
+  String get toolSectionObjective => 'What you want';
+
+  @override
+  String get toolSectionCurrentState => 'Where it stands';
+
+  @override
+  String get toolSectionRecommendedNextStep => 'Recommended next step';
+
+  @override
+  String get toolSectionCredentialAdvice => 'What to do';
+
+  @override
+  String get toolSectionSummary => 'Summary';
+
+  @override
+  String get toolDetailSeparator => ' · ';
 }

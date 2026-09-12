@@ -31,6 +31,13 @@ class AiCitation {
   final int? endPage;
 
   /// "page 4", "pages 4–6", or null when the location is unknown.
+  ///
+  /// Canonical English, and the last place the numbers exist as numbers: a
+  /// caller that keeps only this string cannot translate it afterwards,
+  /// because "page" inflects with the number in Russian and Polish and the
+  /// range dash is not the same character everywhere. So [startPage] and
+  /// [endPage] travel onward too — [IntelligenceCitation] carries both — and
+  /// the screen builds the label from `citationPage` / `citationPageRange`.
   String? get pageLabel {
     final start = startPage;
     if (start == null) return null;

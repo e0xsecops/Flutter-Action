@@ -84,11 +84,43 @@ abstract final class FactPreservation {
     return dropped;
   }
 
-  /// What the user is told when facts went missing.
+  /// How many dropped values the warning names before it summarises the rest.
+  ///
+  /// Four is enough to recognise what went missing without the banner turning
+  /// into the list it is warning about.
+  static const int namedFactLimit = 4;
+
+  /// The values [describe] names, in the order they were found.
+  ///
+  /// Exposed so the sentence can be rebuilt in the reader's language — see
+  /// `DroppedFactsL10n.describeIn` in `lib/l10n/enum_labels.dart`. The values
+  /// themselves are the user's own amounts and references and are never
+  /// translated.
+  static List<String> namedValues(List<DroppedFact> dropped) =>
+      [for (final fact in dropped.take(namedFactLimit)) fact.value];
+
+  /// How many further values [describe] summarises as "and N more". Zero when
+  /// every dropped fact is named.
+  static int hiddenCount(List<DroppedFact> dropped) =>
+      dropped.length <= namedFactLimit ? 0 : dropped.length - namedFactLimit;
+
+  /// What the user is told when facts went missing, in canonical English.
+  ///
+  /// **Safety copy, not a nicety.** It is the only thing standing between a
+  /// rewrite that reads perfectly and a user who acts on an amount the model
+  /// quietly changed, so both halves have to survive translation: which values
+  /// are gone, and the instruction to check before using it.
+  ///
+  /// This is `data/` — no `BuildContext`, no locale — so the English is
+  /// canonical here for the tool tests and the fixture reports, and
+  /// `DroppedFactsL10n.describeIn(l10n)` builds what a person reads out of
+  /// [namedValues] and [hiddenCount]. The `', '` between values is a bundle
+  /// decision there too: Arabic writes `، ` and Chinese and Japanese `、`.
   static String describe(List<DroppedFact> dropped) {
     if (dropped.isEmpty) return '';
-    final shown = dropped.take(4).map((d) => d.value).join(', ');
-    final extra = dropped.length > 4 ? ' and ${dropped.length - 4} more' : '';
+    final shown = namedValues(dropped).join(', ');
+    final hidden = hiddenCount(dropped);
+    final extra = hidden > 0 ? ' and $hidden more' : '';
     return dropped.length == 1
         ? 'The rewrite no longer contains $shown. Check it before using this.'
         : 'The rewrite no longer contains $shown$extra. Check it before using '

@@ -711,13 +711,19 @@ class _MatchLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final base = text.bodySmall?.copyWith(color: colors.textSecondary);
+
+    // `labelIn` returns null for the two fact fields, whose label is a fact
+    // name out of the user's own document — translating that would be
+    // inventing a fact, so those fall through to the stored English.
+    final label = match.field.labelIn(l10n) ?? match.label;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${match.label} · ',
+          '$label · ',
           style: text.bodySmall?.copyWith(color: colors.textTertiary),
         ),
         Expanded(

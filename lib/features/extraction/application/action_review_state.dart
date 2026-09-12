@@ -169,9 +169,39 @@ final class ReviewStep {
       );
 }
 
-/// Why confirmation is currently refused. [message] is user-facing.
+/// Which open question is refusing confirmation.
+///
+/// The discriminator exists so the confirm bar can name the question in the
+/// reader's language. [ReviewBlocker.message] is the canonical English of the
+/// same sentence and stays where it is — it is what a domain test asserts
+/// without pumping a widget tree, and what a `StateError` from [confirm]
+/// prints.
+enum ReviewBlockerKind {
+  /// Nothing has been typed into the title field.
+  titleMissing,
+
+  /// Several dates disagree and the user has not chosen between them.
+  dateUndecided,
+
+  /// Several amounts disagree and the user has not chosen between them.
+  amountUndecided,
+
+  /// A step the user is keeping has an empty title.
+  stepTitleMissing,
+}
+
+/// Why confirmation is currently refused.
+///
+/// [message] is the canonical English. What a person reads is
+/// `ReviewBlockerKindL10n.messageIn(l10n)` in `lib/l10n/enum_labels.dart`:
+/// this is application-layer state with no `BuildContext`, and a `const`
+/// string cannot depend on a locale.
 final class ReviewBlocker {
-  const ReviewBlocker(this.message);
+  const ReviewBlocker(this.kind, this.message);
+
+  final ReviewBlockerKind kind;
+
+  /// Canonical English. Not the string to put on screen — see [kind].
   final String message;
 }
 
@@ -185,9 +215,29 @@ final class ReviewEditApplied extends ReviewEdit {
   final ActionReviewState state;
 }
 
+/// Which typed edit was refused, for a caller that has to say so in words.
+enum ReviewEditRejection {
+  /// The text is not a real ISO-8601 date.
+  notADate,
+
+  /// The text is not an amount this app will accept — see
+  /// [ReviewEditRejected.moneyError] for which rule it broke.
+  notAnAmount,
+}
+
 final class ReviewEditRejected extends ReviewEdit {
-  const ReviewEditRejected(this.reason);
+  const ReviewEditRejected(this.rejection, this.reason, {this.moneyError});
+
+  final ReviewEditRejection rejection;
+
+  /// Canonical English. Translated at the render site from [rejection] and,
+  /// for an amount, [moneyError] — see `ReviewEditRejectedL10n.reasonIn` and
+  /// `MoneyParseErrorL10n.reasonIn` in `lib/l10n/enum_labels.dart`.
   final String reason;
+
+  /// Which parser rule the amount broke. Null for
+  /// [ReviewEditRejection.notADate].
+  final MoneyParseError? moneyError;
 }
 
 final class ActionReviewState {
@@ -311,6 +361,7 @@ final class ActionReviewState {
     final parsed = parseStrictIso8601(text.trim());
     if (parsed == null) {
       return const ReviewEditRejected(
+        ReviewEditRejection.notADate,
         'That is not a real date. Use the format 2026-08-30.',
       );
     }
@@ -338,7 +389,11 @@ final class ActionReviewState {
       case MoneyParsed(:final value):
         return ReviewEditApplied(editAmount(value));
       case MoneyRejected(:final error):
-        return ReviewEditRejected('That amount cannot be used: ${error.reason}.');
+        return ReviewEditRejected(
+          ReviewEditRejection.notAnAmount,
+          'That amount cannot be used: ${error.reason}.',
+          moneyError: error,
+        );
     }
   }
 
@@ -416,19 +471,30 @@ final class ActionReviewState {
 
   /// Everything still standing between the user and a confirmed action.
   /// Empty exactly when [canConfirm].
+  ///
+  /// The sentences are canonical English; the confirm bar renders
+  /// [ReviewBlocker.kind] through `messageIn(l10n)` instead.
   List<ReviewBlocker> get blockers => [
         if (title.trim().isEmpty)
-          const ReviewBlocker('Give this action a title.'),
+          const ReviewBlocker(
+            ReviewBlockerKind.titleMissing,
+            'Give this action a title.',
+          ),
         if (due.needsDecision)
           const ReviewBlocker(
+            ReviewBlockerKind.dateUndecided,
             'Choose which date is the real deadline, or leave it unset.',
           ),
         if (amount.needsDecision)
           const ReviewBlocker(
+            ReviewBlockerKind.amountUndecided,
             'Choose which amount is right, or leave it unset.',
           ),
         if (steps.any((s) => s.included && s.title.trim().isEmpty))
-          const ReviewBlocker('Steps you keep need a title.'),
+          const ReviewBlocker(
+            ReviewBlockerKind.stepTitleMissing,
+            'Steps you keep need a title.',
+          ),
       ];
 
   /// Deterministic: a pure function of this state, nothing else.

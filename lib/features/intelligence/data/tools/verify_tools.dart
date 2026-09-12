@@ -11,6 +11,7 @@ import 'dart:typed_data';
 
 import '../../domain/ai_request.dart';
 import '../../domain/intelligence_result.dart';
+import '../../domain/tool_copy.dart';
 import '../../domain/intelligence_tool.dart';
 import '../../../../core/security/credential_scanner.dart';
 import '../../../../core/security/file_identity.dart';
@@ -46,8 +47,11 @@ class RedactionStrategy implements LocalIntelligenceStrategy {
         sections: const [
           IntelligenceSection(
             title: 'Nothing to scan',
+            titleCopy: ToolPhrase(ToolPhraseId.sectionRedactionNothingToScan),
             body: 'This tool reads text. Select a note, a pasted message, or a '
                 'capture whose text has been read.',
+            bodyCopy:
+                ToolPhrase(ToolPhraseId.sectionRedactionNothingToScanBody),
           ),
         ],
         warnings: [
@@ -64,8 +68,11 @@ class RedactionStrategy implements LocalIntelligenceStrategy {
         sections: const [
           IntelligenceSection(
             title: 'Nothing obvious found',
+            titleCopy: ToolPhrase(ToolPhraseId.sectionRedactionNothingFound),
             body: 'Action found no email addresses, phone numbers, card '
                 'numbers or reference numbers in this text.',
+            bodyCopy:
+                ToolPhrase(ToolPhraseId.sectionRedactionNothingFoundBody),
           ),
         ],
         warnings: [_coverageWarning, if (hasUnreadable) _formatLimitWarning],
@@ -81,6 +88,7 @@ class RedactionStrategy implements LocalIntelligenceStrategy {
           id: 'redact-$i',
           kind: IntelligenceSuggestionKind.step,
           title: describeSensitiveKind(matches[i].kind),
+          titleCopy: ToolSensitiveKindCopy(matches[i].kind),
           detail: matches[i].value,
           selectedByDefault: true,
         ),
@@ -93,11 +101,17 @@ class RedactionStrategy implements LocalIntelligenceStrategy {
           title: matches.length == 1
               ? '1 thing worth hiding'
               : '${matches.length} things worth hiding',
+          titleCopy: ToolCounted(
+            ToolCountedId.sectionRedactionFindings,
+            matches.length,
+          ),
           kind: IntelligenceSectionKind.facts,
           facts: [
             for (final match in matches)
               IntelligenceFact(
                 label: describeSensitiveKind(match.kind),
+                labelCopy: ToolSensitiveKindCopy(match.kind),
+                // The matched text is the user's own. Nobody translates it.
                 value: match.value,
               ),
           ],
@@ -107,6 +121,7 @@ class RedactionStrategy implements LocalIntelligenceStrategy {
       artifacts: [
         IntelligenceArtifact(
           title: 'Redacted copy',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionRedactedCopy),
           text: SensitiveScanner.redact(text, matches),
           isDraft: false,
         ),
@@ -118,12 +133,14 @@ class RedactionStrategy implements LocalIntelligenceStrategy {
   static const _coverageWarning = IntelligenceWarning.note(
     'This finds patterns like emails, phone numbers and account numbers. It '
     'will not catch everything sensitive — read the copy before you share it.',
+    ToolPhrase(ToolPhraseId.warningRedactionCoverage),
   );
 
   /// The honest statement of a real limitation.
   static const _formatLimitWarning = IntelligenceWarning.caution(
     'Action cannot redact images or PDF files. Covering something in a picture '
     'would leave the original underneath it, so it is not offered.',
+    ToolPhrase(ToolPhraseId.warningRedactionFormatLimit),
   );
 
   static String _readableTextOf(IntelligenceRunInput input) => [
@@ -186,7 +203,13 @@ class AuthenticityStrategy implements LocalIntelligenceStrategy {
           sections: const [
             IntelligenceSection(
               title: 'Nothing to inspect',
+              titleCopy: ToolPhrase(
+                ToolPhraseId.sectionAuthenticityNothingToInspect,
+              ),
               body: 'Select an image or some text.',
+              bodyCopy: ToolPhrase(
+                ToolPhraseId.sectionAuthenticityNothingToInspectBody,
+              ),
             ),
           ],
         );
@@ -199,17 +222,23 @@ class AuthenticityStrategy implements LocalIntelligenceStrategy {
       sections: [
         IntelligenceSection(
           title: describeVerdict(report.verdict),
+          titleCopy: ToolAuthenticityTitleCopy(report.verdict),
           body: explainVerdict(report.verdict),
+          bodyCopy: ToolAuthenticityExplanationCopy(report.verdict),
         ),
         if (report.signals.isNotEmpty)
           IntelligenceSection(
             title: 'What this file says about itself',
+            titleCopy:
+                const ToolPhrase(ToolPhraseId.sectionAuthenticityFileSignals),
             kind: IntelligenceSectionKind.facts,
             facts: [
               for (final signal in report.signals)
                 IntelligenceFact(
                   label: signal.label,
+                  labelCopy: ToolSignalLabelCopy(signal),
                   value: signal.value,
+                  valueCopy: ToolSignalValueCopy(signal),
                   uncertain: signal.experimental,
                 ),
             ],
@@ -217,17 +246,29 @@ class AuthenticityStrategy implements LocalIntelligenceStrategy {
         if (identity != null)
           IntelligenceSection(
             title: 'The file itself',
+            titleCopy:
+                const ToolPhrase(ToolPhraseId.sectionAuthenticityFileItself),
             kind: IntelligenceSectionKind.facts,
             facts: [
               IntelligenceFact(
                 label: 'Contents',
+                labelCopy: const ToolPhrase(ToolPhraseId.sectionFileContents),
                 value: identity.detected?.label ?? 'Not a format Action knows',
+                valueCopy: ToolFileKindCopy(identity),
               ),
-              IntelligenceFact(label: 'Size', value: identity.readableSize),
+              IntelligenceFact(
+                label: 'Size',
+                labelCopy: const ToolPhrase(ToolPhraseId.sectionFileSize),
+                value: identity.readableSize,
+                // The digits and separators are the reader's; the bytes are
+                // not a translation.
+                valueCopy: ToolFileSizeCopy(identity),
+              ),
               // Grouped in fours, which is how a person compares two hashes by
               // eye against a download page.
               IntelligenceFact(
                 label: 'SHA-256',
+                labelCopy: const ToolPhrase(ToolPhraseId.sectionFileDigest),
                 value: identity.readableDigest,
               ),
             ],
@@ -241,6 +282,7 @@ class AuthenticityStrategy implements LocalIntelligenceStrategy {
           'This reports what a file declares about itself. Metadata can be '
           'edited or stripped, so none of it is proof. Do not use this to '
           'accuse anyone.',
+          ToolPhrase(ToolPhraseId.warningAuthenticityNotProof),
         ),
       ],
     );
@@ -292,8 +334,12 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
         sections: const [
           IntelligenceSection(
             title: 'Nothing to check',
+            titleCopy:
+                ToolPhrase(ToolPhraseId.sectionCredentialNothingToCheck),
             body: 'Paste some text, or choose a capture whose text has been '
                 'read. This tool reads text only.',
+            bodyCopy:
+                ToolPhrase(ToolPhraseId.sectionCredentialNothingToCheckBody),
           ),
         ],
       );
@@ -307,8 +353,11 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
         sections: const [
           IntelligenceSection(
             title: 'No credentials found',
+            titleCopy: ToolPhrase(ToolPhraseId.sectionCredentialNoneFound),
             body: 'Action did not find anything shaped like an API key, a '
                 'private key, a token or a password in this text.',
+            bodyCopy:
+                ToolPhrase(ToolPhraseId.sectionCredentialNoneFoundBody),
           ),
         ],
         warnings: [_coverage],
@@ -322,6 +371,15 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
         .where((f) => f.confidence == CredentialConfidence.statistical)
         .toList();
 
+    // One bullet per distinct piece of advice, keeping the first finding that
+    // asked for it: the bullet is rendered from the finding, not from the
+    // English sentence, so the sentence cannot be the thing deduplicated.
+    final advice = <CredentialFinding>[];
+    final seenAdvice = <String>{};
+    for (final finding in findings) {
+      if (seenAdvice.add(finding.advice)) advice.add(finding);
+    }
+
     return IntelligenceResult(
       toolId: credentialScannerTool.id,
       sections: [
@@ -330,6 +388,10 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
             title: named.length == 1
                 ? '1 credential found'
                 : '${named.length} credentials found',
+            titleCopy: ToolCounted(
+              ToolCountedId.sectionCredentialFindings,
+              named.length,
+            ),
             kind: IntelligenceSectionKind.facts,
             facts: [
               for (final finding in named)
@@ -338,6 +400,7 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
                 // situation that brought them to this tool.
                 IntelligenceFact(
                   label: finding.label,
+                  labelCopy: ToolCredentialLabelCopy(finding),
                   value: finding.masked,
                 ),
             ],
@@ -347,11 +410,16 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
             title: guessed.length == 1
                 ? '1 thing that might be a secret'
                 : '${guessed.length} things that might be secrets',
+            titleCopy: ToolCounted(
+              ToolCountedId.sectionCredentialPossibleFindings,
+              guessed.length,
+            ),
             kind: IntelligenceSectionKind.facts,
             facts: [
               for (final finding in guessed)
                 IntelligenceFact(
                   label: finding.label,
+                  labelCopy: ToolCredentialLabelCopy(finding),
                   value: finding.masked,
                   // Marked uncertain because it is: this pass found a
                   // random-looking string with no keyword to explain it, and
@@ -362,13 +430,19 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
           ),
         IntelligenceSection(
           title: 'What to do',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionCredentialAdvice),
           kind: IntelligenceSectionKind.bullets,
-          bullets: {for (final finding in findings) finding.advice}.toList(),
+          bullets: [for (final finding in advice) finding.advice],
+          bulletCopy: [
+            for (final finding in advice) ToolCredentialAdviceCopy(finding),
+          ],
         ),
       ],
       artifacts: [
         IntelligenceArtifact(
           title: 'Copy with the credentials removed',
+          titleCopy:
+              const ToolPhrase(ToolPhraseId.sectionCredentialRedactedCopy),
           text: CredentialScanner.redact(text, findings),
           isDraft: false,
         ),
@@ -379,6 +453,7 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
           'Removing a key from a document does not disable it. If one of these '
           'has already been shared, revoke it with the provider and issue a '
           'new one.',
+          ToolPhrase(ToolPhraseId.warningCredentialRevoke),
         ),
       ],
     );
@@ -387,6 +462,7 @@ class CredentialScanStrategy implements LocalIntelligenceStrategy {
   static const _coverage = IntelligenceWarning.note(
     'This finds credentials with a recognisable shape. A password written out '
     'in a sentence will not be found, so read the text as well.',
+    ToolPhrase(ToolPhraseId.warningCredentialCoverage),
   );
 }
 
@@ -446,7 +522,9 @@ class LinkInspectionStrategy implements LocalIntelligenceStrategy {
         sections: const [
           IntelligenceSection(
             title: 'No links found',
+            titleCopy: ToolPhrase(ToolPhraseId.sectionLinkNoneFound),
             body: 'Paste a link, or choose a capture that contains one.',
+            bodyCopy: ToolPhrase(ToolPhraseId.sectionLinkNoneFoundBody),
           ),
         ],
       );
@@ -463,30 +541,47 @@ class LinkInspectionStrategy implements LocalIntelligenceStrategy {
           title: found.length == 1
               ? 'The link in this text'
               : '${found.length} links in this text',
+          titleCopy: ToolCounted(
+            ToolCountedId.sectionLinkFindings,
+            found.length,
+          ),
           kind: IntelligenceSectionKind.facts,
           facts: [
             for (final inspection in inspections)
               IntelligenceFact(
                 label: inspection.host ?? 'Unreadable',
+                // A host is what the link says; only the honest absence of one
+                // is ours to translate.
+                labelCopy: inspection.host == null
+                    ? const ToolPhrase(ToolPhraseId.sectionLinkUnreadableHost)
+                    : null,
                 value: describeLinkVerdict(inspection.verdict),
+                valueCopy: ToolLinkVerdictCopy(inspection.verdict),
                 uncertain: inspection.observations.isNotEmpty,
               ),
           ],
         ),
         for (final inspection in flagged)
           IntelligenceSection(
+            // The heading is the address itself — nobody's to translate.
             title: inspection.host ?? inspection.input,
             kind: IntelligenceSectionKind.bullets,
             bullets: [
               for (final observation in inspection.observations)
                 '${observation.summary}. ${observation.detail}',
             ],
+            bulletCopy: [
+              for (final observation in inspection.observations)
+                ToolLinkObservationCopy(observation),
+            ],
           ),
         if (flagged.isEmpty)
           const IntelligenceSection(
             title: 'Nothing unusual in how these are written',
+            titleCopy: ToolPhrase(ToolPhraseId.sectionLinkNothingUnusual),
             body: 'That is not the same as knowing the pages are trustworthy. '
                 'Only you can judge whether you expected them.',
+            bodyCopy: ToolPhrase(ToolPhraseId.sectionLinkNothingUnusualBody),
           ),
       ],
       warnings: const [
@@ -494,11 +589,13 @@ class LinkInspectionStrategy implements LocalIntelligenceStrategy {
           'Action reads the address only. It does not open the link, look up '
           'the site, or check any reputation service — doing that would send '
           'your browsing somewhere.',
+          ToolPhrase(ToolPhraseId.warningLinkAddressOnly),
         ),
         IntelligenceWarning.caution(
           'A link with no signals can still be harmful. This finds problems in '
           'how an address is written, which is not everything there is to '
           'know about where it goes.',
+          ToolPhrase(ToolPhraseId.warningLinkNoSignals),
         ),
       ],
     );

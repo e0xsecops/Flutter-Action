@@ -20,6 +20,15 @@ import '../domain/tool_registry.dart';
 ///
 /// Never a file path. A path can carry a real name, a folder structure or a
 /// device username, none of which belong in a prompt or on a citation chip.
+///
+/// **English, in every locale, deliberately.** This value is written into
+/// `AiSourceTextPart.label` and `AiDocumentPart.label`, so it is fenced into
+/// the prompt as the name of a part and comes back inside the model's
+/// citations. Translating it would put the reader's language into the model's
+/// grounding and change which quote matched which source. What a person reads
+/// in a picker row is `SourceTypeShortLabelL10n.shortLabelIn(l10n)` in
+/// `lib/l10n/enum_labels.dart`, which returns these same four names
+/// translated; the English here is the identifier, that is the label.
 String labelForSource(SourceItem source) => switch (source.type) {
       SourceType.pastedText => 'Pasted note',
       SourceType.photo => 'Photo',
@@ -150,6 +159,11 @@ List<IntelligenceToolDefinition> recommendedFor(SourceItem source) {
 /// Facts are included because they are the part the user already confirmed —
 /// they are the most trustworthy thing Action holds, and a plan built without
 /// them would ignore the reference number the whole task turns on.
+///
+/// The field names here are prompt text, never UI copy: they are read by a
+/// model and are not rendered anywhere, so they stay English in every locale.
+/// The same goes for [describeGoal] and for the `'Action'` and `'Goal'` part
+/// labels below.
 String describeAction(ActionItem action) {
   final buffer = StringBuffer()..writeln('Title: ${action.title}');
 

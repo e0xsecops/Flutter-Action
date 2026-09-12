@@ -67,6 +67,16 @@ enum MoneyParseError {
 
   const MoneyParseError(this.reason);
 
+  /// A sentence *fragment*, deliberately: it is never shown on its own. The
+  /// edit sheet drops it into "Cannot use this amount: {reason}." and the
+  /// validator records it as the `detail` on a rejected field, so it carries
+  /// no capital and no full stop.
+  ///
+  /// This is the canonical English, kept here because the validator's
+  /// diagnostics and the domain tests read it without a widget tree. What a
+  /// person reads is `MoneyParseErrorL10n.reasonIn(l10n)` in
+  /// `lib/l10n/enum_labels.dart` — this is domain code with no
+  /// `BuildContext`, and a `const` enum field cannot depend on a locale.
   final String reason;
 }
 

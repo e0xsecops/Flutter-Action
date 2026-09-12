@@ -95,6 +95,18 @@ enum LinkVerdict {
   treatWithCaution,
 }
 
+/// The verdict's name, in canonical English.
+///
+/// Kept here because the honesty tests read it directly — they assert over
+/// every string this file can produce that none of them says a link is safe,
+/// and a test that had to build a translation bundle first would be a test
+/// nobody runs. What a person reads is `LinkVerdictL10n.labelIn(l10n)` in
+/// `lib/l10n/enum_labels.dart`.
+///
+/// Every translation of these three carries the same prohibition as the
+/// English: none of them may become a word meaning safe, clean, verified or
+/// trusted. `noObviousSignals` is the dangerous one — it is the verdict a
+/// reader most wants to hear as an all-clear, and it is not one.
 String describeLinkVerdict(LinkVerdict verdict) => switch (verdict) {
       LinkVerdict.noObviousSignals => 'No obvious signals',
       LinkVerdict.worthChecking => 'Worth checking',
@@ -111,17 +123,50 @@ class LinkObservation {
     required this.weight,
     required this.summary,
     required this.detail,
+    this.subject,
+    this.destination,
+    this.count,
   });
 
   final LinkSignal signal;
   final LinkSignalWeight weight;
 
-  /// A few words, for a chip or a row title.
+  /// A few words, for a chip or a row title, in canonical English.
+  ///
+  /// On screen this is `signal.summaryIn(l10n)`.
   final String summary;
 
-  /// A sentence saying what was seen and why it is worth knowing. Never says
-  /// the link is dangerous, because that is not knowable from here.
+  /// A sentence saying what was seen and why it is worth knowing, in canonical
+  /// English. Never says the link is dangerous, because that is not knowable
+  /// from here.
+  ///
+  /// On screen this is `LinkObservationL10n.detailIn(l10n)`, which rebuilds the
+  /// sentence from [subject], [destination] and [count]. The English original
+  /// stays because the tests assert against it — that the misleading-authority
+  /// detail actually names the real host, and that no detail this file can
+  /// produce contains "safe", "trusted" or "phishing".
   final String detail;
+
+  /// The one concrete thing [detail] names: the scheme, the port, the file
+  /// extension, the query parameter, the planted suffix, or the host.
+  ///
+  /// Held apart from the sentence rather than interpolated into a translated
+  /// literal, so a language can put the value where its own grammar wants it
+  /// instead of where English put it. Null for the observations whose sentence
+  /// names nothing specific.
+  final String? subject;
+
+  /// The host the sentence contrasts [subject] with — the registrable domain
+  /// that actually runs the site, or the host the link appears to go to.
+  ///
+  /// Only [LinkSignal.publicSuffixInSubdomain] and
+  /// [LinkSignal.redirectParameter] name two things at once.
+  final String? destination;
+
+  /// How many labels the host has. Only [LinkSignal.deepSubdomain] counts
+  /// anything, and it is a real count rather than a formatted string because
+  /// several of the twenty languages need a plural form English does not have.
+  final int? count;
 }
 
 /// The result of reading one link.
@@ -156,10 +201,15 @@ class LinkInspection {
     return LinkVerdict.noObviousSignals;
   }
 
-  /// The sentence shown under the verdict.
+  /// The sentence shown under the verdict, in canonical English.
   ///
   /// The clear case is the one that has to be worded most carefully: it is
   /// where a user is most likely to read reassurance that was never offered.
+  ///
+  /// On screen this is `LinkInspectionL10n.summaryIn(l10n)`, which switches on
+  /// the same [verdict]. This English stays because a test asserts that the
+  /// clear-case sentence still contains "not the same as" — the clause that
+  /// withholds the reassurance.
   String get summary => switch (verdict) {
         LinkVerdict.noObviousSignals =>
           'Nothing unusual in how this link is written. That is not the same '
@@ -262,6 +312,7 @@ abstract final class LinkInspector {
             summary: 'Not a web link',
             detail: 'This opens with "$declaredScheme:" rather than a web '
                 'page. It may ask another app to do something.',
+            subject: declaredScheme,
           ),
         ],
       );
@@ -324,6 +375,7 @@ abstract final class LinkInspector {
                 'is shared, they go with it.'
             : 'Everything before the "@" is ignored by the browser. The real '
                 'destination is "$host".',
+        subject: hasPassword ? null : host,
       ));
     }
 
@@ -334,6 +386,7 @@ abstract final class LinkInspector {
         summary: 'Numeric address',
         detail: 'This goes to "$host" — a raw address rather than a name. '
             'Legitimate sites almost always use a name.',
+        subject: host,
       ));
     }
 
@@ -376,6 +429,9 @@ abstract final class LinkInspector {
         summary: 'Unusual port',
         detail: 'This connects on port $port rather than the usual one. That '
             'is common for test servers and unusual for public sites.',
+        // A port is an identifier, not a quantity: it is never grouped or
+        // formatted for a locale, so it travels as the string it is written as.
+        subject: '$port',
       ));
     }
 
@@ -387,6 +443,7 @@ abstract final class LinkInspector {
         summary: 'Many parts in the name',
         detail: 'The name has ${labels.length} parts. Only the last two decide '
             'who runs the site; the rest can be set to anything.',
+        count: labels.length,
       ));
     }
 
@@ -405,6 +462,8 @@ abstract final class LinkInspector {
           detail: 'This name contains ".${planted.first}." in the middle, '
               'which makes the beginning look like the site. The site is '
               'actually "$real".',
+          subject: planted.first,
+          destination: real,
         ));
       }
     }
@@ -431,6 +490,7 @@ abstract final class LinkInspector {
         summary: 'Downloads a program',
         detail: 'This link ends in "$executable", so it downloads something '
             'that can run on your device rather than a page to read.',
+        subject: executable,
       ));
     }
 
@@ -446,6 +506,8 @@ abstract final class LinkInspector {
         summary: 'Sends you on somewhere else',
         detail: 'This link carries a second address in its "${redirect.key}" '
             'setting, so opening it may take you somewhere other than "$host".',
+        subject: redirect.key,
+        destination: host,
       ));
     }
 

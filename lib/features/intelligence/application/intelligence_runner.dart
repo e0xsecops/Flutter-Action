@@ -18,6 +18,7 @@ import '../domain/ai_response.dart';
 import '../domain/ai_limits.dart';
 import '../domain/intelligence_result.dart';
 import '../domain/intelligence_tool.dart';
+import '../domain/tool_copy.dart';
 
 /// What the user is told while waiting.
 ///
@@ -34,6 +35,13 @@ enum IntelligenceStage {
   cancelled,
 }
 
+/// The stage names in canonical English.
+///
+/// Kept here, next to the enum, because this is what a log line prints and what
+/// a domain test asserts without pumping a widget tree. What a person actually
+/// reads is `IntelligenceStageL10n.labelIn(l10n)` in
+/// `lib/l10n/enum_labels.dart` — the runner is an application-layer stream
+/// with no `BuildContext`, and a `const` string cannot depend on a locale.
 String describeStage(IntelligenceStage stage) => switch (stage) {
       IntelligenceStage.idle => '',
       IntelligenceStage.preparing => 'Preparing your document',
@@ -67,6 +75,18 @@ class IntelligenceScope {
   bool get needsConfirmation =>
       pageCount >= AiLimits.scopeDisclosurePageThreshold;
 
+  /// The scope statement in canonical English, for logs and domain tests.
+  ///
+  /// Not what the user reads. `IntelligenceScope` has no `BuildContext` and
+  /// should not grow one, so it exposes the counts and `_scopeSentence` in
+  /// `tool_run_screen.dart` picks the translated sentence —
+  /// `toolRunScopePages`, `toolRunScopeFiles` or `toolRunScopeText`, each a
+  /// real ICU plural, because "1 page" and "2 pages" are not one sentence
+  /// with a number swapped in most of the twenty languages.
+  ///
+  /// This is consent copy either way: it is the last thing the user reads
+  /// before agreeing to send their content on their own key, so both the
+  /// quantity and whose connection is paying have to survive in every locale.
   String get sentence {
     if (pageCount > 0) {
       return '$pageCount ${pageCount == 1 ? 'page' : 'pages'} will be analysed '
@@ -149,6 +169,19 @@ class IntelligenceRunner {
   /// A stream rather than a future so the UI can show real progress without the
   /// runner knowing anything about widgets, and so cancellation has somewhere
   /// natural to land.
+  ///
+  /// **The failure sentences below are the runner's own, not
+  /// [AiFailureKind.message]'s.** Five of the six say something the kind's
+  /// generic wording does not: that a local check never completed and so
+  /// established nothing, that this *build* retired a provider rather than the
+  /// provider retiring the user, that a whole reply was discarded rather than
+  /// partly shown, and which of the two missing inputs is missing. They are
+  /// canonical English here, for logs, and are translated as `toolRunFailure*`
+  /// — but [AiProviderFailure] carries only a kind, and two of these six share
+  /// `notConfigured` while two more share `inputTooLarge`, so a screen holding
+  /// the failure cannot yet tell them apart. Giving [AiProviderFailure] a
+  /// nullable reason the presentation layer can switch on is what closes that,
+  /// and it is a change to `ai_failure.dart` rather than to this file.
   Stream<IntelligenceRunState> run({
     required IntelligenceToolDefinition tool,
     required IntelligenceRunInput input,
@@ -300,6 +333,12 @@ class IntelligenceRunner {
   /// These are honesty guards rather than polish. A truncated answer that looks
   /// whole, or an unevidenced factual claim presented like a quoted one, is
   /// something the user will act on.
+  ///
+  /// Canonical English, like every other sentence the domain carries. Their
+  /// translations are `toolWarningReplyTruncated` and
+  /// `toolWarningNoSupportingQuotes`; resolving them needs
+  /// [IntelligenceWarning] to carry an identity the banner can switch on, which
+  /// is the same gap every warning built in `data/tools/` has.
   IntelligenceResult _annotate(
     IntelligenceResult result,
     AiResponse response,
@@ -310,6 +349,7 @@ class IntelligenceRunner {
     if (response.truncated) {
       warnings.add(const IntelligenceWarning.caution(
         'This reply was cut short, so it may be incomplete.',
+        ToolPhrase(ToolPhraseId.warningReplyTruncated),
       ));
     }
 
@@ -319,6 +359,7 @@ class IntelligenceRunner {
       warnings.add(const IntelligenceWarning.caution(
         'Your model returned no supporting quotes, so nothing here is '
         'evidenced. Check it against the document before acting on it.',
+        ToolPhrase(ToolPhraseId.warningNoSupportingQuotes),
       ));
     }
 

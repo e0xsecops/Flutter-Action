@@ -11,6 +11,14 @@
 /// written and what has been made, and the user decides whether that is
 /// progress. `docs/v2/ACTION_V2_DECISIONS.md` records why every score in the
 /// original brief was declined.
+///
+/// **The eyebrows are stored in sentence case.** Every wide-tracked capital
+/// label on this screen — WHAT YOU WANT, REACHED, WHAT ACTION CAN DO — is one
+/// ARB string in sentence case, uppercased at the render site by
+/// `eyebrowCase`. Storing the capitals would bake them into the fourteen
+/// locales whose script has no case, and a bare `toUpperCase` turns Turkish
+/// dotted `i` into the wrong letter. Three of them double as the heading of
+/// the sheet that edits the same field, which is why one key serves both.
 library;
 
 import 'package:flutter/material.dart';
@@ -23,6 +31,9 @@ import '../../../design/components/glass_surface.dart';
 import '../../../design/components/readable_width.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/casing.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../../../shared/widgets/error_view.dart';
 import '../../actions/application/action_providers.dart';
 import '../../actions/domain/action_item.dart';
@@ -38,6 +49,7 @@ class GoalWorkspaceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final goal = ref.watch(goalProvider(id));
 
     return AmbientBackground(
@@ -46,11 +58,11 @@ class GoalWorkspaceScreen extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           scrolledUnderElevation: 0,
-          title: const Text('Goal'),
+          title: Text(l10n.goalWorkspaceTitle),
           actions: [
             if (goal != null)
               PopupMenuButton<String>(
-                tooltip: 'More',
+                tooltip: l10n.detailMore,
                 onSelected: (value) async {
                   final notifier = ref.read(goalsProvider.notifier);
                   switch (value) {
@@ -72,26 +84,31 @@ class GoalWorkspaceScreen extends ConsumerWidget {
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     value: 'achieved',
+                    // Both halves are the user's own mark and are worded to
+                    // stay that way: reaching a goal is never inferred from
+                    // the Actions made from it, so the menu offers to set the
+                    // mark and to take it back, and neither phrasing says
+                    // Action decided.
                     child: Text(
                       goal.status == GoalStatus.achieved
-                          ? 'Not reached after all'
-                          : 'Mark as reached',
+                          ? l10n.goalUnmarkReached
+                          : l10n.goalMarkReached,
                     ),
                   ),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'archive',
-                    child: Text('Archive'),
+                    child: Text(l10n.detailArchiveConfirm),
                   ),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'delete',
-                    child: Text('Delete'),
+                    child: Text(l10n.commonDelete),
                   ),
                 ],
               ),
           ],
         ),
         body: goal == null
-            ? const ErrorView(message: 'That goal is no longer here.')
+            ? ErrorView(message: l10n.goalNotFound)
             : SafeArea(
                 top: false,
                 child: ReadableWidth.list(child: _Body(goal: goal)),
@@ -100,26 +117,26 @@ class GoalWorkspaceScreen extends ConsumerWidget {
     );
   }
 
-  static Future<bool?> _confirmDelete(BuildContext context) => showDialog<bool>(
-        context: context,
-        builder: (dialogContext) => AlertDialog(
-          title: const Text('Delete this goal?'),
-          content: const Text(
-            'The goal is removed from this device. Any Actions made from it '
-            'stay exactly as they are.',
+  static Future<bool?> _confirmDelete(BuildContext context) {
+    final l10n = AppL10n.of(context);
+    return showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.goalDeleteTitle),
+        content: Text(l10n.goalDeleteBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.sourceDeleteKeep),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text('Keep'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: const Text('Delete'),
-            ),
-          ],
-        ),
-      );
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.commonDelete),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _Body extends ConsumerWidget {
@@ -129,6 +146,7 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final actions = ref.watch(actionsStreamProvider).value ?? const [];
     final linked = [
       for (final id in goal.linkedActionIds)
@@ -146,18 +164,19 @@ class _Body extends ConsumerWidget {
         _Hero(goal: goal),
         const SizedBox(height: Space.xxl),
         _Field(
-          label: 'WHAT DONE LOOKS LIKE',
+          // The label and the heading of the sheet that edits the field are
+          // the same words, so they are the same key; only the case differs,
+          // and the case is applied here rather than stored.
+          label: eyebrowCase(l10n.goalOutcomeLabel, l10n.localeName),
           value: goal.outcome,
-          placeholder: 'Not written yet. A goal is easier to plan when you '
-              'have said what finishing it means.',
+          placeholder: l10n.goalOutcomeEmpty,
           onEdit: () => _editOutcome(context, ref),
         ),
         const SizedBox(height: Space.xl),
         _Field(
-          label: 'WHERE IT STANDS',
+          label: eyebrowCase(l10n.goalContextLabel, l10n.localeName),
           value: goal.context,
-          placeholder: 'Nothing written yet. What has happened so far, and '
-              'what is in the way.',
+          placeholder: l10n.goalContextEmpty,
           onEdit: () => _editContext(context, ref),
         ),
         const SizedBox(height: Space.xxl),
@@ -171,10 +190,13 @@ class _Body extends ConsumerWidget {
   }
 
   Future<void> _editOutcome(BuildContext context, WidgetRef ref) async {
+    final l10n = AppL10n.of(context);
     final outcome = await showGoalTextSheet(
       context,
-      title: 'What done looks like',
-      hint: 'The car is insured and the paperwork is filed.',
+      title: l10n.goalOutcomeLabel,
+      // An example of a finished state, not an instruction — each locale
+      // substitutes one of its own.
+      hint: l10n.goalOutcomeHint,
       initial: goal.outcome,
     );
     if (outcome == null) return;
@@ -184,10 +206,11 @@ class _Body extends ConsumerWidget {
   }
 
   Future<void> _editContext(BuildContext context, WidgetRef ref) async {
+    final l10n = AppL10n.of(context);
     final value = await showGoalTextSheet(
       context,
-      title: 'Where it stands',
-      hint: 'I have two quotes and the renewal is on the 18th.',
+      title: l10n.goalContextLabel,
+      hint: l10n.goalContextHint,
       initial: goal.context,
     );
     if (value == null) return;
@@ -204,6 +227,7 @@ class _Hero extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final reached = goal.status == GoalStatus.achieved;
@@ -228,7 +252,13 @@ class _Hero extends ConsumerWidget {
                 const SizedBox(width: Space.sm),
                 Flexible(
                   child: Text(
-                    reached ? 'REACHED' : 'WHAT YOU WANT',
+                    // "Reached" is the mark the user set, not a verdict Action
+                    // arrived at, and the two strings have to stay different
+                    // words in every locale — they occupy the same slot in
+                    // opposite states.
+                    reached
+                        ? eyebrowCase(l10n.goalStatusReached, l10n.localeName)
+                        : eyebrowCase(l10n.goalTitleLabel, l10n.localeName),
                     overflow: TextOverflow.ellipsis,
                     style: text.labelSmall?.copyWith(
                       color:
@@ -247,13 +277,16 @@ class _Hero extends ConsumerWidget {
                   child: Text(goal.title, style: text.headlineSmall),
                 ),
                 IconButton(
-                  tooltip: 'Edit goal',
+                  // Names the object as well as the verb: it is the only
+                  // accessible name on the pencil, and there are two bare
+                  // "Edit" buttons further down the same screen.
+                  tooltip: l10n.goalEditTooltip,
                   icon: const Icon(Icons.edit_outlined, size: 20),
                   onPressed: () async {
                     final title = await showGoalTextSheet(
                       context,
-                      title: 'What you want',
-                      hint: 'Renew the car insurance without overpaying.',
+                      title: l10n.goalTitleLabel,
+                      hint: l10n.goalTitleHint,
                       initial: goal.title,
                     );
                     if (title == null || title.trim().isEmpty) return;
@@ -279,6 +312,8 @@ class _Field extends StatelessWidget {
     required this.onEdit,
   });
 
+  /// Already in the eyebrow's case: the caller owns the key, and only the
+  /// caller knows which locale bundle it came from.
   final String label;
   final String? value;
   final String placeholder;
@@ -286,6 +321,7 @@ class _Field extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final written = value != null && value!.trim().isNotEmpty;
@@ -313,7 +349,7 @@ class _Field extends StatelessWidget {
                 minimumSize: const Size(0, 36),
                 padding: const EdgeInsets.symmetric(horizontal: Space.sm),
               ),
-              child: Text(written ? 'Edit' : 'Add'),
+              child: Text(written ? l10n.commonEdit : l10n.commonAdd),
             ),
           ],
         ),
@@ -340,6 +376,7 @@ class _PlanningTools extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final ready = goal.hasEnoughToPlan;
@@ -350,7 +387,7 @@ class _PlanningTools extends StatelessWidget {
         Semantics(
           header: true,
           child: Text(
-            'WHAT ACTION CAN DO',
+            eyebrowCase(l10n.goalToolsLabel, l10n.localeName),
             style: text.labelSmall?.copyWith(
               color: colors.textTertiary,
               letterSpacing: 0.8,
@@ -360,8 +397,7 @@ class _PlanningTools extends StatelessWidget {
         const SizedBox(height: Space.md),
         if (!ready)
           Text(
-            'Write a little more about what you want, and these will have '
-            'something to work with.',
+            l10n.goalToolsNotReady,
             style: text.bodySmall?.copyWith(color: colors.textSecondary),
           )
         else
@@ -370,13 +406,16 @@ class _PlanningTools extends StatelessWidget {
             runSpacing: Space.sm,
             children: [
               _ToolChip(
-                label: goalOptimizerTool.title,
+                // A tool's title is a `const` on its definition and so cannot
+                // depend on the locale; `titleIn` is the translation of it,
+                // the same split the enum labels use. The id stays the id.
+                label: goalOptimizerTool.titleIn(l10n),
                 onTap: () => context.push(
                   Routes.tool(goalOptimizerTool.id, goalId: goal.id),
                 ),
               ),
               _ToolChip(
-                label: actionPlanTool.title,
+                label: actionPlanTool.titleIn(l10n),
                 onTap: () => context.push(
                   Routes.tool(actionPlanTool.id, goalId: goal.id),
                 ),
@@ -410,6 +449,7 @@ class _LinkedActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -419,9 +459,14 @@ class _LinkedActions extends StatelessWidget {
         Semantics(
           header: true,
           child: Text(
-            actions.length == 1
-                ? '1 ACTION FROM THIS GOAL'
-                : '${actions.length} ACTIONS FROM THIS GOAL',
+            // The same count the Library shows under a goal, in the same
+            // words: one plural key, uppercased here because this one is an
+            // eyebrow. English needs two forms, Arabic six, Japanese one —
+            // which is why the branch is in the bundle and not here.
+            eyebrowCase(
+              l10n.libraryGoalActionCount(actions.length),
+              l10n.localeName,
+            ),
             style: text.labelSmall?.copyWith(
               color: colors.textTertiary,
               letterSpacing: 0.8,

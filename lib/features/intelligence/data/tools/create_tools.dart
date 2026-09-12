@@ -8,6 +8,7 @@ library;
 import '../../domain/ai_request.dart';
 import '../../domain/ai_response.dart';
 import '../../domain/intelligence_result.dart';
+import '../../domain/tool_copy.dart';
 import '../../domain/intelligence_tool.dart';
 import '../fact_preservation.dart';
 import 'tool_support.dart';
@@ -35,13 +36,23 @@ List<IntelligenceWarning> _factWarnings(
       IntelligenceWarning.note(
         "Action couldn't compare this against the original text, so the "
         'amounts and dates in it have not been checked.',
+        ToolPhrase(ToolPhraseId.warningFactsNotChecked),
       ),
     ];
   }
   final dropped =
       FactPreservation.check(original: original, rewritten: produced);
   if (dropped.isEmpty) return const [];
-  return [IntelligenceWarning.caution(FactPreservation.describe(dropped))];
+  return [
+    IntelligenceWarning.caution(
+      FactPreservation.describe(dropped),
+      ToolNamedList(
+        ToolNamedListId.factLoss,
+        FactPreservation.namedValues(dropped),
+        hidden: FactPreservation.hiddenCount(dropped),
+      ),
+    ),
+  ];
 }
 
 // ---------------------------------------------------------------------------
@@ -114,22 +125,30 @@ Return the improved text and a short list of what you changed and why. If the te
     return IntelligenceResult(
       toolId: rewriteTool.id,
       sections: [
-        IntelligenceSection(title: input.mode ?? clearer, body: improved),
+        IntelligenceSection(
+          title: input.mode ?? clearer,
+          titleCopy: ToolModeName(input.mode ?? clearer),
+          body: improved,
+        ),
         if (changes.isNotEmpty)
           IntelligenceSection(
             title: 'What changed',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionWhatChanged),
             kind: IntelligenceSectionKind.bullets,
             bullets: changes,
           ),
         if (readBool(json, 'already_good'))
           const IntelligenceSection(
             title: 'Note',
+            titleCopy: ToolPhrase(ToolPhraseId.sectionNote),
             body: 'This was already clear. The changes below are minor.',
+            bodyCopy: ToolPhrase(ToolPhraseId.sectionAlreadyClearBody),
           ),
       ],
       artifacts: [
         IntelligenceArtifact(
           title: 'Improved text',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionImprovedText),
           text: improved,
           isDraft: false,
         ),
@@ -243,11 +262,20 @@ This is a draft for the person to review, edit and send themselves.''';
       toolId: draftReplyTool.id,
       sections: [
         if (subject != null)
-          IntelligenceSection(title: 'Subject', body: subject),
-        IntelligenceSection(title: 'Draft reply', body: body),
+          IntelligenceSection(
+            title: 'Subject',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionSubject),
+            body: subject,
+          ),
+        IntelligenceSection(
+          title: 'Draft reply',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionDraftReply),
+          body: body,
+        ),
         if (placeholders.isNotEmpty)
           IntelligenceSection(
             title: 'You need to fill these in',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionPlaceholders),
             kind: IntelligenceSectionKind.bullets,
             bullets: placeholders,
           ),
@@ -255,6 +283,9 @@ This is a draft for the person to review, edit and send themselves.''';
       artifacts: [
         IntelligenceArtifact(
           title: subject == null ? 'Draft reply' : 'Draft — $subject',
+          titleCopy: subject == null
+              ? const ToolPhrase(ToolPhraseId.sectionDraftReply)
+              : ToolNamed(ToolNamedId.sectionDraftWithSubject, subject),
           text: subject == null ? body : '$subject\n\n$body',
         ),
       ],
@@ -262,6 +293,7 @@ This is a draft for the person to review, edit and send themselves.''';
         IntelligenceWarning.note(
           'This is a draft. Action does not send anything — read it, edit it, '
           'and send it yourself.',
+          ToolPhrase(ToolPhraseId.warningDraftNotSent),
         ),
       ],
     );
@@ -346,11 +378,22 @@ This is a translation for understanding. It is not a certified or legal translat
           title: detected == null
               ? 'Translation'
               : 'From $detected to ${input.targetLanguage ?? 'English'}',
+          // Neither name is translated: `from` is the language the model
+          // reported, `to` is the one the user asked for. Only the frame
+          // around them belongs to the reader's bundle.
+          titleCopy: detected == null
+              ? const ToolPhrase(ToolPhraseId.sectionTranslation)
+              : ToolNamedPair(
+                  ToolNamedPairId.sectionTranslationFromTo,
+                  detected,
+                  input.targetLanguage ?? 'English',
+                ),
           body: translated,
         ),
         if (terms.isNotEmpty)
           IntelligenceSection(
             title: 'Kept in the original',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionKeptInOriginal),
             kind: IntelligenceSectionKind.bullets,
             bullets: terms,
           ),
@@ -358,6 +401,7 @@ This is a translation for understanding. It is not a certified or legal translat
       artifacts: [
         IntelligenceArtifact(
           title: 'Translation',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionTranslation),
           text: translated,
           isDraft: false,
         ),
@@ -366,6 +410,7 @@ This is a translation for understanding. It is not a certified or legal translat
         ..._factWarnings(input, translated),
         const IntelligenceWarning.note(
           'A translation for understanding, not a certified translation.',
+          ToolPhrase(ToolPhraseId.warningTranslationNotCertified),
         ),
       ],
     );

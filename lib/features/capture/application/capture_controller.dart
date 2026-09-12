@@ -186,7 +186,10 @@ class SourcesNotifier extends AsyncNotifier<List<SourceItem>> {
       // the way to sending it anyway.
       content = await file.readAsBytes();
     } on FileSystemException {
-      return const RejectedDocument('That document could not be read.');
+      return const RejectedDocument(
+        'That document could not be read.',
+        reason: DocumentRejection.unreadable,
+      );
     }
 
     final outcome = DocumentIntake.validate(
@@ -299,7 +302,10 @@ class SourcesNotifier extends AsyncNotifier<List<SourceItem>> {
         originalByteSize: original.length,
         byteSize: original.length,
         state: SourceProcessingState.failed,
-        failureReason: "That image format couldn't be read on this device.",
+        // Stored in English on purpose: the record outlives the locale it was
+        // captured in. `CaptureReadFailureL10n.messageIn` turns it back into
+        // the reader's language at the point it is shown.
+        failureReason: CaptureReadFailure.imageFormatUnreadable.canonicalMessage,
       );
     }
 

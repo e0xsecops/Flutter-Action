@@ -15,6 +15,8 @@ import '../../../core/security/secret_store.dart';
 import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../application/intelligence_providers.dart';
 import '../domain/ai_capabilities.dart';
 import '../domain/ai_provider_config.dart';
@@ -28,17 +30,22 @@ Future<bool> showConnectProviderSheet(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    builder: (context) => Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: AppSheet(
-        title: 'Connect your AI',
-        subtitle: 'You use your own provider account and API key. '
-            'Action stores the key in this device’s secure storage.',
-        child: _ConnectForm(initialKind: initialKind),
-      ),
-    ),
+    // `AppSheet.title` and `.subtitle` are plain Strings rather than widgets,
+    // so they are resolved here, against the sheet's own context, instead of
+    // inside the form.
+    builder: (sheetContext) {
+      final l10n = AppL10n.of(sheetContext);
+      return Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+        ),
+        child: AppSheet(
+          title: l10n.connectSheetTitle,
+          subtitle: l10n.connectSheetSubtitle,
+          child: _ConnectForm(initialKind: initialKind),
+        ),
+      );
+    },
   );
   return connected ?? false;
 }
@@ -91,18 +98,23 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
   String get _modelId => _modelController.text.trim();
 
   Future<void> _save({required bool alsoTest}) async {
+    // Resolved once, up front: everything below it either runs synchronously
+    // or is guarded by `mounted`, and a bundle read before the first await is
+    // the same bundle the user is looking at.
+    final l10n = AppL10n.of(context);
+
     final key = _keyController.text.trim();
     if (key.isEmpty) {
-      setState(() => _error = 'Paste your API key to continue.');
+      setState(() => _error = l10n.connectErrorKeyMissing);
       return;
     }
     if (_modelId.isEmpty) {
-      setState(() => _error = 'Choose a model, or type a model id.');
+      setState(() => _error = l10n.connectErrorModelMissing);
       return;
     }
     if (_kind == AiProviderKind.openAiCompatible &&
         _endpointController.text.trim().isEmpty) {
-      setState(() => _error = 'Add the address of your endpoint.');
+      setState(() => _error = l10n.connectErrorEndpointMissing);
       return;
     }
 
@@ -132,8 +144,7 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
       if (!mounted) return;
       setState(() {
         _busy = false;
-        _error = "This device's secure storage could not be opened, so the "
-            'key was not saved.';
+        _error = l10n.connectErrorSecureStorageUnavailable;
       });
       return;
     }
@@ -142,7 +153,7 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
     _keyController.clear();
 
     if (alsoTest) {
-      setState(() => _status = 'Checking…');
+      setState(() => _status = l10n.commonChecking);
       final provider = ref.read(aiProvidersProvider)[_kind]!;
       final check = await provider.testConnection(config);
       if (!mounted) return;
@@ -150,11 +161,27 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
         setState(() {
           _busy = false;
           _status = null;
+          // Knowingly still English, and the one string on this screen that
+          // is. `AiConnectionCheck` carries a finished sentence and nothing
+          // else: the `AiFailureKind` that produced it is consumed inside the
+          // adapter, so there is nothing here to switch on. Replacing it with
+          // a single localized "that did not work" would throw away the only
+          // diagnostic the user gets — out of credit is not rate-limited, and
+          // "could not reach your provider" is the opposite claim to "your
+          // provider is having trouble". The fix is to carry the kind on
+          // AiConnectionCheck; it is not a change this file can make.
           _error = check.message;
         });
         return;
       }
-      setState(() => _status = check.message);
+      // Composed here rather than echoed from `check.message`. All four
+      // adapters build the same two English sentences, and the number they
+      // interpolate is already on the check — so the count can be pluralised
+      // properly against a BuildContext the adapters do not have. The claim
+      // stays the narrow one: the provider answered, nothing more.
+      setState(() => _status = check.models.isEmpty
+          ? l10n.connectTestSucceeded
+          : l10n.connectTestSucceededWithModels(check.models.length));
     }
 
     await ref.read(aiProviderConfigProvider.notifier).connect(config);
@@ -167,6 +194,7 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final presets = ref.watch(aiProvidersProvider)[_kind]?.presetModels ?? [];
@@ -181,7 +209,7 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Provider', style: text.labelLarge),
+          Text(l10n.connectProviderLabel, style: text.labelLarge),
           const SizedBox(height: Space.sm),
           Wrap(
             spacing: Space.sm,
@@ -189,7 +217,10 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
             children: [
               for (final kind in AiProviderKind.values)
                 ChoiceChip(
-                  label: Text(kind.label),
+                  // Three of the four are trademarks and come back verbatim;
+                  // only the custom entry has a word to translate. The enum
+                  // keeps its English `label` for logs and fixtures.
+                  label: Text(kind.labelIn(l10n)),
                   selected: _kind == kind,
                   onSelected: _busy
                       ? null
@@ -206,7 +237,7 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
           const SizedBox(height: Space.xl),
 
           if (_kind == AiProviderKind.openAiCompatible) ...[
-            Text('Endpoint', style: text.labelLarge),
+            Text(l10n.connectEndpointLabel, style: text.labelLarge),
             const SizedBox(height: Space.sm),
             TextField(
               controller: _endpointController,
@@ -214,19 +245,19 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
               keyboardType: TextInputType.url,
               autocorrect: false,
               decoration: const InputDecoration(
+                // Not prose: a URL shape the user is meant to copy.
                 hintText: 'https://…/v1',
               ),
             ),
             const SizedBox(height: Space.xs),
             Text(
-              'Must be an https:// address. Action will not send your '
-              'documents over an unencrypted connection.',
+              l10n.connectEndpointHttpsNote,
               style: text.bodySmall,
             ),
             const SizedBox(height: Space.xl),
           ],
 
-          Text('API key', style: text.labelLarge),
+          Text(l10n.connectApiKeyLabel, style: text.labelLarge),
           const SizedBox(height: Space.sm),
           TextField(
             controller: _keyController,
@@ -243,18 +274,16 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
               // newline, which becomes an invalid header value.
               FilteringTextInputFormatter.deny(RegExp(r'\s')),
             ],
-            decoration: const InputDecoration(hintText: 'Paste your key'),
+            decoration: InputDecoration(hintText: l10n.connectApiKeyHint),
           ),
           const SizedBox(height: Space.xs),
           Text(
-            'Your key stays on this device. Action never sends it anywhere '
-            'except to the provider you chose, and cannot show it to you '
-            'again after saving.',
+            l10n.connectKeyPrivacyNote,
             style: text.bodySmall,
           ),
           const SizedBox(height: Space.xl),
 
-          Text('Model', style: text.labelLarge),
+          Text(l10n.connectModelLabel, style: text.labelLarge),
           const SizedBox(height: Space.sm),
           if (presets.isNotEmpty)
             Wrap(
@@ -263,6 +292,7 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
               children: [
                 for (final model in presets)
                   ChoiceChip(
+                    // A provider's own model name, not copy.
                     label: Text(model.label),
                     selected: _selectedPreset == model.id,
                     onSelected: _busy
@@ -280,13 +310,13 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
             enabled: !_busy,
             autocorrect: false,
             onChanged: (_) => setState(() => _selectedPreset = null),
-            decoration: const InputDecoration(hintText: 'Model id'),
+            decoration: InputDecoration(hintText: l10n.connectModelIdHint),
           ),
           const SizedBox(height: Space.xs),
           Text(
-            // The honest reason a free-text field exists next to the presets.
-            'Providers retire model ids and add new ones. If the one you want '
-            'is not listed, type it here.',
+            // The honest reason a free-text field exists next to the presets:
+            // the presets are hints, never a whitelist.
+            l10n.connectModelFreeTextNote,
             style: text.bodySmall,
           ),
 
@@ -308,12 +338,12 @@ class _ConnectFormState extends ConsumerState<_ConnectForm> {
           const SizedBox(height: Space.xl),
           FilledButton(
             onPressed: _busy ? null : () => _save(alsoTest: true),
-            child: Text(_busy ? 'Checking…' : 'Connect and test'),
+            child: Text(_busy ? l10n.commonChecking : l10n.connectAndTest),
           ),
           const SizedBox(height: Space.sm),
           TextButton(
             onPressed: _busy ? null : () => _save(alsoTest: false),
-            child: const Text('Save without testing'),
+            child: Text(l10n.connectSaveWithoutTesting),
           ),
         ],
       ),

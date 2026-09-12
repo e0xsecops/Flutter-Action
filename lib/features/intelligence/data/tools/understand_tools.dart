@@ -4,6 +4,7 @@ library;
 import '../../domain/ai_request.dart';
 import '../../domain/ai_response.dart';
 import '../../domain/intelligence_result.dart';
+import '../../domain/tool_copy.dart';
 import '../../domain/intelligence_tool.dart';
 import '../evidence_verifier.dart';
 import 'tool_support.dart';
@@ -118,21 +119,26 @@ Only suggest an action if the material actually asks the reader to do something.
       sections: [
         IntelligenceSection(
           title: 'What this is',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionWhatThisIs),
           body: readString(json, 'what_this_is'),
         ),
         IntelligenceSection(
           title: 'What matters',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionWhatMatters),
           body: readString(json, 'what_matters'),
         ),
         if (facts.isNotEmpty)
           IntelligenceSection(
             title: 'Key details',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionKeyDetails),
             kind: IntelligenceSectionKind.facts,
             facts: facts,
           ),
         if (readString(json, 'recommended_next_step') != null)
           IntelligenceSection(
             title: 'Recommended next step',
+            titleCopy:
+                const ToolPhrase(ToolPhraseId.sectionRecommendedNextStep),
             body: readString(json, 'recommended_next_step'),
           ),
       ].where((s) => !s.isEmpty).toList(),
@@ -205,8 +211,14 @@ Never guess. Never fill a gap with what is usually true.''';
         sections: [
           IntelligenceSection(
             title: 'No answer in this material',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionNoAnswer),
             body: readString(json, 'why_not_answered') ??
                 "Action couldn't find that in the selected document.",
+            // Only the fallback is ours to translate. A reason the model wrote
+            // is its own words and passes through.
+            bodyCopy: readString(json, 'why_not_answered') == null
+                ? const ToolPhrase(ToolPhraseId.sectionNoAnswerBody)
+                : null,
           ),
         ],
       );
@@ -218,10 +230,15 @@ Never guess. Never fill a gap with what is usually true.''';
     return IntelligenceResult(
       toolId: askDocumentTool.id,
       sections: [
-        IntelligenceSection(title: 'Answer', body: answer),
+        IntelligenceSection(
+          title: 'Answer',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionAnswer),
+          body: answer,
+        ),
         if (checked.citation != null)
           IntelligenceSection(
             title: 'From the document',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionFromTheDocument),
             kind: IntelligenceSectionKind.quote,
             body: checked.citation!.quotedText,
           ),
@@ -233,6 +250,7 @@ Never guess. Never fill a gap with what is usually true.''';
           const IntelligenceWarning.caution(
             'The quote behind this answer is not in the selected material. '
             'Treat the answer as unreliable.',
+            ToolPhrase(ToolPhraseId.warningQuoteNotFound),
           ),
       ],
     );
@@ -316,11 +334,13 @@ $factualRules''';
       sections: [
         IntelligenceSection(
           title: input.mode ?? quick,
+          titleCopy: ToolModeName(input.mode ?? quick),
           body: readString(json, 'summary'),
         ),
         if (points.isNotEmpty)
           IntelligenceSection(
             title: 'Key points',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionKeyPoints),
             kind: IntelligenceSectionKind.bullets,
             bullets: points,
           ),
@@ -329,6 +349,7 @@ $factualRules''';
       artifacts: [
         IntelligenceArtifact(
           title: 'Summary',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionSummary),
           text: [
             readString(json, 'summary') ?? '',
             if (points.isNotEmpty) '',
@@ -443,24 +464,28 @@ $factualRules''';
         if (differences.isNotEmpty)
           IntelligenceSection(
             title: 'What differs',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionWhatDiffers),
             kind: IntelligenceSectionKind.facts,
             facts: differences,
           ),
         if (conflicts.isNotEmpty)
           IntelligenceSection(
             title: 'Conflicts',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionConflicts),
             kind: IntelligenceSectionKind.bullets,
             bullets: conflicts,
           ),
         if (onlyInOne.isNotEmpty)
           IntelligenceSection(
             title: 'Only in one of them',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionOnlyInOne),
             kind: IntelligenceSectionKind.bullets,
             bullets: onlyInOne,
           ),
         if (common.isNotEmpty)
           IntelligenceSection(
             title: 'In common',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionInCommon),
             kind: IntelligenceSectionKind.bullets,
             bullets: common,
           ),

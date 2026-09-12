@@ -2184,4 +2184,2173 @@ class AppL10nTr extends AppL10n {
 
   @override
   String get urgencyUnsure => 'Emin değil';
+
+  @override
+  String get detailSaveFailed =>
+      'Bu kaydedilemedi. Hiçbir şey kaybolmadı — yeniden deneyin.';
+
+  @override
+  String get detailSectionCreatedFrom => 'Şuradan oluşturuldu';
+
+  @override
+  String get detailSourceChecking => 'Asıl yakalamaya bakılıyor…';
+
+  @override
+  String get detailSourceUnavailable => 'Asıl yakalama artık mevcut değil.';
+
+  @override
+  String get detailReopenAction => 'Görevi yeniden aç';
+
+  @override
+  String get detailMarkActionComplete => 'Görevi tamamlandı olarak işaretle';
+
+  @override
+  String get detailGetHelp => 'Bununla ilgili yardım al';
+
+  @override
+  String get detailSectionHistory => 'Geçmiş';
+
+  @override
+  String get detailHistoryShowLess => 'Daha az göster';
+
+  @override
+  String detailHistoryShowAll(int count) {
+    return '$count kaydın tümünü göster';
+  }
+
+  @override
+  String get detailHistoryCreated => 'Oluşturuldu';
+
+  @override
+  String detailHistoryCreatedWithSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count adımla oluşturuldu',
+      one: '1 adımla oluşturuldu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get detailHistoryReviewed => 'Ayrıntıları siz onayladınız';
+
+  @override
+  String detailHistoryStepFinished(String title) {
+    return 'Bitirdiniz: “$title”';
+  }
+
+  @override
+  String get detailHistoryAStep => 'bir adım';
+
+  @override
+  String get detailHistoryReminderSet => 'Bir hatırlatıcı kurdunuz';
+
+  @override
+  String detailHistoryReminderSetFor(String when) {
+    return '$when için bir hatırlatıcı kurdunuz';
+  }
+
+  @override
+  String get detailHistoryCompleted => 'Bitti olarak işaretlendi';
+
+  @override
+  String get detailHistoryChanged => 'Son değişiklik';
+
+  @override
+  String get detailHistoryTimestampFormat => 'd MMM yyyy, HH:mm';
+
+  @override
+  String get aiProviderCustom => 'Özel (OpenAI uyumlu)';
+
+  @override
+  String get aiCapabilityText => 'metin';
+
+  @override
+  String get aiCapabilityImages => 'görseller';
+
+  @override
+  String get aiCapabilityDocuments => 'belgeler';
+
+  @override
+  String get aiCapabilityStructuredResults => 'yapılandırılmış sonuçlar';
+
+  @override
+  String get aiCapabilityStreaming => 'akış';
+
+  @override
+  String get aiCapabilitySystemInstructions => 'sistem talimatları';
+
+  @override
+  String get aiCapabilityEvidenceCitations => 'kanıt alıntıları';
+
+  @override
+  String get aiCapabilityLongDocuments => 'uzun belgeler';
+
+  @override
+  String aiCapabilityListJoin(String a, String b) {
+    return '$a, $b';
+  }
+
+  @override
+  String aiCapabilityListTwo(String a, String b) {
+    return '$a ya da $b';
+  }
+
+  @override
+  String aiCapabilityListMore(String head, String last) {
+    return '$head ya da $last';
+  }
+
+  @override
+  String get aiFailureNotConfigured =>
+      'Bu aracı kullanmak için bir yapay zekâ sağlayıcı bağlayın.';
+
+  @override
+  String get aiFailureInvalidKey =>
+      'O API anahtarı sağlayıcı tarafından kabul edilmedi.';
+
+  @override
+  String get aiFailureQuotaExceeded =>
+      'Sağlayıcı hesabınızın kredisi bitti ya da kotasına ulaştı.';
+
+  @override
+  String get aiFailureRateLimited =>
+      'Sağlayıcınız istek hızını sınırlıyor. Birazdan yeniden deneyin.';
+
+  @override
+  String get aiFailureNetworkUnavailable =>
+      'Action yapay zekâ sağlayıcınıza ulaşamadı. Bağlantınızı kontrol edin.';
+
+  @override
+  String get aiFailureUnsupportedModel =>
+      'O model anahtarınıza açık değil. Ayarlar\'dan başka birini seçin.';
+
+  @override
+  String aiFailureUnsupportedCapability(String capabilities) {
+    return 'Seçtiğiniz model $capabilities okuyamıyor. Ayarlar\'dan başka bir model seçin.';
+  }
+
+  @override
+  String get aiFailureContextTooLarge =>
+      'Bu içerik, bu modelin bir seferde okuyabileceğinden fazlaydı.';
+
+  @override
+  String get aiFailureInputTooLargeText =>
+      'Bu, bir seferde çözümlenebilecek olandan daha fazla metin.';
+
+  @override
+  String get aiFailureProviderUnavailable =>
+      'Yapay zekâ sağlayıcınızda bir sorun var. Birazdan yeniden deneyin.';
+
+  @override
+  String get aiFailureMalformedResponse =>
+      'O sağlayıcı, Action\'ın okuyamadığı bir şey geri gönderdi.';
+
+  @override
+  String get aiFailureCancelled => 'Durduruldu.';
+
+  @override
+  String get aiFailureInsecureEndpoint =>
+      'O endpoint bir https:// adresi olmalı.';
+
+  @override
+  String get aiFailureUnknown =>
+      'Yapay zekâ sağlayıcınızla konuşurken bir şeyler ters gitti.';
+
+  @override
+  String get appLockTitle => 'Action kilitli';
+
+  @override
+  String get appLockPrompt =>
+      'Devam etmek için siz olduğunuzu doğrulayın. Action bunu cihazınızdan ister — parmak izinizi, yüzünüzü ya da PIN\'inizi asla görmez.';
+
+  @override
+  String get appLockUnlocking => 'Kilit açılıyor…';
+
+  @override
+  String get appLockNotConfirmed =>
+      'Bu doğrulanmadı. Hazır olduğunuzda yeniden deneyin.';
+
+  @override
+  String get appLockCannotConfirm =>
+      'Cihazınız şu anda siz olduğunuzu doğrulayamıyor. Cihaz ayarlarınızda hâlâ kurulu bir ekran kilidi olduğunu kontrol edin.';
+
+  @override
+  String get appLockWaiting => 'Bekleniyor…';
+
+  @override
+  String get appLockUnlock => 'Kilidi aç';
+
+  @override
+  String get appLockReasonUnlock => 'Action\'ın kilidini aç';
+
+  @override
+  String get appLockReasonEnable =>
+      'Uygulama Kilidi\'ni açmadan önce siz olduğunuzu doğrulayın';
+
+  @override
+  String get appLockReasonDisable =>
+      'Uygulama Kilidi\'ni kapatmadan önce siz olduğunuzu doğrulayın';
+
+  @override
+  String get todayCapabilityHeading => 'Action neyi üstlenir';
+
+  @override
+  String get todayCapabilityDocumentTitle => 'Bir mektup ya da fatura';
+
+  @override
+  String get todayCapabilityDocumentBlurb =>
+      'Action onu okur; son tarihi, tutarı ve referans numarasını bulur.';
+
+  @override
+  String get todayCapabilityScreenshotTitle => 'Bir ekran görüntüsü';
+
+  @override
+  String get todayCapabilityScreenshotBlurb =>
+      'Yoksa unutacağınız bir mesajı, harekete geçebileceğiniz bir şeye dönüştürün.';
+
+  @override
+  String get todayCapabilityTextTitle => 'Bir parça metin';
+
+  @override
+  String get todayCapabilityTextBlurb =>
+      'Ne olursa yapıştırın. Action onun ne olduğunu ve sizden ne istediğini çözer.';
+
+  @override
+  String get todayCapabilityConfirmTitle => 'Her şeyi siz onaylarsınız';
+
+  @override
+  String get todayCapabilityConfirmBlurb =>
+      'Siz kanıtı görüp evet demeden hiçbir şey göreve dönüşmez.';
+
+  @override
+  String get todayCapabilityExploreIntelligence => 'Zekâ\'yı keşfet';
+
+  @override
+  String get documentRejectedEmpty => 'O dosya boş.';
+
+  @override
+  String documentRejectedTooLarge(String size) {
+    return 'O belge $size; bu da Action\'ın çalışabileceğinden büyük.';
+  }
+
+  @override
+  String get documentRejectedNotAPdf =>
+      'Adı ne olursa olsun bu bir PDF değil. Action, PDF\'leri ve görselleri okur.';
+
+  @override
+  String get documentRejectedUnreadable => 'O belge okunamadı.';
+
+  @override
+  String get pdfRejectedNotAPdf => 'Adı ne olursa olsun o dosya bir PDF değil.';
+
+  @override
+  String get pdfRejectedEncrypted =>
+      'O PDF parola korumalı, bu yüzden Action onu okuyamıyor.';
+
+  @override
+  String get pdfRejectedDamaged => 'O PDF okunamadı. Eksik olabilir.';
+
+  @override
+  String get shareRejectedEmpty => 'O paylaşımda okunacak bir şey yoktu.';
+
+  @override
+  String get shareRejectedUnsupportedType =>
+      'Action metin, görsel ve PDF alabilir. Bu başka bir şeydi.';
+
+  @override
+  String get shareRejectedContentMismatch =>
+      'O dosya, söylediği türden bir dosya değil; bu yüzden Action onu açmadı.';
+
+  @override
+  String get shareRejectedTooLarge =>
+      'O dosya Action\'ın çalışamayacağı kadar büyük.';
+
+  @override
+  String get shareRejectedUnreadable => 'O dosya okunamadı.';
+
+  @override
+  String get captureFailureRecognition => 'Metin tanıma çalıştırılamadı.';
+
+  @override
+  String get captureFailureImageFormat =>
+      'O görüntü biçimi bu cihazda okunamadı.';
+
+  @override
+  String get connectSheetTitle => 'Yapay zekânızı bağlayın';
+
+  @override
+  String get connectSheetSubtitle =>
+      'Kendi sağlayıcı hesabınızı ve API anahtarınızı kullanırsınız. Action anahtarı bu cihazın güvenli deposunda saklar.';
+
+  @override
+  String get connectErrorKeyMissing =>
+      'Devam etmek için API anahtarınızı yapıştırın.';
+
+  @override
+  String get connectErrorModelMissing =>
+      'Bir model seçin ya da bir model kimliği yazın.';
+
+  @override
+  String get connectErrorEndpointMissing =>
+      'Endpoint\'inizin adresini ekleyin.';
+
+  @override
+  String get connectErrorSecureStorageUnavailable =>
+      'Bu cihazın güvenli deposu açılamadı, bu yüzden anahtar kaydedilmedi.';
+
+  @override
+  String get connectTestSucceeded => 'Bağlanıldı.';
+
+  @override
+  String connectTestSucceededWithModels(int count) {
+    return 'Bağlanıldı. $count model kullanılabilir.';
+  }
+
+  @override
+  String get connectProviderLabel => 'Sağlayıcı';
+
+  @override
+  String get connectEndpointLabel => 'Endpoint';
+
+  @override
+  String get connectEndpointHttpsNote =>
+      'Bir https:// adresi olmalı. Action belgelerinizi şifresiz bir bağlantı üzerinden göndermez.';
+
+  @override
+  String get connectApiKeyLabel => 'API anahtarı';
+
+  @override
+  String get connectApiKeyHint => 'Anahtarınızı yapıştırın';
+
+  @override
+  String get connectKeyPrivacyNote =>
+      'Anahtarınız bu cihazda kalır. Action onu seçtiğiniz sağlayıcı dışında hiçbir yere göndermez ve kaydettikten sonra size bir daha gösteremez.';
+
+  @override
+  String get connectModelLabel => 'Model';
+
+  @override
+  String get connectModelIdHint => 'Model kimliği';
+
+  @override
+  String get connectModelFreeTextNote =>
+      'Sağlayıcılar model kimliklerini kullanımdan kaldırır ve yenilerini ekler. İstediğiniz kimlik listede yoksa buraya yazın.';
+
+  @override
+  String get connectAndTest => 'Bağlan ve test et';
+
+  @override
+  String get connectSaveWithoutTesting => 'Test etmeden kaydet';
+
+  @override
+  String get toolWarningFactsNotChecked =>
+      'Action bunu asıl metinle karşılaştıramadı, bu yüzden içindeki tutarlar ve tarihler denetlenmedi.';
+
+  @override
+  String get toolTitleRewrite => 'Bu yazıyı iyileştir';
+
+  @override
+  String get toolDescriptionRewrite =>
+      'Daha açık, daha kısa ya da daha resmî — bilgiler olduğu gibi korunur.';
+
+  @override
+  String get toolModeRewriteClearer => 'Daha açık';
+
+  @override
+  String get toolModeRewriteProfessional => 'Daha profesyonel';
+
+  @override
+  String get toolModeRewriteShorter => 'Daha kısa';
+
+  @override
+  String get toolModeRewritePersuasive => 'Daha ikna edici';
+
+  @override
+  String get toolModeRewriteSimpler => 'Daha yalın';
+
+  @override
+  String get toolModeRewriteStructured => 'Daha düzenli';
+
+  @override
+  String get toolModeRewriteGrammarOnly => 'Yalnızca dilbilgisi';
+
+  @override
+  String get toolSectionWhatChanged => 'Ne değişti';
+
+  @override
+  String get toolSectionNote => 'Not';
+
+  @override
+  String get toolSectionAlreadyClearBody =>
+      'Bu zaten açıktı. Aşağıdaki değişiklikler küçük.';
+
+  @override
+  String get toolSectionImprovedText => 'İyileştirilmiş metin';
+
+  @override
+  String get toolTitleDraftReply => 'Bir yanıt taslağı yaz';
+
+  @override
+  String get toolDescriptionDraftReply =>
+      'Düzenleyip kendiniz gönderebileceğiniz bir yanıt.';
+
+  @override
+  String get toolModeReplyProfessional => 'Profesyonel';
+
+  @override
+  String get toolModeReplyConcise => 'Kısa ve öz';
+
+  @override
+  String get toolModeReplyFriendly => 'Samimi';
+
+  @override
+  String get toolModeReplyFormal => 'Resmî';
+
+  @override
+  String get toolModeReplyClarification => 'Açıklama iste';
+
+  @override
+  String get toolModeReplyConfirmation => 'Alındığını bildir';
+
+  @override
+  String get toolModeReplyDispute => 'Buna itiraz et';
+
+  @override
+  String get toolSectionSubject => 'Konu';
+
+  @override
+  String get toolSectionDraftReply => 'Yanıt taslağı';
+
+  @override
+  String get toolSectionPlaceholders => 'Bunları sizin doldurmanız gerekiyor';
+
+  @override
+  String toolSectionDraftWithSubject(String subject) {
+    return 'Taslak — $subject';
+  }
+
+  @override
+  String get toolWarningDraftNotSent =>
+      'Bu bir taslak. Action hiçbir şey göndermez — okuyun, düzenleyin ve kendiniz gönderin.';
+
+  @override
+  String get toolTitleTranslate => 'Çevir';
+
+  @override
+  String get toolDescriptionTranslate =>
+      'Başka bir dil; sayılar ve adlar olduğu gibi korunur.';
+
+  @override
+  String get toolSectionTranslation => 'Çeviri';
+
+  @override
+  String toolSectionTranslationFromTo(String from, String to) {
+    return '$from dilinden $to diline';
+  }
+
+  @override
+  String get toolSectionKeptInOriginal => 'Asıl hâliyle bırakılanlar';
+
+  @override
+  String get toolWarningTranslationNotCertified =>
+      'Anlamak için bir çeviri; yeminli çeviri değil.';
+
+  @override
+  String get toolTitleStructuredData => 'Tablo çıkar';
+
+  @override
+  String get toolDescriptionStructuredData =>
+      'Kopyalayıp alabileceğiniz satırlar, alanlar ve sayılar.';
+
+  @override
+  String get toolSectionTable => 'Tablo';
+
+  @override
+  String get toolSectionFields => 'Alanlar';
+
+  @override
+  String get toolSectionTableCsv => 'Tablo (CSV)';
+
+  @override
+  String get toolWarningTableLayoutUncertain =>
+      'Bu tablonun sütun düzeni güvenilir biçimde okunamadı. Kullanmadan önce satırların hizalı olduğunu kontrol edin.';
+
+  @override
+  String get toolTitleDeadlineFinder => 'Son tarihleri bul';
+
+  @override
+  String get toolDescriptionDeadlineFinder =>
+      'Ne yapılması gerekiyor, ne zamana kadar ve yapılmazsa ne oluyor.';
+
+  @override
+  String toolSectionDeadlineCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count son tarih',
+      one: '1 son tarih',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionNothingDue => 'Süresi gelen bir şey yok';
+
+  @override
+  String get toolSectionNothingDueBody =>
+      'Action bu içerikte hiçbir son tarih ya da yükümlülük bulamadı.';
+
+  @override
+  String get toolWarningNothingScheduledAutomatically =>
+      'Siz seçmeden hiçbir şey zamanlanmaz. Hatırlatıcılar asla kendiliğinden kurulmaz.';
+
+  @override
+  String toolLabelDeadlineConsequence(String consequence) {
+    return 'Yapılmazsa: $consequence';
+  }
+
+  @override
+  String toolLabelDeadlineRequiredItems(String items) {
+    return 'Size gerekenler: $items';
+  }
+
+  @override
+  String get moneyErrorEmpty => 'tutar girilmemiş';
+
+  @override
+  String get moneyErrorMalformed => 'tutar düz bir sayı değil';
+
+  @override
+  String get moneyErrorNegative => 'eksi bir tutar ödenecek bir meblağ olamaz';
+
+  @override
+  String get moneyErrorTooManyDecimals =>
+      'para biriminin sahip olduğundan daha fazla ondalık basamak';
+
+  @override
+  String get moneyErrorUnsupportedCurrency =>
+      'para birimi kodu tanıdıklarımızdan biri değil';
+
+  @override
+  String get moneyErrorOutOfRange => 'tutar inandırıcı olmayacak kadar büyük';
+
+  @override
+  String get escalationOcrFailed => 'Bu yakalamada tanıma hiç çalıştırılamadı.';
+
+  @override
+  String get escalationNoTextRecognised =>
+      'Bu bir belgeye benziyor ama hiç metin tanınmadı.';
+
+  @override
+  String get escalationThinText =>
+      'Bu boyutta bir belgeye göre fazlasıyla az metin tanındı.';
+
+  @override
+  String get escalationLowLineConfidence =>
+      'Tanıyıcı birkaç satırda düşük güven bildirdi.';
+
+  @override
+  String get escalationTableLikeLayout =>
+      'Yerleşim bir tabloya benziyor ve satır satır okumak, hangi değerin hangi satıra ait olduğunu kaybediyor.';
+
+  @override
+  String get escalationFragmentedLayout =>
+      'Metin çok sayıda küçücük parça hâlinde döndü, bu yüzden yapısı belirsiz.';
+
+  @override
+  String get escalationMalformedText =>
+      'Tanınan metnin çoğu okunabilir sözcük ya da sayı değil.';
+
+  @override
+  String get escalationConflictingDates =>
+      'Birden fazla tarih son tarih olarak sunulmuş.';
+
+  @override
+  String get escalationConflictingAmounts =>
+      'Birden fazla tutar, ödenecek meblağ olarak sunulmuş.';
+
+  @override
+  String get escalationUnresolvedGrounding =>
+      'Bazı değerlerin belge metninde nereden geldiği bulunamadı.';
+
+  @override
+  String get escalationInstructionLikeContent =>
+      'Belge, uygulamaya verilmiş talimat gibi yazılmış metin içeriyor. Bu metin belge içeriği olarak ele alınır, asla talimat olarak değil.';
+
+  @override
+  String get providerFailureNetwork =>
+      'Action hizmete ulaşamadı. Bağlantınızı kontrol edin.';
+
+  @override
+  String get providerFailureTimedOut =>
+      'Hizmetin yanıt vermesi çok uzun sürdü.';
+
+  @override
+  String get providerFailureServiceUnavailable =>
+      'Hizmet geçici olarak kullanılamıyor. Daha sonra yeniden deneyin.';
+
+  @override
+  String get providerFailureUnauthorized =>
+      'Bu uygulamanın şu anda hizmeti kullanma yetkisi yok.';
+
+  @override
+  String get providerFailureBlocked => 'Hizmet bu belgeyi işlemeyi reddetti.';
+
+  @override
+  String get providerFailureUnknown =>
+      'Action bu belgeyi okuyamadı. Yeniden denemek işe yarayabilir.';
+
+  @override
+  String get reviewBlockerTitle => 'Bu göreve bir başlık verin.';
+
+  @override
+  String get reviewBlockerDate =>
+      'Hangi tarihin gerçek son tarih olduğunu seçin ya da boş bırakın.';
+
+  @override
+  String get reviewBlockerAmount =>
+      'Hangi tutarın doğru olduğunu seçin ya da boş bırakın.';
+
+  @override
+  String get reviewBlockerStepTitle =>
+      'Sakladığınız adımların bir başlığı olmalı.';
+
+  @override
+  String citationPage(int page) {
+    String _temp0 = intl.Intl.pluralLogic(
+      page,
+      locale: localeName,
+      other: 'sayfa $page',
+      one: 'sayfa 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String citationPageRange(int start, int end) {
+    return 'sayfa $start–$end';
+  }
+
+  @override
+  String rewriteDroppedFacts(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Yeniden yazılan metinde artık $values yok. Kullanmadan önce kontrol edin.',
+      one:
+          'Yeniden yazılan metinde artık $values yok. Kullanmadan önce kontrol edin.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rewriteDroppedFactsMore(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Yeniden yazılan metinde artık $values ve $count tane daha yok. Kullanmadan önce kontrol edin.',
+      one:
+          'Yeniden yazılan metinde artık $values ve 1 tane daha yok. Kullanmadan önce kontrol edin.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get listSeparator => ', ';
+
+  @override
+  String get goalStatusReached => 'Ulaşıldı';
+
+  @override
+  String get goalNewSheetTitle => 'Neyin gerçekleşmesini istiyorsunuz?';
+
+  @override
+  String get goalNewSheetSubtitle =>
+      'Bir cümle yeter. Ayrıntıları sonra ekleyebilirsiniz.';
+
+  @override
+  String get goalTitleHint => 'Araç sigortasını fazla ödeme yapmadan yenile.';
+
+  @override
+  String get goalCreateAction => 'Hedef oluştur';
+
+  @override
+  String get goalTitleSheetTitle => 'Ne istediğiniz';
+
+  @override
+  String get goalOutcomeSheetTitle => 'Bitmiş hâli neye benzer';
+
+  @override
+  String get goalContextSheetTitle => 'Şu anki durum';
+
+  @override
+  String get goalOutcomeHint => 'Araç sigortalı ve evraklar dosyalandı.';
+
+  @override
+  String get goalContextHint => 'İki teklifim var ve yenileme ayın 18\'inde.';
+
+  @override
+  String get goalWorkspaceTitle => 'Hedef';
+
+  @override
+  String get goalUnmarkReached => 'Ulaşıldı işaretini kaldır';
+
+  @override
+  String get goalMarkReached => 'Ulaşıldı olarak işaretle';
+
+  @override
+  String get goalNotFound => 'O hedef artık burada değil.';
+
+  @override
+  String get goalDeleteTitle => 'Bu hedef silinsin mi?';
+
+  @override
+  String get goalDeleteBody =>
+      'Hedef bu cihazdan silinir. Ondan oluşturulan görevler tam olduğu gibi kalır.';
+
+  @override
+  String get goalOutcomeLabel => 'Bittiğinde neye benzeyecek';
+
+  @override
+  String get goalOutcomeEmpty =>
+      'Henüz yazılmadı. Bitirmenin ne demek olduğunu söylediğinizde bir hedefi planlamak kolaylaşır.';
+
+  @override
+  String get goalContextLabel => 'Şu anki durum';
+
+  @override
+  String get goalContextEmpty =>
+      'Henüz bir şey yazılmadı. Şimdiye kadar olanlar ve önünde duranlar.';
+
+  @override
+  String get goalTitleLabel => 'Ne istiyorsunuz';
+
+  @override
+  String get goalEditTooltip => 'Hedefi düzenle';
+
+  @override
+  String get goalToolsLabel => 'Action neler yapabilir';
+
+  @override
+  String get goalToolsNotReady =>
+      'İstediğiniz şey hakkında biraz daha yazın, o zaman bu araçların üzerinde çalışacağı bir şey olur.';
+
+  @override
+  String get toolGoalOptimizerTitle => 'Bir hedefi keskinleştir';
+
+  @override
+  String get toolActionPlanTitle => 'Bir plan kur';
+
+  @override
+  String get resultFactUnconfirmed => 'Onaylanmamış';
+
+  @override
+  String get resultSuggestedSteps => 'Önerilen adımlar';
+
+  @override
+  String get resultSuggestedAction => 'Önerilen görev';
+
+  @override
+  String get resultWorthAsking => 'Sorulmaya değer';
+
+  @override
+  String get resultSuggestedDeadlines => 'Önerilen son tarihler';
+
+  @override
+  String get resultSuggestions => 'Öneriler';
+
+  @override
+  String resultSupportingQuotes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count destekleyici alıntı',
+      one: '1 destekleyici alıntı',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get resultEvidenceFromSelectedSource => 'Seçilen kaynaktan';
+
+  @override
+  String resultEvidenceLocation(String source, String page) {
+    return '$source, $page';
+  }
+
+  @override
+  String get toolRunStagePreparing => 'Belgeniz hazırlanıyor';
+
+  @override
+  String get toolRunStageReading => 'Seçilen sayfalar okunuyor';
+
+  @override
+  String get toolRunStageAnalysing => 'Çözümleniyor';
+
+  @override
+  String get toolRunStageBuilding => 'Gözden geçirmeniz oluşturuluyor';
+
+  @override
+  String get toolRunStageDone => 'Tamamlandı';
+
+  @override
+  String get toolRunStageFailed => 'Bu bitmedi';
+
+  @override
+  String get toolRunStageCancelled => 'Durdurdunuz';
+
+  @override
+  String get toolRunFailureLocalCheckFailed => 'Bu denetlenemedi.';
+
+  @override
+  String get toolRunFailureProviderRetired =>
+      'O yapay zekâ sağlayıcı bu sürümde artık kullanılamıyor.';
+
+  @override
+  String get toolRunFailureUnusableReply =>
+      'O yanıt kullanılabilir bir biçimde dönmedi. Yeniden deneyin.';
+
+  @override
+  String get toolRunFailureQuestionRequired => 'Önce bir soru yazın.';
+
+  @override
+  String get toolRunFailureInputRequired =>
+      'Bu aracın üzerinde çalışacağı bir şey seçin.';
+
+  @override
+  String get toolWarningReplyTruncated =>
+      'Bu yanıt yarıda kesildi, bu yüzden eksik olabilir.';
+
+  @override
+  String get toolWarningNoSupportingQuotes =>
+      'Modeliniz destekleyici hiçbir alıntı döndürmedi, bu yüzden buradaki hiçbir şeyin dayanağı yok. Buna göre hareket etmeden önce belgeyle karşılaştırın.';
+
+  @override
+  String get aiSettingsRemoveTitle => 'Bu bağlantı kaldırılsın mı?';
+
+  @override
+  String get aiSettingsRemoveBody =>
+      'Action, API anahtarınızı bu cihazdan silecek ve yapay zekâ özelliklerini kullanmayı bırakacak. Sağlayıcınızdaki hesabınız bundan etkilenmez.';
+
+  @override
+  String get aiSettingsProviderLabel => 'Sağlayıcı';
+
+  @override
+  String get aiSettingsProviderFootnoteConnected =>
+      'Kullandığınız kadarının ücretini sağlayıcınız alır. Action kendi başına hiçbir zaman istek göndermez.';
+
+  @override
+  String get aiSettingsConnectLabel => 'Bir yapay zekâ sağlayıcı bağla';
+
+  @override
+  String get aiSettingsConnectDescription =>
+      'Kendi hesabınızı ve API anahtarınızı OpenAI, Anthropic, Google Gemini ya da uyumlu bir endpoint ile kullanın.';
+
+  @override
+  String get aiSettingsModelLabel => 'Model';
+
+  @override
+  String get aiSettingsEndpointLabel => 'Endpoint';
+
+  @override
+  String get aiSettingsApiKeyLabel => 'API anahtarı';
+
+  @override
+  String get aiSettingsKeyStored => 'Bu cihazın güvenli deposunda tutulur.';
+
+  @override
+  String get aiSettingsKeyMissing =>
+      'Bu cihazda anahtar bulunamadı. Bir tane eklemek için yeniden bağlanın.';
+
+  @override
+  String get aiSettingsTestLabel => 'Bağlantıyı test et';
+
+  @override
+  String get aiSettingsProviderUnavailable =>
+      'O sağlayıcı bu sürümde kullanılamıyor.';
+
+  @override
+  String aiSettingsTestConnectedModels(int count) {
+    return 'Bağlandı. $count model kullanılabilir.';
+  }
+
+  @override
+  String get aiSettingsTestButton => 'Test et';
+
+  @override
+  String get aiSettingsChangeProvider => 'Sağlayıcıyı ya da modeli değiştir';
+
+  @override
+  String get aiSettingsRemoveKey => 'Anahtarı kaldır';
+
+  @override
+  String get aiSettingsSectionPrivacy => 'Gizlilik';
+
+  @override
+  String get aiSettingsWhatGetsSentLabel => 'Ne gönderiliyor';
+
+  @override
+  String get aiSettingsWhereItGoesLabel => 'Nereye gidiyor';
+
+  @override
+  String get aiSettingsWhereItGoesNoProvider =>
+      'Siz bir sağlayıcı bağlayana kadar hiçbir şey gönderilmez.';
+
+  @override
+  String aiSettingsWhereItGoesProvider(String provider) {
+    return 'Doğrudan $provider sağlayıcısına, kendi anahtarınızla gider. Action\'a ait hiçbir sunucudan geçmez.';
+  }
+
+  @override
+  String get aiSettingsSectionData => 'Veriler';
+
+  @override
+  String get aiSettingsDataFootnote =>
+      'Action hangi araçları kullandığınızı hatırlar, onları neyin üzerinde kullandığınızı asla.';
+
+  @override
+  String get aiSettingsRecentToolsLabel => 'Son kullanılan araçlar';
+
+  @override
+  String get aiSettingsRecentToolsNone => 'Yok';
+
+  @override
+  String get reminderNotificationTitle => 'Action hatırlatıcısı';
+
+  @override
+  String get reminderNotificationPrivateBody =>
+      'Gözden geçirmeniz gereken bir şey var.';
+
+  @override
+  String get reminderChannelName => 'Action hatırlatıcıları';
+
+  @override
+  String get reminderChannelDescription =>
+      'Görevleriniz için kendi kurduğunuz hatırlatıcılar.';
+
+  @override
+  String get onboardingStart => 'Action\'ı kullanmaya başla';
+
+  @override
+  String onboardingProgressSemantics(int current, int total) {
+    return '$total adımdan $current.';
+  }
+
+  @override
+  String get onboardingCaptureTitle => 'Bilgiyi göreve dönüştürün';
+
+  @override
+  String get onboardingCaptureBody =>
+      'Bir ekran görüntüsü, bir fotoğraf ya da size gönderilmiş bir metin ekleyin. Action onu okur ve sizden ne yapmanızın istendiğini çıkarır.';
+
+  @override
+  String get onboardingReviewTitle => 'Siz onaylamadan hiçbir şey kaydedilmez';
+
+  @override
+  String get onboardingReviewBody =>
+      'Action neyi bulduğunu ve hangi sözcüklerden geldiğini gösterir. Yanlış olan neyse siz düzeltirsiniz. Siz onaylayana kadar bu bir öneridir — bir olgu değil, bir görev de değil.';
+
+  @override
+  String get onboardingTrackingTitle => 'Önemli olanı takip edin';
+
+  @override
+  String get onboardingTrackingBody =>
+      'İlgi bekliyor, gecikmiş ya da yaklaşan ne varsa öne çıkarır. Her görev kendi sonraki adımını, ilerlemesini ve onun için kurduğunuz hatırlatıcıları saklar.';
+
+  @override
+  String get onboardingPrivacyBody => 'Başlamadan önce bilinmesi gerekenler:';
+
+  @override
+  String get onboardingPrivacyOnDevice =>
+      'Görevleriniz, yakalamalarınız, hatırlatıcılarınız ve aramalarınız bu cihazda saklanır. Arama ve hatırlatıcılar bağlantı olmadan da çalışır.';
+
+  @override
+  String get onboardingPrivacySentToRead =>
+      'Action\'dan bir şeyi okumasını istediğinizde, o içerik onu yorumlayan yapay zekâ hizmetine gönderilir.';
+
+  @override
+  String get onboardingPrivacyCloud =>
+      'Onaylanmış bir görevin kısa bir kaydı — başlığı, tarihleri, tutarı ve önerilen adımı — bu cihaza ait anonim bir kimlik altında bulutta saklanabilir. Yakalamalarınız, adımlarınız ve hatırlatıcılarınız saklanmaz.';
+
+  @override
+  String get onboardingPrivacyNotBackup =>
+      'Bu kayıt bir yedek değildir. Yeni bir cihaza hiçbir şeyi geri yükleyemez.';
+
+  @override
+  String toolSectionBlockerCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count engel',
+      one: '1 engel',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCouldBeSimpler => 'Daha basit olabilir';
+
+  @override
+  String get toolDescriptionGoalOptimizer =>
+      'Ne eksik, önünü ne kesiyor, önce ne yapmalı.';
+
+  @override
+  String toolSectionStepDependsOn(String step) {
+    return 'Şundan sonra: $step';
+  }
+
+  @override
+  String get toolSectionThePlan => 'Plan';
+
+  @override
+  String get toolDescriptionActionPlan =>
+      'Görevlere dönüştürebileceğiniz, sıralanmış bir adımlar kümesi.';
+
+  @override
+  String get toolTitleSmartChecklist => 'Bir kontrol listesi çıkar';
+
+  @override
+  String get toolDescriptionSmartChecklist =>
+      'Bunun sizden istediği her şey, sırasıyla.';
+
+  @override
+  String toolSectionMissingDetailCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count eksik ayrıntı',
+      one: '1 eksik ayrıntı',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionContradictions => 'Bunlar birbiriyle çelişiyor';
+
+  @override
+  String get toolTitleMissingInformation => 'Eksik olan ne';
+
+  @override
+  String get toolDescriptionMissingInformation =>
+      'Boşluklar ve onlar hakkında ne sorulacağı.';
+
+  @override
+  String get aiAdapterTimedOut => 'Bu çok uzun sürdü ve durduruldu.';
+
+  @override
+  String get aiAdapterSecureConnectionFailed =>
+      'Yapay zekâ sağlayıcınıza kurulan güvenli bağlantı başarısız oldu.';
+
+  @override
+  String get aiAdapterModelOrEndpointNotFound =>
+      'Action o modeli ya da endpoint adresini bulamadı.';
+
+  @override
+  String get aiAdapterRequestRejected =>
+      'Yapay zekâ sağlayıcınız o isteği reddetti.';
+
+  @override
+  String get aiAdapterSecureStorageUnavailable =>
+      'Action bu cihazın güvenli deposunu açamadı.';
+
+  @override
+  String get aiAdapterEndpointMissing =>
+      'Ayarlar\'da yapay zekâ endpoint adresinizi ekleyin.';
+
+  @override
+  String get aiAdapterReplyIncomplete => 'O yanıt eksikti. Yeniden deneyin.';
+
+  @override
+  String get aiAdapterContentDeclined =>
+      'Sağlayıcınız o içeriği işlemeyi kabul etmedi.';
+
+  @override
+  String aiAdapterTooManyAttachments(int limit) {
+    return 'Bu, bir seferde $limit dosyadan fazla. Daha azını seçin.';
+  }
+
+  @override
+  String get aiAdapterImageTooLarge =>
+      'O görüntülerden biri çözümlenemeyecek kadar büyük.';
+
+  @override
+  String aiAdapterDocumentTooLarge(String filename, int limit) {
+    return '“$filename” çözümlenemeyecek kadar büyük. Sınır $limit MB.';
+  }
+
+  @override
+  String aiAdapterDocumentTooManyPages(String filename, int count, int limit) {
+    return '“$filename” $count sayfa. Action bir seferde en çok $limit sayfa okur — bir aralık seçin.';
+  }
+
+  @override
+  String get aiAdapterSelectionTooLarge =>
+      'Bu seçim tek bir istekte gönderilemeyecek kadar büyük.';
+
+  @override
+  String get toolRunNotAvailableTitle => 'O araç kullanılamıyor';
+
+  @override
+  String get toolRunNotAvailableMessage =>
+      'Action\'ın daha yeni bir sürümünde kaldırılmış olabilir.';
+
+  @override
+  String get toolRunNoSourcesYet =>
+      'Üzerinde çalışılacak bir şey yok. Bir şey yakalayın ya da aşağıya biraz metin yapıştırın.';
+
+  @override
+  String get toolRunChooseSourcesToCompare => 'Neyi karşılaştıracağınızı seçin';
+
+  @override
+  String get toolRunChooseSource => 'Bir kaynak seçin';
+
+  @override
+  String get toolRunQuestionLabel => 'Sorunuz';
+
+  @override
+  String get toolRunQuestionHint => 'Son tarih ne zaman?';
+
+  @override
+  String get toolRunFreeTextLabel => 'Ya da biraz metin yapıştırın';
+
+  @override
+  String get toolRunFreeTextHint => 'Buraya yapıştırın ya da yazın';
+
+  @override
+  String get toolRunModeLabel => 'Biçim';
+
+  @override
+  String get toolRunRunLocally => 'Bu cihazda denetle';
+
+  @override
+  String get toolRunRun => 'Çalıştır';
+
+  @override
+  String get toolRunStop => 'Durdur';
+
+  @override
+  String get toolRunRunAgain => 'Yeniden çalıştır';
+
+  @override
+  String get toolRunWorkingOn => 'Üzerinde çalışılan:';
+
+  @override
+  String toolRunFirstUseTitle(String provider) {
+    return 'Bu $provider sağlayıcısına gönderilsin mi?';
+  }
+
+  @override
+  String toolRunFirstUseBody(String provider) {
+    return 'Seçtiğiniz içerik, kendi API anahtarınızla işlenmek üzere $provider sağlayıcısına gönderilecek.';
+  }
+
+  @override
+  String get toolRunFirstUseKeyStays =>
+      'Anahtarınız bu cihazda kalır. Action arka planda hiçbir şey göndermez, diğer görevlerinizi ya da kaynaklarınızı da göndermez.';
+
+  @override
+  String get toolRunScopeTitle => 'Bu çalışmadan önce';
+
+  @override
+  String toolRunScopePages(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$provider bağlantınız kullanılarak $count sayfa çözümlenecek.',
+      one: '$provider bağlantınız kullanılarak 1 sayfa çözümlenecek.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunScopeFiles(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$provider bağlantınız kullanılarak $count dosya çözümlenecek.',
+      one: '$provider bağlantınız kullanılarak 1 dosya çözümlenecek.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunScopeText(String provider) {
+    return 'Seçtiğiniz metin $provider bağlantınıza gönderilecek.';
+  }
+
+  @override
+  String get toolRunNeedsProviderTitle =>
+      'Bu aracı kullanmak için bir yapay zekâ sağlayıcı bağlayın';
+
+  @override
+  String get toolRunNeedsProviderBody =>
+      'Kendi sağlayıcı hesabınızı ve kendi API anahtarınızı kullanırsınız.';
+
+  @override
+  String toolRunActionCreatedFromSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count adımdan görev oluşturuldu.',
+      one: '1 adımdan görev oluşturuldu.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunStepsAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count adım eklendi.',
+      one: '1 adım eklendi.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunSaveCreateActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Görev oluştur · $count adım',
+      one: 'Görev oluştur · 1 adım',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunSaveAddToActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bu göreve ekle · $count adım',
+      one: 'Bu göreve ekle · 1 adım',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourceTypeLabelPhoto => 'Fotoğraf';
+
+  @override
+  String get sourceTypeLabelScreenshot => 'Ekran görüntüsü';
+
+  @override
+  String get sourceTypeLabelPastedText => 'Yapıştırılan not';
+
+  @override
+  String get sourceTypeLabelDocument => 'Belge';
+
+  @override
+  String get toolModeClearer => 'Daha anlaşılır';
+
+  @override
+  String get toolModeMoreProfessional => 'Daha profesyonel';
+
+  @override
+  String get toolModeShorter => 'Daha kısa';
+
+  @override
+  String get toolModeSimpler => 'Daha yalın';
+
+  @override
+  String get toolModeMoreStructured => 'Daha düzenli';
+
+  @override
+  String get toolModeMorePersuasive => 'Daha ikna edici';
+
+  @override
+  String get toolModeGrammarOnly => 'Yalnızca dilbilgisi';
+
+  @override
+  String get toolModeProfessional => 'Profesyonel';
+
+  @override
+  String get toolModeConcise => 'Özlü';
+
+  @override
+  String get toolModeFriendly => 'Samimi';
+
+  @override
+  String get toolModeFormal => 'Resmî';
+
+  @override
+  String get toolModeAskForClarification => 'Açıklama iste';
+
+  @override
+  String get toolModeConfirm => 'Teyit et';
+
+  @override
+  String get toolModeDispute => 'Buna itiraz et';
+
+  @override
+  String get toolModeQuick => 'Hızlı bakış';
+
+  @override
+  String get toolModeDetailed => 'Ayrıntılı';
+
+  @override
+  String get toolModeExecutive => 'Yönetici özeti';
+
+  @override
+  String get toolModeKeyPoints => 'Önemli noktalar';
+
+  @override
+  String get toolModeActionFocused => 'Göreve odaklı';
+
+  @override
+  String toolWarningEvidenceNotFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Alıntılanan $count ayrıntı seçtiğiniz şeyin içinde bulunamadı, bu yüzden belirsiz olarak işaretlendi.',
+      one: 'Alıntılanan 1 ayrıntı seçtiğiniz şeyin içinde bulunamadı, bu yüzden belirsiz olarak işaretlendi.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolWarningEvidenceUnverifiable =>
+      'Action bu alıntıları dosyanın kendisiyle karşılaştırıp denetleyemedi, bu yüzden denetlenmediler.';
+
+  @override
+  String triageBadgeOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Gecikmiş · $count gün',
+      one: 'Gecikmiş · 1 gün',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageBadgeDueTomorrow => 'Yarın son gün';
+
+  @override
+  String get triageBadgeReminderSoon => 'Hatırlatıcı yakında';
+
+  @override
+  String triageSpokenOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gün gecikti',
+      one: '1 gün gecikti',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String triageSemanticLabel(String status, String title) {
+    return '$status. $title';
+  }
+
+  @override
+  String get triageExplanationDone => 'Bu bitti.';
+
+  @override
+  String get triageExplanationNothingPressing =>
+      'Bu burada, çünkü onunla ilgili henüz acil bir şey yok.';
+
+  @override
+  String triageExplanationNeedsAttention(String reason) {
+    return 'Bu ilgi bekliyor çünkü $reason.';
+  }
+
+  @override
+  String triageExplanationUpcoming(String reason) {
+    return 'Bu daha aşağıda çünkü $reason.';
+  }
+
+  @override
+  String get triageReasonOverdue => 'gecikmiş';
+
+  @override
+  String get triageReasonDeadlinePassed => 'son tarihi geçti';
+
+  @override
+  String triageReasonOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gündür gecikmiş',
+      one: 'bir gündür gecikmiş',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageReasonDueToday => 'bugün son gün';
+
+  @override
+  String get triageReasonCriticalDueSoon =>
+      'siz kritik olarak işaretlediniz ve son tarihi yaklaştı';
+
+  @override
+  String get triageReasonAllStepsDone =>
+      'bütün adımlar bitti — geriye yalnızca bitirmek kaldı';
+
+  @override
+  String get triageReasonDueTomorrow => 'yarın son gün';
+
+  @override
+  String get triageReasonReminderSoon =>
+      'önümüzdeki bir gün içinde onun için bir hatırlatıcı kurdunuz';
+
+  @override
+  String get triageReasonDueWithinThreeDays => 'son tarihi üç gün içinde';
+
+  @override
+  String get triageReasonCriticalNoDeadline =>
+      'siz kritik olarak işaretlediniz ve son tarihi yok';
+
+  @override
+  String get triageReasonDueWithinSevenDays => 'son tarihi bir hafta içinde';
+
+  @override
+  String get triageReasonImportant => 'siz önemli olarak işaretlediniz';
+
+  @override
+  String get triageReasonDueLater => 'son tarihi daha uzakta';
+
+  @override
+  String get triageReasonNoDeadline => 'son tarihi yok ve acil bir şey yok';
+
+  @override
+  String cardCompletedTooltip(String title) {
+    return 'Tamamlandı: $title';
+  }
+
+  @override
+  String get toolTitleDocumentIntelligence => 'Bu belgeyi anla';
+
+  @override
+  String get toolDescriptionDocumentIntelligence =>
+      'Bunun ne olduğu, neyin önemli olduğu ve bu konuda ne yapılacağı.';
+
+  @override
+  String get toolSectionWhatThisIs => 'Bu ne';
+
+  @override
+  String get toolSectionWhatMatters => 'Önemli olan ne';
+
+  @override
+  String get toolSectionKeyDetails => 'Başlıca ayrıntılar';
+
+  @override
+  String get toolTitleAskDocument => 'Bir kaynak hakkında soru sor';
+
+  @override
+  String get toolDescriptionAskDocument =>
+      'Yalnızca sizin seçtiğinize dayanan yanıtlar — ya da hiçbir yanıt.';
+
+  @override
+  String get toolSectionNoAnswer => 'Bu içerikte yanıt bulunamadı';
+
+  @override
+  String get toolSectionNoAnswerBody => 'Action bunu seçilen belgede bulamadı.';
+
+  @override
+  String get toolSectionAnswer => 'Yanıt';
+
+  @override
+  String get toolSectionFromTheDocument => 'Belgeden';
+
+  @override
+  String get toolWarningQuoteNotFound =>
+      'Bu yanıtın dayandığı alıntı seçilen içerikte yok. Yanıtı güvenilmez sayın.';
+
+  @override
+  String get toolTitleSmartSummary => 'Özetle';
+
+  @override
+  String get toolDescriptionSmartSummary =>
+      'Kısa hâli — ya da sizin yapmanız gerekeni değiştiren hâli.';
+
+  @override
+  String get toolSectionKeyPoints => 'Önemli noktalar';
+
+  @override
+  String get toolTitleCompareDocuments => 'Belgeleri karşılaştır';
+
+  @override
+  String get toolDescriptionCompareDocuments =>
+      'Ne değişmiş, ne çelişiyor, ne eksik.';
+
+  @override
+  String get toolSectionWhatDiffers => 'Neler farklı';
+
+  @override
+  String get toolSectionConflicts => 'Çelişkiler';
+
+  @override
+  String get toolSectionOnlyInOne => 'Yalnızca birinde geçenler';
+
+  @override
+  String get toolSectionInCommon => 'Ortak olanlar';
+
+  @override
+  String get sensitiveKindEmail => 'E-posta adresi';
+
+  @override
+  String get sensitiveKindPhone => 'Telefon numarası';
+
+  @override
+  String get sensitiveKindPaymentCard => 'Ödeme kartı numarası';
+
+  @override
+  String get sensitiveKindIban => 'Banka hesabı (IBAN)';
+
+  @override
+  String get sensitiveKindNationalId => 'Ulusal kimlik numarası';
+
+  @override
+  String get sensitiveKindPostcode => 'Posta kodu';
+
+  @override
+  String get sensitiveKindAccountNumber => 'Hesap numarası';
+
+  @override
+  String get sensitiveKindReference => 'Referans numarası';
+
+  @override
+  String get sensitiveKindDateOfBirth => 'Doğum tarihi';
+
+  @override
+  String get sensitiveKindUrl => 'Web adresi';
+
+  @override
+  String get verdictVerifiedProvenance => 'Doğrulanmış köken bilgisi var';
+
+  @override
+  String get verdictVerifiedProvenanceExplainer =>
+      'Bu dosya, denetlenen ve geçerli çıkan bir imza taşıyor.';
+
+  @override
+  String get verdictSignalsSynthetic =>
+      'Yapay zekâ ile üretilmiş içerikle uyumlu işaretler';
+
+  @override
+  String get verdictSignalsSyntheticExplainer =>
+      'Bu dosya, üretken bir araçla yapıldığını söylüyor. Meta veri düzenlenebilir ya da kaldırılabilir; dolayısıyla bu, dosyanın iddiasıdır, kanıt değildir.';
+
+  @override
+  String get verdictSignalsEdited => 'Düzenlenmiş içerikle uyumlu işaretler';
+
+  @override
+  String get verdictSignalsEditedExplainer =>
+      'Bu dosya, bir düzenleme yazılımından geçtiğini söylüyor. Bu, fotoğraflar için olağandır ve tek başına bir şeyin sahte olduğu anlamına gelmez.';
+
+  @override
+  String get verdictNoReliableProvenance =>
+      'Güvenilir köken bilgisi bulunamadı';
+
+  @override
+  String get verdictNoReliableProvenanceExplainer =>
+      'Bu dosyada köken bilgisi yok. Bu normaldir — çoğu hizmet bunu siler — ve hiçbir şeyin işareti değildir.';
+
+  @override
+  String get verdictInconclusive => 'Sonuç belirsiz';
+
+  @override
+  String get verdictInconclusiveExplainer =>
+      'Burada, bunun nereden geldiğini söylemeye yetecek bilgi yok.';
+
+  @override
+  String get authenticitySignalCamera => 'Kamera';
+
+  @override
+  String get authenticitySignalSoftware => 'Yazılım';
+
+  @override
+  String get authenticitySignalDescription => 'Açıklama';
+
+  @override
+  String get authenticitySignalCopyright => 'Telif hakkı';
+
+  @override
+  String get authenticitySignalLocation => 'Konum';
+
+  @override
+  String get authenticitySignalLocationValue => 'Bu dosyada konum verisi var.';
+
+  @override
+  String get authenticitySignalContentCredentials => 'Content Credentials';
+
+  @override
+  String get authenticitySignalContentCredentialsValue =>
+      'Denetlenmedi — bu sürümde imza doğrulayıcı yok.';
+
+  @override
+  String get authenticitySignalFile => 'Dosya';
+
+  @override
+  String get authenticitySignalFileUnreadableValue =>
+      'Görsel olarak okunamadı.';
+
+  @override
+  String get authenticitySignalFileUnrecognisedValue =>
+      'Tanınan bir görsel biçimi değil.';
+
+  @override
+  String get authenticitySignalText => 'Metin';
+
+  @override
+  String get authenticitySignalTextValue =>
+      'Tek başına metin, yapay zekâ kullanılıp kullanılmadığını güvenilir biçimde gösteremez. Action tahmin yürütmez.';
+
+  @override
+  String get fileTypePng => 'bir PNG görseli';
+
+  @override
+  String get fileTypeJpeg => 'bir JPEG görseli';
+
+  @override
+  String get fileTypeGif => 'bir GIF görseli';
+
+  @override
+  String get fileTypeWebp => 'bir WebP görseli';
+
+  @override
+  String get fileTypeWav => 'bir WAV kaydı';
+
+  @override
+  String get fileTypePdf => 'bir PDF belgesi';
+
+  @override
+  String get fileTypeHeic => 'bir HEIC görseli';
+
+  @override
+  String get fileTypeVideo => 'bir video dosyası';
+
+  @override
+  String get fileTypeTiff => 'bir TIFF görseli';
+
+  @override
+  String get fileTypeBitmap => 'bir bitmap görseli';
+
+  @override
+  String get fileTypeRtf => 'bir RTF belgesi';
+
+  @override
+  String get fileTypeZip => 'bir Zip arşivi';
+
+  @override
+  String get fileTypeGzip => 'bir gzip arşivi';
+
+  @override
+  String get fileTypeSevenZip => 'bir 7-Zip arşivi';
+
+  @override
+  String get fileTypeRar => 'bir RAR arşivi';
+
+  @override
+  String get fileTypeWindowsProgram => 'bir Windows programı';
+
+  @override
+  String get fileTypeLinuxProgram => 'bir Linux programı';
+
+  @override
+  String get fileTypePostScript => 'bir PostScript belgesi';
+
+  @override
+  String get fileTypeOgg => 'bir Ogg kaydı';
+
+  @override
+  String get fileTypeMp3 => 'bir MP3 kaydı';
+
+  @override
+  String get fileTypePlainText => 'düz metin';
+
+  @override
+  String fileMismatchNote(String extension, String contents) {
+    return 'Bu dosyanın adı \".$extension\" ama içeriği $contents. Bu, iyi niyetli bir hata olabilir; aynı zamanda bir dosyanın beklediğinizden başka bir şeyle açılmasının da yoludur.';
+  }
+
+  @override
+  String fileSizeBytes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bayt',
+      one: '1 bayt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileSizeKilobytes(String size) {
+    return '$size KB';
+  }
+
+  @override
+  String fileSizeMegabytes(String size) {
+    return '$size MB';
+  }
+
+  @override
+  String fileSizeGigabytes(String size) {
+    return '$size GB';
+  }
+
+  @override
+  String get credentialKindPrivateKey => 'Özel anahtar';
+
+  @override
+  String get credentialKindApiKey => 'API anahtarı';
+
+  @override
+  String get credentialKindConnectionString => 'Bağlantı dizesi';
+
+  @override
+  String get credentialKindAccessToken => 'Erişim belirteci';
+
+  @override
+  String get credentialKindAuthorizationHeader => 'Authorization başlığı';
+
+  @override
+  String get credentialKindPasswordOrKey => 'Parola ya da anahtar';
+
+  @override
+  String get credentialKindPossibleSecret => 'Olası gizli değer';
+
+  @override
+  String get credentialAdvicePrivateKey =>
+      'Bunu paylaşmadan önce kaldırın ve anahtar çiftini değiştirin. Bir özel anahtar, bir kez görüldükten sonra bir daha güvenli hâle getirilemez.';
+
+  @override
+  String get credentialAdviceProviderApiKey =>
+      'Bu anahtarı sağlayıcınızda iptal edin ve yenisini oluşturun. Belgeden kaldırmak onu devre dışı bırakmaz.';
+
+  @override
+  String get credentialAdviceConnectionString =>
+      'Bu, hem bir parolayı hem de o parolanın açtığı adresi taşıyor. Bu zaten paylaşıldıysa parolayı değiştirin.';
+
+  @override
+  String get credentialAdviceJsonWebToken =>
+      'Bunun gibi belirteçlerin süresi çoğu zaman dolar, ama her zaman değil. Ne zaman dolacağını bilmiyorsanız onu çalışır durumda sayın.';
+
+  @override
+  String get credentialAdviceAuthorizationHeader =>
+      'Başlığın değerini kaldırın. Yapıştırılan istek kayıtları, çalışan bir belirtecin kazara paylaşılmasının en yaygın yollarından biridir.';
+
+  @override
+  String get credentialAdviceKeyedAssignment =>
+      'Bunu bir ortam değişkenine ya da bir gizli değer deposuna taşıyın; dosya paylaşıldıysa değeri de değiştirin.';
+
+  @override
+  String get credentialAdviceHighEntropyString =>
+      'Action bunun ne olduğunu anlayamıyor. Paylaşmadan önce kontrol edin — bu, aynı ölçüde bir tanımlayıcı ya da bir sağlama toplamı da olabilir.';
+
+  @override
+  String get credentialLabelAnthropicApiKey => 'Anthropic API anahtarı';
+
+  @override
+  String get credentialLabelOpenAiProjectKey => 'OpenAI proje anahtarı';
+
+  @override
+  String get credentialLabelOpenAiStyleApiKey => 'OpenAI tarzı API anahtarı';
+
+  @override
+  String get credentialLabelGoogleApiKey => 'Google API anahtarı';
+
+  @override
+  String get credentialLabelGoogleOAuthToken => 'Google OAuth belirteci';
+
+  @override
+  String get credentialLabelGitHubToken => 'GitHub belirteci';
+
+  @override
+  String get credentialLabelSlackToken => 'Slack belirteci';
+
+  @override
+  String get credentialLabelAwsAccessKeyId => 'AWS erişim anahtarı kimliği';
+
+  @override
+  String get credentialLabelGitLabToken => 'GitLab belirteci';
+
+  @override
+  String get credentialLabelNpmToken => 'npm belirteci';
+
+  @override
+  String get credentialLabelPassphrase => 'Parola cümlesi';
+
+  @override
+  String get credentialLabelPassword => 'Parola';
+
+  @override
+  String get credentialLabelRefreshToken => 'Yenileme belirteci';
+
+  @override
+  String get credentialLabelToken => 'Belirteç';
+
+  @override
+  String get credentialLabelClientSecret => 'İstemci gizli anahtarı';
+
+  @override
+  String get credentialLabelCredential => 'Kimlik bilgisi';
+
+  @override
+  String get credentialLabelSecret => 'Gizli değer';
+
+  @override
+  String get linkVerdictNoObviousSignals => 'Belirgin bir işaret yok';
+
+  @override
+  String get linkVerdictWorthChecking => 'Bakmaya değer';
+
+  @override
+  String get linkVerdictTreatWithCaution => 'Dikkatli yaklaşın';
+
+  @override
+  String get linkSummaryNoObviousSignals =>
+      'Bu bağlantının yazılışında olağandışı bir şey yok. Bu, sayfanın güvenilir olduğunu bilmekle aynı şey değildir — bunu bekleyip beklemediğinize yalnızca siz karar verebilirsiniz.';
+
+  @override
+  String get linkSummaryWorthChecking =>
+      'Bu bağlantıyla ilgili bir şey, onu açmadan önce bakmaya değer.';
+
+  @override
+  String get linkSummaryTreatWithCaution =>
+      'Bu bağlantının yazılışıyla ilgili birkaç şey, onu açmadan önce kontrol etmeye değer.';
+
+  @override
+  String get linkSignalNotHttps => 'Şifreli değil';
+
+  @override
+  String get linkSignalNonWebScheme => 'Web bağlantısı değil';
+
+  @override
+  String get linkSignalEmbeddedCredentials => 'Bağlantıda parola';
+
+  @override
+  String get linkSignalMisleadingAuthority => 'Gizlenmiş gerçek adres';
+
+  @override
+  String get linkSignalIpLiteralHost => 'Sayısal adres';
+
+  @override
+  String get linkSignalPunycodeHost => 'Adda kodlanmış karakterler';
+
+  @override
+  String get linkSignalMixedScriptHost => 'Adda karışık alfabeler';
+
+  @override
+  String get linkSignalEncodedHost => 'Adda kaçış karakterleri';
+
+  @override
+  String get linkSignalUnusualPort => 'Olağandışı port';
+
+  @override
+  String get linkSignalDeepSubdomain => 'Adda çok sayıda parça';
+
+  @override
+  String get linkSignalPublicSuffixInSubdomain => 'Tanıdık ad yanlış yerde';
+
+  @override
+  String get linkSignalShortener => 'Kısaltılmış bağlantı';
+
+  @override
+  String get linkSignalExecutableTarget => 'Bir program indirir';
+
+  @override
+  String get linkSignalRedirectParameter => 'Sizi başka bir yere gönderir';
+
+  @override
+  String get linkSignalVeryLongUrl => 'Çok uzun';
+
+  @override
+  String get linkSignalUnparseable => 'Okunabilir bir bağlantı değil';
+
+  @override
+  String get linkDetailNotHttps =>
+      'Bu bağlantı http kullanıyor; bu yüzden sayfaya yazdığınız her şey yolda okunabilir.';
+
+  @override
+  String linkDetailNonWebScheme(String scheme) {
+    return 'Bu, bir web sayfası yerine \"$scheme:\" ile açılıyor. Başka bir uygulamadan bir şey yapmasını isteyebilir.';
+  }
+
+  @override
+  String get linkDetailEmbeddedCredentials =>
+      'Bu bağlantının içine bir kullanıcı adı ve parola yazılmış. Bağlantı nereye paylaşılırsa onlar da onunla birlikte gider.';
+
+  @override
+  String linkDetailMisleadingAuthority(String host) {
+    return 'Tarayıcı, \"@\" işaretinden önceki her şeyi yok sayar. Asıl varış noktası \"$host\".';
+  }
+
+  @override
+  String linkDetailIpLiteralHost(String host) {
+    return 'Bu, \"$host\" adresine gidiyor — bir ad değil, ham bir adres. Meşru siteler neredeyse her zaman bir ad kullanır.';
+  }
+
+  @override
+  String get linkDetailPunycodeHost =>
+      'Site adı, kodlanmış olarak saklanan Latin dışı karakterler içeriyor. Bu, birçok dil için normaldir ve aynı zamanda bir adın tanıdık bir ada benzetilmesinin de yoludur.';
+
+  @override
+  String get linkDetailMixedScriptHost =>
+      'Site adı, Latin harfleriyle başka bir alfabeden gelen ve onlara aynı görünen harfleri karıştırıyor. Adı karakter karakter okuyun.';
+
+  @override
+  String get linkDetailEncodedHost =>
+      'Site adı kaçış kodları içeriyor; oysa oraları onların yeri değil. Bunlar, adın aslında ne yazdığını gizleyebilir.';
+
+  @override
+  String linkDetailUnusualPort(String port) {
+    return 'Bu, olağan port yerine $port portu üzerinden bağlanıyor. Bu, test sunucularında yaygın, herkese açık sitelerde olağandışıdır.';
+  }
+
+  @override
+  String linkDetailDeepSubdomain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Adın $count parçası var. Siteyi kimin işlettiğine yalnızca son iki tanesi karar verir; geri kalanı herhangi bir şey olarak ayarlanabilir.',
+      one:
+          'Adın $count parçası var. Siteyi kimin işlettiğine yalnızca son iki tanesi karar verir; geri kalanı herhangi bir şey olarak ayarlanabilir.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String linkDetailPublicSuffixInSubdomain(String suffix, String host) {
+    return 'Bu ad, ortasında \".$suffix.\" içeriyor; bu da başlangıcını sitenin kendisi gibi gösteriyor. Site aslında \"$host\".';
+  }
+
+  @override
+  String get linkDetailShortener =>
+      'Bir kısaltma hizmeti asıl varış noktasını gizler. Bunun nereye gittiğini açmadan bilemezsiniz.';
+
+  @override
+  String linkDetailExecutableTarget(String fileExtension) {
+    return 'Bu bağlantı \"$fileExtension\" ile bitiyor; yani okunacak bir sayfa değil, cihazınızda çalışabilecek bir şey indiriyor.';
+  }
+
+  @override
+  String linkDetailRedirectParameter(String parameter, String host) {
+    return 'Bu bağlantı, \"$parameter\" ayarında ikinci bir adres taşıyor; bu yüzden açmak sizi \"$host\" dışında bir yere götürebilir.';
+  }
+
+  @override
+  String get linkDetailVeryLongUrl =>
+      'Uzun bağlantıların okunması daha zordur ve varış noktasını belirleyen kısım görüş alanının dışına itilebilir.';
+
+  @override
+  String get linkDetailUnparseable =>
+      'Action bunu bir web adresi olarak okuyamadı. Bağlantıya benzemeyen bağlantılara karşı dikkatli olun.';
+
+  @override
+  String get toolTitleRedaction => 'Hassas ayrıntıları gizle';
+
+  @override
+  String get toolDescriptionRedaction =>
+      'Paylaşılmaması gerekeni bulun ve bunların çıkarıldığı bir kopya oluşturun.';
+
+  @override
+  String get toolSectionRedactionNothingToScan => 'Taranacak bir şey yok';
+
+  @override
+  String get toolSectionRedactionNothingToScanBody =>
+      'Bu araç metin okur. Bir not, yapıştırılmış bir mesaj ya da metni okunmuş bir yakalama seçin.';
+
+  @override
+  String get toolSectionRedactionNothingFound => 'Belirgin bir şey bulunamadı';
+
+  @override
+  String get toolSectionRedactionNothingFoundBody =>
+      'Action bu metinde e-posta adresi, telefon numarası, kart numarası ya da referans numarası bulmadı.';
+
+  @override
+  String toolSectionRedactionFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Gizlemeye değer $count şey',
+      one: 'Gizlemeye değer 1 şey',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionRedactedCopy => 'Ayrıntıları çıkarılmış kopya';
+
+  @override
+  String get toolWarningRedactionCoverage =>
+      'Bu, e-posta, telefon numarası ve hesap numarası gibi kalıpları bulur. Hassas olan her şeyi yakalamaz — paylaşmadan önce kopyayı okuyun.';
+
+  @override
+  String get toolWarningRedactionFormatLimit =>
+      'Action görsellerdeki ve PDF dosyalarındaki ayrıntıları çıkaramaz. Bir resimde bir şeyin üzerini örtmek aslını altında bırakır, bu yüzden bu seçenek sunulmuyor.';
+
+  @override
+  String get toolTitleAuthenticity => 'Bunun nereden geldiğini kontrol et';
+
+  @override
+  String get toolDescriptionAuthenticity =>
+      'Bir dosyanın kendi kökeni hakkında ne beyan ettiği.';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspect =>
+      'İncelenecek bir şey yok';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspectBody =>
+      'Bir görsel ya da bir metin seçin.';
+
+  @override
+  String get toolSectionAuthenticityFileSignals =>
+      'Bu dosyanın kendisi hakkında söyledikleri';
+
+  @override
+  String get toolSectionAuthenticityFileItself => 'Dosyanın kendisi';
+
+  @override
+  String get toolSectionFileContents => 'İçerik';
+
+  @override
+  String get toolSectionFileUnknownFormat =>
+      'Action\'ın bildiği bir biçim değil';
+
+  @override
+  String get toolSectionFileSize => 'Boyut';
+
+  @override
+  String get toolSectionFileDigest => 'SHA-256';
+
+  @override
+  String get toolWarningAuthenticityNotProof =>
+      'Bu, bir dosyanın kendisi hakkında ne beyan ettiğini bildirir. Meta veri düzenlenebilir ya da silinebilir; dolayısıyla bunların hiçbiri kanıt değildir. Bunu kimseyi suçlamak için kullanmayın.';
+
+  @override
+  String get toolTitleCredentialScanner => 'Anahtar ve parola ara';
+
+  @override
+  String get toolDescriptionCredentialScanner =>
+      'Bir şeyi paylaşmadan önce kimlik bilgilerini bulun.';
+
+  @override
+  String get toolSectionCredentialNothingToCheck =>
+      'Kontrol edilecek bir şey yok';
+
+  @override
+  String get toolSectionCredentialNothingToCheckBody =>
+      'Bir metin yapıştırın ya da metni okunmuş bir yakalama seçin. Bu araç yalnızca metin okur.';
+
+  @override
+  String get toolSectionCredentialNoneFound => 'Kimlik bilgisi bulunamadı';
+
+  @override
+  String get toolSectionCredentialNoneFoundBody =>
+      'Action bu metinde API anahtarı, özel anahtar, belirteç ya da parola biçiminde bir şey bulamadı.';
+
+  @override
+  String toolSectionCredentialFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kimlik bilgisi bulundu',
+      one: '1 kimlik bilgisi bulundu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolSectionCredentialPossibleFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Gizli değer olabilecek $count şey',
+      one: 'Gizli değer olabilecek 1 şey',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCredentialRedactedCopy =>
+      'Kimlik bilgileri çıkarılmış kopya';
+
+  @override
+  String get toolWarningCredentialRevoke =>
+      'Bir anahtarı belgeden kaldırmak onu devre dışı bırakmaz. Bunlardan biri zaten paylaşıldıysa onu sağlayıcınızda iptal edin ve yenisini oluşturun.';
+
+  @override
+  String get toolWarningCredentialCoverage =>
+      'Bu, tanınabilir bir biçimi olan kimlik bilgilerini bulur. Bir cümlenin içine yazılmış bir parola bulunmaz; bu yüzden metni de okuyun.';
+
+  @override
+  String get toolTitleLinkInspector => 'Bir bağlantıyı incele';
+
+  @override
+  String get toolDescriptionLinkInspector =>
+      'Bir adresin, siz açmadan önce ele verdikleri.';
+
+  @override
+  String get toolSectionLinkNoneFound => 'Bağlantı bulunamadı';
+
+  @override
+  String get toolSectionLinkNoneFoundBody =>
+      'Bir bağlantı yapıştırın ya da bir tane içeren bir yakalama seçin.';
+
+  @override
+  String toolSectionLinkFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bu metindeki $count bağlantı',
+      one: 'Bu metindeki bağlantı',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionLinkUnreadableHost => 'Okunamadı';
+
+  @override
+  String toolSectionLinkObservationLine(String summary, String detail) {
+    return '$summary. $detail';
+  }
+
+  @override
+  String get toolSectionLinkNothingUnusual =>
+      'Bunların yazılışında olağandışı bir şey yok';
+
+  @override
+  String get toolSectionLinkNothingUnusualBody =>
+      'Bu, sayfaların güvenilir olduğunu bilmekle aynı şey değildir. Bunları bekleyip beklemediğinize yalnızca siz karar verebilirsiniz.';
+
+  @override
+  String get toolWarningLinkAddressOnly =>
+      'Action yalnızca adresi okur. Bağlantıyı açmaz, siteyi sorgulamaz ve herhangi bir itibar hizmetine bakmaz — bunları yapmak, gezindiğiniz yerleri bir başkasına göndermek olurdu.';
+
+  @override
+  String get toolWarningLinkNoSignals =>
+      'Hiçbir işaret taşımayan bir bağlantı yine de zararlı olabilir. Bu, bir adresin yazılışındaki sorunları bulur; bu da adresin nereye gittiği hakkında bilinmesi gereken her şey değildir.';
+
+  @override
+  String get toolSectionObjective => 'İstediğiniz şey';
+
+  @override
+  String get toolSectionCurrentState => 'Gelinen nokta';
+
+  @override
+  String get toolSectionRecommendedNextStep => 'Önerilen sonraki adım';
+
+  @override
+  String get toolSectionCredentialAdvice => 'Ne yapmalısınız';
+
+  @override
+  String get toolSectionSummary => 'Özet';
+
+  @override
+  String get toolDetailSeparator => ' · ';
 }

@@ -79,8 +79,8 @@ class _ActionDetailScreenState extends ConsumerState<ActionDetailScreen> {
       _log(AnalyticsEvents.actionLocalPersistenceFailed);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("That didn't save. Nothing was lost — try again."),
+          SnackBar(
+            content: Text(AppL10n.of(context).detailSaveFailed),
           ),
         );
       }
@@ -1258,6 +1258,7 @@ class _Provenance extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -1268,7 +1269,7 @@ class _Provenance extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'CREATED FROM',
+                eyebrowCase(l10n.detailSectionCreatedFrom, l10n.localeName),
                 style: text.labelSmall?.copyWith(
                   color: colors.textTertiary,
                   letterSpacing: 1.0,
@@ -1284,7 +1285,7 @@ class _Provenance extends ConsumerWidget {
     final manual = action.origin == ActionOrigin.manual;
 
     final byYou = Text(
-      'Created by you',
+      l10n.metaCreatedByYou,
       style: text.bodyMedium?.copyWith(color: colors.textSecondary),
     );
 
@@ -1304,13 +1305,13 @@ class _Provenance extends ConsumerWidget {
           switch (source) {
             // Resolving the source must never hold up the page.
             AsyncLoading() => Text(
-                'Checking the original capture…',
+                l10n.detailSourceChecking,
                 style: text.bodySmall?.copyWith(color: colors.textTertiary),
               ),
             AsyncData(:final value) when value != null =>
               _SourceLink(item: value),
             _ => Text(
-                'The original capture is no longer available.',
+                l10n.detailSourceUnavailable,
                 style: text.bodyMedium?.copyWith(color: colors.textSecondary),
               ),
           },
@@ -1343,7 +1344,7 @@ class _SourceLink extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.type.provenanceLabel, style: text.bodyMedium),
+                  Text(item.type.provenanceIn(l10n), style: text.bodyMedium),
                   Text(
                     _friendlyDate(item.capturedAt.toLocal(), l10n),
                     style: text.bodySmall?.copyWith(color: colors.textTertiary),
@@ -1351,7 +1352,7 @@ class _SourceLink extends StatelessWidget {
                 ],
               ),
             ),
-            Text('View source',
+            Text(l10n.reviewViewSource,
                 style: text.labelLarge?.copyWith(color: colors.brand)),
           ],
         ),
@@ -1376,6 +1377,7 @@ class _BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final completed = action.status == ActionStatus.completed;
 
@@ -1394,7 +1396,7 @@ class _BottomBar extends StatelessWidget {
         child: completed
             ? OutlinedButton(
                 onPressed: () => state._reopenAction(action),
-                child: const Text('Reopen action'),
+                child: Text(l10n.detailReopenAction),
               )
             // Outlined, not filled. The filled button on this screen belongs
             // to the recommended next step: that is the move the product is
@@ -1403,7 +1405,7 @@ class _BottomBar extends StatelessWidget {
             // stays one tap away, it just stops shouting over the step.
             : OutlinedButton(
                 onPressed: () => state._completeAction(action),
-                child: const Text('Mark action complete'),
+                child: Text(l10n.detailMarkActionComplete),
               ),
       ),
     );
@@ -1454,6 +1456,7 @@ class _ActionIntelligence extends StatelessWidget {
     final tools = recommendedForAction(action);
     if (tools.isEmpty) return const SizedBox.shrink();
 
+    final l10n = AppL10n.of(context);
     final text = Theme.of(context).textTheme;
 
     return Padding(
@@ -1466,7 +1469,7 @@ class _ActionIntelligence extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Get help with this', style: text.titleSmall),
+          Text(l10n.detailGetHelp, style: text.titleSmall),
           const SizedBox(height: Space.md),
           Wrap(
             spacing: Space.sm,
@@ -1509,6 +1512,7 @@ class _TimelineState extends ConsumerState<_Timeline> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
     final reminders =
@@ -1533,7 +1537,7 @@ class _TimelineState extends ConsumerState<_Timeline> {
           Semantics(
             header: true,
             child: Text(
-              'HISTORY',
+              eyebrowCase(l10n.detailSectionHistory, l10n.localeName),
               style: text.labelSmall?.copyWith(
                 color: colors.textTertiary,
                 letterSpacing: 0.8,
@@ -1558,8 +1562,8 @@ class _TimelineState extends ConsumerState<_Timeline> {
                 ),
                 child: Text(
                   _expanded
-                      ? 'Show less'
-                      : 'Show all ${events.length}',
+                      ? l10n.detailHistoryShowLess
+                      : l10n.detailHistoryShowAll(events.length),
                 ),
               ),
             ),
@@ -1582,6 +1586,7 @@ class _TimelineRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
@@ -1624,14 +1629,14 @@ class _TimelineRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _describe(event, context),
+                    _describe(event, l10n),
                     style: text.bodyMedium?.copyWith(
                       color: colors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: Space.xxs),
                   Text(
-                    _timestamp(event.at),
+                    _timestamp(event.at, l10n),
                     style: text.labelSmall?.copyWith(
                       color: colors.textTertiary,
                     ),
@@ -1645,21 +1650,22 @@ class _TimelineRow extends StatelessWidget {
     );
   }
 
-  static String _describe(ActionEvent event, BuildContext context) {
+  static String _describe(ActionEvent event, AppL10n l10n) {
     return switch (event.kind) {
       ActionEventKind.created => event.count == null
-          ? 'Created'
-          : 'Created with ${event.count} '
-              '${event.count == 1 ? 'step' : 'steps'}',
-      ActionEventKind.reviewed => 'You confirmed the details',
-      ActionEventKind.stepCompleted =>
-        'Finished “${event.subject ?? 'a step'}”',
-      ActionEventKind.reminderSet => _reminderLine(event.subject),
-      ActionEventKind.completed => 'Marked done',
-      ActionEventKind.archived => 'Archived',
+          ? l10n.detailHistoryCreated
+          : l10n.detailHistoryCreatedWithSteps(event.count!),
+      ActionEventKind.reviewed => l10n.detailHistoryReviewed,
+      ActionEventKind.stepCompleted => l10n
+          .detailHistoryStepFinished(event.subject ?? l10n.detailHistoryAStep),
+      ActionEventKind.reminderSet => _reminderLine(event.subject, l10n),
+      ActionEventKind.completed => l10n.detailHistoryCompleted,
+      // The same word the meta line uses for the same state, deliberately: one
+      // vocabulary for one lifecycle.
+      ActionEventKind.archived => l10n.detailArchived,
       // Never elaborated. The store knows that something changed and not what,
       // and inventing the what is exactly what this section refuses to do.
-      ActionEventKind.changed => 'Last changed',
+      ActionEventKind.changed => l10n.detailHistoryChanged,
     };
   }
 
@@ -1667,12 +1673,14 @@ class _TimelineRow extends StatelessWidget {
   /// the words the Reminders section above uses. The same phrase twice on one
   /// screen, meaning two different things, is ambiguous to a reader and was
   /// ambiguous to a test.
-  static String _reminderLine(String? scheduledAt) {
+  static String _reminderLine(String? scheduledAt, AppL10n l10n) {
     final when = scheduledAt == null ? null : DateTime.tryParse(scheduledAt);
-    if (when == null) return 'You set a reminder';
-    return 'You set a reminder for ${_timestamp(when.toLocal())}';
+    if (when == null) return l10n.detailHistoryReminderSet;
+    return l10n
+        .detailHistoryReminderSetFor(_timestamp(when.toLocal(), l10n));
   }
 
-  static String _timestamp(DateTime at) =>
-      DateFormat('d MMM yyyy, HH:mm').format(at.toLocal());
+  static String _timestamp(DateTime at, AppL10n l10n) =>
+      DateFormat(l10n.detailHistoryTimestampFormat, l10n.localeName)
+          .format(at.toLocal());
 }

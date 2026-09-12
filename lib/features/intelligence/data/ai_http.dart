@@ -147,7 +147,7 @@ class AiHttpExchange {
     } on _Cancelled {
       throw AiProviderFailure(
         AiFailureKind.cancelled,
-        message: 'Stopped.',
+        message: AiFailureKind.cancelled.message(),
       );
     } on AiProviderFailure {
       rethrow;
@@ -202,7 +202,10 @@ class AiHttpExchange {
       }
       return utf8.decode(response.bodyBytes, allowMalformed: true);
     } on _Cancelled {
-      throw AiProviderFailure(AiFailureKind.cancelled, message: 'Stopped.');
+      throw AiProviderFailure(
+        AiFailureKind.cancelled,
+        message: AiFailureKind.cancelled.message(),
+      );
     } on AiProviderFailure {
       rethrow;
     } on Object catch (error) {
@@ -218,7 +221,7 @@ class AiHttpExchange {
       if (decoded is! Map<String, dynamic>) {
         throw AiProviderFailure(
           AiFailureKind.malformedResponse,
-          message: 'That provider sent back something Action could not read.',
+          message: AiFailureKind.malformedResponse.message(),
           technicalDetail: 'expected a JSON object, got ${decoded.runtimeType}',
         );
       }
@@ -226,7 +229,7 @@ class AiHttpExchange {
     } on FormatException catch (error) {
       throw AiProviderFailure(
         AiFailureKind.malformedResponse,
-        message: 'That provider sent back something Action could not read.',
+        message: AiFailureKind.malformedResponse.message(),
         technicalDetail: error.message,
       );
     }
@@ -252,27 +255,27 @@ AiProviderFailure _failureForTransportError(Object error, {String? secret}) {
   if (error is TimeoutException) {
     return AiProviderFailure(
       AiFailureKind.networkUnavailable,
-      message: 'That took too long and was stopped.',
+      message: AiAdapterMessage.timedOut.text(),
       technicalDetail: detail,
     );
   }
   if (error is SocketException || error is http.ClientException) {
     return AiProviderFailure(
       AiFailureKind.networkUnavailable,
-      message: "Action couldn't reach your AI provider. Check your connection.",
+      message: AiFailureKind.networkUnavailable.message(),
       technicalDetail: detail,
     );
   }
   if (error is HandshakeException || error is TlsException) {
     return AiProviderFailure(
       AiFailureKind.providerUnavailable,
-      message: 'The secure connection to your AI provider failed.',
+      message: AiAdapterMessage.secureConnectionFailed.text(),
       technicalDetail: detail,
     );
   }
   return AiProviderFailure(
     AiFailureKind.unknown,
-    message: 'Something went wrong talking to your AI provider.',
+    message: AiFailureKind.unknown.message(),
     technicalDetail: detail,
   );
 }
@@ -300,7 +303,7 @@ AiProviderFailure _failureForStatus(
   if (status == 401 || status == 403) {
     return AiProviderFailure(
       AiFailureKind.invalidKey,
-      message: 'That API key was not accepted by the provider.',
+      message: AiFailureKind.invalidKey.message(),
       technicalDetail: detail,
     );
   }
@@ -317,13 +320,13 @@ AiProviderFailure _failureForStatus(
     ])) {
       return AiProviderFailure(
         AiFailureKind.quotaExceeded,
-        message: "Your provider account is out of credit or has hit its quota.",
+        message: AiFailureKind.quotaExceeded.message(),
         technicalDetail: detail,
       );
     }
     return AiProviderFailure(
       AiFailureKind.rateLimited,
-      message: 'Your provider is rate-limiting requests. Try again shortly.',
+      message: AiFailureKind.rateLimited.message(),
       technicalDetail: detail,
     );
   }
@@ -335,8 +338,7 @@ AiProviderFailure _failureForStatus(
     if (mentions(const ['model'])) {
       return AiProviderFailure(
         AiFailureKind.unsupportedModel,
-        message: 'That model is not available to your key. Choose another in '
-            'Settings.',
+        message: AiFailureKind.unsupportedModel.message(),
         technicalDetail: detail,
       );
     }
@@ -352,7 +354,7 @@ AiProviderFailure _failureForStatus(
       ])) {
     return AiProviderFailure(
       AiFailureKind.contextTooLarge,
-      message: 'That was too much content for this model to read at once.',
+      message: AiFailureKind.contextTooLarge.message(),
       technicalDetail: detail,
     );
   }
@@ -360,7 +362,7 @@ AiProviderFailure _failureForStatus(
   if (status >= 500) {
     return AiProviderFailure(
       AiFailureKind.providerUnavailable,
-      message: 'Your AI provider is having trouble. Try again shortly.',
+      message: AiFailureKind.providerUnavailable.message(),
       technicalDetail: detail,
     );
   }
@@ -368,14 +370,14 @@ AiProviderFailure _failureForStatus(
   if (status == 404) {
     return AiProviderFailure(
       AiFailureKind.unsupportedModel,
-      message: 'Action could not find that model or endpoint.',
+      message: AiAdapterMessage.modelOrEndpointNotFound.text(),
       technicalDetail: detail,
     );
   }
 
   return AiProviderFailure(
     AiFailureKind.unknown,
-    message: 'Your AI provider rejected that request.',
+    message: AiAdapterMessage.requestRejected.text(),
     technicalDetail: detail,
   );
 }
@@ -393,4 +395,113 @@ Uri? validateEndpoint(String raw, {required bool allowCleartext}) {
   if (uri.scheme == 'https') return uri;
   if (uri.scheme == 'http' && allowCleartext) return uri;
   return null;
+}
+
+/// The sentences the adapters write themselves, in canonical English.
+///
+/// **Why this exists next to [AiFailureKind.message].** Almost every failure
+/// this layer raises is one of the dozen conditions the kind already owns, and
+/// those now take their wording from the kind — one sentence, one place, and a
+/// translation that arrives through `AiFailureKindL10n.messageIn`. What is left
+/// is the handful of cases where the kind is right but its sentence is not: a
+/// four-minute timeout is not "check your connection", a failed TLS handshake
+/// is not "try again shortly", a safety-filtered prompt is not a malformed
+/// reply, and a document refused locally has to name the file and the number.
+///
+/// Before this enum those sentences were literals at four adapters' throw
+/// sites, three of them written out more than once and already drifting
+/// ("provider" in one file, "endpoint" in the next). They are collected here
+/// for the same two reasons the kind's are collected on the kind: so the copy
+/// cannot fork again, and so there is a value to translate rather than a string
+/// to match.
+///
+/// **This is the English original**, which is what a log line, a bug report and
+/// the adapter tests read. What a person should read is
+/// `AiAdapterMessageL10n.messageIn(l10n)` in `lib/l10n/enum_labels.dart` — but
+/// nothing reaches it yet, because [AiProviderFailure] carries only the kind
+/// and a finished string. Wiring it up is one field on that class and one line
+/// in `tool_run_screen.dart`; until then these stay English on screen, exactly
+/// as they were.
+enum AiAdapterMessage {
+  /// The request ran past the response timeout and the socket was closed.
+  timedOut,
+
+  /// TLS negotiation failed. Never downgraded, never retried in the clear.
+  secureConnectionFailed,
+
+  /// A 404 that did not name a model — usually a custom endpoint's path.
+  modelOrEndpointNotFound,
+
+  /// A 4xx none of the specific branches claimed.
+  requestRejected,
+
+  /// The platform keystore could not be opened, so no key could be read.
+  secureStorageUnavailable,
+
+  /// A custom provider is selected but its address field is empty.
+  endpointMissing,
+
+  /// A response arrived and parsed, but carried no content to show.
+  replyIncomplete,
+
+  /// The provider's own safety filter refused the prompt.
+  contentDeclined,
+
+  /// More attachments in one request than Action will send.
+  tooManyAttachments,
+
+  /// One image over the local cap.
+  imageTooLarge,
+
+  /// One document over the local byte cap. Names the file.
+  documentTooLarge,
+
+  /// A document longer than Action will send without being asked. Names the
+  /// file and both numbers, because the user picks the range.
+  documentTooManyPages,
+
+  /// The whole payload is over the local cap.
+  selectionTooLarge;
+
+  /// [filename], [count] and [limit] are read only by the arms that name them.
+  String text({String filename = '', int count = 0, int limit = 0}) {
+    assert(
+      !const {
+            AiAdapterMessage.documentTooLarge,
+            AiAdapterMessage.documentTooManyPages,
+          }.contains(this) ||
+          filename.isNotEmpty,
+      'This sentence names the file it refused. With no filename it opens on '
+      'an empty pair of quotes and tells the user nothing about which '
+      'document to remove: pass the filename.',
+    );
+    return switch (this) {
+      AiAdapterMessage.timedOut => 'That took too long and was stopped.',
+      AiAdapterMessage.secureConnectionFailed =>
+        'The secure connection to your AI provider failed.',
+      AiAdapterMessage.modelOrEndpointNotFound =>
+        'Action could not find that model or endpoint.',
+      AiAdapterMessage.requestRejected =>
+        'Your AI provider rejected that request.',
+      AiAdapterMessage.secureStorageUnavailable =>
+        "Action couldn't open this device's secure storage.",
+      AiAdapterMessage.endpointMissing =>
+        'Add the address of your AI endpoint in Settings.',
+      AiAdapterMessage.replyIncomplete =>
+        'That reply was incomplete. Try again.',
+      AiAdapterMessage.contentDeclined =>
+        'Your provider declined to process that content.',
+      AiAdapterMessage.tooManyAttachments =>
+        'That is more than $limit files at once. Select fewer.',
+      AiAdapterMessage.imageTooLarge =>
+        'One of those images is too large to analyse.',
+      AiAdapterMessage.documentTooLarge =>
+        '"$filename" is too large to analyse. The limit is $limit MB.',
+      AiAdapterMessage.documentTooManyPages =>
+        '"$filename" has $count pages. Action reads up to $limit at a time — '
+            'choose a range.',
+      AiAdapterMessage.selectionTooLarge =>
+        'That selection is too large to send in one request.',
+    };
+  }
 }

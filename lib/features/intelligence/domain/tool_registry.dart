@@ -97,6 +97,16 @@ class SourceSignals {
   final bool isDocument;
 
   /// Derives the signals from text, with plain pattern matching.
+  ///
+  /// The English words in these patterns stay English. They are matched against
+  /// the captured document and never shown to anyone, so routing them through
+  /// the localization bundle would translate nothing a user reads — it would
+  /// only stop them matching the documents they were written for. A source in
+  /// another language still trips the numeric dates, the currency symbols and
+  /// the layout heuristic; it misses the spelled-out months and the letter
+  /// phrases, and falls back to the two general tools [ToolRecommendations]
+  /// always appends. Widening the word lists is a matching gap, not a
+  /// localization one.
   factory SourceSignals.fromText(String text, {bool isImage = false}) {
     final dates = RegExp(
       r'\b(?:\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}-\d{2}-\d{2}'

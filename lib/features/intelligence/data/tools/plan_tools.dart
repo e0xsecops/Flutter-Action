@@ -9,6 +9,7 @@ library;
 import '../../domain/ai_request.dart';
 import '../../domain/ai_response.dart';
 import '../../domain/intelligence_result.dart';
+import '../../domain/tool_copy.dart';
 import '../../domain/intelligence_tool.dart';
 import '../evidence_verifier.dart';
 import 'tool_support.dart';
@@ -101,21 +102,29 @@ Everything you return is a suggestion for the person to accept or reject. Do not
       sections: [
         IntelligenceSection(
           title: 'What you want',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionObjective),
           body: readString(json, 'objective'),
         ),
         IntelligenceSection(
           title: 'Where it stands',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionCurrentState),
           body: readString(json, 'current_state'),
         ),
         if (blockers.isNotEmpty)
           IntelligenceSection(
-            title: blockers.length == 1 ? '1 blocker' : '${blockers.length} blockers',
+            title:
+                blockers.length == 1 ? '1 blocker' : '${blockers.length} blockers',
+            titleCopy: ToolCounted(
+              ToolCountedId.sectionBlockerCount,
+              blockers.length,
+            ),
             kind: IntelligenceSectionKind.facts,
             facts: blockers,
           ),
         if (simplifications.isNotEmpty)
           IntelligenceSection(
             title: 'Could be simpler',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionCouldBeSimpler),
             kind: IntelligenceSectionKind.bullets,
             bullets: simplifications,
           ),
@@ -179,15 +188,24 @@ $_noInventedDates''';
     for (final raw in readObjects(json, 'steps')) {
       final title = readString(raw, 'title');
       if (title == null) continue;
+      final outcome = readString(raw, 'outcome');
+      final dependsOn = readString(raw, 'depends_on');
+      // Canonical English for the log; the screen reads `detailCopy`, where the
+      // separator and the "After: {step}" frame are the bundle's.
       final detail = [
-        ?readString(raw, 'outcome'),
-        if (readString(raw, 'depends_on') case final dep?) 'After: $dep',
+        ?outcome,
+        if (dependsOn case final dep?) 'After: $dep',
       ].join(' · ');
       suggestions.add(IntelligenceSuggestion(
         id: 'step-${index++}',
         kind: IntelligenceSuggestionKind.step,
         title: title,
         detail: detail.isEmpty ? null : detail,
+        detailCopy: <ToolCopy>[
+          if (outcome case final o?) ToolVerbatim(o),
+          if (dependsOn case final dep?)
+            ToolNamed(ToolNamedId.sectionStepDependsOn, dep),
+        ],
       ));
     }
 
@@ -196,6 +214,7 @@ $_noInventedDates''';
       sections: [
         IntelligenceSection(
           title: 'The plan',
+          titleCopy: const ToolPhrase(ToolPhraseId.sectionThePlan),
           body: readString(json, 'summary'),
         ),
       ].where((s) => !s.isEmpty).toList(),
@@ -366,12 +385,17 @@ $factualRules''';
             title: gaps.length == 1
                 ? '1 missing detail'
                 : '${gaps.length} missing details',
+            titleCopy: ToolCounted(
+              ToolCountedId.sectionMissingDetailCount,
+              gaps.length,
+            ),
             kind: IntelligenceSectionKind.facts,
             facts: gaps,
           ),
         if (contradictions.isNotEmpty)
           IntelligenceSection(
             title: 'These disagree with each other',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionContradictions),
             kind: IntelligenceSectionKind.bullets,
             bullets: contradictions,
           ),

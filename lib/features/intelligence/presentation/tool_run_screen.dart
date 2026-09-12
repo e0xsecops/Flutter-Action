@@ -18,6 +18,8 @@ import '../../../design/components/glass_surface.dart';
 import '../../../design/components/readable_width.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/enum_labels.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../../../shared/widgets/empty_view.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../actions/application/action_providers.dart';
@@ -179,7 +181,7 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
     // The disclosure and the scope confirmation both happen before a request
     // is built, so declining costs nothing.
     if (!tool.isLocal && config != null) {
-      if (!await _confirmFirstUse(config.kind.label, config.kind)) return;
+      if (!await _confirmFirstUse(config.kind)) return;
 
       final scope = ref
           .read(intelligenceRunnerProvider)
@@ -241,7 +243,6 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
     }
   }
 
-
   /// Turns the ticked suggestions into something durable.
   ///
   /// **Only ever what the user ticked, and only ever on a tap.** A plan that
@@ -257,6 +258,9 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
   /// a title from a model's output is exactly the kind of quiet fabrication
   /// the review screen exists to prevent.
   Future<void> _saveSuggestions(IntelligenceResult result) async {
+    // Resolved before the first await: the snackbars below are shown after
+    // several round trips to the repository.
+    final l10n = AppL10n.of(context);
     final chosen = result.suggestions
         .where((s) => _selectedSuggestions.contains(s.id))
         .where((s) =>
@@ -301,8 +305,7 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
       await ref.read(goalsProvider.notifier).linkAction(goal.id, id, now: now);
       if (!mounted) return;
       _log(AnalyticsEvents.actionCreated);
-      _say('Action created from ${chosen.length} '
-          '${chosen.length == 1 ? 'step' : 'steps'}.');
+      _say(l10n.toolRunActionCreatedFromSteps(chosen.length));
       context.pop();
       return;
     }
@@ -324,7 +327,7 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
       }
       if (!mounted) return;
       _log(AnalyticsEvents.stepAdded);
-      _say('${chosen.length} ${chosen.length == 1 ? 'step' : 'steps'} added.');
+      _say(l10n.toolRunStepsAdded(chosen.length));
       context.pop();
     }
   }
@@ -357,28 +360,36 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
     return total;
   }
 
-  Future<bool> _confirmFirstUse(String label, AiProviderKind kind) async {
+  Future<bool> _confirmFirstUse(AiProviderKind kind) async {
     final disclosure = ref.read(aiDisclosureProvider.notifier);
     if (disclosure.hasAccepted(kind)) return true;
 
+    final l10n = AppL10n.of(context);
+    // Named from the bundle, not from the enum's English `label`. Three of the
+    // four kinds are trademarks and come back unchanged; the fourth is the
+    // words "Custom (OpenAI-compatible)", and this dialog is the first thing a
+    // BYOK user ever reads.
+    final label = kind.labelIn(l10n);
     final accepted = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Send this to $label?'),
+        title: Text(l10n.toolRunFirstUseTitle(label)),
+        // Two keys, joined here rather than translated as one paragraph: the
+        // second one carries three separate negative claims, and a translation
+        // that quietly drops one is easier to catch when it stands alone.
         content: Text(
-          'The content you selected will be sent to $label for processing, '
-          'using your API key.\n\n'
-          'Your key stays on this device. Action does not send anything in '
-          'the background, and does not send your other Actions or sources.',
+          '${l10n.toolRunFirstUseBody(label)}'
+          '\n\n'
+          '${l10n.toolRunFirstUseKeyStays}',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Continue'),
+            child: Text(l10n.commonContinue),
           ),
         ],
       ),
@@ -389,26 +400,46 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
   }
 
   Future<bool> _confirmScope(IntelligenceScope scope) async {
+    final l10n = AppL10n.of(context);
     final go = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Before this runs'),
+        title: Text(l10n.toolRunScopeTitle),
         // Scope, never a currency figure: provider pricing changes and a stale
         // table would lie to the user.
-        content: Text(scope.sentence),
+        content: Text(_scopeSentence(l10n, scope)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Run'),
+            child: Text(l10n.toolRunRun),
           ),
         ],
       ),
     );
     return go == true;
+  }
+
+  /// The scope statement, chosen here rather than built in the domain.
+  ///
+  /// [IntelligenceScope] has no `BuildContext` and should not grow one, so it
+  /// keeps exposing the counts and this screen picks the sentence. Its own
+  /// English `sentence` getter stays as the value logged and asserted by the
+  /// runner's tests.
+  static String _scopeSentence(AppL10n l10n, IntelligenceScope scope) {
+    if (scope.pageCount > 0) {
+      return l10n.toolRunScopePages(scope.pageCount, scope.providerLabel);
+    }
+    if (scope.attachmentCount > 0) {
+      return l10n.toolRunScopeFiles(
+        scope.attachmentCount,
+        scope.providerLabel,
+      );
+    }
+    return l10n.toolRunScopeText(scope.providerLabel);
   }
 
   void _stop() {
@@ -420,14 +451,15 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final tool = _tool;
     if (tool == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: const EmptyView(
+        body: EmptyView(
           icon: Icons.help_outline,
-          title: 'That tool is not available',
-          message: 'It may have been removed in a newer version of Action.',
+          title: l10n.toolRunNotAvailableTitle,
+          message: l10n.toolRunNotAvailableMessage,
         ),
       );
     }
@@ -438,7 +470,7 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
     final needsProvider = !tool.isLocal && config == null;
 
     return Scaffold(
-      appBar: AppBar(title: Text(tool.title)),
+      appBar: AppBar(title: Text(tool.titleIn(l10n))),
       body: SafeArea(
         top: false,
         child: ReadableWidth(
@@ -451,7 +483,7 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
             ),
             children: [
               Text(
-                tool.shortDescription,
+                tool.shortDescriptionIn(l10n),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: Space.lg),
@@ -512,10 +544,16 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
                           _selectedSuggestions.isNotEmpty)
                       ? () => _saveSuggestions(_run.result!)
                       : null,
+                  // Two whole sentences rather than a label interpolated into
+                  // a count: the count is part of the grammar in most of the
+                  // twenty languages, not a suffix.
                   saveLabel: widget.goalId != null
-                      ? 'Create an action'
-                      : 'Add to this action',
-                  selectedCount: _selectedSuggestions.length,
+                      ? l10n.toolRunSaveCreateActionWithCount(
+                          _selectedSuggestions.length,
+                        )
+                      : l10n.toolRunSaveAddToActionWithCount(
+                          _selectedSuggestions.length,
+                        ),
                 ),
               ],
             ],
@@ -533,6 +571,7 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
         !tool.acceptedInputs.contains(IntelligenceInputKind.multipleSources)) {
       return const SizedBox.shrink();
     }
+    final l10n = AppL10n.of(context);
     final multiple =
         tool.acceptedInputs.contains(IntelligenceInputKind.multipleSources);
 
@@ -540,7 +579,7 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
       return Padding(
         padding: const EdgeInsets.only(bottom: Space.lg),
         child: Text(
-          'Nothing to work on yet. Capture something, or paste some text below.',
+          l10n.toolRunNoSourcesYet,
           style: Theme.of(context).textTheme.bodySmall,
         ),
       );
@@ -550,7 +589,9 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          multiple ? 'Choose what to compare' : 'Choose a source',
+          multiple
+              ? l10n.toolRunChooseSourcesToCompare
+              : l10n.toolRunChooseSource,
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: Space.sm),
@@ -586,8 +627,13 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // The reader's label. `labelForSource` stays English
+                        // deliberately: the same string is the part label sent
+                        // to the provider and the text on a citation chip, and
+                        // translating that would change what the model is
+                        // grounding against.
                         Text(
-                          labelForSource(source),
+                          source.type.shortLabelIn(l10n),
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                         Text(
@@ -608,75 +654,91 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
     );
   }
 
-  Widget _questionField() => Padding(
-        padding: const EdgeInsets.only(bottom: Space.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Your question',
-              style: Theme.of(context).textTheme.labelLarge,
+  Widget _questionField() {
+    final l10n = AppL10n.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Space.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.toolRunQuestionLabel,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: Space.sm),
+          TextField(
+            controller: _questionController,
+            minLines: 1,
+            maxLines: 3,
+            textInputAction: TextInputAction.done,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              hintText: l10n.toolRunQuestionHint,
             ),
-            const SizedBox(height: Space.sm),
-            TextField(
-              controller: _questionController,
-              minLines: 1,
-              maxLines: 3,
-              textInputAction: TextInputAction.done,
-              onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
-                hintText: 'What is the deadline?',
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _freeTextField(IntelligenceToolDefinition tool) => Padding(
-        padding: const EdgeInsets.only(bottom: Space.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Or paste some text',
-              style: Theme.of(context).textTheme.labelLarge,
+  Widget _freeTextField(IntelligenceToolDefinition tool) {
+    final l10n = AppL10n.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Space.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.toolRunFreeTextLabel,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: Space.sm),
+          TextField(
+            controller: _freeTextController,
+            minLines: 3,
+            maxLines: 10,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              hintText: l10n.toolRunFreeTextHint,
             ),
-            const SizedBox(height: Space.sm),
-            TextField(
-              controller: _freeTextController,
-              minLines: 3,
-              maxLines: 10,
-              onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
-                hintText: 'Paste or type here',
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _modePicker(IntelligenceToolDefinition tool) => Padding(
-        padding: const EdgeInsets.only(bottom: Space.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Style', style: Theme.of(context).textTheme.labelLarge),
-            const SizedBox(height: Space.sm),
-            Wrap(
-              spacing: Space.sm,
-              runSpacing: Space.sm,
-              children: [
-                for (final mode in tool.modes)
-                  ChoiceChip(
-                    label: Text(mode),
-                    selected: (_mode ?? tool.modes.first) == mode,
-                    onSelected: (_) => setState(() => _mode = mode),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      );
+  Widget _modePicker(IntelligenceToolDefinition tool) {
+    final l10n = AppL10n.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Space.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.toolRunModeLabel,
+              style: Theme.of(context).textTheme.labelLarge),
+          const SizedBox(height: Space.sm),
+          Wrap(
+            spacing: Space.sm,
+            runSpacing: Space.sm,
+            children: [
+              for (final mode in tool.modes)
+                ChoiceChip(
+                  // The chip shows the translation; `mode` itself stays the
+                  // English identifier, because it is also the switch key the
+                  // strategies use to pick their prompt guidance and the value
+                  // stored on IntelligenceRunInput.mode. Translating it would
+                  // silently fall through to the default branch and change
+                  // what the model is told.
+                  label: Text(modeLabel(l10n, mode)),
+                  selected: (_mode ?? tool.modes.first) == mode,
+                  onSelected: (_) => setState(() => _mode = mode),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _runButton(
     IntelligenceToolDefinition tool,
@@ -685,9 +747,10 @@ class _ToolRunScreenState extends ConsumerState<ToolRunScreen> {
     final input = _buildInput(sources);
     final canRun = tool.accepts(input) && !_run.isRunning;
 
+    final l10n = AppL10n.of(context);
     return FilledButton(
       onPressed: canRun ? () => _run_(tool, input) : null,
-      child: Text(tool.isLocal ? 'Check on this device' : 'Run'),
+      child: Text(tool.isLocal ? l10n.toolRunRunLocally : l10n.toolRunRun),
     );
   }
 }
@@ -699,6 +762,7 @@ class _NeedsProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final text = Theme.of(context).textTheme;
 
     return GlassSurface(
@@ -707,14 +771,14 @@ class _NeedsProvider extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // An invitation, not an error. The user did nothing wrong.
-          Text('Connect an AI provider to use this tool', style: text.titleSmall),
+          Text(l10n.toolRunNeedsProviderTitle, style: text.titleSmall),
           const SizedBox(height: Space.sm),
-          Text(
-            'You use your own provider account and API key.',
-            style: text.bodySmall,
-          ),
+          Text(l10n.toolRunNeedsProviderBody, style: text.bodySmall),
           const SizedBox(height: Space.lg),
-          FilledButton(onPressed: onConnect, child: const Text('Connect AI')),
+          FilledButton(
+            onPressed: onConnect,
+            child: Text(l10n.studioConnectAi),
+          ),
         ],
       ),
     );
@@ -741,7 +805,10 @@ class _StageIndicator extends StatelessWidget {
         ),
         const SizedBox(width: Space.md),
         Expanded(child: Text(describeStage(stage), style: text.bodyMedium)),
-        TextButton(onPressed: onStop, child: const Text('Stop')),
+        TextButton(
+          onPressed: onStop,
+          child: Text(AppL10n.of(context).toolRunStop),
+        ),
       ],
     );
   }
@@ -776,7 +843,10 @@ class _FailureView extends StatelessWidget {
           if (onRetry != null) ...[
             const SizedBox(height: Space.md),
             // Offered only where retrying could actually work.
-            TextButton(onPressed: onRetry, child: const Text('Try again')),
+            TextButton(
+              onPressed: onRetry,
+              child: Text(AppL10n.of(context).commonRetry),
+            ),
           ],
         ],
       ),
@@ -789,9 +859,8 @@ class _ResultActions extends StatelessWidget {
     required this.tool,
     required this.result,
     required this.onRerun,
+    required this.saveLabel,
     this.onSave,
-    this.saveLabel = 'Create an action',
-    this.selectedCount = 0,
   });
 
   final IntelligenceToolDefinition tool;
@@ -800,8 +869,13 @@ class _ResultActions extends StatelessWidget {
 
   /// Null when there is nothing ticked, or nowhere for it to go.
   final VoidCallback? onSave;
+
+  /// The whole button label, already localized and already carrying its count.
+  ///
+  /// Resolved by the caller rather than assembled here: the count is part of
+  /// the sentence's grammar in most of the twenty languages, so the label and
+  /// the number cannot be concatenated at the last moment.
   final String saveLabel;
-  final int selectedCount;
 
   @override
   Widget build(BuildContext context) {
@@ -814,10 +888,7 @@ class _ResultActions extends StatelessWidget {
           FilledButton.icon(
             onPressed: onSave,
             icon: const Icon(Icons.playlist_add_check_rounded, size: 18),
-            label: Text(
-              '$saveLabel · $selectedCount '
-              '${selectedCount == 1 ? 'step' : 'steps'}',
-            ),
+            label: Text(saveLabel),
           ),
           const SizedBox(height: Space.md),
         ],
@@ -847,6 +918,7 @@ class _SecondaryActions extends StatelessWidget {
     // The app's OutlinedButton style is full-width by default
     // (Size.fromHeight), which a Wrap cannot lay out. These are secondary
     // actions that belong side by side, so they opt out of that width.
+    final l10n = AppL10n.of(context);
     final style = OutlinedButton.styleFrom(
       minimumSize: const Size(0, 44),
       padding: const EdgeInsets.symmetric(horizontal: Space.lg),
@@ -863,18 +935,20 @@ class _SecondaryActions extends StatelessWidget {
               await Clipboard.setData(ClipboardData(text: artifact!.text));
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Copied')),
+                  SnackBar(content: Text(l10n.commonCopied)),
                 );
               }
             },
             icon: const Icon(Icons.copy, size: 18),
-            label: const Text('Copy'),
+            label: Text(l10n.commonCopy),
           ),
         OutlinedButton.icon(
           style: style,
           onPressed: onRerun,
           icon: const Icon(Icons.refresh, size: 18),
-          label: const Text('Run again'),
+          // "Run again", not "Try again": this one re-spends the user's key on
+          // a run that already succeeded.
+          label: Text(l10n.toolRunRunAgain),
         ),
       ],
     );
@@ -908,7 +982,8 @@ class _FixedContext extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Working on', style: text.bodySmall),
+                  Text(AppL10n.of(context).toolRunWorkingOn,
+                      style: text.bodySmall),
                   Text(label, style: text.titleSmall),
                 ],
               ),

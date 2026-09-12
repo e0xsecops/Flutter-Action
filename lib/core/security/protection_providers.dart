@@ -112,7 +112,13 @@ class ProtectionSettingsController extends Notifier<ProtectionSettings> {
   /// Turning it *on* requires passing the check first. Enabling a lock the
   /// user cannot open — no credential enrolled, sensor broken — would be a
   /// trap, and finding out at the door is too late.
-  Future<AppLockChangeResult> setAppLock(bool enabled) async {
+  ///
+  /// [reason] is the sentence the OS shows in its own dialog, so it has to be
+  /// in the reader's language and this controller has no `BuildContext` to get
+  /// it from. The screen supplies it; the English here is the fallback for the
+  /// callers that do not — tests, and anything running without a widget tree —
+  /// and is the canonical wording the translations are made from.
+  Future<AppLockChangeResult> setAppLock(bool enabled, {String? reason}) async {
     if (enabled == state.appLockEnabled) return AppLockChangeResult.unchanged;
 
     if (enabled) {
@@ -121,7 +127,7 @@ class ProtectionSettingsController extends Notifier<ProtectionSettings> {
         return AppLockChangeResult.unavailable;
       }
       final outcome = await authenticator.authenticate(
-        'Confirm it is you before turning on App Lock',
+        reason ?? 'Confirm it is you before turning on App Lock',
       );
       if (outcome != DeviceAuthOutcome.succeeded) {
         return outcome == DeviceAuthOutcome.unavailable
@@ -132,7 +138,7 @@ class ProtectionSettingsController extends Notifier<ProtectionSettings> {
       // And turning it *off* requires it too, or the lock protects nothing
       // from someone holding the unlocked phone.
       final outcome = await ref.read(deviceAuthenticatorProvider).authenticate(
-            'Confirm it is you before turning off App Lock',
+            reason ?? 'Confirm it is you before turning off App Lock',
           );
       if (outcome != DeviceAuthOutcome.succeeded) {
         return AppLockChangeResult.refused;
@@ -251,12 +257,17 @@ class AppLockedController extends Notifier<bool> {
   }
 
   /// Prompts, and unlocks if the OS says yes.
-  Future<DeviceAuthOutcome> unlock() async {
+  ///
+  /// [reason] is what the OS puts in its own dialog. The lock screen passes
+  /// the translated sentence in, because this controller has no
+  /// `BuildContext`; the English default is the canonical wording and what a
+  /// test or a headless caller gets.
+  Future<DeviceAuthOutcome> unlock({String? reason}) async {
     _authenticating = true;
     try {
       final outcome = await ref
           .read(deviceAuthenticatorProvider)
-          .authenticate('Unlock Action');
+          .authenticate(reason ?? 'Unlock Action');
       if (outcome == DeviceAuthOutcome.succeeded) {
         _leftAt = null;
         state = false;

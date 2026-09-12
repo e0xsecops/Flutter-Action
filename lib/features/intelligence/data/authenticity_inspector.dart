@@ -51,6 +51,12 @@ enum AuthenticityVerdict {
   inconclusive,
 }
 
+/// The verdict in English. The canonical wording the tests read.
+///
+/// A screen shows `AuthenticityVerdictL10n.titleIn` from
+/// `lib/l10n/enum_labels.dart` instead — the same verdict in the reader's
+/// language, and held to the same rule: no percentage, and nothing that reads
+/// as proof of AI authorship.
 String describeVerdict(AuthenticityVerdict verdict) => switch (verdict) {
       AuthenticityVerdict.verifiedProvenanceAvailable =>
         'Verified provenance available',
@@ -64,6 +70,10 @@ String describeVerdict(AuthenticityVerdict verdict) => switch (verdict) {
     };
 
 /// The sentence under the verdict. Every one of these limits the claim.
+///
+/// English and canonical, like [describeVerdict]. The translated sentence is
+/// `AuthenticityVerdictL10n.explanationIn`, and each of these limits is
+/// written into its ARB description so a translation cannot quietly drop one.
 String explainVerdict(AuthenticityVerdict verdict) => switch (verdict) {
       AuthenticityVerdict.verifiedProvenanceAvailable =>
         'This file carries a signature that was checked and held up.',
@@ -80,13 +90,47 @@ String explainVerdict(AuthenticityVerdict verdict) => switch (verdict) {
         'There is not enough information here to say where this came from.',
     };
 
+/// Which of the fixed signals this is.
+///
+/// Exists so a screen can look up a translated label — and, for the signals
+/// whose value is a sentence Action wrote rather than a string read out of the
+/// file, a translated value too. The English [AuthenticitySignal.label] and
+/// [AuthenticitySignal.value] stay canonical: the tests read them, and a
+/// domain test has no locale.
+enum AuthenticitySignalKind {
+  /// Produced by a [ProvenanceVerifier], not by this file. Its label and value
+  /// come from the verifier, so there is nothing here to translate.
+  provenance,
+
+  camera,
+  software,
+  description,
+  copyright,
+  location,
+  contentCredentials,
+
+  /// The bytes could not be decoded at all.
+  unreadableFile,
+
+  /// The bytes decoded but matched no known image format.
+  unrecognisedFormat,
+
+  /// The standing statement that text cannot answer this question.
+  textLimitation,
+}
+
 /// One thing that was found, or looked for and not found.
 class AuthenticitySignal {
   const AuthenticitySignal({
     required this.label,
     required this.value,
+    this.kind = AuthenticitySignalKind.provenance,
     this.experimental = false,
   });
+
+  /// Defaults to [AuthenticitySignalKind.provenance] because the only signal
+  /// this file does not build itself is the one a verifier returns.
+  final AuthenticitySignalKind kind;
 
   final String label;
   final String value;
@@ -182,6 +226,7 @@ abstract final class AuthenticityInspector {
         verdict: AuthenticityVerdict.inconclusive,
         signals: [
           AuthenticitySignal(
+            kind: AuthenticitySignalKind.unreadableFile,
             label: 'File',
             value: 'Could not be read as an image.',
           ),
@@ -194,6 +239,7 @@ abstract final class AuthenticityInspector {
         verdict: AuthenticityVerdict.inconclusive,
         signals: [
           AuthenticitySignal(
+            kind: AuthenticitySignalKind.unrecognisedFormat,
             label: 'File',
             value: 'Not a recognised image format.',
           ),
@@ -211,28 +257,43 @@ abstract final class AuthenticityInspector {
 
     if (make != null || model != null) {
       signals.add(AuthenticitySignal(
+        kind: AuthenticitySignalKind.camera,
         label: 'Camera',
         value: [?make, ?model].join(' ').trim(),
       ));
     }
     if (software != null) {
-      signals.add(AuthenticitySignal(label: 'Software', value: software));
+      signals.add(AuthenticitySignal(
+        kind: AuthenticitySignalKind.software,
+        label: 'Software',
+        value: software,
+      ));
     }
     if (description != null) {
-      signals.add(AuthenticitySignal(label: 'Description', value: description));
+      signals.add(AuthenticitySignal(
+        kind: AuthenticitySignalKind.description,
+        label: 'Description',
+        value: description,
+      ));
     }
     if (copyright != null) {
-      signals.add(AuthenticitySignal(label: 'Copyright', value: copyright));
+      signals.add(AuthenticitySignal(
+        kind: AuthenticitySignalKind.copyright,
+        label: 'Copyright',
+        value: copyright,
+      ));
     }
     if (hasGps) {
       // Presence only. Action does not display someone's coordinates back at
       // them in a tool about authenticity.
       signals.add(const AuthenticitySignal(
+        kind: AuthenticitySignalKind.location,
         label: 'Location',
         value: 'Location data is present in this file.',
       ));
     }
     signals.add(const AuthenticitySignal(
+      kind: AuthenticitySignalKind.contentCredentials,
       label: 'Content Credentials',
       value: 'Not checked — this build has no signature verifier.',
     ));
@@ -284,6 +345,7 @@ abstract final class AuthenticityInspector {
         verdict: AuthenticityVerdict.inconclusive,
         signals: [
           AuthenticitySignal(
+            kind: AuthenticitySignalKind.textLimitation,
             label: 'Text',
             value: 'Text alone cannot reliably show whether AI was used. '
                 'Action does not guess.',

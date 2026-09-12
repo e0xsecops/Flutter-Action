@@ -89,7 +89,16 @@ class ActionCard extends ConsumerWidget {
 
   void _explain(BuildContext context, ActionTriageDecision decision) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(TriageLabels.explanation(decision, item, now))),
+      SnackBar(
+        content: Text(
+          TriageLabels.explanationIn(
+            AppL10n.of(context),
+            decision,
+            item,
+            now,
+          ),
+        ),
+      ),
     );
   }
 
@@ -97,6 +106,7 @@ class ActionCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final l10n = AppL10n.of(context);
     final completed = item.status == ActionStatus.completed;
 
     final spine = switch (item.urgency) {
@@ -108,7 +118,7 @@ class ActionCard extends ConsumerWidget {
 
     final badge = decision == null
         ? null
-        : TriageLabels.badge(decision!, item, now);
+        : TriageLabels.badgeIn(l10n, decision!, item, now);
     final tone = switch (decision?.primaryReason) {
       TriageReason.overdue => colors.urgencyCritical,
       TriageReason.dueToday ||
@@ -156,8 +166,12 @@ class ActionCard extends ConsumerWidget {
                     // full sentence: a colour is not an explanation.
                     if (badge != null)
                       Semantics(
-                        label:
-                            TriageLabels.semanticLabel(decision!, item, now),
+                        label: TriageLabels.semanticLabelIn(
+                          l10n,
+                          decision!,
+                          item,
+                          now,
+                        ),
                         button: true,
                         child: InkWell(
                           onTap: () => _explain(context, decision!),
@@ -237,8 +251,8 @@ class ActionCard extends ConsumerWidget {
                 // three times in a list says nothing about which of the three
                 // is about to be marked.
                 tooltip: completed
-                    ? 'Completed: ${item.title}'
-                    : 'Mark "${item.title}" as done',
+                    ? l10n.cardCompletedTooltip(item.title)
+                    : l10n.briefMarkDone(item.title),
                 onPressed: completed
                     ? null
                     : () async {

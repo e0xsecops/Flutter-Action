@@ -73,10 +73,16 @@ extension type const AiCapabilities(Set<AiCapability> _values) {
   Set<AiCapability> get values => _values;
 }
 
-/// How a missing capability reads to a person.
+/// How a missing capability reads, in canonical English.
 ///
 /// Kept next to the enum so a new capability cannot be added without deciding
-/// what the user would be told when it is absent.
+/// what the user would be told when it is absent — and kept in English so a
+/// log line, a fixture report and a domain test can print it without a locale.
+///
+/// What a person reads is `AiCapabilityL10n.describeIn(l10n)` in
+/// `lib/l10n/enum_labels.dart`. These nouns are mid-sentence and lowercase on
+/// purpose: they land inside "the model you chose cannot read …", not on a
+/// button.
 String describeCapability(AiCapability capability) => switch (capability) {
       AiCapability.text => 'text',
       AiCapability.vision => 'images',
@@ -87,3 +93,26 @@ String describeCapability(AiCapability capability) => switch (capability) {
       AiCapability.citations => 'evidence citations',
       AiCapability.longContext => 'long documents',
     };
+
+/// Several capabilities, joined as they read inside a sentence — in English.
+///
+/// **Why the join is not a `join(', ')` at the call site.** The comma and the
+/// "or" are language, not punctuation: Arabic writes `، `, Chinese and
+/// Japanese write `、`, and several languages put the conjunction somewhere
+/// English does not. So the joining is a translated pattern like everything
+/// else, and this function is only its English twin, for logs and tests. A
+/// person reads `AiCapabilityListL10n.describeIn(l10n)`.
+///
+/// Order follows the enum declaration rather than the alphabet, because an
+/// alphabetical sort is an English sort and would reorder the sentence
+/// differently in every locale.
+String describeCapabilities(Iterable<AiCapability> capabilities) {
+  final ordered = AiCapability.values.where(capabilities.contains).toList();
+  if (ordered.isEmpty) return '';
+  if (ordered.length == 1) return describeCapability(ordered.single);
+  final head = ordered
+      .sublist(0, ordered.length - 1)
+      .map(describeCapability)
+      .join(', ');
+  return '$head or ${describeCapability(ordered.last)}';
+}

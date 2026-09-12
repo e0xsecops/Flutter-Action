@@ -9,12 +9,18 @@ import 'package:flutter/material.dart';
 
 import '../../../design/components/app_sheet.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 /// Returns the new text, `''` to clear it, or null if the user backed out.
 ///
 /// Empty and null are deliberately different: clearing a field is a decision,
 /// and treating it as a cancel would silently refuse to let anyone undo
 /// something they wrote.
+///
+/// [title] and [hint] are already-localized text, not keys. Three call sites
+/// pass three different field names into the same sheet, so the sheet stays
+/// field-agnostic and the caller — which knows *which* field is being edited —
+/// is the one that reaches for the bundle.
 Future<String?> showGoalTextSheet(
   BuildContext context, {
   required String title,
@@ -65,6 +71,8 @@ class _GoalTextEditorState extends State<_GoalTextEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         Space.page,
@@ -88,7 +96,7 @@ class _GoalTextEditorState extends State<_GoalTextEditor> {
           FilledButton(
             onPressed: () =>
                 Navigator.of(context).pop(_controller.text.trim()),
-            child: const Text('Save'),
+            child: Text(l10n.commonSave),
           ),
         ],
       ),
@@ -109,10 +117,10 @@ Future<String?> showNewGoalSheet(BuildContext context) {
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
       ),
-      child: const AppSheet(
-        title: 'What do you want to happen?',
-        subtitle: 'One sentence is enough. You can add the details after.',
-        child: _NewGoalEditor(),
+      child: AppSheet(
+        title: AppL10n.of(sheetContext).goalNewSheetTitle,
+        subtitle: AppL10n.of(sheetContext).goalNewSheetSubtitle,
+        child: const _NewGoalEditor(),
       ),
     ),
   );
@@ -145,6 +153,7 @@ class _NewGoalEditorState extends State<_NewGoalEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final canSave = _controller.text.trim().isNotEmpty;
 
     return Padding(
@@ -164,16 +173,14 @@ class _NewGoalEditorState extends State<_NewGoalEditor> {
             maxLines: 3,
             minLines: 1,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(
-              hintText: 'Renew the car insurance without overpaying.',
-            ),
+            decoration: InputDecoration(hintText: l10n.goalTitleHint),
           ),
           const SizedBox(height: Space.md),
           FilledButton(
             onPressed: canSave
                 ? () => Navigator.of(context).pop(_controller.text.trim())
                 : null,
-            child: const Text('Create goal'),
+            child: Text(l10n.goalCreateAction),
           ),
         ],
       ),

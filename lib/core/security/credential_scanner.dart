@@ -65,6 +65,13 @@ enum CredentialKind {
   highEntropyString,
 }
 
+/// The kind's name, in canonical English.
+///
+/// This is the string the domain tests, the diagnostics harness and the
+/// redaction marker read. What a person on screen reads is
+/// `CredentialKindL10n.labelIn(l10n)` in `lib/l10n/enum_labels.dart`, for the
+/// reason every enum in this app keeps its English and its translation apart:
+/// a `const` value cannot depend on a locale.
 String describeCredentialKind(CredentialKind kind) => switch (kind) {
       CredentialKind.privateKeyBlock => 'Private key',
       CredentialKind.providerApiKey => 'API key',
@@ -74,6 +81,86 @@ String describeCredentialKind(CredentialKind kind) => switch (kind) {
       CredentialKind.keyedAssignment => 'Password or key',
       CredentialKind.highEntropyString => 'Possible secret',
     };
+
+/// What to do about a credential of this kind, in canonical English.
+///
+/// **Why the advice belongs to the kind rather than to the match site.** It
+/// was written at each `claim` call, one sentence per pattern, and each
+/// sentence already corresponded exactly to one [CredentialKind] — the
+/// duplication was invisible only because the two lists happened to agree. It
+/// also could not be translated there: a literal built inside a static scan
+/// has no locale to build itself from. The kind travels out of the scan; the
+/// advice should travel with it.
+///
+/// The sentence a person reads is `CredentialKindL10n.adviceIn(l10n)`. This
+/// English original stays because the honesty tests assert against it directly
+/// — that a provider-key finding says "revoke", and that nothing here promises
+/// the content is safe.
+String describeCredentialAdvice(CredentialKind kind) => switch (kind) {
+      CredentialKind.privateKeyBlock =>
+        'Remove this before sharing, and replace the key pair. A '
+            'private key cannot be made safe again once it has been seen.',
+      CredentialKind.providerApiKey =>
+        'Revoke this key with the provider and issue a new one. '
+            'Removing it from the document does not disable it.',
+      CredentialKind.connectionString =>
+        'This carries a password and the address it opens. Change the '
+            'password if this has already been shared.',
+      CredentialKind.jsonWebToken =>
+        'Tokens like this often expire, but not always. Treat it as '
+            'live unless you know when it expires.',
+      CredentialKind.authorizationHeader =>
+        'Remove the header value. Pasted request logs are one of the '
+            'most common ways a working token gets shared by accident.',
+      CredentialKind.keyedAssignment =>
+        'Move this into an environment variable or a secret store, '
+            'and change the value if the file has been shared.',
+      CredentialKind.highEntropyString =>
+        'Action cannot tell what this is. Check it before sharing — it '
+            'may equally be an identifier or a checksum.',
+    };
+
+/// The specific name a finding can carry instead of its kind's generic one.
+///
+/// Two families live here: the vendor a prefix identifies, and the keyword an
+/// assignment was named for. Both used to be bare strings, which meant the only
+/// way to know *which* label a finding had was to compare the English — and a
+/// screen that has to match on display text cannot be translated at all.
+///
+/// The English stays on the member, because the scanner's tests assert that a
+/// `sk-ant-` prefix comes back labelled 'Anthropic API key' and that
+/// `client_secret:` comes back labelled 'Client secret'. What a person reads is
+/// `CredentialLabelL10n.labelIn(l10n)`.
+enum CredentialLabel {
+  // Vendor prefixes. The company names are trademarks and are not translated.
+  anthropicApiKey('Anthropic API key'),
+  openAiProjectKey('OpenAI project key'),
+  openAiStyleApiKey('OpenAI-style API key'),
+  googleApiKey('Google API key'),
+  googleOAuthToken('Google OAuth token'),
+  gitHubToken('GitHub token'),
+  slackToken('Slack token'),
+  awsAccessKeyId('AWS access key ID'),
+  gitLabToken('GitLab token'),
+  npmToken('npm token'),
+
+  // What the keyword in a `name = value` assignment said the value was.
+  passphrase('Passphrase'),
+  password('Password'),
+  privateKey('Private key'),
+  refreshToken('Refresh token'),
+  accessToken('Access token'),
+  token('Token'),
+  clientSecret('Client secret'),
+  apiKey('API key'),
+  credential('Credential'),
+  secret('Secret');
+
+  const CredentialLabel(this.label);
+
+  /// Canonical English. Read by tests and logs, never rendered directly.
+  final String label;
+}
 
 /// How strongly the evidence supports calling this a credential.
 ///
@@ -105,7 +192,6 @@ class CredentialFinding {
     required this.value,
     required this.start,
     required this.end,
-    required this.advice,
     this.detail,
   });
 
@@ -119,14 +205,17 @@ class CredentialFinding {
   final int start;
   final int end;
 
-  /// What the user should do about it, in plain words.
-  final String advice;
-
   /// A specific note — the vendor's name, say. Absent when there is nothing
   /// useful to add beyond the kind.
-  final String? detail;
+  final CredentialLabel? detail;
 
-  String get label => detail ?? describeCredentialKind(kind);
+  /// What the user should do about it, in plain words and in canonical
+  /// English. On screen this is `kind.adviceIn(l10n)`.
+  String get advice => describeCredentialAdvice(kind);
+
+  /// Canonical English again: the specific label when there is one, otherwise
+  /// the kind's. On screen this is `CredentialFindingL10n.labelIn(l10n)`.
+  String get label => detail?.label ?? describeCredentialKind(kind);
 
   /// The only form that may be shown by default.
   ///
@@ -136,7 +225,13 @@ class CredentialFinding {
   /// most of itself.
   String get masked => maskCredential(value);
 
-  /// The replacement written into a cleaned copy.
+  /// The replacement written into a cleaned copy, in canonical English.
+  ///
+  /// A screen that has a locale should pass
+  /// `CredentialFindingL10n.replacementIn(l10n)` to [CredentialScanner.redact]
+  /// as its `marker`, so the copy the user shares is marked up in the language
+  /// they are reading. That form uppercases through `eyebrowCase` rather than
+  /// `toUpperCase`, which gets Turkish dotted i wrong.
   String get replacement => '[${describeCredentialKind(kind).toUpperCase()}]';
 
   @override
@@ -176,37 +271,46 @@ abstract final class CredentialScanner {
   /// Vendor prefixes. These are the shapes that can be asserted rather than
   /// guessed, so they carry [CredentialConfidence.named]-adjacent weight and a
   /// vendor name in [CredentialFinding.detail].
-  static final _vendorKeys = <({RegExp pattern, String label})>[
+  static final _vendorKeys = <({RegExp pattern, CredentialLabel label})>[
     (
       pattern: RegExp(r'\bsk-ant-[A-Za-z0-9\-_]{16,}'),
-      label: 'Anthropic API key',
+      label: CredentialLabel.anthropicApiKey,
     ),
     (
       pattern: RegExp(r'\bsk-proj-[A-Za-z0-9\-_]{16,}'),
-      label: 'OpenAI project key',
+      label: CredentialLabel.openAiProjectKey,
     ),
-    (pattern: RegExp(r'\bsk-[A-Za-z0-9]{20,}'), label: 'OpenAI-style API key'),
-    (pattern: RegExp(r'\bAIza[A-Za-z0-9\-_]{30,}'), label: 'Google API key'),
+    (
+      pattern: RegExp(r'\bsk-[A-Za-z0-9]{20,}'),
+      label: CredentialLabel.openAiStyleApiKey,
+    ),
+    (
+      pattern: RegExp(r'\bAIza[A-Za-z0-9\-_]{30,}'),
+      label: CredentialLabel.googleApiKey,
+    ),
     (
       pattern: RegExp(r'\bya29\.[A-Za-z0-9\-_.]{20,}'),
-      label: 'Google OAuth token',
+      label: CredentialLabel.googleOAuthToken,
     ),
     (
       pattern: RegExp(r'\bgh[pousr]_[A-Za-z0-9]{30,}'),
-      label: 'GitHub token',
+      label: CredentialLabel.gitHubToken,
     ),
     (
       pattern: RegExp(r'\bxox[baprs]-[A-Za-z0-9-]{10,}'),
-      label: 'Slack token',
+      label: CredentialLabel.slackToken,
     ),
-    (pattern: RegExp(r'\bAKIA[0-9A-Z]{16}\b'), label: 'AWS access key ID'),
+    (
+      pattern: RegExp(r'\bAKIA[0-9A-Z]{16}\b'),
+      label: CredentialLabel.awsAccessKeyId,
+    ),
     (
       pattern: RegExp(r'\bglpat-[A-Za-z0-9\-_]{16,}'),
-      label: 'GitLab token',
+      label: CredentialLabel.gitLabToken,
     ),
     (
       pattern: RegExp(r'\bnpm_[A-Za-z0-9]{30,}'),
-      label: 'npm token',
+      label: CredentialLabel.npmToken,
     ),
   ];
 
@@ -282,8 +386,7 @@ abstract final class CredentialScanner {
       int end, {
       required CredentialKind kind,
       required CredentialConfidence confidence,
-      required String advice,
-      String? detail,
+      CredentialLabel? detail,
       String? value,
     }) {
       if (start < 0 || end > text.length || end <= start) return;
@@ -295,7 +398,6 @@ abstract final class CredentialScanner {
         value: value ?? text.substring(start, end),
         start: start,
         end: end,
-        advice: advice,
         detail: detail,
       ));
     }
@@ -306,8 +408,6 @@ abstract final class CredentialScanner {
         match.end,
         kind: CredentialKind.privateKeyBlock,
         confidence: CredentialConfidence.named,
-        advice: 'Remove this before sharing, and replace the key pair. A '
-            'private key cannot be made safe again once it has been seen.',
       );
     }
 
@@ -317,8 +417,6 @@ abstract final class CredentialScanner {
         match.end,
         kind: CredentialKind.connectionString,
         confidence: CredentialConfidence.named,
-        advice: 'This carries a password and the address it opens. Change the '
-            'password if this has already been shared.',
       );
     }
 
@@ -328,8 +426,6 @@ abstract final class CredentialScanner {
         match.end,
         kind: CredentialKind.authorizationHeader,
         confidence: CredentialConfidence.named,
-        advice: 'Remove the header value. Pasted request logs are one of the '
-            'most common ways a working token gets shared by accident.',
       );
     }
 
@@ -341,8 +437,6 @@ abstract final class CredentialScanner {
           kind: CredentialKind.providerApiKey,
           confidence: CredentialConfidence.named,
           detail: vendor.label,
-          advice: 'Revoke this key with the provider and issue a new one. '
-              'Removing it from the document does not disable it.',
         );
       }
     }
@@ -353,8 +447,6 @@ abstract final class CredentialScanner {
         match.end,
         kind: CredentialKind.jsonWebToken,
         confidence: CredentialConfidence.shaped,
-        advice: 'Tokens like this often expire, but not always. Treat it as '
-            'live unless you know when it expires.',
       );
     }
 
@@ -368,8 +460,6 @@ abstract final class CredentialScanner {
         kind: CredentialKind.keyedAssignment,
         confidence: CredentialConfidence.shaped,
         detail: _assignmentLabel(match.group(1)),
-        advice: 'Move this into an environment variable or a secret store, '
-            'and change the value if the file has been shared.',
         value: match.group(2),
       );
     }
@@ -382,8 +472,6 @@ abstract final class CredentialScanner {
         match.end,
         kind: CredentialKind.highEntropyString,
         confidence: CredentialConfidence.statistical,
-        advice: 'Action cannot tell what this is. Check it before sharing — it '
-            'may equally be an identifier or a checksum.',
       );
     }
 
@@ -394,13 +482,28 @@ abstract final class CredentialScanner {
   /// Produces a copy with [selected] findings replaced.
   ///
   /// Back to front, so earlier offsets stay valid. The original is untouched.
-  static String redact(String text, List<CredentialFinding> selected) {
+  ///
+  /// [marker] decides what each removed span is replaced with. It defaults to
+  /// [CredentialFinding.replacement], the canonical English `[API KEY]`, so
+  /// callers with no locale — tests, diagnostics — get what they always got.
+  /// A screen passes the localised form; this is a seam rather than an
+  /// `AppL10n` parameter because a scanner that had to be handed a translation
+  /// bundle in order to redact would be a scanner that could not run in the
+  /// domain.
+  static String redact(
+    String text,
+    List<CredentialFinding> selected, {
+    String Function(CredentialFinding finding)? marker,
+  }) {
     final ordered = [...selected]..sort((a, b) => b.start.compareTo(a.start));
     var result = text;
     for (final finding in ordered) {
       if (finding.start < 0 || finding.end > result.length) continue;
-      result =
-          result.replaceRange(finding.start, finding.end, finding.replacement);
+      result = result.replaceRange(
+        finding.start,
+        finding.end,
+        marker == null ? finding.replacement : marker(finding),
+      );
     }
     return result;
   }
@@ -449,21 +552,25 @@ abstract final class CredentialScanner {
 
   /// Turns the matched variable name into something readable, without echoing
   /// an arbitrarily long identifier into the UI.
-  static String? _assignmentLabel(String? name) {
+  ///
+  /// Returns a member rather than a string so the screen can ask for the
+  /// reader's language. The keywords matched here are the ones a developer
+  /// typed in a config file and are never translated; the label they map to is.
+  static CredentialLabel? _assignmentLabel(String? name) {
     if (name == null || name.isEmpty) return null;
     final lower = name.toLowerCase();
-    if (lower.contains('passphrase')) return 'Passphrase';
+    if (lower.contains('passphrase')) return CredentialLabel.passphrase;
     if (lower.contains('passwd') || lower.contains('password')) {
-      return 'Password';
+      return CredentialLabel.password;
     }
-    if (lower.contains('private')) return 'Private key';
-    if (lower.contains('refresh')) return 'Refresh token';
-    if (lower.contains('access')) return 'Access token';
-    if (lower.contains('token')) return 'Token';
-    if (lower.contains('client')) return 'Client secret';
-    if (lower.contains('key')) return 'API key';
-    if (lower.contains('credential')) return 'Credential';
-    return 'Secret';
+    if (lower.contains('private')) return CredentialLabel.privateKey;
+    if (lower.contains('refresh')) return CredentialLabel.refreshToken;
+    if (lower.contains('access')) return CredentialLabel.accessToken;
+    if (lower.contains('token')) return CredentialLabel.token;
+    if (lower.contains('client')) return CredentialLabel.clientSecret;
+    if (lower.contains('key')) return CredentialLabel.apiKey;
+    if (lower.contains('credential')) return CredentialLabel.credential;
+    return CredentialLabel.secret;
   }
 }
 

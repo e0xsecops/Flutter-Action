@@ -63,7 +63,15 @@ enum ExtractionEscalationSignal {
 
   const ExtractionEscalationSignal(this.reason, {required this.needsMultimodal});
 
-  /// Plain-language explanation, safe to show a user.
+  /// Plain-language explanation, safe to show a user — in canonical English.
+  ///
+  /// Every one of these sentences is a statement about what the app could
+  /// *not* establish from the capture, which is precisely why the review
+  /// screen shows them. What a person reads is
+  /// `ExtractionEscalationSignalL10n.reasonIn(l10n)` in
+  /// `lib/l10n/enum_labels.dart`; the English stays here because the fixture
+  /// harness prints it and the escalation tests assert it without pumping a
+  /// widget tree, and because a `const` enum field cannot depend on a locale.
   final String reason;
 
   /// Whether this signal is one a multimodal read could plausibly fix.
@@ -93,6 +101,13 @@ class EscalationAssessment {
 
   /// Every reason, in one readable string. This is what makes the decision
   /// auditable — if the app cannot fill this in, it has no business escalating.
+  ///
+  /// **Not a user-facing string, and deliberately not translated.** It is read
+  /// by the diagnostics harness and by `escalation_evaluator_test.dart`. The
+  /// review screen never shows it: it loops the signals and renders each
+  /// `reasonIn(l10n)` on its own line, which also sidesteps the `' '` join —
+  /// a space between sentences is wrong in Chinese and Japanese, where the
+  /// terminator is `。` and nothing follows it.
   String get explanation =>
       signals.isEmpty ? 'On-device reading looks sufficient.' : signals.map((s) => s.reason).join(' ');
 

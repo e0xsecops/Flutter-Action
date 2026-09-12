@@ -90,7 +90,7 @@ class SettingsScreen extends ConsumerWidget {
               label: l10n.settingsAiProvider,
               description: aiConfig == null
                   ? l10n.settingsAiNotConnected
-                  : l10n.settingsAiConnected(aiConfig.kind.label),
+                  : l10n.settingsAiConnected(aiConfig.kind.labelIn(l10n)),
               icon: Icons.lightbulb_outline_rounded,
               onTap: () => context.push(Routes.settingsIntelligence),
             ),

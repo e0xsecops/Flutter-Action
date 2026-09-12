@@ -2105,4 +2105,2065 @@ class AppL10nKo extends AppL10n {
 
   @override
   String get urgencyUnsure => '알 수 없음';
+
+  @override
+  String get detailSaveFailed => '저장하지 못했습니다. 잃어버린 것은 없습니다 — 다시 시도해 주세요.';
+
+  @override
+  String get detailSectionCreatedFrom => '만든 원본';
+
+  @override
+  String get detailSourceChecking => '원본 캡처를 불러오는 중…';
+
+  @override
+  String get detailSourceUnavailable => '원본 캡처를 더 이상 찾을 수 없습니다.';
+
+  @override
+  String get detailReopenAction => '할 일 다시 열기';
+
+  @override
+  String get detailMarkActionComplete => '할 일 전체를 완료로 표시';
+
+  @override
+  String get detailGetHelp => '이것에 대해 도움 받기';
+
+  @override
+  String get detailSectionHistory => '이력';
+
+  @override
+  String get detailHistoryShowLess => '간단히 보기';
+
+  @override
+  String detailHistoryShowAll(int count) {
+    return '이력 $count개 모두 보기';
+  }
+
+  @override
+  String get detailHistoryCreated => '만들어짐';
+
+  @override
+  String detailHistoryCreatedWithSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '단계 $count개와 함께 만들어짐',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get detailHistoryReviewed => '당신이 세부 정보를 확인했습니다';
+
+  @override
+  String detailHistoryStepFinished(String title) {
+    return '“$title” 끝냄';
+  }
+
+  @override
+  String get detailHistoryAStep => '어떤 단계';
+
+  @override
+  String get detailHistoryReminderSet => '당신이 알림을 걸어 두었습니다';
+
+  @override
+  String detailHistoryReminderSetFor(String when) {
+    return '당신이 $when에 알리도록 알림을 걸어 두었습니다';
+  }
+
+  @override
+  String get detailHistoryCompleted => '완료로 표시함';
+
+  @override
+  String get detailHistoryChanged => '마지막으로 바뀜';
+
+  @override
+  String get detailHistoryTimestampFormat => 'yyyy년 M월 d일 HH:mm';
+
+  @override
+  String get aiProviderCustom => '직접 지정 (OpenAI 호환)';
+
+  @override
+  String get aiCapabilityText => '글';
+
+  @override
+  String get aiCapabilityImages => '이미지';
+
+  @override
+  String get aiCapabilityDocuments => '문서';
+
+  @override
+  String get aiCapabilityStructuredResults => '구조화된 결과';
+
+  @override
+  String get aiCapabilityStreaming => '스트리밍 응답';
+
+  @override
+  String get aiCapabilitySystemInstructions => '시스템 지시문';
+
+  @override
+  String get aiCapabilityEvidenceCitations => '근거 인용';
+
+  @override
+  String get aiCapabilityLongDocuments => '긴 문서 전체';
+
+  @override
+  String aiCapabilityListJoin(String a, String b) {
+    return '$a, $b';
+  }
+
+  @override
+  String aiCapabilityListTwo(String a, String b) {
+    return '$a 또는 $b';
+  }
+
+  @override
+  String aiCapabilityListMore(String head, String last) {
+    return '$head 또는 $last';
+  }
+
+  @override
+  String get aiFailureNotConfigured => '이 도구를 쓰려면 AI 제공자를 연결하세요.';
+
+  @override
+  String get aiFailureInvalidKey => '그 API 키를 제공자가 받아들이지 않았습니다.';
+
+  @override
+  String get aiFailureQuotaExceeded => '당신의 제공자 계정에 크레딧이 없거나 할당량을 다 썼습니다.';
+
+  @override
+  String get aiFailureRateLimited =>
+      '당신의 제공자가 요청 속도를 제한하고 있습니다. 잠시 뒤에 다시 시도해 보세요.';
+
+  @override
+  String get aiFailureNetworkUnavailable =>
+      'Action이 당신의 AI 제공자에 닿지 못했습니다. 연결을 확인해 보세요.';
+
+  @override
+  String get aiFailureUnsupportedModel =>
+      '그 모델은 당신의 키로는 쓸 수 없습니다. 설정에서 다른 모델을 고르세요.';
+
+  @override
+  String aiFailureUnsupportedCapability(String capabilities) {
+    return '당신이 고른 모델은 $capabilities을(를) 읽지 못합니다. 설정에서 다른 모델을 고르세요.';
+  }
+
+  @override
+  String get aiFailureContextTooLarge => '이 모델이 한 번에 읽기에는 내용이 너무 많았습니다.';
+
+  @override
+  String get aiFailureInputTooLargeText => '한 번에 분석할 수 있는 양보다 글이 많습니다.';
+
+  @override
+  String get aiFailureProviderUnavailable =>
+      '당신의 AI 제공자에 문제가 생겼습니다. 잠시 뒤에 다시 시도해 보세요.';
+
+  @override
+  String get aiFailureMalformedResponse => '그 제공자가 Action이 읽을 수 없는 것을 돌려보냈습니다.';
+
+  @override
+  String get aiFailureCancelled => '중지했습니다.';
+
+  @override
+  String get aiFailureInsecureEndpoint => '그 endpoint는 https:// 주소여야 합니다.';
+
+  @override
+  String get aiFailureUnknown => '당신의 AI 제공자와 주고받는 중에 무언가 잘못되었습니다.';
+
+  @override
+  String get appLockTitle => 'Action이 잠겨 있습니다';
+
+  @override
+  String get appLockPrompt =>
+      '계속하려면 본인이 맞는지 확인하세요. Action은 당신의 기기에 확인을 맡깁니다 — 당신의 지문도, 얼굴도, PIN도 결코 보지 않습니다.';
+
+  @override
+  String get appLockUnlocking => '잠금을 푸는 중…';
+
+  @override
+  String get appLockNotConfirmed => '확인되지 않았습니다. 준비되면 다시 시도하세요.';
+
+  @override
+  String get appLockCannotConfirm =>
+      '지금은 당신의 기기가 본인이 맞는지 확인하지 못합니다. 기기 설정에 화면 잠금이 아직 설정되어 있는지 확인하세요.';
+
+  @override
+  String get appLockWaiting => '기다리는 중…';
+
+  @override
+  String get appLockUnlock => '잠금 해제';
+
+  @override
+  String get appLockReasonUnlock => 'Action 잠금 해제';
+
+  @override
+  String get appLockReasonEnable => '앱 잠금을 켜기 전에 본인 확인';
+
+  @override
+  String get appLockReasonDisable => '앱 잠금을 끄기 전에 본인 확인';
+
+  @override
+  String get todayCapabilityHeading => 'Action이 다루는 것';
+
+  @override
+  String get todayCapabilityDocumentTitle => '편지나 청구서 한 장';
+
+  @override
+  String get todayCapabilityDocumentBlurb =>
+      'Action이 그것을 읽고 기한과 금액과 접수 번호를 찾아냅니다.';
+
+  @override
+  String get todayCapabilityScreenshotTitle => '스크린샷 한 장';
+
+  @override
+  String get todayCapabilityScreenshotBlurb =>
+      '그냥 두면 잊어버릴 메시지를, 행동에 옮길 수 있는 것으로 바꾸세요.';
+
+  @override
+  String get todayCapabilityTextTitle => '글 몇 줄';
+
+  @override
+  String get todayCapabilityTextBlurb =>
+      '무엇이든 붙여넣으세요. Action이 그것이 무엇이고 당신에게 무엇을 요구하는지 알아냅니다.';
+
+  @override
+  String get todayCapabilityConfirmTitle => '모든 것을 당신이 확인합니다';
+
+  @override
+  String get todayCapabilityConfirmBlurb =>
+      '당신이 근거를 보고 그렇다고 말하기 전에는 어느 것도 할 일이 되지 않습니다.';
+
+  @override
+  String get todayCapabilityExploreIntelligence => '인텔리전스 둘러보기';
+
+  @override
+  String get documentRejectedEmpty => '그 파일은 비어 있습니다.';
+
+  @override
+  String documentRejectedTooLarge(String size) {
+    return '그 문서는 $size 크기로, Action이 다룰 수 있는 것보다 큽니다.';
+  }
+
+  @override
+  String get documentRejectedNotAPdf =>
+      '이름이 무엇이든 그것은 PDF가 아닙니다. Action은 PDF와 이미지를 읽습니다.';
+
+  @override
+  String get documentRejectedUnreadable => '그 문서를 읽지 못했습니다.';
+
+  @override
+  String get pdfRejectedNotAPdf => '이름이 무엇이든 그 파일은 PDF가 아닙니다.';
+
+  @override
+  String get pdfRejectedEncrypted => '그 PDF는 비밀번호로 잠겨 있어서 Action이 읽지 못합니다.';
+
+  @override
+  String get pdfRejectedDamaged => '그 PDF를 읽지 못했습니다. 파일이 온전하지 않을 수도 있습니다.';
+
+  @override
+  String get shareRejectedEmpty => '그 공유 안에는 읽을 것이 없었습니다.';
+
+  @override
+  String get shareRejectedUnsupportedType =>
+      'Action은 텍스트와 이미지와 PDF를 받을 수 있습니다. 그건 그 밖의 것이었습니다.';
+
+  @override
+  String get shareRejectedContentMismatch =>
+      '그 파일은 스스로 밝힌 종류의 파일이 아니어서, Action은 그것을 열지 않았습니다.';
+
+  @override
+  String get shareRejectedTooLarge => '그 파일은 Action이 다루기에 너무 큽니다.';
+
+  @override
+  String get shareRejectedUnreadable => '그 파일을 읽지 못했습니다.';
+
+  @override
+  String get captureFailureRecognition => '문자 인식을 실행하지 못했습니다.';
+
+  @override
+  String get captureFailureImageFormat => '그 이미지 형식은 이 기기에서 읽지 못했습니다.';
+
+  @override
+  String get connectSheetTitle => '당신의 AI 연결하기';
+
+  @override
+  String get connectSheetSubtitle =>
+      '당신 자신의 제공자 계정과 API 키를 씁니다. Action은 그 키를 이 기기의 보안 저장소에 보관합니다.';
+
+  @override
+  String get connectErrorKeyMissing => '계속하려면 API 키를 붙여넣으세요.';
+
+  @override
+  String get connectErrorModelMissing => '모델을 고르거나 모델 id를 입력하세요.';
+
+  @override
+  String get connectErrorEndpointMissing => '당신의 endpoint 주소를 입력하세요.';
+
+  @override
+  String get connectErrorSecureStorageUnavailable =>
+      '이 기기의 보안 저장소를 열지 못해서 키가 저장되지 않았습니다.';
+
+  @override
+  String get connectTestSucceeded => '연결되었습니다.';
+
+  @override
+  String connectTestSucceededWithModels(int count) {
+    return '연결되었습니다. 모델 $count개를 쓸 수 있습니다.';
+  }
+
+  @override
+  String get connectProviderLabel => '제공자';
+
+  @override
+  String get connectEndpointLabel => 'Endpoint';
+
+  @override
+  String get connectEndpointHttpsNote =>
+      'https:// 주소여야 합니다. Action은 암호화되지 않은 연결로 당신의 문서를 보내지 않습니다.';
+
+  @override
+  String get connectApiKeyLabel => 'API 키';
+
+  @override
+  String get connectApiKeyHint => '키를 붙여넣으세요';
+
+  @override
+  String get connectKeyPrivacyNote =>
+      '당신의 키는 이 기기에 남습니다. Action은 당신이 고른 제공자 외에는 어디에도 그것을 보내지 않으며, 저장한 뒤에는 다시 보여 주지 못합니다.';
+
+  @override
+  String get connectModelLabel => '모델';
+
+  @override
+  String get connectModelIdHint => '모델 id';
+
+  @override
+  String get connectModelFreeTextNote =>
+      '제공자는 모델 id를 없애기도 하고 새로 추가하기도 합니다. 원하는 것이 목록에 없으면 여기에 직접 입력하세요.';
+
+  @override
+  String get connectAndTest => '연결하고 테스트';
+
+  @override
+  String get connectSaveWithoutTesting => '테스트 없이 저장';
+
+  @override
+  String get toolWarningFactsNotChecked =>
+      'Action이 이것을 원본 글과 대조하지 못했으므로, 여기 있는 금액과 날짜는 확인되지 않았습니다.';
+
+  @override
+  String get toolTitleRewrite => '글 다듬기';
+
+  @override
+  String get toolDescriptionRewrite =>
+      '더 분명하게, 더 짧게, 또는 더 격식 있게 — 사실은 그대로 둔 채.';
+
+  @override
+  String get toolModeRewriteClearer => '더 분명하게';
+
+  @override
+  String get toolModeRewriteProfessional => '더 업무적으로';
+
+  @override
+  String get toolModeRewriteShorter => '더 짧게';
+
+  @override
+  String get toolModeRewritePersuasive => '더 설득력 있게';
+
+  @override
+  String get toolModeRewriteSimpler => '더 쉽게';
+
+  @override
+  String get toolModeRewriteStructured => '더 짜임새 있게';
+
+  @override
+  String get toolModeRewriteGrammarOnly => '문법만';
+
+  @override
+  String get toolSectionWhatChanged => '무엇이 바뀌었나';
+
+  @override
+  String get toolSectionNote => '참고';
+
+  @override
+  String get toolSectionAlreadyClearBody => '이 글은 이미 분명했습니다. 아래의 변경은 사소합니다.';
+
+  @override
+  String get toolSectionImprovedText => '다듬은 글';
+
+  @override
+  String get toolTitleDraftReply => '답장 초안 쓰기';
+
+  @override
+  String get toolDescriptionDraftReply => '당신이 직접 고쳐서 보내는 답장.';
+
+  @override
+  String get toolModeReplyProfessional => '정중하게';
+
+  @override
+  String get toolModeReplyConcise => '간결하게';
+
+  @override
+  String get toolModeReplyFriendly => '친근하게';
+
+  @override
+  String get toolModeReplyFormal => '격식 있게';
+
+  @override
+  String get toolModeReplyClarification => '설명 요청하기';
+
+  @override
+  String get toolModeReplyConfirmation => '수신 확인하기';
+
+  @override
+  String get toolModeReplyDispute => '반박하기';
+
+  @override
+  String get toolSectionSubject => '제목';
+
+  @override
+  String get toolSectionDraftReply => '답장 초안';
+
+  @override
+  String get toolSectionPlaceholders => '이건 당신이 채워야 합니다';
+
+  @override
+  String toolSectionDraftWithSubject(String subject) {
+    return '초안 — $subject';
+  }
+
+  @override
+  String get toolWarningDraftNotSent =>
+      '이건 초안입니다. Action은 아무것도 보내지 않습니다 — 당신이 읽고, 고치고, 직접 보내세요.';
+
+  @override
+  String get toolTitleTranslate => '번역하기';
+
+  @override
+  String get toolDescriptionTranslate => '다른 언어로, 숫자와 이름은 그대로 둔 채.';
+
+  @override
+  String get toolSectionTranslation => '번역';
+
+  @override
+  String toolSectionTranslationFromTo(String from, String to) {
+    return '$from에서 $to(으)로 번역';
+  }
+
+  @override
+  String get toolSectionKeptInOriginal => '원문 그대로 둔 것';
+
+  @override
+  String get toolWarningTranslationNotCertified =>
+      '이해를 돕기 위한 번역이며, 공증 번역이 아닙니다.';
+
+  @override
+  String get toolTitleStructuredData => '표 뽑아내기';
+
+  @override
+  String get toolDescriptionStructuredData => '복사해 쓸 수 있는 행과 항목과 숫자.';
+
+  @override
+  String get toolSectionTable => '표';
+
+  @override
+  String get toolSectionFields => '항목';
+
+  @override
+  String get toolSectionTableCsv => '표 (CSV)';
+
+  @override
+  String get toolWarningTableLayoutUncertain =>
+      '이 표의 열 구성은 제대로 읽어내지 못했습니다. 쓰기 전에 행이 맞게 놓였는지 맞춰 보세요.';
+
+  @override
+  String get toolTitleDeadlineFinder => '기한 찾기';
+
+  @override
+  String get toolDescriptionDeadlineFinder =>
+      '무엇을, 언제까지 해야 하고, 하지 않으면 어떻게 된다고 하는지.';
+
+  @override
+  String toolSectionDeadlineCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '기한 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionNothingDue => '기한이 된 것 없음';
+
+  @override
+  String get toolSectionNothingDueBody => 'Action은 이 자료에서 기한도 의무도 찾지 못했습니다.';
+
+  @override
+  String get toolWarningNothingScheduledAutomatically =>
+      '당신이 고르기 전에는 아무것도 예약되지 않습니다. 알림이 저절로 설정되는 일은 결코 없습니다.';
+
+  @override
+  String toolLabelDeadlineConsequence(String consequence) {
+    return '그러지 않으면: $consequence';
+  }
+
+  @override
+  String toolLabelDeadlineRequiredItems(String items) {
+    return '필요한 것: $items';
+  }
+
+  @override
+  String get moneyErrorEmpty => '금액이 입력되지 않았습니다';
+
+  @override
+  String get moneyErrorMalformed => '금액이 일반 숫자 형태가 아닙니다';
+
+  @override
+  String get moneyErrorNegative => '금액이 음수이며, 음수는 낼 수 있는 금액이 아닙니다';
+
+  @override
+  String get moneyErrorTooManyDecimals => '이 통화가 가지는 것보다 소수 자릿수가 많습니다';
+
+  @override
+  String get moneyErrorUnsupportedCurrency => '이 통화 코드는 저희가 아는 코드가 아닙니다';
+
+  @override
+  String get moneyErrorOutOfRange => '금액이 실제 금액이라고 보기 어려울 만큼 큽니다';
+
+  @override
+  String get escalationOcrFailed => '이 캡처에서는 문자 인식이 아예 실행되지 못했습니다.';
+
+  @override
+  String get escalationNoTextRecognised => '이것은 문서처럼 보이지만, 글자는 하나도 인식되지 않았습니다.';
+
+  @override
+  String get escalationThinText => '이 크기의 문서치고는 인식된 글이 너무나 적습니다.';
+
+  @override
+  String get escalationLowLineConfidence => '인식기가 여러 줄에서 신뢰도가 낮다고 보고했습니다.';
+
+  @override
+  String get escalationTableLikeLayout =>
+      '배치가 표처럼 보이며, 이것을 한 줄씩 읽으면 어떤 값이 어느 행에 속하는지가 사라집니다.';
+
+  @override
+  String get escalationFragmentedLayout =>
+      '글이 아주 작은 조각으로 여럿 나뉘어 돌아와서, 구조를 알 수 없습니다.';
+
+  @override
+  String get escalationMalformedText => '인식된 글의 상당 부분이 읽을 수 있는 단어나 숫자가 아닙니다.';
+
+  @override
+  String get escalationConflictingDates => '하나가 넘는 날짜가 기한으로 제시되어 있습니다.';
+
+  @override
+  String get escalationConflictingAmounts => '하나가 넘는 금액이 내야 할 금액으로 제시되어 있습니다.';
+
+  @override
+  String get escalationUnresolvedGrounding =>
+      '일부 값은 문서의 글에서 어디서 나왔는지 찾지 못했습니다.';
+
+  @override
+  String get escalationInstructionLikeContent =>
+      '이 문서에는 앱에 내리는 지시문처럼 쓰인 글이 들어 있습니다. 그것은 문서 내용으로 다루며, 결코 지시로 다루지 않습니다.';
+
+  @override
+  String get providerFailureNetwork =>
+      'Action이 그 서비스에 연결하지 못했습니다. 연결 상태를 확인하세요.';
+
+  @override
+  String get providerFailureTimedOut => '그 서비스가 답하는 데 너무 오래 걸렸습니다.';
+
+  @override
+  String get providerFailureServiceUnavailable =>
+      '그 서비스를 일시적으로 쓸 수 없습니다. 나중에 다시 시도하세요.';
+
+  @override
+  String get providerFailureUnauthorized => '이 앱은 지금 그 서비스를 쓸 권한이 없습니다.';
+
+  @override
+  String get providerFailureBlocked => '그 서비스가 이 문서의 처리를 거절했습니다.';
+
+  @override
+  String get providerFailureUnknown =>
+      'Action이 이 문서를 읽지 못했습니다. 다시 시도하면 될 수도 있습니다.';
+
+  @override
+  String get reviewBlockerTitle => '이 할 일에 제목을 붙이세요.';
+
+  @override
+  String get reviewBlockerDate => '어느 날짜가 진짜 기한인지 고르거나, 비워 두기로 하세요.';
+
+  @override
+  String get reviewBlockerAmount => '어느 금액이 맞는지 고르거나, 비워 두기로 하세요.';
+
+  @override
+  String get reviewBlockerStepTitle => '남기기로 한 단계에는 제목이 필요합니다.';
+
+  @override
+  String citationPage(int page) {
+    String _temp0 = intl.Intl.pluralLogic(
+      page,
+      locale: localeName,
+      other: '$page쪽',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String citationPageRange(int start, int end) {
+    return '$start~$end쪽';
+  }
+
+  @override
+  String rewriteDroppedFacts(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '고쳐 쓴 글에 $values이(가) 더 이상 들어 있지 않습니다. 이걸 쓰기 전에 확인하세요.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rewriteDroppedFactsMore(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '고쳐 쓴 글에 $values 외 $count개가 더 이상 들어 있지 않습니다. 이걸 쓰기 전에 확인하세요.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get listSeparator => ', ';
+
+  @override
+  String get goalStatusReached => '달성';
+
+  @override
+  String get goalNewSheetTitle => '무엇이 이루어지길 바라나요?';
+
+  @override
+  String get goalNewSheetSubtitle => '한 문장이면 충분합니다. 자세한 것은 나중에 더할 수 있습니다.';
+
+  @override
+  String get goalTitleHint => '더 내지 않고 자동차 보험 갱신하기.';
+
+  @override
+  String get goalCreateAction => '목표 만들기';
+
+  @override
+  String get goalTitleSheetTitle => '이루고 싶은 것';
+
+  @override
+  String get goalOutcomeSheetTitle => '끝났다는 건 어떤 모습인가';
+
+  @override
+  String get goalContextSheetTitle => '지금 어디까지 왔나';
+
+  @override
+  String get goalOutcomeHint => '차가 보험에 들어 있고 서류 제출도 끝나 있다.';
+
+  @override
+  String get goalContextHint => '견적을 두 개 받았고 갱신일은 18일이다.';
+
+  @override
+  String get goalWorkspaceTitle => '목표';
+
+  @override
+  String get goalUnmarkReached => '달성 표시 되돌리기';
+
+  @override
+  String get goalMarkReached => '달성으로 표시';
+
+  @override
+  String get goalNotFound => '그 목표는 더 이상 없습니다.';
+
+  @override
+  String get goalDeleteTitle => '이 목표를 삭제할까요?';
+
+  @override
+  String get goalDeleteBody =>
+      '이 목표가 이 기기에서 삭제됩니다. 이 목표에서 만들어진 할 일은 지금 그대로 남습니다.';
+
+  @override
+  String get goalOutcomeLabel => '끝났다는 건 어떤 모습인가';
+
+  @override
+  String get goalOutcomeEmpty =>
+      '아직 쓰지 않았습니다. 끝낸다는 것이 무엇인지 적어 두면 목표를 세우기가 더 쉬워집니다.';
+
+  @override
+  String get goalContextLabel => '지금 어디까지 왔나';
+
+  @override
+  String get goalContextEmpty =>
+      '아직 아무것도 쓰지 않았습니다. 지금까지 무슨 일이 있었는지, 그리고 무엇이 막고 있는지.';
+
+  @override
+  String get goalTitleLabel => '이루고 싶은 것';
+
+  @override
+  String get goalEditTooltip => '목표 편집';
+
+  @override
+  String get goalToolsLabel => 'Action이 할 수 있는 일';
+
+  @override
+  String get goalToolsNotReady => '이루고 싶은 것을 조금 더 적으면, 이 도구들이 다룰 거리가 생깁니다.';
+
+  @override
+  String get toolGoalOptimizerTitle => '목표 다듬기';
+
+  @override
+  String get toolActionPlanTitle => '계획 세우기';
+
+  @override
+  String get resultFactUnconfirmed => '확인되지 않음';
+
+  @override
+  String get resultSuggestedSteps => '제안된 단계';
+
+  @override
+  String get resultSuggestedAction => '제안된 할 일';
+
+  @override
+  String get resultWorthAsking => '물어볼 만한 것';
+
+  @override
+  String get resultSuggestedDeadlines => '제안된 기한';
+
+  @override
+  String get resultSuggestions => '제안';
+
+  @override
+  String resultSupportingQuotes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '뒷받침하는 인용 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get resultEvidenceFromSelectedSource => '선택한 원본에서';
+
+  @override
+  String resultEvidenceLocation(String source, String page) {
+    return '$source, $page';
+  }
+
+  @override
+  String get toolRunStagePreparing => '문서를 준비하는 중';
+
+  @override
+  String get toolRunStageReading => '선택한 쪽을 읽는 중';
+
+  @override
+  String get toolRunStageAnalysing => '분석 중';
+
+  @override
+  String get toolRunStageBuilding => '검토할 내용을 구성하는 중';
+
+  @override
+  String get toolRunStageDone => '완료됨';
+
+  @override
+  String get toolRunStageFailed => '끝나지 않음';
+
+  @override
+  String get toolRunStageCancelled => '중지함';
+
+  @override
+  String get toolRunFailureLocalCheckFailed => '그건 확인하지 못했습니다.';
+
+  @override
+  String get toolRunFailureProviderRetired => '그 AI 제공자는 이 버전에 더 이상 없습니다.';
+
+  @override
+  String get toolRunFailureUnusableReply =>
+      '그 응답은 쓸 수 있는 형태로 돌아오지 않았습니다. 다시 시도해 보세요.';
+
+  @override
+  String get toolRunFailureQuestionRequired => '먼저 질문을 입력하세요.';
+
+  @override
+  String get toolRunFailureInputRequired => '이 도구가 다룰 것을 고르세요.';
+
+  @override
+  String get toolWarningReplyTruncated => '이 응답은 중간에 끊겼으므로 내용이 불완전할 수 있습니다.';
+
+  @override
+  String get toolWarningNoSupportingQuotes =>
+      '당신의 모델이 뒷받침하는 인용을 하나도 돌려주지 않았으므로, 여기 있는 어떤 것에도 근거가 없습니다. 이것을 근거로 움직이기 전에 문서와 맞춰 보세요.';
+
+  @override
+  String get aiSettingsRemoveTitle => '이 연결을 제거할까요?';
+
+  @override
+  String get aiSettingsRemoveBody =>
+      'Action이 이 기기에서 당신의 API 키를 삭제하고 AI 기능 사용을 중단합니다. 당신의 제공자 계정에는 아무 영향이 없습니다.';
+
+  @override
+  String get aiSettingsProviderLabel => '제공자';
+
+  @override
+  String get aiSettingsProviderFootnoteConnected =>
+      '쓴 만큼의 요금은 당신의 제공자가 청구합니다. Action은 스스로 요청을 보내는 일이 결코 없습니다.';
+
+  @override
+  String get aiSettingsConnectLabel => 'AI 제공자 연결';
+
+  @override
+  String get aiSettingsConnectDescription =>
+      'OpenAI, Anthropic, Google Gemini 또는 호환되는 endpoint에서 당신 자신의 계정과 API 키를 쓰세요.';
+
+  @override
+  String get aiSettingsModelLabel => '모델';
+
+  @override
+  String get aiSettingsEndpointLabel => 'Endpoint';
+
+  @override
+  String get aiSettingsApiKeyLabel => 'API 키';
+
+  @override
+  String get aiSettingsKeyStored => '이 기기의 보안 저장소에 보관됩니다.';
+
+  @override
+  String get aiSettingsKeyMissing => '이 기기에서 키를 찾지 못했습니다. 다시 연결해 하나 추가하세요.';
+
+  @override
+  String get aiSettingsTestLabel => '연결 테스트';
+
+  @override
+  String get aiSettingsProviderUnavailable => '그 제공자는 이 버전에 없습니다.';
+
+  @override
+  String aiSettingsTestConnectedModels(int count) {
+    return '연결되었습니다. 모델 $count개를 쓸 수 있습니다.';
+  }
+
+  @override
+  String get aiSettingsTestButton => '테스트';
+
+  @override
+  String get aiSettingsChangeProvider => '제공자 또는 모델 바꾸기';
+
+  @override
+  String get aiSettingsRemoveKey => '키 제거';
+
+  @override
+  String get aiSettingsSectionPrivacy => '개인정보';
+
+  @override
+  String get aiSettingsWhatGetsSentLabel => '전송되는 것';
+
+  @override
+  String get aiSettingsWhereItGoesLabel => '어디로 가는가';
+
+  @override
+  String get aiSettingsWhereItGoesNoProvider =>
+      '제공자를 연결하기 전까지는 아무것도 전송되지 않습니다.';
+
+  @override
+  String aiSettingsWhereItGoesProvider(String provider) {
+    return '당신의 키로 $provider에 곧바로 갑니다. Action에 속한 어떤 서버도 거치지 않습니다.';
+  }
+
+  @override
+  String get aiSettingsSectionData => '데이터';
+
+  @override
+  String get aiSettingsDataFootnote =>
+      'Action은 당신이 어떤 도구를 썼는지는 기억하지만, 그 도구를 무엇에 썼는지는 결코 기억하지 않습니다.';
+
+  @override
+  String get aiSettingsRecentToolsLabel => '최근에 쓴 도구';
+
+  @override
+  String get aiSettingsRecentToolsNone => '없음';
+
+  @override
+  String get reminderNotificationTitle => 'Action 알림';
+
+  @override
+  String get reminderNotificationPrivateBody => '확인할 것이 있습니다.';
+
+  @override
+  String get reminderChannelName => 'Action 알림';
+
+  @override
+  String get reminderChannelDescription => '당신이 직접 할 일에 설정한 알림입니다.';
+
+  @override
+  String get onboardingStart => 'Action 시작하기';
+
+  @override
+  String onboardingProgressSemantics(int current, int total) {
+    return '$total단계 중 $current단계';
+  }
+
+  @override
+  String get onboardingCaptureTitle => '정보를 할 일로 바꾸세요';
+
+  @override
+  String get onboardingCaptureBody =>
+      '스크린샷, 사진, 또는 받은 글을 추가하세요. Action이 그것을 읽고 무엇을 하라는 것인지 알아냅니다.';
+
+  @override
+  String get onboardingReviewTitle => '당신이 확인하기 전에는 아무것도 저장되지 않습니다';
+
+  @override
+  String get onboardingReviewBody =>
+      'Action은 무엇을 찾았고 그것이 어떤 단어에서 나왔는지 보여 줍니다. 틀린 것은 당신이 고칩니다. 당신이 확인하기 전까지 그것은 제안일 뿐, 사실도 아니고 할 일도 아닙니다.';
+
+  @override
+  String get onboardingTrackingTitle => '중요한 것을 계속 챙기세요';
+
+  @override
+  String get onboardingTrackingBody =>
+      '확인이 필요함은 기한이 지났거나 가까운 것을 앞으로 끌어옵니다. 모든 할 일은 그 다음 단계와 진행 상황, 그리고 당신이 설정한 알림을 지니고 있습니다.';
+
+  @override
+  String get onboardingPrivacyBody => '시작하기 전에 알아 둘 것:';
+
+  @override
+  String get onboardingPrivacyOnDevice =>
+      '당신의 할 일, 캡처, 알림, 검색은 이 기기에 저장됩니다. 검색과 알림은 연결 없이도 작동합니다.';
+
+  @override
+  String get onboardingPrivacySentToRead =>
+      '무언가를 읽어 달라고 Action에 요청하면, 그 내용은 그것을 해석하는 AI 서비스로 전송됩니다.';
+
+  @override
+  String get onboardingPrivacyCloud =>
+      '확인된 할 일의 짧은 기록 — 제목, 날짜, 금액, 제안된 단계 — 이 이 기기의 익명 식별자 아래 클라우드에 저장될 수 있습니다. 당신의 캡처와 단계와 알림은 저장되지 않습니다.';
+
+  @override
+  String get onboardingPrivacyNotBackup =>
+      '그 기록은 백업이 아닙니다. 새 기기로 무엇도 복원할 수 없습니다.';
+
+  @override
+  String toolSectionBlockerCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '막는 것 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCouldBeSimpler => '더 단순해질 수 있는 것';
+
+  @override
+  String get toolDescriptionGoalOptimizer =>
+      '무엇이 빠졌는지, 무엇이 막고 있는지, 먼저 무엇을 해야 하는지.';
+
+  @override
+  String toolSectionStepDependsOn(String step) {
+    return '$step 다음에';
+  }
+
+  @override
+  String get toolSectionThePlan => '계획';
+
+  @override
+  String get toolDescriptionActionPlan => '할 일로 바꿀 수 있는, 순서가 정해진 단계 묶음.';
+
+  @override
+  String get toolTitleSmartChecklist => '체크리스트 만들기';
+
+  @override
+  String get toolDescriptionSmartChecklist => '이것이 당신에게 요구하는 것을, 순서대로.';
+
+  @override
+  String toolSectionMissingDetailCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '찾지 못한 항목 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionContradictions => '이것들은 서로 어긋납니다';
+
+  @override
+  String get toolTitleMissingInformation => '무엇이 빠졌나';
+
+  @override
+  String get toolDescriptionMissingInformation =>
+      '빠진 부분, 그리고 그에 대해 무엇을 물어야 하는지.';
+
+  @override
+  String get aiAdapterTimedOut => '그건 너무 오래 걸려서 중지했습니다.';
+
+  @override
+  String get aiAdapterSecureConnectionFailed => '당신의 AI 제공자로 가는 보안 연결에 실패했습니다.';
+
+  @override
+  String get aiAdapterModelOrEndpointNotFound =>
+      'Action이 그 모델 또는 endpoint를 찾지 못했습니다.';
+
+  @override
+  String get aiAdapterRequestRejected => '당신의 AI 제공자가 그 요청을 거부했습니다.';
+
+  @override
+  String get aiAdapterSecureStorageUnavailable =>
+      'Action이 이 기기의 보안 저장소를 열지 못했습니다.';
+
+  @override
+  String get aiAdapterEndpointMissing => '설정에서 당신의 AI endpoint 주소를 추가하세요.';
+
+  @override
+  String get aiAdapterReplyIncomplete => '그 응답은 불완전했습니다. 다시 시도하세요.';
+
+  @override
+  String get aiAdapterContentDeclined => '당신의 제공자가 그 내용의 처리를 거절했습니다.';
+
+  @override
+  String aiAdapterTooManyAttachments(int limit) {
+    return '한 번에 $limit개가 넘는 파일입니다. 더 적게 고르세요.';
+  }
+
+  @override
+  String get aiAdapterImageTooLarge => '그 이미지들 중 하나가 분석하기에 너무 큽니다.';
+
+  @override
+  String aiAdapterDocumentTooLarge(String filename, int limit) {
+    return '“$filename”은(는) 분석하기에 너무 큽니다. 제한은 $limit MB입니다.';
+  }
+
+  @override
+  String aiAdapterDocumentTooManyPages(String filename, int count, int limit) {
+    return '“$filename”은(는) $count쪽입니다. Action은 한 번에 $limit쪽까지 읽으므로, 범위를 고르세요.';
+  }
+
+  @override
+  String get aiAdapterSelectionTooLarge => '그 선택은 한 번의 요청으로 보내기에 너무 큽니다.';
+
+  @override
+  String get toolRunNotAvailableTitle => '그 도구는 쓸 수 없습니다';
+
+  @override
+  String get toolRunNotAvailableMessage => '더 새로운 버전의 Action에서 없어졌을 수 있습니다.';
+
+  @override
+  String get toolRunNoSourcesYet => '아직 다룰 것이 없습니다. 무언가 캡처하거나, 아래에 글을 붙여넣으세요.';
+
+  @override
+  String get toolRunChooseSourcesToCompare => '무엇을 비교할지 고르기';
+
+  @override
+  String get toolRunChooseSource => '원본 고르기';
+
+  @override
+  String get toolRunQuestionLabel => '당신의 질문';
+
+  @override
+  String get toolRunQuestionHint => '기한이 언제인가요?';
+
+  @override
+  String get toolRunFreeTextLabel => '또는 글 붙여넣기';
+
+  @override
+  String get toolRunFreeTextHint => '여기에 붙여넣거나 입력하세요';
+
+  @override
+  String get toolRunModeLabel => '방식';
+
+  @override
+  String get toolRunRunLocally => '이 기기에서 확인하기';
+
+  @override
+  String get toolRunRun => '실행';
+
+  @override
+  String get toolRunStop => '중지';
+
+  @override
+  String get toolRunRunAgain => '다시 실행';
+
+  @override
+  String get toolRunWorkingOn => '작업 대상';
+
+  @override
+  String toolRunFirstUseTitle(String provider) {
+    return '이것을 $provider(으)로 보낼까요?';
+  }
+
+  @override
+  String toolRunFirstUseBody(String provider) {
+    return '당신이 선택한 내용이 당신의 API 키를 써서 처리를 위해 $provider(으)로 전송됩니다.';
+  }
+
+  @override
+  String get toolRunFirstUseKeyStays =>
+      '당신의 키는 이 기기에 남습니다. Action은 백그라운드에서 아무것도 전송하지 않으며, 당신의 다른 할 일이나 원본도 전송하지 않습니다.';
+
+  @override
+  String get toolRunScopeTitle => '실행하기 전에';
+
+  @override
+  String toolRunScopePages(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count쪽',
+    );
+    return '$_temp0이 당신의 $provider 연결을 통해 분석됩니다.';
+  }
+
+  @override
+  String toolRunScopeFiles(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '파일 $count개',
+    );
+    return '$_temp0가 당신의 $provider 연결을 통해 분석됩니다.';
+  }
+
+  @override
+  String toolRunScopeText(String provider) {
+    return '당신이 선택한 글이 당신의 $provider 연결로 전송됩니다.';
+  }
+
+  @override
+  String get toolRunNeedsProviderTitle => '이 도구를 쓰려면 AI 제공자를 연결하세요';
+
+  @override
+  String get toolRunNeedsProviderBody => '당신 자신의 제공자 계정과 API 키를 씁니다.';
+
+  @override
+  String toolRunActionCreatedFromSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '단계 $count개로 할 일을 만들었습니다.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunStepsAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '단계 $count개를 추가했습니다.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunSaveCreateActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '단계 $count개',
+    );
+    return '할 일 만들기 · $_temp0';
+  }
+
+  @override
+  String toolRunSaveAddToActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '단계 $count개',
+    );
+    return '이 할 일에 추가 · $_temp0';
+  }
+
+  @override
+  String get sourceTypeLabelPhoto => '사진';
+
+  @override
+  String get sourceTypeLabelScreenshot => '스크린샷';
+
+  @override
+  String get sourceTypeLabelPastedText => '붙여넣은 글';
+
+  @override
+  String get sourceTypeLabelDocument => '문서';
+
+  @override
+  String get toolModeClearer => '더 명확하게';
+
+  @override
+  String get toolModeMoreProfessional => '더 전문적으로';
+
+  @override
+  String get toolModeShorter => '더 짧게';
+
+  @override
+  String get toolModeSimpler => '더 쉽게';
+
+  @override
+  String get toolModeMoreStructured => '더 구조적으로';
+
+  @override
+  String get toolModeMorePersuasive => '더 설득력 있게';
+
+  @override
+  String get toolModeGrammarOnly => '문법만';
+
+  @override
+  String get toolModeProfessional => '전문적인 어조';
+
+  @override
+  String get toolModeConcise => '간결하게';
+
+  @override
+  String get toolModeFriendly => '친근한 어조';
+
+  @override
+  String get toolModeFormal => '격식 있는 어조';
+
+  @override
+  String get toolModeAskForClarification => '설명 요청하기';
+
+  @override
+  String get toolModeConfirm => '확인 회신';
+
+  @override
+  String get toolModeDispute => '이의 제기하기';
+
+  @override
+  String get toolModeQuick => '빠르게 훑기';
+
+  @override
+  String get toolModeDetailed => '자세하게';
+
+  @override
+  String get toolModeExecutive => '의사결정용';
+
+  @override
+  String get toolModeKeyPoints => '핵심 요점';
+
+  @override
+  String get toolModeActionFocused => '할 일 중심';
+
+  @override
+  String toolWarningEvidenceNotFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '인용된 내용 $count개를 당신이 선택한 자료에서 찾지 못했으므로, 불확실로 표시했습니다.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolWarningEvidenceUnverifiable =>
+      'Action이 이 인용들을 파일 자체와 대조하지 못했으므로, 이 인용들은 대조되지 않았습니다.';
+
+  @override
+  String triageBadgeOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '기한 초과 · $count일',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageBadgeDueTomorrow => '내일까지';
+
+  @override
+  String get triageBadgeReminderSoon => '곧 알림';
+
+  @override
+  String triageSpokenOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '기한이 $count일 지났습니다',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String triageSemanticLabel(String status, String title) {
+    return '$status. $title.';
+  }
+
+  @override
+  String get triageExplanationDone => '이건 완료되었습니다.';
+
+  @override
+  String get triageExplanationNothingPressing => '이건 아직 급한 것이 하나도 없어서 여기 있습니다.';
+
+  @override
+  String triageExplanationNeedsAttention(String reason) {
+    return '$reason 확인이 필요합니다.';
+  }
+
+  @override
+  String triageExplanationUpcoming(String reason) {
+    return '$reason 더 아래쪽에 있습니다.';
+  }
+
+  @override
+  String get triageReasonOverdue => '기한이 지나서';
+
+  @override
+  String get triageReasonDeadlinePassed => '기한 시각이 지나서';
+
+  @override
+  String triageReasonOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '기한이 $count일 지나서',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageReasonDueToday => '오늘이 기한이라서';
+
+  @override
+  String get triageReasonCriticalDueSoon => '당신이 매우 급함으로 표시했고 기한이 가까워서';
+
+  @override
+  String get triageReasonAllStepsDone => '모든 단계가 끝났고 마무리만 남아서';
+
+  @override
+  String get triageReasonDueTomorrow => '내일이 기한이라서';
+
+  @override
+  String get triageReasonReminderSoon => '하루 안에 올 알림을 당신이 설정해 두어서';
+
+  @override
+  String get triageReasonDueWithinThreeDays => '기한이 사흘 안이라서';
+
+  @override
+  String get triageReasonCriticalNoDeadline => '당신이 매우 급함으로 표시했고, 기한은 없어서';
+
+  @override
+  String get triageReasonDueWithinSevenDays => '기한이 일주일 안이라서';
+
+  @override
+  String get triageReasonImportant => '당신이 중요로 표시해서';
+
+  @override
+  String get triageReasonDueLater => '기한이 더 멀어서';
+
+  @override
+  String get triageReasonNoDeadline => '기한이 없고 급한 것도 없어서';
+
+  @override
+  String cardCompletedTooltip(String title) {
+    return '완료됨: $title';
+  }
+
+  @override
+  String get toolTitleDocumentIntelligence => '이 문서 이해하기';
+
+  @override
+  String get toolDescriptionDocumentIntelligence =>
+      '무엇인지, 무엇이 중요한지, 그리고 그에 대해 무엇을 해야 하는지.';
+
+  @override
+  String get toolSectionWhatThisIs => '이것이 무엇인가';
+
+  @override
+  String get toolSectionWhatMatters => '무엇이 중요한가';
+
+  @override
+  String get toolSectionKeyDetails => '핵심 항목';
+
+  @override
+  String get toolTitleAskDocument => '원본에 물어보기';
+
+  @override
+  String get toolDescriptionAskDocument =>
+      '당신이 선택한 내용에 근거한 답 — 아니면 아무 답도 하지 않습니다.';
+
+  @override
+  String get toolSectionNoAnswer => '이 자료에서는 답을 찾지 못함';
+
+  @override
+  String get toolSectionNoAnswerBody => 'Action이 선택한 문서에서 그것을 찾지 못했습니다.';
+
+  @override
+  String get toolSectionAnswer => '답';
+
+  @override
+  String get toolSectionFromTheDocument => '문서에서';
+
+  @override
+  String get toolWarningQuoteNotFound =>
+      '이 답변의 근거가 된 인용은 선택한 자료에 없습니다. 이 답변은 믿을 수 없는 것으로 다루세요.';
+
+  @override
+  String get toolTitleSmartSummary => '요약하기';
+
+  @override
+  String get toolDescriptionSmartSummary => '짧게 간추린 것 — 또는 당신이 해야 할 일을 바꾸는 부분.';
+
+  @override
+  String get toolSectionKeyPoints => '핵심 요점';
+
+  @override
+  String get toolTitleCompareDocuments => '문서 비교하기';
+
+  @override
+  String get toolDescriptionCompareDocuments =>
+      '무엇이 달라졌는지, 무엇이 서로 어긋나는지, 무엇이 보이지 않는지.';
+
+  @override
+  String get toolSectionWhatDiffers => '다른 점';
+
+  @override
+  String get toolSectionConflicts => '서로 어긋나는 점';
+
+  @override
+  String get toolSectionOnlyInOne => '한 곳에만 있는 내용';
+
+  @override
+  String get toolSectionInCommon => '공통된 내용';
+
+  @override
+  String get sensitiveKindEmail => '이메일 주소';
+
+  @override
+  String get sensitiveKindPhone => '전화번호';
+
+  @override
+  String get sensitiveKindPaymentCard => '결제 카드 번호';
+
+  @override
+  String get sensitiveKindIban => '은행 계좌(IBAN)';
+
+  @override
+  String get sensitiveKindNationalId => '국가 신분증 번호';
+
+  @override
+  String get sensitiveKindPostcode => '우편번호';
+
+  @override
+  String get sensitiveKindAccountNumber => '계좌번호';
+
+  @override
+  String get sensitiveKindReference => '참조번호';
+
+  @override
+  String get sensitiveKindDateOfBirth => '생년월일';
+
+  @override
+  String get sensitiveKindUrl => '웹 주소';
+
+  @override
+  String get verdictVerifiedProvenance => '확인된 출처 정보가 있음';
+
+  @override
+  String get verdictVerifiedProvenanceExplainer =>
+      '이 파일은 서명을 지니고 있으며, 그 서명을 확인한 결과 문제없이 통과했습니다.';
+
+  @override
+  String get verdictSignalsSynthetic => 'AI로 생성한 내용과 들어맞는 신호';
+
+  @override
+  String get verdictSignalsSyntheticExplainer =>
+      '이 파일은 생성 도구로 만들어졌다고 스스로 밝히고 있습니다. 메타데이터는 고치거나 지울 수 있으므로, 이것은 파일이 주장하는 내용일 뿐 증거가 아닙니다.';
+
+  @override
+  String get verdictSignalsEdited => '편집된 내용과 들어맞는 신호';
+
+  @override
+  String get verdictSignalsEditedExplainer =>
+      '이 파일은 편집 소프트웨어를 거쳤다고 스스로 밝히고 있습니다. 사진에서는 흔한 일이며, 그것만으로 무언가를 꾸며냈다는 뜻은 아닙니다.';
+
+  @override
+  String get verdictNoReliableProvenance => '믿을 만한 출처 정보를 찾지 못함';
+
+  @override
+  String get verdictNoReliableProvenanceExplainer =>
+      '이 파일에는 출처 정보가 없습니다. 대부분의 서비스가 그것을 떼어내기 때문에 흔한 일이며, 무언가를 뜻하는 징후가 아닙니다.';
+
+  @override
+  String get verdictInconclusive => '단정할 수 없음';
+
+  @override
+  String get verdictInconclusiveExplainer =>
+      '이것이 어디서 왔는지 말하기에는 여기 있는 정보가 충분하지 않습니다.';
+
+  @override
+  String get authenticitySignalCamera => '카메라';
+
+  @override
+  String get authenticitySignalSoftware => '소프트웨어';
+
+  @override
+  String get authenticitySignalDescription => '설명';
+
+  @override
+  String get authenticitySignalCopyright => '저작권';
+
+  @override
+  String get authenticitySignalLocation => '위치';
+
+  @override
+  String get authenticitySignalLocationValue => '이 파일에 위치 데이터가 들어 있습니다.';
+
+  @override
+  String get authenticitySignalContentCredentials =>
+      'Content Credentials(콘텐츠 자격 증명)';
+
+  @override
+  String get authenticitySignalContentCredentialsValue =>
+      '확인하지 않음 — 이 빌드에는 서명을 검증하는 기능이 없습니다.';
+
+  @override
+  String get authenticitySignalFile => '파일';
+
+  @override
+  String get authenticitySignalFileUnreadableValue => '이미지로 읽어 들이지 못했습니다.';
+
+  @override
+  String get authenticitySignalFileUnrecognisedValue =>
+      '알아볼 수 있는 이미지 형식이 아닙니다.';
+
+  @override
+  String get authenticitySignalText => '텍스트';
+
+  @override
+  String get authenticitySignalTextValue =>
+      '글만으로는 AI가 쓰였는지 믿을 만하게 알아낼 수 없습니다. Action은 추측하지 않습니다.';
+
+  @override
+  String get fileTypePng => 'PNG 이미지';
+
+  @override
+  String get fileTypeJpeg => 'JPEG 이미지';
+
+  @override
+  String get fileTypeGif => 'GIF 이미지';
+
+  @override
+  String get fileTypeWebp => 'WebP 이미지';
+
+  @override
+  String get fileTypeWav => 'WAV 녹음 파일';
+
+  @override
+  String get fileTypePdf => 'PDF 문서';
+
+  @override
+  String get fileTypeHeic => 'HEIC 이미지';
+
+  @override
+  String get fileTypeVideo => '동영상 파일';
+
+  @override
+  String get fileTypeTiff => 'TIFF 이미지';
+
+  @override
+  String get fileTypeBitmap => '비트맵 이미지';
+
+  @override
+  String get fileTypeRtf => 'RTF 문서';
+
+  @override
+  String get fileTypeZip => 'Zip 압축 파일';
+
+  @override
+  String get fileTypeGzip => 'gzip 압축 파일';
+
+  @override
+  String get fileTypeSevenZip => '7-Zip 압축 파일';
+
+  @override
+  String get fileTypeRar => 'RAR 압축 파일';
+
+  @override
+  String get fileTypeWindowsProgram => 'Windows 프로그램';
+
+  @override
+  String get fileTypeLinuxProgram => 'Linux 프로그램';
+
+  @override
+  String get fileTypePostScript => 'PostScript 문서';
+
+  @override
+  String get fileTypeOgg => 'Ogg 녹음 파일';
+
+  @override
+  String get fileTypeMp3 => 'MP3 녹음 파일';
+
+  @override
+  String get fileTypePlainText => '일반 텍스트';
+
+  @override
+  String fileMismatchNote(String extension, String contents) {
+    return '이 파일의 이름은 \".$extension\"이지만, 그 내용물은 $contents입니다. 단순한 실수일 수도 있고, 당신이 예상한 것과 다른 프로그램으로 파일이 열리게 되는 방식이기도 합니다.';
+  }
+
+  @override
+  String fileSizeBytes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count바이트',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileSizeKilobytes(String size) {
+    return '$size KB';
+  }
+
+  @override
+  String fileSizeMegabytes(String size) {
+    return '$size MB';
+  }
+
+  @override
+  String fileSizeGigabytes(String size) {
+    return '$size GB';
+  }
+
+  @override
+  String get credentialKindPrivateKey => '개인 키';
+
+  @override
+  String get credentialKindApiKey => 'API 키';
+
+  @override
+  String get credentialKindConnectionString => '연결 문자열';
+
+  @override
+  String get credentialKindAccessToken => '액세스 토큰';
+
+  @override
+  String get credentialKindAuthorizationHeader => 'Authorization 헤더';
+
+  @override
+  String get credentialKindPasswordOrKey => '비밀번호 또는 키';
+
+  @override
+  String get credentialKindPossibleSecret => '비밀 값일 수 있는 문자열';
+
+  @override
+  String get credentialAdvicePrivateKey =>
+      '공유하기 전에 이것을 지우고, 키 쌍을 교체하세요. 개인 키는 한번 남의 눈에 들어오고 나면 다시는 안전해질 수 없습니다.';
+
+  @override
+  String get credentialAdviceProviderApiKey =>
+      '이 키를 제공자 쪽에서 폐기하고 새 키를 발급하세요. 문서에서 지우는 것만으로는 그 키가 무효가 되지 않습니다.';
+
+  @override
+  String get credentialAdviceConnectionString =>
+      '여기에는 비밀번호와, 그 비밀번호로 열리는 주소가 함께 들어 있습니다. 이것을 이미 공유했다면 비밀번호를 바꾸세요.';
+
+  @override
+  String get credentialAdviceJsonWebToken =>
+      '이런 토큰은 만료되는 경우가 많지만, 항상 그런 것은 아닙니다. 언제 만료되는지 알고 있는 것이 아니라면 아직 살아 있는 것으로 다루세요.';
+
+  @override
+  String get credentialAdviceAuthorizationHeader =>
+      '헤더의 값을 지우세요. 붙여넣은 요청 로그는 살아 있는 토큰이 실수로 공유되는 가장 흔한 경로 가운데 하나입니다.';
+
+  @override
+  String get credentialAdviceKeyedAssignment =>
+      '이것을 환경 변수나 비밀 저장소로 옮기고, 그 파일을 공유한 적이 있다면 값을 바꾸세요.';
+
+  @override
+  String get credentialAdviceHighEntropyString =>
+      'Action은 이것이 무엇인지 알 수 없습니다. 공유하기 전에 확인해 보세요 — 식별자이거나 체크섬일 가능성도 똑같이 있습니다.';
+
+  @override
+  String get credentialLabelAnthropicApiKey => 'Anthropic API 키';
+
+  @override
+  String get credentialLabelOpenAiProjectKey => 'OpenAI 프로젝트 키';
+
+  @override
+  String get credentialLabelOpenAiStyleApiKey => 'OpenAI 형식의 API 키';
+
+  @override
+  String get credentialLabelGoogleApiKey => 'Google API 키';
+
+  @override
+  String get credentialLabelGoogleOAuthToken => 'Google OAuth 토큰';
+
+  @override
+  String get credentialLabelGitHubToken => 'GitHub 토큰';
+
+  @override
+  String get credentialLabelSlackToken => 'Slack 토큰';
+
+  @override
+  String get credentialLabelAwsAccessKeyId => 'AWS 액세스 키 ID';
+
+  @override
+  String get credentialLabelGitLabToken => 'GitLab 토큰';
+
+  @override
+  String get credentialLabelNpmToken => 'npm 토큰';
+
+  @override
+  String get credentialLabelPassphrase => '암호 구문';
+
+  @override
+  String get credentialLabelPassword => '비밀번호';
+
+  @override
+  String get credentialLabelRefreshToken => '리프레시 토큰';
+
+  @override
+  String get credentialLabelToken => '토큰';
+
+  @override
+  String get credentialLabelClientSecret => '클라이언트 시크릿';
+
+  @override
+  String get credentialLabelCredential => '자격 증명';
+
+  @override
+  String get credentialLabelSecret => '비밀 값';
+
+  @override
+  String get linkVerdictNoObviousSignals => '뚜렷한 신호 없음';
+
+  @override
+  String get linkVerdictWorthChecking => '확인해 볼 만함';
+
+  @override
+  String get linkVerdictTreatWithCaution => '주의해서 다룰 것';
+
+  @override
+  String get linkSummaryNoObviousSignals =>
+      '이 링크가 적힌 방식에는 특이한 점이 없습니다. 그렇다고 이 페이지를 믿을 만하다고 아는 것과 같은 말은 아닙니다 — 이 링크를 당신이 예상했는지는 오직 당신만이 판단할 수 있습니다.';
+
+  @override
+  String get linkSummaryWorthChecking => '이 링크에는 열기 전에 한번 살펴볼 만한 점이 하나 있습니다.';
+
+  @override
+  String get linkSummaryTreatWithCaution =>
+      '이 링크가 적힌 방식에는 열기 전에 확인해 볼 만한 점이 여럿 있습니다.';
+
+  @override
+  String get linkSignalNotHttps => '암호화되지 않음';
+
+  @override
+  String get linkSignalNonWebScheme => '웹 링크가 아님';
+
+  @override
+  String get linkSignalEmbeddedCredentials => '링크 안에 비밀번호';
+
+  @override
+  String get linkSignalMisleadingAuthority => '가려진 진짜 주소';
+
+  @override
+  String get linkSignalIpLiteralHost => '숫자로 된 주소';
+
+  @override
+  String get linkSignalPunycodeHost => '이름에 인코딩된 문자';
+
+  @override
+  String get linkSignalMixedScriptHost => '이름에 섞인 여러 문자 체계';
+
+  @override
+  String get linkSignalEncodedHost => '이름에 이스케이프된 문자';
+
+  @override
+  String get linkSignalUnusualPort => '흔치 않은 포트';
+
+  @override
+  String get linkSignalDeepSubdomain => '여러 부분으로 된 이름';
+
+  @override
+  String get linkSignalPublicSuffixInSubdomain => '엉뚱한 자리에 있는 익숙한 이름';
+
+  @override
+  String get linkSignalShortener => '단축 링크';
+
+  @override
+  String get linkSignalExecutableTarget => '프로그램을 내려받음';
+
+  @override
+  String get linkSignalRedirectParameter => '다른 곳으로 보낼 수 있음';
+
+  @override
+  String get linkSignalVeryLongUrl => '아주 긴 주소';
+
+  @override
+  String get linkSignalUnparseable => '읽어 낼 수 없는 링크';
+
+  @override
+  String get linkDetailNotHttps =>
+      '이 링크는 http를 씁니다. 그래서 그 페이지에 당신이 입력하는 것은 전달되는 도중에 읽힐 수 있습니다.';
+
+  @override
+  String linkDetailNonWebScheme(String scheme) {
+    return '이것은 웹 페이지가 아니라 \"$scheme:\"(으)로 열립니다. 다른 앱에 무언가를 시키는 것일 수 있습니다.';
+  }
+
+  @override
+  String get linkDetailEmbeddedCredentials =>
+      '이 링크 안에 사용자 이름과 비밀번호가 적혀 있습니다. 이 링크가 공유되는 곳마다 그것들도 함께 갑니다.';
+
+  @override
+  String linkDetailMisleadingAuthority(String host) {
+    return '브라우저는 \"@\" 앞에 있는 것을 전부 무시합니다. 실제로 가는 곳은 \"$host\"입니다.';
+  }
+
+  @override
+  String linkDetailIpLiteralHost(String host) {
+    return '이것은 \"$host\"(으)로 갑니다 — 이름이 아니라 숫자로 된 주소입니다. 제대로 된 사이트는 거의 언제나 이름을 씁니다.';
+  }
+
+  @override
+  String get linkDetailPunycodeHost =>
+      '이 사이트 이름에는 로마자가 아닌 문자가 들어 있고, 인코딩된 형태로 저장되어 있습니다. 이것은 많은 언어에서 정상적인 일이며, 동시에 어떤 이름을 익숙한 이름처럼 보이게 만드는 방법이기도 합니다.';
+
+  @override
+  String get linkDetailMixedScriptHost =>
+      '이 사이트 이름은 로마자와, 그것과 똑같아 보이는 다른 문자 체계의 글자를 섞어 쓰고 있습니다. 한 글자씩 짚어 가며 읽어 보세요.';
+
+  @override
+  String get linkDetailEncodedHost =>
+      '이 사이트 이름에는 이스케이프 코드가 들어 있는데, 그것이 있을 자리가 아닙니다. 그런 코드는 이름이 실제로 무엇이라고 적혀 있는지를 가릴 수 있습니다.';
+
+  @override
+  String linkDetailUnusualPort(String port) {
+    return '이것은 보통 쓰는 포트가 아니라 $port 포트로 연결합니다. 테스트 서버에서는 흔한 일이고, 공개된 사이트에서는 드문 일입니다.';
+  }
+
+  @override
+  String linkDetailDeepSubdomain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '이 이름은 $count개의 부분으로 되어 있습니다. 누가 이 사이트를 운영하는지는 마지막 두 부분만이 정하고, 나머지는 무엇으로든 정할 수 있습니다.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String linkDetailPublicSuffixInSubdomain(String suffix, String host) {
+    return '이 이름의 가운데에 \".$suffix.\"이 들어 있어서, 앞부분이 사이트인 것처럼 보입니다. 실제 사이트는 \"$host\"입니다.';
+  }
+
+  @override
+  String get linkDetailShortener =>
+      '단축 서비스가 진짜 목적지를 가립니다. 열어 보지 않고서는 이것이 어디로 가는지 알 수 없습니다.';
+
+  @override
+  String linkDetailExecutableTarget(String fileExtension) {
+    return '이 링크는 \"$fileExtension\"(으)로 끝나므로, 읽을 페이지가 아니라 당신의 기기에서 실행될 수 있는 것을 내려받습니다.';
+  }
+
+  @override
+  String linkDetailRedirectParameter(String parameter, String host) {
+    return '이 링크는 \"$parameter\" 설정에 또 다른 주소를 담고 있어서, 열면 \"$host\"이 아닌 다른 곳으로 데려갈 수 있습니다.';
+  }
+
+  @override
+  String get linkDetailVeryLongUrl =>
+      '긴 링크는 읽기가 더 어렵고, 목적지를 정하는 부분이 눈에 보이지 않는 곳까지 밀려날 수 있습니다.';
+
+  @override
+  String get linkDetailUnparseable =>
+      'Action은 이것을 웹 주소로 읽어 내지 못했습니다. 링크처럼 보이지 않는 링크는 조심하세요.';
+
+  @override
+  String get toolTitleRedaction => '민감한 내용 가리기';
+
+  @override
+  String get toolDescriptionRedaction => '공유하면 안 되는 것을 찾아, 그것을 뺀 사본을 만듭니다.';
+
+  @override
+  String get toolSectionRedactionNothingToScan => '살펴볼 글이 없음';
+
+  @override
+  String get toolSectionRedactionNothingToScanBody =>
+      '이 도구는 글을 읽습니다. 메모나 붙여넣은 메시지, 또는 글을 이미 읽어 낸 캡처를 고르세요.';
+
+  @override
+  String get toolSectionRedactionNothingFound => '뚜렷한 것은 찾지 못함';
+
+  @override
+  String get toolSectionRedactionNothingFoundBody =>
+      'Action은 이 글에서 이메일 주소, 전화번호, 카드 번호, 참조번호를 찾지 못했습니다.';
+
+  @override
+  String toolSectionRedactionFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '가릴 만한 것 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionRedactedCopy => '삭제 처리한 사본';
+
+  @override
+  String get toolWarningRedactionCoverage =>
+      '이 도구는 이메일 주소, 전화번호, 계좌번호 같은 형태를 찾습니다. 민감한 것을 전부 잡아내지는 못합니다. 공유하기 전에 사본을 직접 읽어 보세요.';
+
+  @override
+  String get toolWarningRedactionFormatLimit =>
+      'Action은 이미지와 PDF 파일은 삭제 처리할 수 없습니다. 그림에서 무언가를 덮어도 원본은 그 아래에 그대로 남기 때문에, 이 기능은 제공하지 않습니다.';
+
+  @override
+  String get toolTitleAuthenticity => '이것이 어디서 왔는지 확인하기';
+
+  @override
+  String get toolDescriptionAuthenticity => '파일이 자신의 출처에 대해 스스로 밝히는 내용.';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspect => '살펴볼 것이 없음';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspectBody => '이미지나 텍스트를 선택하세요.';
+
+  @override
+  String get toolSectionAuthenticityFileSignals => '이 파일이 스스로에 대해 말하는 것';
+
+  @override
+  String get toolSectionAuthenticityFileItself => '파일 그 자체';
+
+  @override
+  String get toolSectionFileContents => '내용물';
+
+  @override
+  String get toolSectionFileUnknownFormat => 'Action이 아는 형식이 아님';
+
+  @override
+  String get toolSectionFileSize => '크기';
+
+  @override
+  String get toolSectionFileDigest => 'SHA-256';
+
+  @override
+  String get toolWarningAuthenticityNotProof =>
+      '이 도구는 파일이 스스로에 대해 밝히는 내용을 그대로 전합니다. 메타데이터는 고치거나 지울 수 있으므로, 그중 어느 것도 증거가 되지 않습니다. 이것을 근거로 누군가를 탓하지 마세요.';
+
+  @override
+  String get toolTitleCredentialScanner => '키와 비밀번호 찾기';
+
+  @override
+  String get toolDescriptionCredentialScanner => '무언가를 공유하기 전에 자격 증명을 찾아내세요.';
+
+  @override
+  String get toolSectionCredentialNothingToCheck => '검사할 것이 없음';
+
+  @override
+  String get toolSectionCredentialNothingToCheckBody =>
+      '텍스트를 붙여넣거나, 글을 이미 읽어 낸 캡처를 고르세요. 이 도구는 텍스트만 읽습니다.';
+
+  @override
+  String get toolSectionCredentialNoneFound => '자격 증명을 찾지 못함';
+
+  @override
+  String get toolSectionCredentialNoneFoundBody =>
+      'Action은 이 텍스트에서 API 키, 개인 키, 토큰, 비밀번호처럼 생긴 것을 아무것도 찾지 못했습니다.';
+
+  @override
+  String toolSectionCredentialFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '찾은 자격 증명 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolSectionCredentialPossibleFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '비밀일 수도 있는 것 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCredentialRedactedCopy => '찾은 자격 증명을 지운 사본';
+
+  @override
+  String get toolWarningCredentialRevoke =>
+      '문서에서 키를 지워도 그 키는 작동을 멈추지 않습니다. 이 중 하나라도 이미 공유했다면, 그 키를 발급한 제공자에서 폐기하고 새 키를 발급받으세요.';
+
+  @override
+  String get toolWarningCredentialCoverage =>
+      '이 도구는 알아볼 수 있는 형태를 가진 자격 증명을 찾습니다. 문장 안에 풀어 쓴 비밀번호는 찾아내지 못합니다. 그러니 텍스트도 직접 읽어 보세요.';
+
+  @override
+  String get toolTitleLinkInspector => '링크 살펴보기';
+
+  @override
+  String get toolDescriptionLinkInspector => '열어 보기 전에 주소가 드러내는 것.';
+
+  @override
+  String get toolSectionLinkNoneFound => '링크를 찾지 못함';
+
+  @override
+  String get toolSectionLinkNoneFoundBody => '링크를 붙여넣거나, 링크가 들어 있는 캡처를 고르세요.';
+
+  @override
+  String toolSectionLinkFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '이 텍스트 속 링크 $count개',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionLinkUnreadableHost => '읽어 내지 못함';
+
+  @override
+  String toolSectionLinkObservationLine(String summary, String detail) {
+    return '$summary — $detail';
+  }
+
+  @override
+  String get toolSectionLinkNothingUnusual => '이 주소들이 적힌 방식에서 특이한 점 없음';
+
+  @override
+  String get toolSectionLinkNothingUnusualBody =>
+      '그것은 그 페이지들을 믿을 만하다고 아는 것과는 다릅니다. 이 링크들을 당신이 예상하고 있었는지는 당신만 판단할 수 있습니다.';
+
+  @override
+  String get toolWarningLinkAddressOnly =>
+      'Action은 주소만 읽습니다. 링크를 열지 않고, 사이트를 조회하지 않으며, 어떤 평판 서비스에도 물어보지 않습니다 — 그렇게 하면 당신이 무엇을 보는지가 다른 곳으로 전송되기 때문입니다.';
+
+  @override
+  String get toolWarningLinkNoSignals =>
+      '눈에 띄는 신호가 없는 링크도 해로울 수 있습니다. 이 도구는 주소가 적힌 방식에서 문제를 찾을 뿐이며, 그것은 그 주소가 어디로 데려가는지에 대해 알아야 할 전부가 아닙니다.';
+
+  @override
+  String get toolSectionObjective => '당신이 원하는 것';
+
+  @override
+  String get toolSectionCurrentState => '목표의 현재 상황';
+
+  @override
+  String get toolSectionRecommendedNextStep => '권하는 다음 단계';
+
+  @override
+  String get toolSectionCredentialAdvice => '무엇을 해야 하나';
+
+  @override
+  String get toolSectionSummary => '요약';
+
+  @override
+  String get toolDetailSeparator => ' · ';
 }

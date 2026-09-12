@@ -11,6 +11,7 @@
 library;
 
 import 'ai_response.dart';
+import 'tool_copy.dart';
 
 /// How a section wants to be read.
 ///
@@ -39,12 +40,23 @@ class IntelligenceFact {
   const IntelligenceFact({
     required this.label,
     required this.value,
+    this.labelCopy,
+    this.valueCopy,
     this.citation,
     this.uncertain = false,
   });
 
   final String label;
   final String value;
+
+  /// What [label] *is*, where the tool wrote it rather than the model.
+  final ToolCopy? labelCopy;
+
+  /// What [value] *is*.
+  ///
+  /// Null for an amount, a date or a reference read out of the user's own
+  /// document. Those are not anybody's to translate.
+  final ToolCopy? valueCopy;
 
   /// Where this came from. Absent means the model asserted it without evidence,
   /// which the UI shows differently — an unevidenced amount is not the same
@@ -62,21 +74,44 @@ class IntelligenceFact {
 class IntelligenceSection {
   const IntelligenceSection({
     required this.title,
+    this.titleCopy,
     this.kind = IntelligenceSectionKind.prose,
     this.body,
+    this.bodyCopy,
     this.bullets = const [],
+    this.bulletCopy = const [],
     this.facts = const [],
     this.rows = const [],
     this.columns = const [],
   });
 
+  /// Canonical English. Still what a log line, the activity journal and the
+  /// domain tests read.
   final String title;
+
+  /// What [title] *is*, where it is editorial copy this tool wrote.
+  ///
+  /// Null on purpose where the title is runtime text — a host read out of a
+  /// link, a mode the user picked, a fact name the model returned. Absence is
+  /// a statement, not an omission: it says this string is nobody's to
+  /// translate.
+  final ToolCopy? titleCopy;
+
   final IntelligenceSectionKind kind;
 
   /// Used by [IntelligenceSectionKind.prose] and `quote`.
   final String? body;
 
+  /// What [body] *is*. Null where the body is the model's own prose.
+  final ToolCopy? bodyCopy;
+
   final List<String> bullets;
+
+  /// Index-parallel to [bullets], or empty when no bullet is editorial.
+  ///
+  /// Ragged is tolerated the way a ragged table row is: a short list costs the
+  /// bullets it does not cover, not the whole section.
+  final List<ToolCopy> bulletCopy;
   final List<IntelligenceFact> facts;
 
   /// Table data. Ragged rows are tolerated at render time rather than rejected:
@@ -102,6 +137,8 @@ class IntelligenceCitation {
     this.sourceId,
     this.sourceLabel,
     this.pageLabel,
+    this.startPage,
+    this.endPage,
   });
 
   factory IntelligenceCitation.fromProvider(AiCitation citation) =>
@@ -110,21 +147,30 @@ class IntelligenceCitation {
         sourceId: citation.sourceId,
         sourceLabel: citation.documentLabel,
         pageLabel: citation.pageLabel,
+        startPage: citation.startPage,
+        endPage: citation.endPage,
       );
 
   final String quotedText;
   final String? sourceId;
   final String? sourceLabel;
+
+  /// The provider's page location as canonical English — "page 3",
+  /// "pages 3–6". Kept for logs and for a citation built without page
+  /// numbers; the evidence chip prefers [startPage]/[endPage].
   final String? pageLabel;
 
-  /// "Renewal notice, page 3" — what an evidence chip shows.
-  String get locationLabel {
-    final parts = [
-      ?sourceLabel,
-      ?pageLabel,
-    ];
-    return parts.isEmpty ? 'From the selected source' : parts.join(', ');
-  }
+  /// 1-indexed, carried through from [AiCitation] so the page label can be
+  /// *built* in the reader's language rather than translated after the fact.
+  ///
+  /// This is the whole reason they are here. "page 3" arrives from the
+  /// provider layer as a finished English string, and by then the number has
+  /// stopped being a number — nothing downstream can pluralise it for a
+  /// language that inflects the noun, or swap the en dash for the range mark
+  /// its locale uses. Null for a citation Action derived locally, which has
+  /// no page to point at and must not invent one.
+  final int? startPage;
+  final int? endPage;
 }
 
 /// What a suggestion would become if the user accepted it.
@@ -153,7 +199,9 @@ class IntelligenceSuggestion {
     required this.id,
     required this.kind,
     required this.title,
+    this.titleCopy,
     this.detail,
+    this.detailCopy = const <ToolCopy>[],
     this.dueAt,
     this.citation,
     this.selectedByDefault = false,
@@ -164,7 +212,22 @@ class IntelligenceSuggestion {
 
   final IntelligenceSuggestionKind kind;
   final String title;
+
+  /// What [title] *is*. Null where the title is the model's own words, which
+  /// is the usual case for a suggestion.
+  final ToolCopy? titleCopy;
+
   final String? detail;
+
+  /// The parts of [detail], unjoined.
+  ///
+  /// [detail] is a `' · '` join made in `data/` — a sentence assembled in
+  /// English order out of translatable labels and untranslatable model text.
+  /// The parts travel separately so the reader's bundle chooses the separator,
+  /// and so "If not: {consequence}" and "You need: {items}" reach the bundle
+  /// as frames rather than as finished strings. Empty means [detail] is
+  /// runtime text throughout.
+  final List<ToolCopy> detailCopy;
 
   /// Only ever set when the source actually stated a date. A plausible-sounding
   /// deadline the document does not mention is a fabrication.
@@ -193,16 +256,40 @@ class IntelligenceWarning {
   const IntelligenceWarning({
     required this.level,
     required this.message,
+    required this.copy,
   });
 
-  const IntelligenceWarning.caution(String message)
-      : this(level: IntelligenceWarningLevel.caution, message: message);
+  const IntelligenceWarning.caution(String message, ToolCopy copy)
+      : this(
+          level: IntelligenceWarningLevel.caution,
+          message: message,
+          copy: copy,
+        );
 
-  const IntelligenceWarning.note(String message)
-      : this(level: IntelligenceWarningLevel.note, message: message);
+  const IntelligenceWarning.note(String message, ToolCopy copy)
+      : this(
+          level: IntelligenceWarningLevel.note,
+          message: message,
+          copy: copy,
+        );
 
   final IntelligenceWarningLevel level;
+
+  /// Canonical English, written at the tool that raises it.
+  ///
+  /// Read by logs, by the fixture reports and by the domain tests; no longer
+  /// the string on screen. [copy] is what the banner renders.
   final String message;
+
+  /// What this warning *is*.
+  ///
+  /// **Required, unlike every other copy field in this file.** A warning is
+  /// never runtime text — all of them are editorial, and several are safety
+  /// copy whose only job is to stop the user acting on something. A section
+  /// title may legitimately be a hostname; a caution may not legitimately be
+  /// English on a Bengali screen. So a new tool that raises a warning without
+  /// an identity does not compile.
+  final ToolCopy copy;
 }
 
 /// Generated content the user can keep, copy, edit or export.
@@ -212,12 +299,17 @@ class IntelligenceWarning {
 class IntelligenceArtifact {
   const IntelligenceArtifact({
     required this.title,
+    this.titleCopy,
     required this.text,
     this.mimeType = 'text/plain',
     this.isDraft = true,
   });
 
   final String title;
+
+  /// What [title] *is*. Null where the artifact is named after the user's own
+  /// document rather than by the tool.
+  final ToolCopy? titleCopy;
   final String text;
   final String mimeType;
 

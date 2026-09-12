@@ -4,6 +4,7 @@ library;
 import '../../domain/ai_request.dart';
 import '../../domain/ai_response.dart';
 import '../../domain/intelligence_result.dart';
+import '../../domain/tool_copy.dart';
 import '../../domain/intelligence_tool.dart';
 import '../evidence_verifier.dart';
 import 'tool_support.dart';
@@ -89,6 +90,7 @@ $factualRules''';
         if (rows.isNotEmpty)
           IntelligenceSection(
             title: 'Table',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionTable),
             kind: IntelligenceSectionKind.table,
             columns: columns,
             rows: rows,
@@ -96,6 +98,7 @@ $factualRules''';
         if (fields.isNotEmpty)
           IntelligenceSection(
             title: 'Fields',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionFields),
             kind: IntelligenceSectionKind.facts,
             facts: fields,
           ),
@@ -105,6 +108,7 @@ $factualRules''';
         if (rows.isNotEmpty)
           IntelligenceArtifact(
             title: 'Table (CSV)',
+            titleCopy: const ToolPhrase(ToolPhraseId.sectionTableCsv),
             text: _csv(columns, rows),
             mimeType: 'text/csv',
             isDraft: false,
@@ -116,6 +120,7 @@ $factualRules''';
           const IntelligenceWarning.caution(
             'The column layout of this table could not be read reliably. '
             'Check the rows line up before using them.',
+            ToolPhrase(ToolPhraseId.warningTableLayoutUncertain),
           ),
       ],
     );
@@ -208,17 +213,35 @@ $factualRules''';
       evidence.add(checked);
 
       final dueAt = readIsoDate(raw, 'due_date');
+      // The document's own wording is kept even when a date was parsed, so
+      // "within 14 days of receipt" is not silently replaced by a date the
+      // user cannot check.
+      final dueText = readString(raw, 'due_text');
+      final condition = readString(raw, 'condition');
+      final consequence = readString(raw, 'consequence');
+      final requiredItems = readStrings(raw, 'required_items');
+
+      // Canonical English, for the log and the domain tests. The screen reads
+      // `detailCopy` instead: the separator between these clauses and the two
+      // frames around them are the bundle's, not this file's.
       final detail = [
-        // The document's own wording is kept even when a date was parsed, so
-        // "within 14 days of receipt" is not silently replaced by a date the
-        // user cannot check.
-        ?readString(raw, 'due_text'),
-        ?readString(raw, 'condition'),
-        if (readString(raw, 'consequence') case final c?) 'If not: $c',
-        if (readStrings(raw, 'required_items') case final items
-            when items.isNotEmpty)
-          'You need: ${items.join(', ')}',
+        ?dueText,
+        ?condition,
+        if (consequence case final c?) 'If not: $c',
+        if (requiredItems.isNotEmpty)
+          'You need: ${requiredItems.join(', ')}',
       ].join(' · ');
+      final detailCopy = <ToolCopy>[
+        if (dueText case final t?) ToolVerbatim(t),
+        if (condition case final c?) ToolVerbatim(c),
+        if (consequence case final c?)
+          ToolNamed(ToolNamedId.labelDeadlineConsequence, c),
+        if (requiredItems.isNotEmpty)
+          ToolNamedList(
+            ToolNamedListId.labelDeadlineRequiredItems,
+            requiredItems,
+          ),
+      ];
 
       suggestions.add(IntelligenceSuggestion(
         id: 'obligation-${index++}',
@@ -227,6 +250,7 @@ $factualRules''';
             : IntelligenceSuggestionKind.step,
         title: what,
         detail: detail.isEmpty ? null : detail,
+        detailCopy: detailCopy,
         dueAt: dueAt,
         citation: checked.citation,
       ));
@@ -234,7 +258,7 @@ $factualRules''';
       if (dueAt != null || readString(raw, 'due_text') != null) {
         facts.add(IntelligenceFact(
           label: what,
-          value: readString(raw, 'due_text') ??
+          value: dueText ??
               '${dueAt!.year}-${dueAt.month.toString().padLeft(2, '0')}-'
                   '${dueAt.day.toString().padLeft(2, '0')}',
           citation: checked.citation,
@@ -248,14 +272,21 @@ $factualRules''';
       sections: [
         if (facts.isNotEmpty)
           IntelligenceSection(
-            title: facts.length == 1 ? '1 deadline' : '${facts.length} deadlines',
+            title:
+                facts.length == 1 ? '1 deadline' : '${facts.length} deadlines',
+            titleCopy: ToolCounted(
+              ToolCountedId.sectionDeadlineCount,
+              facts.length,
+            ),
             kind: IntelligenceSectionKind.facts,
             facts: facts,
           ),
         if (suggestions.isEmpty)
           const IntelligenceSection(
             title: 'Nothing due',
+            titleCopy: ToolPhrase(ToolPhraseId.sectionNothingDue),
             body: 'Action found no deadlines or obligations in this material.',
+            bodyCopy: ToolPhrase(ToolPhraseId.sectionNothingDueBody),
           ),
       ],
       suggestions: suggestions,
@@ -266,6 +297,7 @@ $factualRules''';
           const IntelligenceWarning.note(
             'Nothing is scheduled until you choose it. Reminders are never set '
             'automatically.',
+            ToolPhrase(ToolPhraseId.warningNothingScheduledAutomatically),
           ),
       ],
     );

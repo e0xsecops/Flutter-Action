@@ -27,7 +27,18 @@ enum AiProviderKind {
   /// display change or a rename must not orphan a stored key.
   final String id;
 
-  /// What the user sees.
+  /// The canonical English name — for logs, diagnostics and domain tests.
+  ///
+  /// Not the string on screen. A `const` enum field cannot depend on the
+  /// locale, so what a person reads is `labelIn(l10n)` in
+  /// `lib/l10n/enum_labels.dart`, the same split every other enum in this app
+  /// makes.
+  ///
+  /// Three of the four values are trademarks and are byte-identical in every
+  /// language. Only [openAiCompatible]'s description is translated, and
+  /// `OpenAI` survives inside it: "Custom" is the word that says the user
+  /// chose this server, and "OpenAI-compatible" is a claim about the shape of
+  /// a request, never about where the content goes.
   final String label;
 
   static AiProviderKind? fromId(String id) {

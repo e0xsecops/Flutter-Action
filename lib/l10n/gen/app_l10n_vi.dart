@@ -2165,4 +2165,2153 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get urgencyUnsure => 'Chưa chắc';
+
+  @override
+  String get detailSaveFailed =>
+      'Không lưu được. Không mất gì cả — hãy thử lại.';
+
+  @override
+  String get detailSectionCreatedFrom => 'Tạo ra từ';
+
+  @override
+  String get detailSourceChecking => 'Đang tìm bản thu nhận gốc…';
+
+  @override
+  String get detailSourceUnavailable => 'Bản thu nhận gốc không còn sẵn nữa.';
+
+  @override
+  String get detailReopenAction => 'Mở lại việc này';
+
+  @override
+  String get detailMarkActionComplete => 'Đánh dấu việc đã xong';
+
+  @override
+  String get detailGetHelp => 'Nhờ trợ giúp với cái này';
+
+  @override
+  String get detailSectionHistory => 'Lịch sử';
+
+  @override
+  String get detailHistoryShowLess => 'Xem ít hơn';
+
+  @override
+  String detailHistoryShowAll(int count) {
+    return 'Xem tất cả $count mục';
+  }
+
+  @override
+  String get detailHistoryCreated => 'Đã tạo';
+
+  @override
+  String detailHistoryCreatedWithSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Đã tạo cùng $count bước',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get detailHistoryReviewed => 'Bạn đã xác nhận các thông tin';
+
+  @override
+  String detailHistoryStepFinished(String title) {
+    return 'Đã hoàn thành “$title”';
+  }
+
+  @override
+  String get detailHistoryAStep => 'một bước';
+
+  @override
+  String get detailHistoryReminderSet => 'Bạn đã đặt một nhắc nhở';
+
+  @override
+  String detailHistoryReminderSetFor(String when) {
+    return 'Bạn đã đặt một nhắc nhở cho $when';
+  }
+
+  @override
+  String get detailHistoryCompleted => 'Đã đánh dấu xong';
+
+  @override
+  String get detailHistoryChanged => 'Lần thay đổi gần nhất';
+
+  @override
+  String get detailHistoryTimestampFormat => 'd MMM yyyy, HH:mm';
+
+  @override
+  String get aiProviderCustom => 'Tự chọn (tương thích OpenAI)';
+
+  @override
+  String get aiCapabilityText => 'văn bản';
+
+  @override
+  String get aiCapabilityImages => 'hình ảnh';
+
+  @override
+  String get aiCapabilityDocuments => 'tài liệu';
+
+  @override
+  String get aiCapabilityStructuredResults => 'kết quả có cấu trúc';
+
+  @override
+  String get aiCapabilityStreaming => 'chế độ truyền phát';
+
+  @override
+  String get aiCapabilitySystemInstructions => 'chỉ dẫn hệ thống';
+
+  @override
+  String get aiCapabilityEvidenceCitations => 'trích dẫn bằng chứng';
+
+  @override
+  String get aiCapabilityLongDocuments => 'tài liệu dài';
+
+  @override
+  String aiCapabilityListJoin(String a, String b) {
+    return '$a, $b';
+  }
+
+  @override
+  String aiCapabilityListTwo(String a, String b) {
+    return '$a hoặc $b';
+  }
+
+  @override
+  String aiCapabilityListMore(String head, String last) {
+    return '$head hoặc $last';
+  }
+
+  @override
+  String get aiFailureNotConfigured =>
+      'Hãy kết nối một nhà cung cấp AI để dùng công cụ này.';
+
+  @override
+  String get aiFailureInvalidKey => 'Nhà cung cấp không chấp nhận khoá API đó.';
+
+  @override
+  String get aiFailureQuotaExceeded =>
+      'Tài khoản nhà cung cấp của bạn đã hết tín dụng hoặc đã chạm hạn mức.';
+
+  @override
+  String get aiFailureRateLimited =>
+      'Nhà cung cấp của bạn đang giới hạn tốc độ yêu cầu. Hãy thử lại sau một lát.';
+
+  @override
+  String get aiFailureNetworkUnavailable =>
+      'Action không liên lạc được với nhà cung cấp AI của bạn. Hãy kiểm tra kết nối.';
+
+  @override
+  String get aiFailureUnsupportedModel =>
+      'Mô hình đó không mở cho khoá của bạn. Hãy chọn mô hình khác trong Cài đặt.';
+
+  @override
+  String aiFailureUnsupportedCapability(String capabilities) {
+    return 'Mô hình bạn chọn không đọc được $capabilities. Hãy chọn mô hình khác trong Cài đặt.';
+  }
+
+  @override
+  String get aiFailureContextTooLarge =>
+      'Đó là quá nhiều nội dung để mô hình này đọc trong một lần.';
+
+  @override
+  String get aiFailureInputTooLargeText =>
+      'Đó là nhiều chữ hơn mức có thể phân tích trong một lần.';
+
+  @override
+  String get aiFailureProviderUnavailable =>
+      'Nhà cung cấp AI của bạn đang gặp trục trặc. Hãy thử lại sau một lát.';
+
+  @override
+  String get aiFailureMalformedResponse =>
+      'Nhà cung cấp đó gửi lại thứ mà Action không đọc được.';
+
+  @override
+  String get aiFailureCancelled => 'Đã dừng.';
+
+  @override
+  String get aiFailureInsecureEndpoint =>
+      'Endpoint đó phải là một địa chỉ https://.';
+
+  @override
+  String get aiFailureUnknown =>
+      'Đã có lỗi xảy ra khi nói chuyện với nhà cung cấp AI của bạn.';
+
+  @override
+  String get appLockTitle => 'Action đang bị khoá';
+
+  @override
+  String get appLockPrompt =>
+      'Hãy xác nhận đúng là bạn để tiếp tục. Action nhờ thiết bị của bạn làm việc đó — Action không bao giờ thấy vân tay, khuôn mặt hay mã PIN của bạn.';
+
+  @override
+  String get appLockUnlocking => 'Đang mở khoá…';
+
+  @override
+  String get appLockNotConfirmed =>
+      'Chưa được xác nhận. Hãy thử lại khi bạn sẵn sàng.';
+
+  @override
+  String get appLockCannotConfirm =>
+      'Ngay lúc này thiết bị của bạn không xác nhận được đúng là bạn. Hãy kiểm tra xem khoá màn hình còn được đặt trong cài đặt thiết bị hay không.';
+
+  @override
+  String get appLockWaiting => 'Đang chờ…';
+
+  @override
+  String get appLockUnlock => 'Mở khoá';
+
+  @override
+  String get appLockReasonUnlock => 'Mở khoá Action';
+
+  @override
+  String get appLockReasonEnable =>
+      'Xác nhận đúng là bạn trước khi bật Khoá ứng dụng';
+
+  @override
+  String get appLockReasonDisable =>
+      'Xác nhận đúng là bạn trước khi tắt Khoá ứng dụng';
+
+  @override
+  String get todayCapabilityHeading => 'Những gì Action lo được';
+
+  @override
+  String get todayCapabilityDocumentTitle => 'Một lá thư hay hoá đơn';
+
+  @override
+  String get todayCapabilityDocumentBlurb =>
+      'Action đọc nó và tìm ra hạn chót, số tiền và số tham chiếu.';
+
+  @override
+  String get todayCapabilityScreenshotTitle => 'Một ảnh màn hình';
+
+  @override
+  String get todayCapabilityScreenshotBlurb =>
+      'Biến một tin nhắn mà bạn hẳn sẽ quên mất thành thứ bạn có thể làm.';
+
+  @override
+  String get todayCapabilityTextTitle => 'Một đoạn văn bản';
+
+  @override
+  String get todayCapabilityTextBlurb =>
+      'Dán bất cứ thứ gì vào. Action nhận ra đó là gì và nó đòi hỏi gì ở bạn.';
+
+  @override
+  String get todayCapabilityConfirmTitle => 'Bạn xác nhận mọi thứ';
+
+  @override
+  String get todayCapabilityConfirmBlurb =>
+      'Không gì trở thành một việc cho tới khi bạn đã xem bằng chứng và đồng ý.';
+
+  @override
+  String get todayCapabilityExploreIntelligence => 'Khám phá Trí tuệ';
+
+  @override
+  String get documentRejectedEmpty => 'Tệp đó rỗng.';
+
+  @override
+  String documentRejectedTooLarge(String size) {
+    return 'Tài liệu đó nặng $size, lớn hơn mức Action làm việc được.';
+  }
+
+  @override
+  String get documentRejectedNotAPdf =>
+      'Đó không phải một PDF, dù nó được đặt tên là gì. Action đọc PDF và hình ảnh.';
+
+  @override
+  String get documentRejectedUnreadable => 'Không đọc được tài liệu đó.';
+
+  @override
+  String get pdfRejectedNotAPdf =>
+      'Tệp đó không phải một PDF, dù nó được đặt tên là gì.';
+
+  @override
+  String get pdfRejectedEncrypted =>
+      'PDF đó được bảo vệ bằng mật khẩu, nên Action không đọc được nó.';
+
+  @override
+  String get pdfRejectedDamaged =>
+      'Không đọc được PDF đó. Có thể nó chưa đầy đủ.';
+
+  @override
+  String get shareRejectedEmpty => 'Trong lần chia sẻ đó không có gì để đọc.';
+
+  @override
+  String get shareRejectedUnsupportedType =>
+      'Action nhận được văn bản, hình ảnh và PDF. Đó lại là thứ khác.';
+
+  @override
+  String get shareRejectedContentMismatch =>
+      'Tệp đó không đúng loại tệp như nó tự khai, nên Action đã không mở nó.';
+
+  @override
+  String get shareRejectedTooLarge => 'Tệp đó quá lớn để Action làm việc được.';
+
+  @override
+  String get shareRejectedUnreadable => 'Không đọc được tệp đó.';
+
+  @override
+  String get captureFailureRecognition =>
+      'Việc nhận dạng chữ đã không chạy được.';
+
+  @override
+  String get captureFailureImageFormat =>
+      'Không đọc được định dạng ảnh đó trên thiết bị này.';
+
+  @override
+  String get connectSheetTitle => 'Kết nối AI của bạn';
+
+  @override
+  String get connectSheetSubtitle =>
+      'Bạn dùng tài khoản và khoá API của riêng bạn. Action lưu khoá đó trong vùng lưu trữ an toàn của thiết bị này.';
+
+  @override
+  String get connectErrorKeyMissing =>
+      'Hãy dán khoá API của bạn vào để tiếp tục.';
+
+  @override
+  String get connectErrorModelMissing =>
+      'Hãy chọn một mô hình, hoặc gõ mã mô hình.';
+
+  @override
+  String get connectErrorEndpointMissing =>
+      'Hãy thêm địa chỉ endpoint của bạn.';
+
+  @override
+  String get connectErrorSecureStorageUnavailable =>
+      'Không mở được vùng lưu trữ an toàn của thiết bị này, nên khoá đã không được lưu.';
+
+  @override
+  String get connectTestSucceeded => 'Đã kết nối.';
+
+  @override
+  String connectTestSucceededWithModels(int count) {
+    return 'Đã kết nối. Có $count mô hình dùng được.';
+  }
+
+  @override
+  String get connectProviderLabel => 'Nhà cung cấp';
+
+  @override
+  String get connectEndpointLabel => 'Endpoint';
+
+  @override
+  String get connectEndpointHttpsNote =>
+      'Phải là một địa chỉ https://. Action sẽ không gửi tài liệu của bạn qua một kết nối không mã hoá.';
+
+  @override
+  String get connectApiKeyLabel => 'Khoá API';
+
+  @override
+  String get connectApiKeyHint => 'Dán khoá của bạn';
+
+  @override
+  String get connectKeyPrivacyNote =>
+      'Khoá của bạn ở lại trên thiết bị này. Action không bao giờ gửi nó đi đâu ngoài nhà cung cấp mà bạn đã chọn, và không thể cho bạn xem lại nó sau khi lưu.';
+
+  @override
+  String get connectModelLabel => 'Mô hình';
+
+  @override
+  String get connectModelIdHint => 'Mã mô hình';
+
+  @override
+  String get connectModelFreeTextNote =>
+      'Các nhà cung cấp cho ngừng những mã mô hình cũ và thêm mã mới. Nếu mã bạn muốn không có trong danh sách, hãy gõ vào đây.';
+
+  @override
+  String get connectAndTest => 'Kết nối và thử';
+
+  @override
+  String get connectSaveWithoutTesting => 'Lưu mà không thử';
+
+  @override
+  String get toolWarningFactsNotChecked =>
+      'Action không đối chiếu được cái này với phần chữ gốc, nên các số tiền và ngày tháng trong đó không hề được kiểm tra.';
+
+  @override
+  String get toolTitleRewrite => 'Cải thiện đoạn viết này';
+
+  @override
+  String get toolDescriptionRewrite =>
+      'Rõ hơn, ngắn hơn hoặc trang trọng hơn — dữ kiện được giữ nguyên.';
+
+  @override
+  String get toolModeRewriteClearer => 'Rõ hơn';
+
+  @override
+  String get toolModeRewriteProfessional => 'Chuyên nghiệp hơn';
+
+  @override
+  String get toolModeRewriteShorter => 'Ngắn hơn';
+
+  @override
+  String get toolModeRewritePersuasive => 'Thuyết phục hơn';
+
+  @override
+  String get toolModeRewriteSimpler => 'Đơn giản hơn';
+
+  @override
+  String get toolModeRewriteStructured => 'Có bố cục hơn';
+
+  @override
+  String get toolModeRewriteGrammarOnly => 'Chỉ sửa ngữ pháp';
+
+  @override
+  String get toolSectionWhatChanged => 'Những gì đã thay đổi';
+
+  @override
+  String get toolSectionNote => 'Lưu ý';
+
+  @override
+  String get toolSectionAlreadyClearBody =>
+      'Đoạn này vốn đã rõ. Những thay đổi bên dưới là nhỏ.';
+
+  @override
+  String get toolSectionImprovedText => 'Văn bản đã cải thiện';
+
+  @override
+  String get toolTitleDraftReply => 'Soạn một câu trả lời';
+
+  @override
+  String get toolDescriptionDraftReply =>
+      'Một câu trả lời bạn có thể sửa rồi tự mình gửi đi.';
+
+  @override
+  String get toolModeReplyProfessional => 'Chuyên nghiệp';
+
+  @override
+  String get toolModeReplyConcise => 'Ngắn gọn';
+
+  @override
+  String get toolModeReplyFriendly => 'Thân thiện';
+
+  @override
+  String get toolModeReplyFormal => 'Trang trọng';
+
+  @override
+  String get toolModeReplyClarification => 'Hỏi cho rõ';
+
+  @override
+  String get toolModeReplyConfirmation => 'Xác nhận đã nhận';
+
+  @override
+  String get toolModeReplyDispute => 'Phản đối cái này';
+
+  @override
+  String get toolSectionSubject => 'Chủ đề';
+
+  @override
+  String get toolSectionDraftReply => 'Bản nháp câu trả lời';
+
+  @override
+  String get toolSectionPlaceholders => 'Bạn cần điền những chỗ này';
+
+  @override
+  String toolSectionDraftWithSubject(String subject) {
+    return 'Bản nháp — $subject';
+  }
+
+  @override
+  String get toolWarningDraftNotSent =>
+      'Đây là một bản nháp. Action không gửi đi bất cứ thứ gì — hãy đọc nó, sửa nó, và tự mình gửi đi.';
+
+  @override
+  String get toolTitleTranslate => 'Dịch';
+
+  @override
+  String get toolDescriptionTranslate =>
+      'Một ngôn ngữ khác, với các con số và tên riêng được giữ nguyên.';
+
+  @override
+  String get toolSectionTranslation => 'Bản dịch';
+
+  @override
+  String toolSectionTranslationFromTo(String from, String to) {
+    return 'Từ $from sang $to';
+  }
+
+  @override
+  String get toolSectionKeptInOriginal => 'Giữ nguyên như trong bản gốc';
+
+  @override
+  String get toolWarningTranslationNotCertified =>
+      'Một bản dịch để hiểu nội dung, không phải một bản dịch công chứng.';
+
+  @override
+  String get toolTitleStructuredData => 'Trích xuất một bảng';
+
+  @override
+  String get toolDescriptionStructuredData =>
+      'Các hàng, các trường và các con số bạn có thể sao chép ra.';
+
+  @override
+  String get toolSectionTable => 'Bảng';
+
+  @override
+  String get toolSectionFields => 'Trường';
+
+  @override
+  String get toolSectionTableCsv => 'Bảng (CSV)';
+
+  @override
+  String get toolWarningTableLayoutUncertain =>
+      'Cách chia cột của bảng này không đọc được một cách đáng tin. Hãy kiểm tra xem các hàng có khớp nhau không trước khi dùng chúng.';
+
+  @override
+  String get toolTitleDeadlineFinder => 'Tìm các hạn chót';
+
+  @override
+  String get toolDescriptionDeadlineFinder =>
+      'Cái gì đến hạn, khi nào, và điều gì xảy ra nếu không làm.';
+
+  @override
+  String toolSectionDeadlineCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hạn chót',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionNothingDue => 'Không có gì đến hạn';
+
+  @override
+  String get toolSectionNothingDueBody =>
+      'Action không tìm thấy hạn chót hay nghĩa vụ nào trong phần nội dung này.';
+
+  @override
+  String get toolWarningNothingScheduledAutomatically =>
+      'Không gì được lên lịch cho tới khi bạn chọn. Nhắc nhở không bao giờ được đặt tự động.';
+
+  @override
+  String toolLabelDeadlineConsequence(String consequence) {
+    return 'Nếu không: $consequence';
+  }
+
+  @override
+  String toolLabelDeadlineRequiredItems(String items) {
+    return 'Bạn cần: $items';
+  }
+
+  @override
+  String get moneyErrorEmpty => 'chưa có số tiền nào được đưa vào';
+
+  @override
+  String get moneyErrorMalformed => 'số tiền không phải một con số thuần tuý';
+
+  @override
+  String get moneyErrorNegative => 'số tiền âm không phải một khoản phải trả';
+
+  @override
+  String get moneyErrorTooManyDecimals =>
+      'nhiều chữ số thập phân hơn mức đồng tiền đó có';
+
+  @override
+  String get moneyErrorUnsupportedCurrency =>
+      'mã tiền tệ không phải mã chúng tôi nhận ra';
+
+  @override
+  String get moneyErrorOutOfRange => 'số tiền lớn đến mức khó tin';
+
+  @override
+  String get escalationOcrFailed =>
+      'Việc nhận dạng hoàn toàn không chạy được trên bản thu nhận này.';
+
+  @override
+  String get escalationNoTextRecognised =>
+      'Cái này trông như một tài liệu, nhưng không nhận dạng được chữ nào.';
+
+  @override
+  String get escalationThinText =>
+      'Lượng chữ nhận dạng được là quá ít so với một tài liệu cỡ này.';
+
+  @override
+  String get escalationLowLineConfidence =>
+      'Bộ nhận dạng báo độ tin cậy thấp ở một số dòng.';
+
+  @override
+  String get escalationTableLikeLayout =>
+      'Cách trình bày trông như một bảng, và việc đọc theo từng dòng làm mất đi việc giá trị nào thuộc hàng nào.';
+
+  @override
+  String get escalationFragmentedLayout =>
+      'Phần chữ trả về thành rất nhiều mảnh vụn, nên cấu trúc không còn rõ ràng.';
+
+  @override
+  String get escalationMalformedText =>
+      'Phần lớn chữ nhận dạng được không phải là từ hay số đọc được.';
+
+  @override
+  String get escalationConflictingDates =>
+      'Có nhiều hơn một ngày được trình bày như là hạn chót.';
+
+  @override
+  String get escalationConflictingAmounts =>
+      'Có nhiều hơn một số tiền được trình bày như là khoản phải trả.';
+
+  @override
+  String get escalationUnresolvedGrounding =>
+      'Một số giá trị không đối chiếu được với phần chữ của tài liệu.';
+
+  @override
+  String get escalationInstructionLikeContent =>
+      'Tài liệu này có đoạn chữ được viết như thể đó là chỉ dẫn cho ứng dụng. Nó được xử lý như nội dung tài liệu, không bao giờ như chỉ dẫn.';
+
+  @override
+  String get providerFailureNetwork =>
+      'Action không liên lạc được với dịch vụ. Hãy kiểm tra kết nối.';
+
+  @override
+  String get providerFailureTimedOut => 'Dịch vụ mất quá lâu để trả lời.';
+
+  @override
+  String get providerFailureServiceUnavailable =>
+      'Dịch vụ tạm thời không dùng được. Hãy thử lại sau.';
+
+  @override
+  String get providerFailureUnauthorized =>
+      'Hiện giờ ứng dụng này chưa được phép dùng dịch vụ.';
+
+  @override
+  String get providerFailureBlocked => 'Dịch vụ đã từ chối xử lý tài liệu này.';
+
+  @override
+  String get providerFailureUnknown =>
+      'Action không đọc được tài liệu này. Thử lại có thể sẽ được.';
+
+  @override
+  String get reviewBlockerTitle => 'Hãy đặt tên cho việc này.';
+
+  @override
+  String get reviewBlockerDate =>
+      'Hãy chọn ngày nào mới là hạn chót thật, hoặc để trống.';
+
+  @override
+  String get reviewBlockerAmount =>
+      'Hãy chọn số tiền nào là đúng, hoặc để trống.';
+
+  @override
+  String get reviewBlockerStepTitle => 'Những bước bạn giữ lại cần có tên.';
+
+  @override
+  String citationPage(int page) {
+    String _temp0 = intl.Intl.pluralLogic(
+      page,
+      locale: localeName,
+      other: 'trang $page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String citationPageRange(int start, int end) {
+    return 'trang $start–$end';
+  }
+
+  @override
+  String rewriteDroppedFacts(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Bản viết lại không còn chứa $values. Hãy kiểm tra nó trước khi dùng.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rewriteDroppedFactsMore(int count, String values) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Bản viết lại không còn chứa $values và $count giá trị nữa. Hãy kiểm tra nó trước khi dùng.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get listSeparator => ', ';
+
+  @override
+  String get goalStatusReached => 'Đã đạt';
+
+  @override
+  String get goalNewSheetTitle => 'Bạn muốn điều gì xảy ra?';
+
+  @override
+  String get goalNewSheetSubtitle =>
+      'Một câu là đủ. Bạn có thể thêm chi tiết sau.';
+
+  @override
+  String get goalTitleHint => 'Gia hạn bảo hiểm xe mà không trả thừa tiền.';
+
+  @override
+  String get goalCreateAction => 'Tạo mục tiêu';
+
+  @override
+  String get goalTitleSheetTitle => 'Điều bạn muốn';
+
+  @override
+  String get goalOutcomeSheetTitle => 'Xong thì trông thế nào';
+
+  @override
+  String get goalContextSheetTitle => 'Hiện đang đến đâu';
+
+  @override
+  String get goalOutcomeHint => 'Xe đã có bảo hiểm và giấy tờ đã nộp xong.';
+
+  @override
+  String get goalContextHint =>
+      'Tôi đã có hai báo giá và hạn gia hạn là ngày 18.';
+
+  @override
+  String get goalWorkspaceTitle => 'Mục tiêu';
+
+  @override
+  String get goalUnmarkReached => 'Bỏ đánh dấu đã đạt được';
+
+  @override
+  String get goalMarkReached => 'Đánh dấu là đã đạt được';
+
+  @override
+  String get goalNotFound => 'Mục tiêu đó không còn ở đây nữa.';
+
+  @override
+  String get goalDeleteTitle => 'Xoá mục tiêu này?';
+
+  @override
+  String get goalDeleteBody =>
+      'Mục tiêu sẽ bị gỡ khỏi thiết bị này. Mọi việc đã được tạo ra từ nó vẫn y nguyên như cũ.';
+
+  @override
+  String get goalOutcomeLabel => 'Thế nào là xong';
+
+  @override
+  String get goalOutcomeEmpty =>
+      'Chưa viết gì. Một mục tiêu dễ lập kế hoạch hơn khi bạn đã nói rõ hoàn thành nó nghĩa là gì.';
+
+  @override
+  String get goalContextLabel => 'Đang đến đâu';
+
+  @override
+  String get goalContextEmpty =>
+      'Chưa viết gì. Những gì đã diễn ra đến giờ, và những gì đang cản đường.';
+
+  @override
+  String get goalTitleLabel => 'Điều bạn muốn';
+
+  @override
+  String get goalEditTooltip => 'Sửa mục tiêu';
+
+  @override
+  String get goalToolsLabel => 'Action có thể làm gì';
+
+  @override
+  String get goalToolsNotReady =>
+      'Hãy viết thêm một chút về điều bạn muốn, và những công cụ này sẽ có cái để làm việc.';
+
+  @override
+  String get toolGoalOptimizerTitle => 'Mài sắc một mục tiêu';
+
+  @override
+  String get toolActionPlanTitle => 'Dựng một kế hoạch';
+
+  @override
+  String get resultFactUnconfirmed => 'Chưa được khẳng định';
+
+  @override
+  String get resultSuggestedSteps => 'Các bước được gợi ý';
+
+  @override
+  String get resultSuggestedAction => 'Việc được gợi ý';
+
+  @override
+  String get resultWorthAsking => 'Đáng để hỏi';
+
+  @override
+  String get resultSuggestedDeadlines => 'Các hạn chót được gợi ý';
+
+  @override
+  String get resultSuggestions => 'Các gợi ý';
+
+  @override
+  String resultSupportingQuotes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count câu trích dẫn làm căn cứ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get resultEvidenceFromSelectedSource => 'Từ nguồn bạn đã chọn';
+
+  @override
+  String resultEvidenceLocation(String source, String page) {
+    return '$source, $page';
+  }
+
+  @override
+  String get toolRunStagePreparing => 'Đang chuẩn bị tài liệu của bạn';
+
+  @override
+  String get toolRunStageReading => 'Đang đọc những trang bạn đã chọn';
+
+  @override
+  String get toolRunStageAnalysing => 'Đang phân tích';
+
+  @override
+  String get toolRunStageBuilding => 'Đang dựng bản xem lại của bạn';
+
+  @override
+  String get toolRunStageDone => 'Đã xong';
+
+  @override
+  String get toolRunStageFailed => 'Không hoàn tất';
+
+  @override
+  String get toolRunStageCancelled => 'Đã dừng';
+
+  @override
+  String get toolRunFailureLocalCheckFailed => 'Không kiểm tra được cái đó.';
+
+  @override
+  String get toolRunFailureProviderRetired =>
+      'Nhà cung cấp AI đó không còn dùng được trong phiên bản này.';
+
+  @override
+  String get toolRunFailureUnusableReply =>
+      'Câu trả lời đó trả về ở dạng không dùng được. Hãy thử lại.';
+
+  @override
+  String get toolRunFailureQuestionRequired => 'Hãy gõ một câu hỏi trước đã.';
+
+  @override
+  String get toolRunFailureInputRequired =>
+      'Hãy chọn thứ gì đó để công cụ này làm việc trên đó.';
+
+  @override
+  String get toolWarningReplyTruncated =>
+      'Câu trả lời này bị cắt ngang, nên nó có thể chưa đầy đủ.';
+
+  @override
+  String get toolWarningNoSupportingQuotes =>
+      'Mô hình của bạn không trả về câu trích dẫn làm căn cứ nào, nên không có gì ở đây có căn cứ cả. Hãy đối chiếu với tài liệu trước khi dựa vào nó.';
+
+  @override
+  String get aiSettingsRemoveTitle => 'Gỡ kết nối này?';
+
+  @override
+  String get aiSettingsRemoveBody =>
+      'Action sẽ xoá khoá API của bạn khỏi thiết bị này và ngừng dùng các tính năng AI. Tài khoản của bạn ở nhà cung cấp không bị ảnh hưởng.';
+
+  @override
+  String get aiSettingsProviderLabel => 'Nhà cung cấp';
+
+  @override
+  String get aiSettingsProviderFootnoteConnected =>
+      'Nhà cung cấp của bạn tính phí bạn theo những gì bạn dùng. Action không bao giờ tự mình gửi một yêu cầu nào.';
+
+  @override
+  String get aiSettingsConnectLabel => 'Kết nối một nhà cung cấp AI';
+
+  @override
+  String get aiSettingsConnectDescription =>
+      'Dùng tài khoản và khoá API của riêng bạn với OpenAI, Anthropic, Google Gemini, hoặc một endpoint tương thích.';
+
+  @override
+  String get aiSettingsModelLabel => 'Mô hình';
+
+  @override
+  String get aiSettingsEndpointLabel => 'Endpoint';
+
+  @override
+  String get aiSettingsApiKeyLabel => 'Khoá API';
+
+  @override
+  String get aiSettingsKeyStored =>
+      'Được giữ trong vùng lưu trữ an toàn của thiết bị này.';
+
+  @override
+  String get aiSettingsKeyMissing =>
+      'Không tìm thấy khoá nào trên thiết bị này. Hãy kết nối lại để thêm một khoá.';
+
+  @override
+  String get aiSettingsTestLabel => 'Kiểm tra kết nối';
+
+  @override
+  String get aiSettingsProviderUnavailable =>
+      'Nhà cung cấp đó không có trong phiên bản này.';
+
+  @override
+  String aiSettingsTestConnectedModels(int count) {
+    return 'Đã kết nối. Có $count mô hình dùng được.';
+  }
+
+  @override
+  String get aiSettingsTestButton => 'Kiểm tra';
+
+  @override
+  String get aiSettingsChangeProvider => 'Đổi nhà cung cấp hoặc mô hình';
+
+  @override
+  String get aiSettingsRemoveKey => 'Gỡ khoá';
+
+  @override
+  String get aiSettingsSectionPrivacy => 'Riêng tư';
+
+  @override
+  String get aiSettingsWhatGetsSentLabel => 'Những gì được gửi đi';
+
+  @override
+  String get aiSettingsWhereItGoesLabel => 'Nó đi tới đâu';
+
+  @override
+  String get aiSettingsWhereItGoesNoProvider =>
+      'Không có gì được gửi đi cho tới khi bạn kết nối một nhà cung cấp.';
+
+  @override
+  String aiSettingsWhereItGoesProvider(String provider) {
+    return 'Thẳng tới $provider, bằng khoá của bạn. Nó không đi qua bất kỳ máy chủ nào của Action.';
+  }
+
+  @override
+  String get aiSettingsSectionData => 'Dữ liệu';
+
+  @override
+  String get aiSettingsDataFootnote =>
+      'Action nhớ bạn đã dùng những công cụ nào, không bao giờ nhớ bạn dùng chúng lên cái gì.';
+
+  @override
+  String get aiSettingsRecentToolsLabel => 'Các công cụ dùng gần đây';
+
+  @override
+  String get aiSettingsRecentToolsNone => 'Không có';
+
+  @override
+  String get reminderNotificationTitle => 'Nhắc nhở từ Action';
+
+  @override
+  String get reminderNotificationPrivateBody => 'Bạn có việc cần xem lại.';
+
+  @override
+  String get reminderChannelName => 'Nhắc nhở Action';
+
+  @override
+  String get reminderChannelDescription =>
+      'Những nhắc nhở bạn tự đặt cho các việc của bạn.';
+
+  @override
+  String get onboardingStart => 'Bắt đầu dùng Action';
+
+  @override
+  String onboardingProgressSemantics(int current, int total) {
+    return 'Bước $current trên $total';
+  }
+
+  @override
+  String get onboardingCaptureTitle => 'Biến thông tin thành việc cần làm';
+
+  @override
+  String get onboardingCaptureBody =>
+      'Thêm một ảnh màn hình, một tấm ảnh hoặc đoạn chữ ai đó gửi cho bạn. Action đọc nó và tìm ra nó đang yêu cầu bạn làm gì.';
+
+  @override
+  String get onboardingReviewTitle =>
+      'Không có gì được lưu cho đến khi bạn xác nhận';
+
+  @override
+  String get onboardingReviewBody =>
+      'Action cho thấy nó tìm được gì và từ những chữ nào. Bạn sửa bất cứ chỗ nào sai. Cho đến khi bạn xác nhận, đó là một gợi ý — không phải một sự thật, và không phải một việc.';
+
+  @override
+  String get onboardingTrackingTitle => 'Theo sát những gì quan trọng';
+
+  @override
+  String get onboardingTrackingBody =>
+      'Mục Cần bạn để ý đưa lên trước những gì đã quá hạn hoặc sắp đến hạn. Mỗi việc giữ lại bước tiếp theo, tiến độ và mọi nhắc nhở bạn đặt cho nó.';
+
+  @override
+  String get onboardingPrivacyBody => 'Đáng biết trước khi bạn bắt đầu:';
+
+  @override
+  String get onboardingPrivacyOnDevice =>
+      'Việc, bản thu nhận, nhắc nhở và tìm kiếm của bạn được lưu trên thiết bị này. Tìm kiếm và nhắc nhở vẫn chạy khi không có kết nối.';
+
+  @override
+  String get onboardingPrivacySentToRead =>
+      'Khi bạn nhờ Action đọc thứ gì đó, nội dung đó được gửi tới dịch vụ AI diễn giải nó.';
+
+  @override
+  String get onboardingPrivacyCloud =>
+      'Một bản ghi ngắn của một việc đã xác nhận — tên, ngày tháng, số tiền và bước tiếp theo được gợi ý của nó — có thể được lưu trên đám mây dưới một mã định danh ẩn danh của thiết bị này. Các bản thu nhận, bước và nhắc nhở của bạn thì không.';
+
+  @override
+  String get onboardingPrivacyNotBackup =>
+      'Bản ghi đó không phải bản sao lưu. Nó không khôi phục được thứ gì sang thiết bị mới.';
+
+  @override
+  String toolSectionBlockerCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count thứ đang cản',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCouldBeSimpler => 'Có thể đơn giản hơn';
+
+  @override
+  String get toolDescriptionGoalOptimizer =>
+      'Cái gì còn thiếu, cái gì đang cản, và nên làm gì trước.';
+
+  @override
+  String toolSectionStepDependsOn(String step) {
+    return 'Sau: $step';
+  }
+
+  @override
+  String get toolSectionThePlan => 'Kế hoạch';
+
+  @override
+  String get toolDescriptionActionPlan =>
+      'Một chuỗi các bước có thứ tự mà bạn có thể biến thành việc.';
+
+  @override
+  String get toolTitleSmartChecklist => 'Lập một danh sách kiểm tra';
+
+  @override
+  String get toolDescriptionSmartChecklist =>
+      'Tất cả những gì cái này yêu cầu ở bạn, theo thứ tự.';
+
+  @override
+  String toolSectionMissingDetailCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chi tiết còn thiếu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionContradictions => 'Những chỗ này mâu thuẫn với nhau';
+
+  @override
+  String get toolTitleMissingInformation => 'Những gì còn thiếu';
+
+  @override
+  String get toolDescriptionMissingInformation =>
+      'Những chỗ trống, và nên hỏi gì về chúng.';
+
+  @override
+  String get aiAdapterTimedOut =>
+      'Cái đó mất quá nhiều thời gian và đã bị dừng.';
+
+  @override
+  String get aiAdapterSecureConnectionFailed =>
+      'Kết nối an toàn tới nhà cung cấp AI của bạn đã thất bại.';
+
+  @override
+  String get aiAdapterModelOrEndpointNotFound =>
+      'Action không tìm thấy mô hình hoặc endpoint đó.';
+
+  @override
+  String get aiAdapterRequestRejected =>
+      'Nhà cung cấp AI của bạn đã từ chối yêu cầu đó.';
+
+  @override
+  String get aiAdapterSecureStorageUnavailable =>
+      'Action không mở được vùng lưu trữ an toàn của thiết bị này.';
+
+  @override
+  String get aiAdapterEndpointMissing =>
+      'Hãy thêm địa chỉ endpoint AI của bạn trong Cài đặt.';
+
+  @override
+  String get aiAdapterReplyIncomplete =>
+      'Câu trả lời đó không đầy đủ. Hãy thử lại.';
+
+  @override
+  String get aiAdapterContentDeclined =>
+      'Nhà cung cấp của bạn đã từ chối xử lý nội dung đó.';
+
+  @override
+  String aiAdapterTooManyAttachments(int limit) {
+    return 'Như vậy là nhiều hơn $limit tệp cùng lúc. Hãy chọn ít hơn.';
+  }
+
+  @override
+  String get aiAdapterImageTooLarge =>
+      'Một trong những ảnh đó quá lớn để phân tích.';
+
+  @override
+  String aiAdapterDocumentTooLarge(String filename, int limit) {
+    return '“$filename” quá lớn để phân tích. Giới hạn là $limit MB.';
+  }
+
+  @override
+  String aiAdapterDocumentTooManyPages(String filename, int count, int limit) {
+    return '“$filename” có $count trang. Action đọc tối đa $limit trang mỗi lần — hãy chọn một khoảng.';
+  }
+
+  @override
+  String get aiAdapterSelectionTooLarge =>
+      'Phần bạn chọn quá lớn để gửi trong một yêu cầu.';
+
+  @override
+  String get toolRunNotAvailableTitle => 'Công cụ đó không dùng được';
+
+  @override
+  String get toolRunNotAvailableMessage =>
+      'Có thể nó đã bị gỡ trong một phiên bản Action mới hơn.';
+
+  @override
+  String get toolRunNoSourcesYet =>
+      'Chưa có gì để làm việc. Hãy thu nhận thứ gì đó, hoặc dán một đoạn chữ bên dưới.';
+
+  @override
+  String get toolRunChooseSourcesToCompare => 'Chọn những thứ cần so sánh';
+
+  @override
+  String get toolRunChooseSource => 'Chọn một nguồn';
+
+  @override
+  String get toolRunQuestionLabel => 'Câu hỏi của bạn';
+
+  @override
+  String get toolRunQuestionHint => 'Hạn chót là khi nào?';
+
+  @override
+  String get toolRunFreeTextLabel => 'Hoặc dán một đoạn chữ';
+
+  @override
+  String get toolRunFreeTextHint => 'Dán hoặc gõ vào đây';
+
+  @override
+  String get toolRunModeLabel => 'Kiểu';
+
+  @override
+  String get toolRunRunLocally => 'Kiểm tra trên thiết bị này';
+
+  @override
+  String get toolRunRun => 'Chạy';
+
+  @override
+  String get toolRunStop => 'Dừng';
+
+  @override
+  String get toolRunRunAgain => 'Chạy lại';
+
+  @override
+  String get toolRunWorkingOn => 'Đang làm với:';
+
+  @override
+  String toolRunFirstUseTitle(String provider) {
+    return 'Gửi cái này tới $provider?';
+  }
+
+  @override
+  String toolRunFirstUseBody(String provider) {
+    return 'Nội dung bạn đã chọn sẽ được gửi tới $provider để xử lý, bằng khoá API của bạn.';
+  }
+
+  @override
+  String get toolRunFirstUseKeyStays =>
+      'Khoá của bạn ở lại trên thiết bị này. Action không gửi bất cứ thứ gì ngầm ở nền, và không gửi các việc hay nguồn khác của bạn.';
+
+  @override
+  String get toolRunScopeTitle => 'Trước khi cái này chạy';
+
+  @override
+  String toolRunScopePages(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count trang',
+    );
+    return '$_temp0 sẽ được phân tích bằng kết nối $provider của bạn.';
+  }
+
+  @override
+  String toolRunScopeFiles(int count, String provider) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tệp',
+    );
+    return '$_temp0 sẽ được phân tích bằng kết nối $provider của bạn.';
+  }
+
+  @override
+  String toolRunScopeText(String provider) {
+    return 'Đoạn chữ bạn đã chọn sẽ được gửi tới kết nối $provider của bạn.';
+  }
+
+  @override
+  String get toolRunNeedsProviderTitle =>
+      'Kết nối một nhà cung cấp AI để dùng công cụ này';
+
+  @override
+  String get toolRunNeedsProviderBody =>
+      'Bạn dùng tài khoản nhà cung cấp và khoá API của chính bạn.';
+
+  @override
+  String toolRunActionCreatedFromSteps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bước',
+    );
+    return 'Đã tạo một việc từ $_temp0.';
+  }
+
+  @override
+  String toolRunStepsAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Đã thêm $count bước.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolRunSaveCreateActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bước',
+    );
+    return 'Tạo một việc · $_temp0';
+  }
+
+  @override
+  String toolRunSaveAddToActionWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bước',
+    );
+    return 'Thêm vào việc này · $_temp0';
+  }
+
+  @override
+  String get sourceTypeLabelPhoto => 'Ảnh chụp';
+
+  @override
+  String get sourceTypeLabelScreenshot => 'Ảnh màn hình';
+
+  @override
+  String get sourceTypeLabelPastedText => 'Ghi chú đã dán';
+
+  @override
+  String get sourceTypeLabelDocument => 'Tài liệu';
+
+  @override
+  String get toolModeClearer => 'Rõ hơn';
+
+  @override
+  String get toolModeMoreProfessional => 'Chuyên nghiệp hơn';
+
+  @override
+  String get toolModeShorter => 'Ngắn hơn';
+
+  @override
+  String get toolModeSimpler => 'Đơn giản hơn';
+
+  @override
+  String get toolModeMoreStructured => 'Có cấu trúc hơn';
+
+  @override
+  String get toolModeMorePersuasive => 'Thuyết phục hơn';
+
+  @override
+  String get toolModeGrammarOnly => 'Chỉ ngữ pháp';
+
+  @override
+  String get toolModeProfessional => 'Chuyên nghiệp';
+
+  @override
+  String get toolModeConcise => 'Súc tích';
+
+  @override
+  String get toolModeFriendly => 'Thân thiện';
+
+  @override
+  String get toolModeFormal => 'Trang trọng';
+
+  @override
+  String get toolModeAskForClarification => 'Hỏi cho rõ';
+
+  @override
+  String get toolModeConfirm => 'Xác nhận đã nhận';
+
+  @override
+  String get toolModeDispute => 'Phản bác điều này';
+
+  @override
+  String get toolModeQuick => 'Đọc nhanh';
+
+  @override
+  String get toolModeDetailed => 'Chi tiết';
+
+  @override
+  String get toolModeExecutive => 'Để ra quyết định';
+
+  @override
+  String get toolModeKeyPoints => 'Điểm chính';
+
+  @override
+  String get toolModeActionFocused => 'Tập trung vào việc cần làm';
+
+  @override
+  String toolWarningEvidenceNotFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Không tìm thấy $count chi tiết được trích dẫn trong phần bạn đã chọn, nên chúng được đánh dấu là không chắc chắn.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolWarningEvidenceUnverifiable =>
+      'Action không kiểm tra được những câu trích dẫn này với chính tệp đó, nên chúng chưa được đối chiếu.';
+
+  @override
+  String triageBadgeOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Quá hạn · $count ngày',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageBadgeDueTomorrow => 'Hạn ngày mai';
+
+  @override
+  String get triageBadgeReminderSoon => 'Sắp có nhắc nhở';
+
+  @override
+  String triageSpokenOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Quá hạn $count ngày',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String triageSemanticLabel(String status, String title) {
+    return '$status. $title';
+  }
+
+  @override
+  String get triageExplanationDone => 'Cái này đã xong.';
+
+  @override
+  String get triageExplanationNothingPressing =>
+      'Cái này ở đây vì chưa có gì ở nó là gấp cả.';
+
+  @override
+  String triageExplanationNeedsAttention(String reason) {
+    return 'Cái này cần bạn để ý vì $reason.';
+  }
+
+  @override
+  String triageExplanationUpcoming(String reason) {
+    return 'Cái này nằm thấp hơn vì $reason.';
+  }
+
+  @override
+  String get triageReasonOverdue => 'nó đã quá hạn';
+
+  @override
+  String get triageReasonDeadlinePassed => 'hạn chót của nó đã trôi qua';
+
+  @override
+  String triageReasonOverdueDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'nó đã quá hạn $count ngày',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get triageReasonDueToday => 'nó đến hạn hôm nay';
+
+  @override
+  String get triageReasonCriticalDueSoon =>
+      'bạn đã đánh dấu nó là rất gấp và hạn chót của nó đã gần';
+
+  @override
+  String get triageReasonAllStepsDone =>
+      'mọi bước đều đã xong — chỉ còn hoàn thành nó nữa thôi';
+
+  @override
+  String get triageReasonDueTomorrow => 'nó đến hạn ngày mai';
+
+  @override
+  String get triageReasonReminderSoon =>
+      'bạn đã đặt một nhắc nhở cho nó trong vòng một ngày tới';
+
+  @override
+  String get triageReasonDueWithinThreeDays => 'nó đến hạn trong vòng ba ngày';
+
+  @override
+  String get triageReasonCriticalNoDeadline =>
+      'bạn đã đánh dấu nó là rất gấp, và nó không có hạn chót';
+
+  @override
+  String get triageReasonDueWithinSevenDays => 'nó đến hạn trong vòng một tuần';
+
+  @override
+  String get triageReasonImportant => 'bạn đã đánh dấu nó là quan trọng';
+
+  @override
+  String get triageReasonDueLater => 'hạn chót của nó còn xa hơn';
+
+  @override
+  String get triageReasonNoDeadline =>
+      'nó không có hạn chót và không có gì gấp cả';
+
+  @override
+  String cardCompletedTooltip(String title) {
+    return 'Đã hoàn thành: $title';
+  }
+
+  @override
+  String get toolTitleDocumentIntelligence => 'Hiểu tài liệu này';
+
+  @override
+  String get toolDescriptionDocumentIntelligence =>
+      'Nó là gì, điều gì quan trọng, và nên làm gì với nó.';
+
+  @override
+  String get toolSectionWhatThisIs => 'Đây là cái gì';
+
+  @override
+  String get toolSectionWhatMatters => 'Điều gì quan trọng';
+
+  @override
+  String get toolSectionKeyDetails => 'Chi tiết chính';
+
+  @override
+  String get toolTitleAskDocument => 'Hỏi về một nguồn';
+
+  @override
+  String get toolDescriptionAskDocument =>
+      'Câu trả lời dựa trên đúng những gì bạn đã chọn — hoặc không gì cả.';
+
+  @override
+  String get toolSectionNoAnswer => 'Không có câu trả lời trong nội dung này';
+
+  @override
+  String get toolSectionNoAnswerBody =>
+      'Action không tìm thấy điều đó trong tài liệu bạn đã chọn.';
+
+  @override
+  String get toolSectionAnswer => 'Câu trả lời';
+
+  @override
+  String get toolSectionFromTheDocument => 'Trích từ tài liệu';
+
+  @override
+  String get toolWarningQuoteNotFound =>
+      'Đoạn trích làm căn cứ cho câu trả lời này không có trong nội dung đã chọn. Hãy coi câu trả lời này là không đáng tin.';
+
+  @override
+  String get toolTitleSmartSummary => 'Tóm tắt';
+
+  @override
+  String get toolDescriptionSmartSummary =>
+      'Bản ngắn gọn — hoặc bản nói đúng phần thay đổi việc bạn phải làm.';
+
+  @override
+  String get toolSectionKeyPoints => 'Điểm chính';
+
+  @override
+  String get toolTitleCompareDocuments => 'So sánh tài liệu';
+
+  @override
+  String get toolDescriptionCompareDocuments =>
+      'Cái gì đã thay đổi, cái gì mâu thuẫn, cái gì không tìm thấy.';
+
+  @override
+  String get toolSectionWhatDiffers => 'Chỗ khác nhau';
+
+  @override
+  String get toolSectionConflicts => 'Chỗ mâu thuẫn';
+
+  @override
+  String get toolSectionOnlyInOne => 'Chỉ có ở một trong số đó';
+
+  @override
+  String get toolSectionInCommon => 'Điểm chung';
+
+  @override
+  String get sensitiveKindEmail => 'Địa chỉ email';
+
+  @override
+  String get sensitiveKindPhone => 'Số điện thoại';
+
+  @override
+  String get sensitiveKindPaymentCard => 'Số thẻ thanh toán';
+
+  @override
+  String get sensitiveKindIban => 'Tài khoản ngân hàng (IBAN)';
+
+  @override
+  String get sensitiveKindNationalId => 'Số giấy tờ tuỳ thân';
+
+  @override
+  String get sensitiveKindPostcode => 'Mã bưu chính';
+
+  @override
+  String get sensitiveKindAccountNumber => 'Số tài khoản';
+
+  @override
+  String get sensitiveKindReference => 'Số tham chiếu';
+
+  @override
+  String get sensitiveKindDateOfBirth => 'Ngày sinh';
+
+  @override
+  String get sensitiveKindUrl => 'Địa chỉ web';
+
+  @override
+  String get verdictVerifiedProvenance => 'Có nguồn gốc đã được xác minh';
+
+  @override
+  String get verdictVerifiedProvenanceExplainer =>
+      'Tệp này mang một chữ ký đã được kiểm tra, và chữ ký đó đứng vững.';
+
+  @override
+  String get verdictSignalsSynthetic =>
+      'Các dấu hiệu phù hợp với nội dung do AI tạo ra';
+
+  @override
+  String get verdictSignalsSyntheticExplainer =>
+      'Tệp này nói rằng nó được tạo bằng một công cụ sinh nội dung. Siêu dữ liệu có thể bị sửa hoặc bị gỡ đi, nên đây là điều tệp tự khai, không phải bằng chứng.';
+
+  @override
+  String get verdictSignalsEdited =>
+      'Các dấu hiệu phù hợp với nội dung đã qua chỉnh sửa';
+
+  @override
+  String get verdictSignalsEditedExplainer =>
+      'Tệp này nói rằng nó đã đi qua phần mềm chỉnh sửa. Với ảnh chụp thì đó là chuyện bình thường, và tự nó không có nghĩa là có gì đó bị làm giả.';
+
+  @override
+  String get verdictNoReliableProvenance =>
+      'Không tìm thấy nguồn gốc đáng tin cậy';
+
+  @override
+  String get verdictNoReliableProvenanceExplainer =>
+      'Trong tệp này không có thông tin nguồn gốc. Đó là chuyện bình thường — phần lớn dịch vụ đều gỡ nó đi — và nó không phải là dấu hiệu của điều gì cả.';
+
+  @override
+  String get verdictInconclusive => 'Chưa kết luận được';
+
+  @override
+  String get verdictInconclusiveExplainer =>
+      'Ở đây không đủ thông tin để nói cái này đến từ đâu.';
+
+  @override
+  String get authenticitySignalCamera => 'Máy ảnh';
+
+  @override
+  String get authenticitySignalSoftware => 'Phần mềm';
+
+  @override
+  String get authenticitySignalDescription => 'Mô tả';
+
+  @override
+  String get authenticitySignalCopyright => 'Bản quyền';
+
+  @override
+  String get authenticitySignalLocation => 'Vị trí';
+
+  @override
+  String get authenticitySignalLocationValue =>
+      'Trong tệp này có dữ liệu vị trí.';
+
+  @override
+  String get authenticitySignalContentCredentials => 'Content Credentials';
+
+  @override
+  String get authenticitySignalContentCredentialsValue =>
+      'Chưa kiểm tra — bản dựng này không có bộ xác minh chữ ký.';
+
+  @override
+  String get authenticitySignalFile => 'Tệp';
+
+  @override
+  String get authenticitySignalFileUnreadableValue =>
+      'Không đọc được như một tấm ảnh.';
+
+  @override
+  String get authenticitySignalFileUnrecognisedValue =>
+      'Không nhận ra được định dạng ảnh này.';
+
+  @override
+  String get authenticitySignalText => 'Văn bản';
+
+  @override
+  String get authenticitySignalTextValue =>
+      'Chỉ riêng văn bản thì không thể cho biết chắc chắn AI có được dùng hay không. Action không đoán.';
+
+  @override
+  String get fileTypePng => 'một ảnh PNG';
+
+  @override
+  String get fileTypeJpeg => 'một ảnh JPEG';
+
+  @override
+  String get fileTypeGif => 'một ảnh GIF';
+
+  @override
+  String get fileTypeWebp => 'một ảnh WebP';
+
+  @override
+  String get fileTypeWav => 'một bản ghi âm WAV';
+
+  @override
+  String get fileTypePdf => 'một tài liệu PDF';
+
+  @override
+  String get fileTypeHeic => 'một ảnh HEIC';
+
+  @override
+  String get fileTypeVideo => 'một tệp video';
+
+  @override
+  String get fileTypeTiff => 'một ảnh TIFF';
+
+  @override
+  String get fileTypeBitmap => 'một ảnh bitmap';
+
+  @override
+  String get fileTypeRtf => 'một tài liệu RTF';
+
+  @override
+  String get fileTypeZip => 'một kho nén Zip';
+
+  @override
+  String get fileTypeGzip => 'một kho nén gzip';
+
+  @override
+  String get fileTypeSevenZip => 'một kho nén 7-Zip';
+
+  @override
+  String get fileTypeRar => 'một kho nén RAR';
+
+  @override
+  String get fileTypeWindowsProgram => 'một chương trình Windows';
+
+  @override
+  String get fileTypeLinuxProgram => 'một chương trình Linux';
+
+  @override
+  String get fileTypePostScript => 'một tài liệu PostScript';
+
+  @override
+  String get fileTypeOgg => 'một bản ghi âm Ogg';
+
+  @override
+  String get fileTypeMp3 => 'một bản ghi âm MP3';
+
+  @override
+  String get fileTypePlainText => 'văn bản thuần';
+
+  @override
+  String fileMismatchNote(String extension, String contents) {
+    return 'Tệp này mang tên \".$extension\" nhưng nội dung của nó lại là $contents. Đó có thể là một nhầm lẫn vô ý, và đó cũng là cách một tệp bị mở bằng thứ khác với thứ bạn tưởng.';
+  }
+
+  @override
+  String fileSizeBytes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count byte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fileSizeKilobytes(String size) {
+    return '$size KB';
+  }
+
+  @override
+  String fileSizeMegabytes(String size) {
+    return '$size MB';
+  }
+
+  @override
+  String fileSizeGigabytes(String size) {
+    return '$size GB';
+  }
+
+  @override
+  String get credentialKindPrivateKey => 'Khoá riêng tư';
+
+  @override
+  String get credentialKindApiKey => 'Khoá API';
+
+  @override
+  String get credentialKindConnectionString => 'Chuỗi kết nối';
+
+  @override
+  String get credentialKindAccessToken => 'Token truy cập';
+
+  @override
+  String get credentialKindAuthorizationHeader => 'Header Authorization';
+
+  @override
+  String get credentialKindPasswordOrKey => 'Mật khẩu hoặc khoá';
+
+  @override
+  String get credentialKindPossibleSecret => 'Có thể là một bí mật';
+
+  @override
+  String get credentialAdvicePrivateKey =>
+      'Hãy gỡ cái này ra trước khi chia sẻ, và thay cặp khoá. Một khoá riêng tư đã bị nhìn thấy thì không bao giờ an toàn trở lại được nữa.';
+
+  @override
+  String get credentialAdviceProviderApiKey =>
+      'Hãy thu hồi khoá này ở phía nhà cung cấp và cấp một khoá mới. Gỡ nó khỏi tài liệu không làm nó ngừng hoạt động.';
+
+  @override
+  String get credentialAdviceConnectionString =>
+      'Cái này mang theo một mật khẩu và cả địa chỉ mà mật khẩu đó mở ra. Hãy đổi mật khẩu nếu cái này đã được chia sẻ.';
+
+  @override
+  String get credentialAdviceJsonWebToken =>
+      'Những token như thế này thường hết hạn, nhưng không phải lúc nào cũng vậy. Hãy coi nó vẫn còn hiệu lực, trừ khi bạn biết nó hết hạn khi nào.';
+
+  @override
+  String get credentialAdviceAuthorizationHeader =>
+      'Hãy gỡ phần giá trị của header. Log request được dán vào là một trong những cách phổ biến nhất khiến một token còn dùng được bị chia sẻ một cách vô tình.';
+
+  @override
+  String get credentialAdviceKeyedAssignment =>
+      'Hãy chuyển cái này vào một biến môi trường hoặc một kho lưu trữ bí mật, và đổi giá trị đó nếu tệp đã được chia sẻ.';
+
+  @override
+  String get credentialAdviceHighEntropyString =>
+      'Action không biết được cái này là gì. Hãy kiểm tra nó trước khi chia sẻ — khả năng nó chỉ là một mã định danh hoặc một checksum cũng lớn không kém.';
+
+  @override
+  String get credentialLabelAnthropicApiKey => 'Khoá API Anthropic';
+
+  @override
+  String get credentialLabelOpenAiProjectKey => 'Khoá dự án OpenAI';
+
+  @override
+  String get credentialLabelOpenAiStyleApiKey => 'Khoá API kiểu OpenAI';
+
+  @override
+  String get credentialLabelGoogleApiKey => 'Khoá API Google';
+
+  @override
+  String get credentialLabelGoogleOAuthToken => 'Token OAuth Google';
+
+  @override
+  String get credentialLabelGitHubToken => 'Token GitHub';
+
+  @override
+  String get credentialLabelSlackToken => 'Token Slack';
+
+  @override
+  String get credentialLabelAwsAccessKeyId => 'ID khoá truy cập AWS';
+
+  @override
+  String get credentialLabelGitLabToken => 'Token GitLab';
+
+  @override
+  String get credentialLabelNpmToken => 'Token npm';
+
+  @override
+  String get credentialLabelPassphrase => 'Cụm mật khẩu';
+
+  @override
+  String get credentialLabelPassword => 'Mật khẩu';
+
+  @override
+  String get credentialLabelRefreshToken => 'Token làm mới';
+
+  @override
+  String get credentialLabelToken => 'Token';
+
+  @override
+  String get credentialLabelClientSecret => 'Client secret';
+
+  @override
+  String get credentialLabelCredential => 'Thông tin xác thực';
+
+  @override
+  String get credentialLabelSecret => 'Bí mật';
+
+  @override
+  String get linkVerdictNoObviousSignals => 'Không có dấu hiệu rõ ràng nào';
+
+  @override
+  String get linkVerdictWorthChecking => 'Đáng xem kỹ';
+
+  @override
+  String get linkVerdictTreatWithCaution => 'Hãy thận trọng';
+
+  @override
+  String get linkSummaryNoObviousSignals =>
+      'Không có gì bất thường trong cách viết liên kết này. Điều đó không đồng nghĩa với việc biết rằng trang đó đáng tin — chỉ bạn mới phán đoán được là bạn có mong đợi liên kết này hay không.';
+
+  @override
+  String get linkSummaryWorthChecking =>
+      'Có một điều ở liên kết này đáng để xem kỹ trước khi bạn mở nó.';
+
+  @override
+  String get linkSummaryTreatWithCaution =>
+      'Có vài điều trong cách viết liên kết này đáng để xem kỹ trước khi bạn mở nó.';
+
+  @override
+  String get linkSignalNotHttps => 'Không được mã hoá';
+
+  @override
+  String get linkSignalNonWebScheme => 'Không phải liên kết web';
+
+  @override
+  String get linkSignalEmbeddedCredentials => 'Mật khẩu nằm trong liên kết';
+
+  @override
+  String get linkSignalMisleadingAuthority => 'Địa chỉ thật bị giấu';
+
+  @override
+  String get linkSignalIpLiteralHost => 'Địa chỉ dạng số';
+
+  @override
+  String get linkSignalPunycodeHost => 'Ký tự được mã hoá trong tên';
+
+  @override
+  String get linkSignalMixedScriptHost => 'Trộn nhiều bảng chữ cái trong tên';
+
+  @override
+  String get linkSignalEncodedHost => 'Ký tự thoát trong tên';
+
+  @override
+  String get linkSignalUnusualPort => 'Cổng khác thường';
+
+  @override
+  String get linkSignalDeepSubdomain => 'Tên có nhiều phần';
+
+  @override
+  String get linkSignalPublicSuffixInSubdomain => 'Tên quen thuộc đặt sai chỗ';
+
+  @override
+  String get linkSignalShortener => 'Liên kết rút gọn';
+
+  @override
+  String get linkSignalExecutableTarget => 'Tải về một chương trình';
+
+  @override
+  String get linkSignalRedirectParameter => 'Đưa bạn đi nơi khác';
+
+  @override
+  String get linkSignalVeryLongUrl => 'Rất dài';
+
+  @override
+  String get linkSignalUnparseable => 'Không đọc được thành liên kết';
+
+  @override
+  String get linkDetailNotHttps =>
+      'Liên kết này dùng http, nên bất cứ thứ gì bạn gõ vào trang đó đều có thể bị đọc trên đường đi.';
+
+  @override
+  String linkDetailNonWebScheme(String scheme) {
+    return 'Cái này mở bằng \"$scheme:\" chứ không phải một trang web. Nó có thể nhờ một ứng dụng khác làm gì đó.';
+  }
+
+  @override
+  String get linkDetailEmbeddedCredentials =>
+      'Một tên người dùng và một mật khẩu được viết thẳng vào liên kết này. Liên kết này được chia sẻ tới đâu, chúng đi theo tới đó.';
+
+  @override
+  String linkDetailMisleadingAuthority(String host) {
+    return 'Mọi thứ đứng trước \"@\" đều bị trình duyệt bỏ qua. Đích đến thật sự là \"$host\".';
+  }
+
+  @override
+  String linkDetailIpLiteralHost(String host) {
+    return 'Cái này dẫn tới \"$host\" — một địa chỉ thô chứ không phải một cái tên. Các trang web chính thống gần như luôn dùng tên.';
+  }
+
+  @override
+  String get linkDetailPunycodeHost =>
+      'Tên trang chứa các ký tự ngoài hệ chữ Latinh, được lưu ở dạng mã hoá. Điều này là bình thường với nhiều ngôn ngữ, và nó cũng là cách một cái tên có thể được làm cho trông giống một cái tên quen thuộc.';
+
+  @override
+  String get linkDetailMixedScriptHost =>
+      'Tên trang trộn chữ cái Latinh với chữ cái của một bảng chữ khác trông y hệt. Hãy đọc nó từng ký tự một.';
+
+  @override
+  String get linkDetailEncodedHost =>
+      'Tên trang chứa các mã thoát, và đó không phải chỗ của chúng. Chúng có thể che đi cái tên thật sự viết gì.';
+
+  @override
+  String linkDetailUnusualPort(String port) {
+    return 'Cái này kết nối qua cổng $port chứ không phải cổng thông thường. Điều đó phổ biến với máy chủ thử nghiệm và khác thường với các trang công khai.';
+  }
+
+  @override
+  String linkDetailDeepSubdomain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Tên này có $count phần. Chỉ hai phần cuối mới quyết định ai điều hành trang; phần còn lại có thể đặt thành bất cứ gì.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String linkDetailPublicSuffixInSubdomain(String suffix, String host) {
+    return 'Tên này có \".$suffix.\" nằm ở giữa, khiến phần đầu trông như thể là trang đó. Trang thật sự là \"$host\".';
+  }
+
+  @override
+  String get linkDetailShortener =>
+      'Một dịch vụ rút gọn che đi đích đến thật. Bạn không thể biết cái này dẫn tới đâu nếu không mở nó ra.';
+
+  @override
+  String linkDetailExecutableTarget(String fileExtension) {
+    return 'Liên kết này kết thúc bằng \"$fileExtension\", nên nó tải về một thứ có thể chạy trên thiết bị của bạn chứ không phải một trang để đọc.';
+  }
+
+  @override
+  String linkDetailRedirectParameter(String parameter, String host) {
+    return 'Liên kết này mang một địa chỉ thứ hai trong thiết lập \"$parameter\", nên mở nó có thể đưa bạn tới một nơi khác chứ không phải \"$host\".';
+  }
+
+  @override
+  String get linkDetailVeryLongUrl =>
+      'Liên kết dài thì khó đọc hơn, và phần quyết định đích đến có thể bị đẩy ra ngoài tầm nhìn.';
+
+  @override
+  String get linkDetailUnparseable =>
+      'Action không đọc được cái này như một địa chỉ web. Hãy cẩn thận với những liên kết trông không giống liên kết.';
+
+  @override
+  String get toolTitleRedaction => 'Che thông tin nhạy cảm';
+
+  @override
+  String get toolDescriptionRedaction =>
+      'Tìm những gì không nên chia sẻ, và tạo một bản sạch.';
+
+  @override
+  String get toolSectionRedactionNothingToScan => 'Không có gì để quét';
+
+  @override
+  String get toolSectionRedactionNothingToScanBody =>
+      'Công cụ này đọc văn bản. Hãy chọn một ghi chú, một tin nhắn đã dán vào, hoặc một bản thu nhận đã được đọc chữ.';
+
+  @override
+  String get toolSectionRedactionNothingFound => 'Không tìm thấy gì rõ ràng';
+
+  @override
+  String get toolSectionRedactionNothingFoundBody =>
+      'Action không tìm thấy địa chỉ email, số điện thoại, số thẻ hay số tham chiếu nào trong đoạn văn bản này.';
+
+  @override
+  String toolSectionRedactionFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count thứ đáng che đi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionRedactedCopy => 'Bản đã lược bỏ';
+
+  @override
+  String get toolWarningRedactionCoverage =>
+      'Cái này tìm những dạng như email, số điện thoại và số tài khoản. Nó sẽ không bắt được mọi thứ nhạy cảm — hãy đọc bản sao đó trước khi bạn chia sẻ nó.';
+
+  @override
+  String get toolWarningRedactionFormatLimit =>
+      'Action không thể lược bỏ nội dung trong ảnh hay tệp PDF. Che một thứ trong một tấm ảnh sẽ để nguyên bản gốc nằm bên dưới, nên lựa chọn đó không được đưa ra.';
+
+  @override
+  String get toolTitleAuthenticity => 'Kiểm tra cái này đến từ đâu';
+
+  @override
+  String get toolDescriptionAuthenticity =>
+      'Những gì một tệp tự khai về nguồn gốc của chính nó.';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspect =>
+      'Không có gì để xem xét';
+
+  @override
+  String get toolSectionAuthenticityNothingToInspectBody =>
+      'Hãy chọn một ảnh hoặc một đoạn văn bản.';
+
+  @override
+  String get toolSectionAuthenticityFileSignals =>
+      'Những gì tệp này nói về chính nó';
+
+  @override
+  String get toolSectionAuthenticityFileItself => 'Bản thân tệp';
+
+  @override
+  String get toolSectionFileContents => 'Nội dung';
+
+  @override
+  String get toolSectionFileUnknownFormat => 'Không phải định dạng Action biết';
+
+  @override
+  String get toolSectionFileSize => 'Dung lượng';
+
+  @override
+  String get toolSectionFileDigest => 'SHA-256';
+
+  @override
+  String get toolWarningAuthenticityNotProof =>
+      'Cái này báo lại những gì một tệp tự khai về chính nó. Siêu dữ liệu có thể bị sửa hoặc bị gỡ đi, nên không có gì trong đó là bằng chứng cả. Đừng dùng cái này để buộc tội ai.';
+
+  @override
+  String get toolTitleCredentialScanner => 'Tìm khoá và mật khẩu';
+
+  @override
+  String get toolDescriptionCredentialScanner =>
+      'Tìm thông tin xác thực trước khi bạn chia sẻ thứ gì đó.';
+
+  @override
+  String get toolSectionCredentialNothingToCheck => 'Không có gì để kiểm tra';
+
+  @override
+  String get toolSectionCredentialNothingToCheckBody =>
+      'Hãy dán một đoạn văn bản, hoặc chọn một bản thu nhận đã được đọc chữ. Công cụ này chỉ đọc văn bản.';
+
+  @override
+  String get toolSectionCredentialNoneFound =>
+      'Không tìm thấy thông tin xác thực nào';
+
+  @override
+  String get toolSectionCredentialNoneFoundBody =>
+      'Action không tìm thấy thứ gì có hình dạng của một khoá API, một khoá riêng tư, một token hay một mật khẩu trong đoạn văn bản này.';
+
+  @override
+  String toolSectionCredentialFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tìm thấy $count thông tin xác thực',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolSectionCredentialPossibleFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count thứ có thể là bí mật',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionCredentialRedactedCopy =>
+      'Bản đã gỡ bỏ thông tin xác thực';
+
+  @override
+  String get toolWarningCredentialRevoke =>
+      'Gỡ một khoá khỏi tài liệu không làm nó ngừng hoạt động. Nếu một trong số này đã được chia sẻ, hãy thu hồi nó ở phía nhà cung cấp và cấp một khoá mới.';
+
+  @override
+  String get toolWarningCredentialCoverage =>
+      'Cái này tìm những thông tin xác thực có hình dạng nhận ra được. Một mật khẩu viết ra thành câu chữ sẽ không được tìm thấy, nên hãy đọc cả đoạn văn bản nữa.';
+
+  @override
+  String get toolTitleLinkInspector => 'Kiểm tra một liên kết';
+
+  @override
+  String get toolDescriptionLinkInspector =>
+      'Những gì một địa chỉ để lộ ra trước khi bạn mở nó.';
+
+  @override
+  String get toolSectionLinkNoneFound => 'Không tìm thấy liên kết nào';
+
+  @override
+  String get toolSectionLinkNoneFoundBody =>
+      'Hãy dán một liên kết, hoặc chọn một bản thu nhận có chứa liên kết.';
+
+  @override
+  String toolSectionLinkFindings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count liên kết trong đoạn văn bản này',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get toolSectionLinkUnreadableHost => 'Không đọc được';
+
+  @override
+  String toolSectionLinkObservationLine(String summary, String detail) {
+    return '$summary. $detail';
+  }
+
+  @override
+  String get toolSectionLinkNothingUnusual =>
+      'Không có gì bất thường trong cách chúng được viết';
+
+  @override
+  String get toolSectionLinkNothingUnusualBody =>
+      'Điều đó không đồng nghĩa với việc biết rằng các trang đó đáng tin. Chỉ bạn mới phán đoán được là bạn có mong đợi chúng hay không.';
+
+  @override
+  String get toolWarningLinkAddressOnly =>
+      'Action chỉ đọc địa chỉ. Nó không mở liên kết, không tra cứu trang web, và không hỏi bất kỳ dịch vụ đánh giá uy tín nào — làm vậy sẽ gửi hoạt động duyệt web của bạn đi đâu đó.';
+
+  @override
+  String get toolWarningLinkNoSignals =>
+      'Một liên kết không có dấu hiệu nào vẫn có thể gây hại. Cái này tìm những vấn đề trong cách viết một địa chỉ, và đó không phải là tất cả những gì cần biết về nơi nó dẫn tới.';
+
+  @override
+  String get toolSectionObjective => 'Mục tiêu của bạn';
+
+  @override
+  String get toolSectionCurrentState => 'Mục tiêu đang đến đâu';
+
+  @override
+  String get toolSectionRecommendedNextStep => 'Bước tiếp theo được gợi ý';
+
+  @override
+  String get toolSectionCredentialAdvice => 'Bạn nên làm gì';
+
+  @override
+  String get toolSectionSummary => 'Bản tóm tắt';
+
+  @override
+  String get toolDetailSeparator => ' · ';
 }

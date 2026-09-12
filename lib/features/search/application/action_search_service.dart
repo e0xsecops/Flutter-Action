@@ -89,6 +89,15 @@ class ActionSearchService {
       final matches = needle.isEmpty
           // Filters alone: everything that passes is a result, described by
           // its title so the row still says something.
+          //
+          // The fixed labels in this file — "Title", "Next step", "Step",
+          // "Summary", "From capture" — are canonical English. The row shows
+          // `match.field.labelIn(l10n)` from `lib/l10n/enum_labels.dart`
+          // instead: this is application-layer code with no `BuildContext`,
+          // and `MatchField` already says which of them applies. The two fact
+          // labels below are the exception in both directions — they are the
+          // user's own fact names, so `labelIn` returns null for those fields
+          // and the label here is what shows.
           ? [
               SearchMatch(
                 field: MatchField.titleContains,

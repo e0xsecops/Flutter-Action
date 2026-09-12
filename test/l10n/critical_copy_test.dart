@@ -94,6 +94,10 @@ const _exclusiveGroups = <String, List<String>>{
     'reviewNeedsReview',
     'reviewMissing',
     'reviewNotVerified',
+    // The screen-reader label on an uncertain fact. It sits in this group
+    // because "Unconfirmed" is one dropped negation away from "Confirmed",
+    // and a reader using a screen reader has nothing but this word.
+    'resultFactUnconfirmed',
   ],
   'evidence outcome': [
     'evidenceHighlighted',
@@ -107,6 +111,25 @@ const _exclusiveGroups = <String, List<String>>{
     'reviewNotSet',
   ],
 };
+
+/// Keys whose English is the same string on purpose, and whose translations
+/// must therefore be the same string too.
+///
+/// This is the exact inverse of [_exclusiveGroups], and it needs its own test
+/// for the same reason that one does: nothing else in the pipeline notices.
+/// `gen-l10n` is happy, `flutter analyze` is happy, and every locale looks
+/// correct read on its own. The defect only exists in the reader's head —
+/// they tap a chip that says one thing and then read a heading that says
+/// another, and conclude the heading is about something else.
+///
+/// A pair belongs here only when the template's own `@description` says the
+/// two must match. Two keys that merely happen to share their English do not:
+/// a locale is entitled to render "Open" the verb and "Open" the state
+/// differently, and several deliberately do.
+const _boundPairs = <List<String>>[
+  // The summary mode chip and the heading over the bullets it produces.
+  ['toolSectionKeyPoints', 'toolModeKeyPoints'],
+];
 
 /// Tokens the glossary says are never translated, and that carry meaning.
 ///
@@ -158,12 +181,32 @@ const _preservedTokens = [
 /// enforces it. The noun inside such a sentence is left to the translator,
 /// which is the same latitude every untested sentence already has.
 const _brandKeys = {
+  'aiAdapterDocumentTooManyPages',
+  'aiAdapterModelOrEndpointNotFound',
+  'aiAdapterSecureStorageUnavailable',
+  'aiFailureMalformedResponse',
+  'aiFailureNetworkUnavailable',
+  'aiSettingsDataFootnote',
+  'aiSettingsProviderFootnoteConnected',
+  'aiSettingsRemoveBody',
+  'aiSettingsWhereItGoesProvider',
+  'appLockPrompt',
+  'appLockReasonUnlock',
+  'appLockTitle',
   'appName',
+  'authenticitySignalTextValue',
   'briefDetailFirstRun',
   'captureSheetSubtitle',
+  'connectEndpointHttpsNote',
+  'connectKeyPrivacyNote',
+  'connectSheetSubtitle',
+  'credentialAdviceHighEntropyString',
+  'documentRejectedNotAPdf',
+  'documentRejectedTooLarge',
   'evidenceHighlighted',
   'evidenceNoRegion',
   'evidenceUnverified',
+  'goalToolsLabel',
   'helpBackupAnswer',
   'helpDataAnswer',
   'helpLateAnswer',
@@ -173,9 +216,15 @@ const _brandKeys = {
   'libraryNoGoalsMessage',
   'libraryNoOpenMessage',
   'librarySubtitle',
+  'linkDetailUnparseable',
   'ocrScriptNoTextHint',
   'ocrScriptSubtitle',
   'ocrScriptUnreadableTitle',
+  'onboardingCaptureBody',
+  'onboardingPrivacySentToRead',
+  'onboardingReviewBody',
+  'onboardingStart',
+  'pdfRejectedEncrypted',
   'privacyCloudCheckIncomplete',
   'privacyCloudUnreachable',
   'privacyDeletedUnverified',
@@ -188,6 +237,10 @@ const _brandKeys = {
   'privacyProviderKey',
   'privacySentToReadWhat',
   'privacyWillTryAgain',
+  'providerFailureNetwork',
+  'providerFailureUnknown',
+  'reminderChannelName',
+  'reminderNotificationTitle',
   'reviewInjectionNotice',
   'reviewMultipleAmounts',
   'reviewMultipleDates',
@@ -204,22 +257,48 @@ const _brandKeys = {
   'settingsLanguageDescription',
   'settingsNotificationsOffDescription',
   'settingsTextRecognitionDescription',
+  'shareRejectedContentMismatch',
+  'shareRejectedTooLarge',
+  'shareRejectedUnsupportedType',
   'sourceDocumentNotRead',
   'sourceNotInterpreted',
   'sourceReadExplainer',
   'studioDisconnectedBlurb',
   'studioHeroTitle',
+  'todayCapabilityDocumentBlurb',
+  'todayCapabilityHeading',
+  'todayCapabilityTextBlurb',
+  'toolRunFirstUseKeyStays',
+  'toolRunNotAvailableMessage',
+  'toolSectionCredentialNoneFoundBody',
+  'toolSectionFileUnknownFormat',
+  'toolSectionNoAnswerBody',
+  'toolSectionNothingDueBody',
+  'toolSectionRedactionNothingFoundBody',
+  'toolWarningDraftNotSent',
+  'toolWarningEvidenceUnverifiable',
+  'toolWarningFactsNotChecked',
+  'toolWarningLinkAddressOnly',
+  'toolWarningRedactionFormatLimit',
 };
 
-/// Keys whose English `Action` is the domain noun at the start of a phrase,
-/// and which every locale therefore translates.
+/// Keys whose English `Action` is the domain noun, and which every locale
+/// therefore translates.
 ///
-/// Small on purpose. `Steps inside an Action`, `Action created` and `Action
-/// confirmed` are the only places the app capitalises the common noun, and all
-/// three do it because a label or a sentence began.
+/// Small on purpose, and it stays small because capitalising the common noun
+/// needs a reason. Most entries have one a reader can see: a label or a
+/// sentence began — `Steps inside an Action`, `Action created`, `Action
+/// confirmed`, `Action-focused`. Four do not, and they are the ones to read
+/// twice: `onboardingPrivacyCloud` (`a confirmed Action`) and
+/// `onboardingTrackingBody` (`Every Action`) capitalise it mid-sentence, which
+/// is the same spelling the brand uses in the same paragraph. Their `@`
+/// descriptions in `app_en.arb` say outright which one is meant, and that note
+/// — not the spelling — is what put them here.
 const _domainNounKeys = {
   'helpCorrectAnswer',
   'helpCorrectQuestion',
+  'onboardingPrivacyCloud',
+  'onboardingTrackingBody',
   'privacyCloudNotSent',
   'privacyCloudWhat',
   'privacyDeleteAllBody',
@@ -229,6 +308,8 @@ const _domainNounKeys = {
   'searchFieldSteps',
   'securityPrivateRemindersOff',
   'stageActionCreated',
+  'toolModeActionFocused',
+  'toolRunActionCreatedFromSteps',
 };
 
 /// `Action` as a whole word, in either case.
@@ -318,6 +399,32 @@ void main() {
                   'product must not make.',
             );
           }
+        }
+      });
+    }
+  });
+
+  group('strings bound to each other render identically', () {
+    for (final tag in _tags) {
+      test(tag, () {
+        final arb = _read(tag);
+        for (final pair in _boundPairs) {
+          final values = <String, String>{};
+          for (final key in pair) {
+            final value = arb[key];
+            if (value != null) values[key] = value.trim();
+          }
+          if (values.length < 2) continue;
+          final distinct = values.values.toSet();
+          expect(
+            distinct,
+            hasLength(1),
+            reason: '$tag renders ${pair.join(' and ')} differently: '
+                '${values.entries.map((e) => '${e.key}="${e.value}"').join(', ')}. '
+                'The template says these must be translated identically. The '
+                'user picks one of them and then reads the other; two '
+                'wordings read as two different things.',
+          );
         }
       });
     }

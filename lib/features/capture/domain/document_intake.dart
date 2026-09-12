@@ -44,12 +44,70 @@ class AcceptedDocument {
   final String? version;
 }
 
+/// Why a document was refused.
+///
+/// The sentence itself stays on [RejectedDocument.message]: it is what a log
+/// line carries, what the fixture reports print, and what the domain tests
+/// assert without pumping a widget tree, and it is the same English in every
+/// locale. This says *which* refusal it was, so a screen can ask for the
+/// reader's own wording instead of parsing the sentence back apart.
+///
+/// [notAPdf] and [notAPdfOnInspection] are separate cases on purpose. Two
+/// different checks reach them and each says so in its own words: the first is
+/// decided from the leading bytes before anything PDF-shaped is attempted, the
+/// second only after those bytes claimed a PDF and the structure inside did not
+/// hold up.
+enum DocumentRejection {
+  /// Nothing in the file at all.
+  empty,
+
+  /// Past [DocumentIntake.maxBytes]. Its sentence names the size, which is why
+  /// the localized form takes that as a placeholder rather than baking one
+  /// figure into twenty translations.
+  tooLarge,
+
+  /// The leading bytes are not a PDF's, whatever the file is called.
+  notAPdf,
+
+  /// The bytes opened like a PDF and then did not stay one.
+  notAPdfOnInspection,
+
+  /// Password-protected, so it is refused here rather than sent to a provider
+  /// that could not open it either.
+  encrypted,
+
+  /// Truncated, or otherwise structurally broken.
+  damaged,
+
+  /// The copy on disk could not be read back at all.
+  unreadable,
+}
+
 /// A document that did not.
 class RejectedDocument {
-  const RejectedDocument(this.message);
+  const RejectedDocument(
+    this.message, {
+    required this.reason,
+    this.sizeBytes,
+  });
 
+  /// The canonical English. Never the string a screen shows once a locale is
+  /// known — see `RejectedDocumentL10n.messageIn` for that.
   final String message;
+
+  final DocumentRejection reason;
+
+  /// Set only for [DocumentRejection.tooLarge], whose sentence names it.
+  final int? sizeBytes;
 }
+
+/// The document-level refusal a PDF-level one becomes.
+DocumentRejection _documentRejectionFor(PdfRejection rejection) =>
+    switch (rejection) {
+      PdfRejection.notAPdf => DocumentRejection.notAPdfOnInspection,
+      PdfRejection.encrypted => DocumentRejection.encrypted,
+      PdfRejection.damaged => DocumentRejection.damaged,
+    };
 
 abstract final class DocumentIntake {
   /// The largest document Action will take.
@@ -76,12 +134,17 @@ abstract final class DocumentIntake {
     required Uint8List content,
   }) {
     if (sizeBytes <= 0) {
-      return const RejectedDocument('That file is empty.');
+      return const RejectedDocument(
+        'That file is empty.',
+        reason: DocumentRejection.empty,
+      );
     }
     if (sizeBytes > maxBytes) {
       return RejectedDocument(
         'That document is ${formatBytes(sizeBytes)}, which is larger than '
         'Action can work with.',
+        reason: DocumentRejection.tooLarge,
+        sizeBytes: sizeBytes,
       );
     }
 
@@ -91,13 +154,17 @@ abstract final class DocumentIntake {
       return const RejectedDocument(
         'That is not a PDF, whatever it is called. Action reads PDFs and '
         'images.',
+        reason: DocumentRejection.notAPdf,
       );
     }
 
     final probe = PdfProbe.probe(content);
     final rejection = probe.rejection;
     if (rejection != null) {
-      return RejectedDocument(describePdfRejection(rejection));
+      return RejectedDocument(
+        describePdfRejection(rejection),
+        reason: _documentRejectionFor(rejection),
+      );
     }
 
     return AcceptedDocument(
