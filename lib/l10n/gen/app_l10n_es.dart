@@ -2006,7 +2006,7 @@ class AppL10nEs extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Dos herramientas no envían nunca nada: ocultar datos sensibles y comprobar de dónde viene un archivo. Las dos funcionan enteramente en este dispositivo.';
+      'Algunas herramientas no envían nunca nada: ocultar datos sensibles, comprobar de dónde viene un archivo, encontrar credenciales y revisar un enlace funcionan enteramente en este dispositivo.';
 
   @override
   String get privacyProviderAgreement =>

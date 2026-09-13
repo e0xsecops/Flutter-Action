@@ -1903,7 +1903,7 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      '有两个工具从不发送任何东西：隐去敏感信息，以及查看文件来自哪里。两者完全在本机运行。';
+      '有些工具从不发送任何东西：隐去敏感信息、查看文件来自哪里、找出凭据以及查看链接，全都完全在本机运行。';
 
   @override
   String get privacyProviderAgreement =>
@@ -5985,7 +5985,7 @@ class AppL10nZhHans extends AppL10nZh {
 
   @override
   String get privacyProviderLocalTools =>
-      '有两个工具从不发送任何东西：隐去敏感信息，以及查看文件来自哪里。两者完全在本机运行。';
+      '有些工具从不发送任何东西：隐去敏感信息、查看文件来自哪里、找出凭据以及查看链接，全都完全在本机运行。';
 
   @override
   String get privacyProviderAgreement =>
@@ -10068,7 +10068,7 @@ class AppL10nZhHant extends AppL10nZh {
 
   @override
   String get privacyProviderLocalTools =>
-      '有兩個工具從不傳送任何東西：隱去敏感資訊，以及查看檔案來自哪裡。兩者完全在本機執行。';
+      '有些工具從不傳送任何東西：隱去敏感資訊、查看檔案來自哪裡、找出憑證以及檢查連結，全都完全在本機執行。';
 
   @override
   String get privacyProviderAgreement =>

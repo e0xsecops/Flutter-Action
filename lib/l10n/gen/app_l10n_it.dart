@@ -2009,7 +2009,7 @@ class AppL10nIt extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Due strumenti non inviano mai niente: nascondere dati sensibili e controllare da dove viene un file. Entrambi funzionano interamente su questo dispositivo.';
+      'Alcuni strumenti non inviano mai niente: nascondere dati sensibili, controllare da dove viene un file, trovare credenziali e controllare un link funzionano interamente su questo dispositivo.';
 
   @override
   String get privacyProviderAgreement =>

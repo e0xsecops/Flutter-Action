@@ -1925,7 +1925,7 @@ class AppL10nJa extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      '何も送らないツールが二つあります。機微な情報を隠すことと、ファイルの出どころを調べることです。どちらも完全にこの端末で動きます。';
+      '何も送らないツールがあります。機微な情報を隠すこと、ファイルの出どころを調べること、認証情報を見つけること、リンクを調べることは、すべて完全にこの端末で動きます。';
 
   @override
   String get privacyProviderAgreement =>

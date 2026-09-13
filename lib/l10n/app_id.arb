@@ -551,7 +551,7 @@
   "privacyProviderDirect": "Kiriman itu langsung ke mereka. Tidak melewati server mana pun milik Action.",
   "privacyProviderScope": "Yang dikirim hanya yang Anda pilih untuk sebuah alat, dan hanya ketika Anda menjalankannya. Tugas, tangkapan, dan sumber Anda yang lain tidak pernah ikut, dan tidak pernah ada yang dikirim di latar belakang.",
   "privacyProviderKey": "Kunci API Anda disimpan di penyimpanan aman perangkat ini dan hanya dikirim ke penyedia pemiliknya. Penyimpanan aman adalah penghalang nyata bagi siapa pun yang memegang perangkat Anda dalam keadaan tidak terkunci, tetapi tidak mutlak, dan Action tidak akan mengatakan sebaliknya.",
-  "privacyProviderLocalTools": "Dua alat tidak pernah mengirim apa pun: menyembunyikan detail sensitif, dan memeriksa dari mana sebuah berkas berasal. Keduanya berjalan sepenuhnya di perangkat ini.",
+  "privacyProviderLocalTools": "Beberapa alat tidak pernah mengirim apa pun: menyembunyikan detail sensitif, memeriksa dari mana sebuah berkas berasal, menemukan kredensial, dan memeriksa sebuah tautan semuanya berjalan sepenuhnya di perangkat ini.",
   "privacyProviderAgreement": "Apa yang penyedia Anda lakukan dengan yang Anda kirim diatur oleh kesepakatan Anda dengan mereka, bukan oleh Action.",
   "privacyGroupCloud": "Disimpan di awan",
   "privacyCloudWhat": "Saat Anda memastikan sebuah tugas, catatan singkatnya bisa disimpan di bawah identitas anonim milik pemasangan ini: judul, status, tingkat mendesak, kategori, tenggat, jumlah, saran langkah berikutnya, dan penanda waktu.",

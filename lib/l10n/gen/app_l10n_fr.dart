@@ -2016,7 +2016,7 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Deux outils n\'envoient jamais rien : masquer des informations sensibles, et vérifier d\'où vient un fichier. Les deux fonctionnent entièrement sur cet appareil.';
+      'Certains outils n\'envoient jamais rien : masquer des informations sensibles, vérifier d\'où vient un fichier, repérer des identifiants et vérifier un lien fonctionnent entièrement sur cet appareil.';
 
   @override
   String get privacyProviderAgreement =>

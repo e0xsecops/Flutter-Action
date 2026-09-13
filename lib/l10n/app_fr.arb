@@ -551,7 +551,7 @@
   "privacyProviderDirect": "Cela part directement chez eux. Rien ne transite par un serveur appartenant à Action.",
   "privacyProviderScope": "Seul ce que vous choisissez pour un outil est envoyé, et seulement quand vous le lancez. Vos autres tâches, captures et sources ne sont jamais incluses, et rien n'est jamais envoyé en arrière-plan.",
   "privacyProviderKey": "Votre clé API est conservée dans le stockage sécurisé de cet appareil et n'est envoyée qu'au fournisseur auquel elle appartient. Le stockage sécurisé est un obstacle réel pour quelqu'un qui a votre appareil déverrouillé, mais il n'est pas absolu, et Action ne prétendra pas le contraire.",
-  "privacyProviderLocalTools": "Deux outils n'envoient jamais rien : masquer des informations sensibles, et vérifier d'où vient un fichier. Les deux fonctionnent entièrement sur cet appareil.",
+  "privacyProviderLocalTools": "Certains outils n'envoient jamais rien : masquer des informations sensibles, vérifier d'où vient un fichier, repérer des identifiants et vérifier un lien fonctionnent entièrement sur cet appareil.",
   "privacyProviderAgreement": "Ce que votre fournisseur fait de ce que vous envoyez relève de votre accord avec lui, pas d'Action.",
   "privacyGroupCloud": "Stocké dans le cloud",
   "privacyCloudWhat": "Quand vous confirmez une tâche, un court relevé peut être enregistré sous un identifiant anonyme propre à cette installation : son titre, son état, son urgence, sa catégorie, son échéance, son montant, la prochaine étape suggérée et les horodatages.",

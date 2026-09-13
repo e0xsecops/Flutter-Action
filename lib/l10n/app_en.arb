@@ -1295,7 +1295,7 @@
   "@privacyProviderKey": {
     "description": "SAFETY: the qualification is the point. Secure storage is described as a real but limited obstacle; a translation that stops after the first sentence turns a measured statement into a guarantee."
   },
-  "privacyProviderLocalTools": "Two tools never send anything: hiding sensitive details, and checking where a file came from. Both run entirely on this device.",
+  "privacyProviderLocalTools": "Some tools never send anything at all: hiding sensitive details, checking where a file came from, finding credentials and inspecting a link all run entirely on this device.",
   "privacyProviderAgreement": "What your provider does with what you send is governed by your agreement with them, not by Action.",
   "@privacyProviderAgreement": {
     "description": "SAFETY: a limit of responsibility, stated plainly. It must not become a reassurance about what the provider does."

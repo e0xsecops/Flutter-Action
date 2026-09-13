@@ -2000,7 +2000,7 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Two tools never send anything: hiding sensitive details, and checking where a file came from. Both run entirely on this device.';
+      'Some tools never send anything at all: hiding sensitive details, checking where a file came from, finding credentials and inspecting a link all run entirely on this device.';
 
   @override
   String get privacyProviderAgreement =>

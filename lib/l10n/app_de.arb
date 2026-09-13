@@ -551,7 +551,7 @@
   "privacyProviderDirect": "Es geht direkt an sie. Es läuft über keinen Server, der zu Action gehört.",
   "privacyProviderScope": "Gesendet wird nur, was du für ein Werkzeug auswählst, und nur wenn du es ausführst. Deine anderen Aufgaben, Erfassungen und Quellen sind nie dabei, und im Hintergrund wird nie etwas gesendet.",
   "privacyProviderKey": "Dein API-Schlüssel liegt im sicheren Speicher dieses Geräts und wird nur an den Anbieter gesendet, zu dem er gehört. Sicherer Speicher ist ein echtes Hindernis für jemanden mit deinem entsperrten Gerät, aber er ist nicht absolut, und Action behauptet nichts anderes.",
-  "privacyProviderLocalTools": "Zwei Werkzeuge senden nie etwas: sensible Angaben verbergen und prüfen, woher eine Datei stammt. Beide laufen vollständig auf diesem Gerät.",
+  "privacyProviderLocalTools": "Manche Werkzeuge senden überhaupt nie etwas: sensible Angaben verbergen, prüfen, woher eine Datei stammt, Zugangsdaten finden und einen Link prüfen laufen alle vollständig auf diesem Gerät.",
   "privacyProviderAgreement": "Was dein Anbieter mit dem macht, was du sendest, richtet sich nach deiner Vereinbarung mit ihm, nicht nach Action.",
   "privacyGroupCloud": "In der Cloud gespeichert",
   "privacyCloudWhat": "Wenn du eine Aufgabe bestätigst, kann ein kurzer Datensatz davon unter einer anonymen ID dieser Installation gespeichert werden: Titel, Status, Dringlichkeit, Kategorie, Frist, Betrag, vorgeschlagener nächster Schritt und Zeitstempel.",

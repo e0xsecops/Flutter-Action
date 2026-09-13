@@ -1984,7 +1984,7 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Hai công cụ không bao giờ gửi đi thứ gì: che thông tin nhạy cảm, và kiểm tra một tệp đến từ đâu. Cả hai chạy hoàn toàn trên thiết bị này.';
+      'Một số công cụ không bao giờ gửi đi thứ gì: che thông tin nhạy cảm, kiểm tra một tệp đến từ đâu, tìm thông tin đăng nhập và kiểm tra một liên kết đều chạy hoàn toàn trên thiết bị này.';
 
   @override
   String get privacyProviderAgreement =>

@@ -1,6 +1,6 @@
 /// Renders any [IntelligenceResult].
 ///
-/// One view for fifteen tools. That is the payoff for the shared result model:
+/// One view for seventeen tools. That is the payoff for the shared result model:
 /// evidence, uncertainty, warnings and suggestions all behave identically
 /// everywhere, so a user who learns to read one tool's output can read them
 /// all — and a new tool inherits the honesty affordances rather than

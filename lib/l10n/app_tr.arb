@@ -551,7 +551,7 @@
   "privacyProviderDirect": "Doğrudan onlara gider. Action'a ait hiçbir sunucudan geçmez.",
   "privacyProviderScope": "Yalnızca bir araç için seçtiğiniz gönderilir ve yalnızca onu çalıştırdığınızda. Diğer görevleriniz, yakalamalarınız ve kaynaklarınız asla dahil edilmez, arka planda da hiçbir zaman bir şey gönderilmez.",
   "privacyProviderKey": "API anahtarınız bu cihazın güvenli deposunda tutulur ve yalnızca ait olduğu sağlayıcıya gönderilir. Güvenli depo, cihazınızı kilitsiz ele geçiren biri için gerçek bir engeldir, ama mutlak değildir ve Action aksini iddia etmez.",
-  "privacyProviderLocalTools": "İki araç hiçbir zaman bir şey göndermez: hassas ayrıntıları gizlemek ve bir dosyanın nereden geldiğini kontrol etmek. İkisi de tamamen bu cihazda çalışır.",
+  "privacyProviderLocalTools": "Bazı araçlar hiçbir zaman bir şey göndermez: hassas ayrıntıları gizlemek, bir dosyanın nereden geldiğini kontrol etmek, kimlik bilgilerini bulmak ve bir bağlantıyı incelemek tamamen bu cihazda çalışır.",
   "privacyProviderAgreement": "Sağlayıcınızın gönderdiklerinizle ne yaptığı, Action'ın değil, onunla yaptığınız sözleşmenin konusudur.",
   "privacyGroupCloud": "Bulutta saklananlar",
   "privacyCloudWhat": "Bir görevi onayladığınızda, ona ait kısa bir kayıt bu kuruluma ait anonim bir kimlik altında saklanabilir: başlığı, durumu, aciliyeti, kategorisi, son tarihi, tutarı, önerilen sonraki adımı ve zaman damgaları.",

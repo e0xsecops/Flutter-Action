@@ -163,10 +163,16 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path: "assets/icon/icon.png"
   min_sdk_android: 24
-  # Adaptive icons are masked by the launcher, so the foreground is drawn at 72%
+  # Adaptive icons are masked by the launcher, so the foreground is drawn at 85%
   # scale to stay inside the safe zone while the background supplies the colour.
+  # The source art is rendered by tool/icon/render_icon.py.
   adaptive_icon_background: "#2563EB"
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  # Android 13+ themed icons draw a single-colour version of the mark in the
+  # user's wallpaper palette. Without this layer a themed home screen shows
+  # Action as a plain blue disc, which is the one place the icon would be
+  # generic.
+  adaptive_icon_monochrome: "assets/icon/icon_monochrome.png"
 
 flutter_native_splash:
   android: true

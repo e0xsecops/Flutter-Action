@@ -551,7 +551,7 @@
   "privacyProviderDirect": "它直接傳給他們。不經過任何屬於 Action 的伺服器。",
   "privacyProviderScope": "只傳送你為某個工具挑選的內容，而且只在你執行它時。你其他的待辦、擷取和來源永遠不會被一併帶上，背景也從不傳送任何東西。",
   "privacyProviderKey": "你的 API 金鑰保存在本機的安全儲存區中，而且只傳送給它所屬的那個供應方。對於拿到你已解鎖裝置的人來說，安全儲存區是一道真實的阻礙，但它並非絕對，Action 也不會宣稱相反。",
-  "privacyProviderLocalTools": "有兩個工具從不傳送任何東西：隱去敏感資訊，以及查看檔案來自哪裡。兩者完全在本機執行。",
+  "privacyProviderLocalTools": "有些工具從不傳送任何東西：隱去敏感資訊、查看檔案來自哪裡、找出憑證以及檢查連結，全都完全在本機執行。",
   "privacyProviderAgreement": "你的供應方拿你傳過去的東西做什麼，由你與他們的協議決定，而不是由 Action 決定。",
   "privacyGroupCloud": "存在雲端",
   "privacyCloudWhat": "當你確認一項待辦時，它的一則簡短紀錄可能以這次安裝的匿名識別碼儲存下來：標題、狀態、緊急程度、類別、期限、金額、建議的下一步和時間戳記。",

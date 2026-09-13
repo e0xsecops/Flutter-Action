@@ -2012,7 +2012,7 @@ class AppL10nPt extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Duas ferramentas nunca enviam nada: esconder dados sensíveis e verificar de onde veio um ficheiro. Ambas funcionam inteiramente neste dispositivo.';
+      'Algumas ferramentas nunca enviam nada: esconder dados sensíveis, verificar de onde veio um ficheiro, encontrar credenciais e verificar um link funcionam inteiramente neste dispositivo.';
 
   @override
   String get privacyProviderAgreement =>

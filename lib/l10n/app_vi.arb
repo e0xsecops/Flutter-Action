@@ -551,7 +551,7 @@
   "privacyProviderDirect": "Nó đi thẳng tới họ. Nó không đi qua bất kỳ máy chủ nào thuộc về Action.",
   "privacyProviderScope": "Chỉ những gì bạn chọn cho một công cụ mới được gửi, và chỉ khi bạn chạy nó. Những việc, bản thu nhận và nguồn khác của bạn không bao giờ được kèm theo, và không bao giờ có gì được gửi ngầm ở nền.",
   "privacyProviderKey": "Khoá API của bạn được giữ trong vùng lưu trữ an toàn của thiết bị này và chỉ được gửi tới nhà cung cấp mà nó thuộc về. Vùng lưu trữ an toàn là một trở ngại thật sự với người cầm thiết bị đang mở khoá của bạn, nhưng nó không tuyệt đối, và Action sẽ không nói ngược lại.",
-  "privacyProviderLocalTools": "Hai công cụ không bao giờ gửi đi thứ gì: che thông tin nhạy cảm, và kiểm tra một tệp đến từ đâu. Cả hai chạy hoàn toàn trên thiết bị này.",
+  "privacyProviderLocalTools": "Một số công cụ không bao giờ gửi đi thứ gì: che thông tin nhạy cảm, kiểm tra một tệp đến từ đâu, tìm thông tin đăng nhập và kiểm tra một liên kết đều chạy hoàn toàn trên thiết bị này.",
   "privacyProviderAgreement": "Nhà cung cấp của bạn làm gì với những gì bạn gửi là do thoả thuận của bạn với họ quy định, không phải Action.",
   "privacyGroupCloud": "Lưu trên đám mây",
   "privacyCloudWhat": "Khi bạn xác nhận một việc, một bản ghi ngắn của nó có thể được lưu dưới một mã định danh ẩn danh thuộc về bản cài đặt này: tên, trạng thái, mức gấp, phân loại, hạn chót, số tiền, bước tiếp theo được gợi ý và các mốc thời gian.",

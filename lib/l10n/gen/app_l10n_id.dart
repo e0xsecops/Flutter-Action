@@ -1996,7 +1996,7 @@ class AppL10nId extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Dua alat tidak pernah mengirim apa pun: menyembunyikan detail sensitif, dan memeriksa dari mana sebuah berkas berasal. Keduanya berjalan sepenuhnya di perangkat ini.';
+      'Beberapa alat tidak pernah mengirim apa pun: menyembunyikan detail sensitif, memeriksa dari mana sebuah berkas berasal, menemukan kredensial, dan memeriksa sebuah tautan semuanya berjalan sepenuhnya di perangkat ini.';
 
   @override
   String get privacyProviderAgreement =>

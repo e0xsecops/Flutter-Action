@@ -2017,7 +2017,7 @@ class AppL10nDe extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Zwei Werkzeuge senden nie etwas: sensible Angaben verbergen und prüfen, woher eine Datei stammt. Beide laufen vollständig auf diesem Gerät.';
+      'Manche Werkzeuge senden überhaupt nie etwas: sensible Angaben verbergen, prüfen, woher eine Datei stammt, Zugangsdaten finden und einen Link prüfen laufen alle vollständig auf diesem Gerät.';
 
   @override
   String get privacyProviderAgreement =>

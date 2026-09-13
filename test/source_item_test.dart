@@ -113,6 +113,32 @@ void main() {
       expect(retried.imagePath, '/tmp/a.jpg');
     });
 
+    test('copyWith keeps a document where it is, and how long it is', () {
+      // Typing text over a PDF that could not be read goes through copyWith.
+      // An earlier version dropped both fields, which would have erased the
+      // document from its own record.
+      final document = SourceItem(
+        id: 'doc',
+        type: SourceType.document,
+        capturedAt: DateTime.parse('2026-09-01T08:00:00.000'),
+        documentPath: '/data/sources/doc.pdf',
+        pageCount: 12,
+        mimeType: 'application/pdf',
+        state: SourceProcessingState.ready,
+      );
+
+      final typedOver = document.copyWith(
+        pastedText: 'Typed by hand',
+        state: SourceProcessingState.ready,
+        clearFailure: true,
+      );
+
+      expect(typedOver.documentPath, '/data/sources/doc.pdf');
+      expect(typedOver.pageCount, 12);
+      expect(typedOver.hasDocument, isTrue);
+      expect(typedOver.pastedText, 'Typed by hand');
+    });
+
     test('every source type carries provenance copy for the UI', () {
       for (final type in SourceType.values) {
         expect(type.provenanceLabel, isNotEmpty);

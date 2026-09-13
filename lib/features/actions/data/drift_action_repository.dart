@@ -130,6 +130,64 @@ class DriftActionRepository
     });
   }
 
+  // ------------------------------------------------- debug seeding only --
+
+  /// Inserts [items] locally and enqueues nothing for the cloud.
+  ///
+  /// For the debug diagnostics screen, which seeds synthetic Actions so the
+  /// product can be looked at and profiled with 5, 50 or 500 of them. It
+  /// deliberately bypasses the outbox: a synthetic corpus must never be
+  /// mirrored to Firestore under the tester's anonymous id. Nothing in a
+  /// release build reaches this method — the only caller is behind
+  /// `kDebugMode` in the router — and the ids it writes carry a prefix that
+  /// [deleteSeeded] can find again.
+  Future<int> seedLocalOnly(List<ActionItem> items) {
+    return _db.transaction(() async {
+      var inserted = 0;
+      for (final item in items) {
+        final row = await _db.into(_db.actionsTable).insertReturningOrNull(
+              _toRow(item),
+              mode: InsertMode.insertOrIgnore,
+            );
+        if (row == null) continue;
+        for (final step in item.steps) {
+          await _db
+              .into(_db.actionStepsTable)
+              .insert(_stepToRow(item.id, step));
+        }
+        for (final fact in item.facts) {
+          await _db
+              .into(_db.actionFactsTable)
+              .insert(_factToRow(item.id, fact));
+        }
+        inserted++;
+      }
+      return inserted;
+    });
+  }
+
+  /// Removes everything [seedLocalOnly] could have written: every row whose
+  /// Action id starts with [idPrefix]. Local only, like the seeding.
+  Future<int> deleteSeeded({required String idPrefix}) {
+    final pattern = '$idPrefix%';
+    return _db.transaction(() async {
+      await (_db.delete(_db.actionRemindersTable)
+            ..where((t) => t.actionId.like(pattern)))
+          .go();
+      await (_db.delete(_db.actionStepsTable)
+            ..where((t) => t.actionId.like(pattern)))
+          .go();
+      await (_db.delete(_db.actionFactsTable)
+            ..where((t) => t.actionId.like(pattern)))
+          .go();
+      await (_db.delete(_db.syncOutboxTable)
+            ..where((t) => t.actionId.like(pattern)))
+          .go();
+      return (_db.delete(_db.actionsTable)..where((t) => t.id.like(pattern)))
+          .go();
+    });
+  }
+
   @override
   Future<void> update(ActionItem item) {
     return _db.transaction(() async {

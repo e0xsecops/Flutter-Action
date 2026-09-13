@@ -2048,7 +2048,7 @@ class AppL10nPl extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'Dwa narzędzia nigdy niczego nie wysyłają: ukrywanie wrażliwych danych i sprawdzanie, skąd pochodzi plik. Oba działają w całości na tym urządzeniu.';
+      'Niektóre narzędzia nigdy niczego nie wysyłają: ukrywanie wrażliwych danych, sprawdzanie, skąd pochodzi plik, wyszukiwanie danych logowania i sprawdzanie linku działają w całości na tym urządzeniu.';
 
   @override
   String get privacyProviderAgreement =>

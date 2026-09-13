@@ -1,9 +1,9 @@
 /// What a capability *is*, as data.
 ///
-/// Fifteen tools share one runner, one gate set, one result model and one
+/// Seventeen tools share one runner, one gate set, one result model and one
 /// renderer set because a tool is a definition plus a strategy — not a screen.
-/// Adding the sixteenth should be a prompt and a parser, not a new navigation
-/// destination.
+/// Adding the eighteenth should be a prompt and a parser, not a new
+/// navigation destination.
 ///
 /// See `docs/v2/ACTION_INTELLIGENCE_SPEC.md` §3.
 library;
@@ -124,11 +124,13 @@ class IntelligenceRunInput {
 
 /// A tool that runs entirely on this device.
 ///
-/// Two of the fifteen are local, and both are local for a reason rather than as
-/// an optimisation. Scanning a document for sensitive information by sending it
-/// to a third party would defeat the point of asking, and inspecting a file's
-/// own metadata needs no model at all. A useful consequence: both work for
-/// someone who has never connected a provider.
+/// Four of the seventeen are local, and each is local for a reason rather than
+/// as an optimisation. Scanning a document for sensitive information or for
+/// credentials by sending it to a third party would defeat the point of
+/// asking; inspecting a file's own metadata needs no model at all; and sending
+/// a link somewhere to ask whether it is safe leaks exactly the browsing the
+/// user came here to be careful about. A useful consequence: all four work
+/// for someone who has never connected a provider.
 abstract interface class LocalIntelligenceStrategy {
   Future<IntelligenceResult> run(IntelligenceRunInput input);
 }

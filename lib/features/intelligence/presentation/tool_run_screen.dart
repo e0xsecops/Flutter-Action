@@ -902,7 +902,11 @@ class _ResultActions extends StatelessWidget {
   }
 }
 
-class _SecondaryActions extends StatelessWidget {
+/// The tools whose artifact is a copy of the user's text with something
+/// removed, so copying it out is the moment a redacted copy exists.
+const _redactedCopyTools = {'redaction-assistant', 'credential-scanner'};
+
+class _SecondaryActions extends ConsumerWidget {
   const _SecondaryActions({
     required this.tool,
     required this.artifact,
@@ -914,7 +918,7 @@ class _SecondaryActions extends StatelessWidget {
   final VoidCallback onRerun;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // The app's OutlinedButton style is full-width by default
     // (Size.fromHeight), which a Wrap cannot lay out. These are secondary
     // actions that belong side by side, so they opt out of that width.
@@ -933,6 +937,15 @@ class _SecondaryActions extends StatelessWidget {
             style: style,
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: artifact!.text));
+              // A sanitized copy leaving the tool is a protection event worth
+              // a line in the journal: the tool id and the moment, never the
+              // text. Copying any other artifact is not.
+              if (_redactedCopyTools.contains(tool.id)) {
+                unawaited(ref.read(activityRecorderProvider).record(
+                      ActivityEvent.redactedCopyCreated,
+                      toolId: tool.id,
+                    ));
+              }
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(l10n.commonCopied)),

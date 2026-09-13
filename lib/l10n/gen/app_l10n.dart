@@ -3442,7 +3442,7 @@ abstract class AppL10n {
   /// No description provided for @privacyProviderLocalTools.
   ///
   /// In en, this message translates to:
-  /// **'Two tools never send anything: hiding sensitive details, and checking where a file came from. Both run entirely on this device.'**
+  /// **'Some tools never send anything at all: hiding sensitive details, checking where a file came from, finding credentials and inspecting a link all run entirely on this device.'**
   String get privacyProviderLocalTools;
 
   /// SAFETY: a limit of responsibility, stated plainly. It must not become a reassurance about what the provider does.

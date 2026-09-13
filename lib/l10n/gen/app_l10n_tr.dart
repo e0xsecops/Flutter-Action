@@ -2001,7 +2001,7 @@ class AppL10nTr extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      'İki araç hiçbir zaman bir şey göndermez: hassas ayrıntıları gizlemek ve bir dosyanın nereden geldiğini kontrol etmek. İkisi de tamamen bu cihazda çalışır.';
+      'Bazı araçlar hiçbir zaman bir şey göndermez: hassas ayrıntıları gizlemek, bir dosyanın nereden geldiğini kontrol etmek, kimlik bilgilerini bulmak ve bir bağlantıyı incelemek tamamen bu cihazda çalışır.';
 
   @override
   String get privacyProviderAgreement =>

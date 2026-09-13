@@ -200,6 +200,11 @@ class SourceItem {
       capturedAt: capturedAt,
       pastedText: pastedText ?? this.pastedText,
       imagePath: imagePath,
+      // Carried explicitly. An earlier version of this method predated
+      // documents and silently dropped both, so typing text over a PDF that
+      // could not be read would have erased the PDF from the record.
+      documentPath: documentPath,
+      pageCount: pageCount,
       mimeType: mimeType,
       originalFormat: originalFormat,
       imageWidth: imageWidth,

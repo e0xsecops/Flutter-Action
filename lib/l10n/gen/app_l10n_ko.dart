@@ -1928,7 +1928,7 @@ class AppL10nKo extends AppL10n {
 
   @override
   String get privacyProviderLocalTools =>
-      '아무것도 보내지 않는 도구가 둘 있습니다. 민감한 내용을 가리는 것과, 파일이 어디서 왔는지 확인하는 것입니다. 둘 다 전부 이 기기에서 돕니다.';
+      '아무것도 보내지 않는 도구들이 있습니다. 민감한 내용을 가리기, 파일이 어디서 왔는지 확인하기, 자격 증명 찾기, 링크 살펴보기는 모두 전부 이 기기에서 돕니다.';
 
   @override
   String get privacyProviderAgreement =>

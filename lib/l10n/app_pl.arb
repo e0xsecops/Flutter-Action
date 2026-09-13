@@ -551,7 +551,7 @@
   "privacyProviderDirect": "Trafia to prosto do nich. Nie przechodzi przez żaden serwer należący do Action.",
   "privacyProviderScope": "Wysyłane jest tylko to, co wybierzesz dla narzędzia, i tylko wtedy, gdy je uruchomisz. Twoje pozostałe zadania, przechwycenia i źródła nigdy nie są dołączane, a w tle nigdy nic nie jest wysyłane.",
   "privacyProviderKey": "Twój klucz API jest trzymany w bezpiecznej pamięci tego urządzenia i wysyłany wyłącznie do dostawcy, do którego należy. Bezpieczna pamięć to realna przeszkoda dla kogoś, kto ma Twoje odblokowane urządzenie, ale nie jest absolutna, a Action nie będzie twierdzić inaczej.",
-  "privacyProviderLocalTools": "Dwa narzędzia nigdy niczego nie wysyłają: ukrywanie wrażliwych danych i sprawdzanie, skąd pochodzi plik. Oba działają w całości na tym urządzeniu.",
+  "privacyProviderLocalTools": "Niektóre narzędzia nigdy niczego nie wysyłają: ukrywanie wrażliwych danych, sprawdzanie, skąd pochodzi plik, wyszukiwanie danych logowania i sprawdzanie linku działają w całości na tym urządzeniu.",
   "privacyProviderAgreement": "To, co Twój dostawca robi z tym, co wysyłasz, reguluje Twoja umowa z nim, a nie Action.",
   "privacyGroupCloud": "Przechowywane w chmurze",
   "privacyCloudWhat": "Gdy potwierdzasz zadanie, jego krótki zapis może zostać zachowany pod anonimowym identyfikatorem tej instalacji: tytuł, status, pilność, kategoria, termin, kwota, proponowany następny krok i znaczniki czasu.",

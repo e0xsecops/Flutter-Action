@@ -164,13 +164,18 @@ class SecurityScreen extends ConsumerWidget {
     WidgetRef ref,
     bool want,
   ) async {
-    final result =
-        await ref.read(protectionSettingsProvider.notifier).setAppLock(want);
+    final l10n = AppL10n.of(context);
+    // The OS shows this sentence in its own dialog, so it has to say which
+    // change is being confirmed — and say it in the user's language, which
+    // the canonical English fallback inside the controller does not.
+    final result = await ref.read(protectionSettingsProvider.notifier).setAppLock(
+          want,
+          reason: want ? l10n.appLockReasonEnable : l10n.appLockReasonDisable,
+        );
     if (!context.mounted) return;
 
     // Each outcome gets its own sentence; "that didn't work" would leave
     // someone with no screen lock guessing forever.
-    final l10n = AppL10n.of(context);
     final message = switch (result) {
       AppLockChangeResult.changed || AppLockChangeResult.unchanged => null,
       AppLockChangeResult.refused => l10n.securityAppLockRefused,

@@ -551,7 +551,7 @@
   "privacyProviderDirect": "Va direttamente a loro. Non passa da nessun server che appartenga ad Action.",
   "privacyProviderScope": "Viene inviato solo ciò che scegli per uno strumento, e solo quando lo esegui. Le tue altre attività, acquisizioni e fonti non sono mai incluse, e non viene mai inviato niente in secondo piano.",
   "privacyProviderKey": "La tua chiave API è tenuta nell'archivio sicuro di questo dispositivo e viene inviata solo al fornitore a cui appartiene. L'archivio sicuro è un ostacolo reale per chi ha il tuo dispositivo sbloccato, ma non è assoluto, e Action non sosterrà il contrario.",
-  "privacyProviderLocalTools": "Due strumenti non inviano mai niente: nascondere dati sensibili e controllare da dove viene un file. Entrambi funzionano interamente su questo dispositivo.",
+  "privacyProviderLocalTools": "Alcuni strumenti non inviano mai niente: nascondere dati sensibili, controllare da dove viene un file, trovare credenziali e controllare un link funzionano interamente su questo dispositivo.",
   "privacyProviderAgreement": "Cosa fa il tuo fornitore con ciò che invii è regolato dal tuo accordo con lui, non da Action.",
   "privacyGroupCloud": "Conservato nel cloud",
   "privacyCloudWhat": "Quando confermi un'attività, un breve registro può essere salvato sotto un identificativo anonimo di questa installazione: titolo, stato, urgenza, categoria, scadenza, importo, passo successivo suggerito e marche temporali.",
