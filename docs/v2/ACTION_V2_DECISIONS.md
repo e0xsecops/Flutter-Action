@@ -221,12 +221,57 @@ order proposed.
 
 | # | Opportunity | Blocked on |
 |---|---|---|
-| 20 | **Voice capture** | Needs an explicit-record UI and an honest answer about where transcription happens. Not started rather than half-started. |
-| 22 | **Collections and pinning** | Cheap individually, but Library 3.0 should be designed once with them in it. |
+| 20 | **Voice capture** | Decided 2026-09-14: deferred, with the evaluation in `V2_ULTRA_COMPLETION_MATRIX.md` §4. The value over Paste Text is convenience, not understanding; the cost is a new dangerous permission and a per-device disclosure that cannot yet be made truthfully (Android's recogniser sends audio to Google unless on-device recognition is available and requested). The flow it must have when built is recorded there. |
+| 22 | **Collections and pinning** | Decided 2026-09-14: both deferred with evidence (matrix §1). Goals already carry the "tax / moving house / trip" grouping with a workspace and planning tools a Collection would lack; a pin would override the triage Today promises not to override, and the brief itself forbids it outranking Needs Attention. |
 | 23 | **C2PA / Content Credentials** | No Flutter binding exists — only a Kotlin AAR over the Rust SDK. `ProvenanceVerifier` is the seam. Until then Action reports that provenance was *not checked*, never that it was absent. |
 | 25 | **Encrypted local vault** | See deviation 8. |
+| 28 | **Interactive demo** | The deterministic offline review path exists only in debug builds; a production demo needs an in-memory Source the Library never sees, a bundled synthetic result, and a keep-this step — none of which exist. First-run Today already shows what Action handles. |
+| 29 | **Bengali (and Arabic, Russian, Thai, Urdu) OCR** | `OCR_LANGUAGE_SUPPORT.md`. No maintained on-device engine; the AI-assisted user-initiated path is specified and not started, because it would be the first flow to send a photo to a provider and deserves its own commit, disclosure and receipt. |
+| 30 | **Platform shortcuts, outbound share, exports** | Nothing outbound exists — no share sheet, no file writer, no calendar. Each is a new entry or exit point with its own disclosure; none has been asked for. |
+| 31 | **Protection-lane history on the Security centre** | Recorded in the journal, no screen. A list of the user's own switch flips has little decision value and would cost twelve strings in twenty languages. |
+
+### Rejected in the completion pass (2026-09-14)
+
+| # | Opportunity | Why not |
+|---|---|---|
+| 32 | **Action Lens** (live viewfinder with detected date/amount, boundary, QR) | A prettier duplicate of camera + OCR that needs the `camera` package and the `CAMERA` permission Action deliberately does not hold, and that would show a second, weaker extraction *before* the trust-first review. QR is real but marginal for documents, and the Link Inspector already covers a captured link. |
+| 33 | **Privacy Shield "sensitive screens only" mode** | `FLAG_SECURE` is a window flag toggled over an async channel; across a route transition the recents snapshot races the flag, so the mode would sometimes protect nothing while saying it did. Two honest modes (Off / Always) instead of three, one of which lies occasionally. |
+| 34 | **Studio tool search and favourites** | Seventeen items in five named groups with a recommended rail is under the threshold where a search field pays for itself; favourites would be a second "recent". |
 
 ---
+
+## Part 4 — What the completion pass changed in the code (2026-09-14)
+
+Not decisions so much as things the code was found to be doing that its own
+documentation said it did not. Each is a commit on the branch; each has a
+test that fails without it.
+
+1. **The Japanese and Thai navigation labels ellipsized**, and no test could
+   have caught it because the test font draws every code point one em wide.
+   The nav-label test now shapes text with the QA device's own fonts
+   (subsets under `test/fonts/`). The bar lets its labels follow the system
+   text size only as far as it has room.
+2. **`SourceItem.copyWith` dropped a document's path and page count**, so
+   typing text over an unreadable PDF would have erased the PDF from its own
+   record.
+3. **The Privacy screen said two tools never send anything.** Four do.
+4. **App Lock's on/off confirmations** were translated and never passed to
+   the OS dialog.
+5. **`redactedCopyCreated`** was declared in the journal and never recorded.
+6. **The Library counted archived Actions as open** and printed "Overdue" under
+   each; archiving is "stop showing me this".
+7. **App Lock re-prompted forever after a correct PIN** on the device: the
+   prompt's result reaches Dart before the activity's own `resumed` event,
+   which read as a cold start. Lifecycle bookkeeping now settles for 1.5 s
+   after any prompt closes; the mistake it can still make is locking once
+   too often, never once too rarely.
+8. **The Today hero said "OVERDUE · 22 DAYS" in every language** while the
+   cards beneath it were translated.
+9. **The Library segment bar was unreadable at 200% text**; above 130% it
+   scrolls.
+10. **The launcher icon was a generic checkmark.** It is now a focus ring
+    opening into a forward arrow, with a monochrome layer for themed home
+    screens.
 
 ## Part 3 — Standing rules this work must not break
 
