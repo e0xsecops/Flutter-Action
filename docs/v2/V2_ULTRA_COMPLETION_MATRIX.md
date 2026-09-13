@@ -160,12 +160,206 @@ See §9 for the screenshots and what was judged from them.
 
 ## 9. Device pass — 2026-09-14, `Action_Pixel_API36`, `emulator-5554`
 
-_Filled in by the pass that follows; see the section of the same name at the
-end of this file._
+Debug build of the branch head, fresh install (`pm clear`), driven by
+`adb shell input` and `uiautomator dump` — never `adb shell monkey`. Android
+16, 411×914 dp at 420 dpi. Every screenshot below was looked at, not
+inferred from source. Synthetic data only: the seeded corpus from the
+diagnostics screen and the synthetic fixture images; nothing personal.
 
-## 10. Engineering — filled from the release pass
+### What was captured
 
-_Filled in by the pass that follows._
+| Screen | States | Verdict |
+|---|---|---|
+| Onboarding | 4 pages | Four beats — capture, nothing saved until you confirm, stay on top, where your information lives — line art in the app's own tokens, no permission wall, no marketing. |
+| Today | first run · cleared · 1 · 5 · 50 · 500 Actions · light · dark | Answers "what needs me now": the hero carries the one Action that most needs the user with its overdue badge and next step; sections cap with see-all; at 500 the screen still leads with 133 that need attention and the glass bar visibly blurs the cards passing under it. First run is the capability preview, a cleared day is the quick-start strip; neither is a feature catalogue. |
+| Library | empty · 5 · 50 · 500 · Goals · Done | Sunken segmented control with counts, opaque cards. Found and fixed: archived Actions were counted as open and called overdue. |
+| Capture sheet | light · dark | Four doors on a near-opaque sheet with the privacy line; readable, not frosted soup. |
+| Preview → Source Detail | real gallery capture of a synthetic notice | Provenance strip, the image, dimensions and size, the text read on device in 675 ms, "nothing has been interpreted yet", three suggested tools, Create action. Coherent; not a card wall. |
+| Review | ambiguous-deadlines fixture through the production screen | Two deadlines are a question card, not a value; the chooser shows each candidate with its label and quote, another date, and leave-without-a-deadline; choosing marks "Confirmed by you" and the CTA returns. Live extraction itself could not run on this install (§10, App Check). |
+| Action Cockpit | seeded and real Actions · light · dark · 200% | Header, NEXT as the one primary block, chain, details, reminders, why this matters, three tools, history, provenance, outlined complete. |
+| Goal workspace | created on device | Glass hero with the goal, done-looks-like, where-it-stands, two planning tools. |
+| Intelligence Studio | light · dark | Hero with connection state, "4 of them already work on this device", category sections; opaque tool cards. |
+| Link Inspector | run on two links | *Treat with caution* / *Worth checking* / *No obvious signals*, each signal explained; the caveat that no signals is not trust is on screen. Ran with no provider connected. |
+| Search | empty · results at 50 and 500 | Privacy line first, worked examples, filters, results with highlighted matches. |
+| Settings | light · dark · Arabic · Bengali 200% | Grouped, tinted glyphs, values inline; not a ListTile wall. |
+| Security centre | off · App Lock on · all three on · light · dark · 200% | The hero names what is on in words; Screen privacy turned the screenshot black (`FLAG_SECURE` honoured) and back; Private reminders re-armed the queue. |
+| App Lock | enable · background · relaunch · cancel · unlock | See below. |
+| Share-in | text shared from the shell while locked | The share waited behind the lock and landed on the paste screen after the PIN. |
+| Reminder | set on a real Action | Persisted before permission, permission asked at that moment, alarm armed in AlarmManager after the grant. |
+| Launcher icon | home screen | The focus-ring mark, legible at launcher size. |
+
+### 200% text — English, German, Bengali, Arabic
+
+No `RenderFlex` overflow anywhere in the session's logcat. Nav labels hold
+their whole word in every language. Arabic mirrors correctly at 200%. Two
+defects found and fixed on the spot: the Today hero's badge was English in
+every language (the cards were not), and the Library segment bar squeezed
+its four labels to ellipses (Bengali lost one entirely) — it now scrolls
+above 130%. Remaining, recorded and not fixed: a German eyebrow breaks
+"AUFMERKSAMKEIT" across lines at 200%, and the Library card's one-line meta
+ellipsizes its date at 200%.
+
+### App Lock on the device
+
+A PIN was set on the emulator. Enabling App Lock raised the OS dialog with
+the translated reason; the PIN enabled it and did not lock the app it had
+just enabled. Backgrounding and relaunching showed the lock screen with the
+prompt already up; cancelling the prompt showed "That was not confirmed";
+the PIN unlocked. **Found and fixed on the device:** before the fix the
+prompt reappeared forever after a correct PIN (matrix §5, commit
+`92fa7b9`). Not exercised: biometric hardware (the emulator has none
+enrolled; the device-credential path is the one that ran) and a notification
+tap through the lock (the reminder was armed for an hour ahead).
+
+### Long-run synthetic sequence
+
+Capture image → Source → (extraction refused by App Check, see §10) →
+manual Action → reminder → Security centre (all three protections) → Link
+Inspector → share-in while locked → unlock → Goal → Library → Search →
+language change (Bengali, Arabic, German, back to English) → 200% and back
+→ Today. The logcat for the whole session: zero `FATAL EXCEPTION`, zero
+`E/AndroidRuntime` from the app, zero `E/flutter`, zero `RenderFlex`, zero
+SQLite or Drift errors, zero notification, share, PDF, biometric or shader
+errors, no memory pressure. The only warnings are App Check debug-token
+exchanges, which are the environment (§10).
+
+### What the pass changed
+
+Six product defects were found by looking and are fixed on the branch:
+Thai nav label, Library archived Actions, App Lock re-prompt loop, Today
+hero badge language, Library segment bar at 200%, and the generic icon.
+
+## 10. Engineering — 2026-09-14
+
+### Tests and analyzer
+
+`flutter analyze`: no issues. `flutter test --exclude-tags baseline`:
+**1826 tests pass**, none skipped. The pass added: the nav-label fit
+test (device fonts), the App Lock controller test (device lifecycle order),
+the Library segment tests, the Today-hero language test, the
+`copyWith`-document test, the privacy-sentence-names-every-local-tool test.
+
+### Database and cloud
+
+Drift `schemaVersion` **3**, unchanged. `actionSchemaVersion` **1**,
+unchanged. `firestore.rules` byte-identical to `main`
+(`git diff main...HEAD -- firestore.rules` is empty); `lib/core/firebase`
+and the mirror, deletion and inventory files unchanged. The only
+cloud-adjacent change on the branch is four new closed-set values for the
+`capture_type` analytics parameter (share and PDF intake). No document
+sync, no query or content analytics.
+
+### Startup — profile build, `emulator-5554`, 500 seeded Actions
+
+| Measure | Value |
+|---|---|
+| `am start -W` cold, ×5 | 1177 · 1456 · 1564 · 1576 · 2243 ms (median **1564**) |
+| `am start -W` warm (home → relaunch), ×3 | 244 · 252 · 262 ms |
+| Flutter `--trace-startup`: framework init | 311 ms |
+| Flutter: first frame | **769 ms** after engine enter |
+| Flutter: first frame rasterized | 877 ms |
+
+Against earlier evidence: Day 17's release build measured 727–840 ms cold
+and Day 20's fresh-install release 1228–1327 ms, both with an empty
+database. This run is a **profile** build, with 500 Actions and 76 finished
+ones in the database, an App Check debug token the console does not know
+(it retries at start-up), and adb/uiautomator traffic on the same emulator.
+The numbers are therefore not a like-for-like comparison, and there is no
+evidence of a regression beyond that noise; the one that is comparable —
+Flutter's own first-frame — sits at 769 ms. Debug timings were never used
+for any figure here.
+
+### Frames — SurfaceFlinger timestats on the Flutter surface, profile build
+
+`gfxinfo` counts only HWUI frames and reports zero for a Flutter scroll, so
+frames were read from SurfaceFlinger's per-layer statistics on the BLAST
+layer Flutter presents through. Present-to-present percentiles are in 1 ms
+buckets; the display runs at 60 Hz (16.7 ms).
+
+| Sequence | Frames | Dropped | Janky (SF) | Avg FPS | p50 | p90 | p99 |
+|---|---|---|---|---|---|---|---|
+| Today scroll, 500 Actions | 344 | 0 | 0 | 61.3 | 16 ms | 18 ms | 22 ms |
+| Library scroll, 424 open | 341 | 0 | 0 | 60.9 | 16 ms | 18 ms | 27 ms |
+| Studio scroll | 224 | 0 | 0 | 60.9 | 16 ms | 18 ms | 29 ms |
+| Search results scroll | 227 | 0 | 0 | 61.3 | 16 ms | 19 ms | 23 ms |
+| Cockpit scroll | 225 | 0 | 0 | 60.4 | 16 ms | 18 ms | 33 ms |
+| Tab switching ×24 (glass bar over every branch) | 591 | 0 | 0 | 61.5 | 16 ms | 18 ms | 24 ms |
+| Capture sheet open/close ×5 | 270 | 0 | 0 | — | 16 ms | 19 ms | — |
+| Cockpit open/close ×5 | 291 | 0 | 0 | — | 16 ms | 19 ms | — |
+
+The two open/close rows include the idle gap while the sheet or screen sat
+open, which is why their average FPS (34–39) and p99 (350–600 ms) are not
+frame times; their p50/p90 are. **Glass:** the nav bar's `BackdropFilter`
+was under every one of these sequences, the hero's under the Today and
+Studio ones, and the sheet's during the sheet row; nothing dropped. No
+shader-compilation stalls appeared in logcat. The one `BackdropFilter` in
+the codebase is clipped to its surface and never nests — held by
+`day17_hardening_test.dart`.
+
+### Memory — profile build, `dumpsys meminfo`, TOTAL PSS
+
+| Moment | PSS |
+|---|---|
+| After launch, on Today with 500 Actions | 180 MB |
+| After the scroll sequences above | 213 MB |
+| After 10 rounds of tab switching + Cockpit open/close | 210 MB |
+| End of the pass | 209 MB |
+
+Flat across the navigation loop: no growth with repeated navigation. No
+`OutOfMemory`, no low-memory kill, no GC pressure lines for the app.
+
+### Release builds
+
+Signed with the local keystore (`android/key.properties`, ignored by git;
+nothing about it is printed here).
+
+| Artifact | Path | Size (as `flutter build` reports it) |
+|---|---|---|
+| Universal APK | `build/app/outputs/flutter-apk/app-release.apk` | 112.0 MB |
+| App bundle | `build/app/outputs/bundle/release/app-release.aab` | 93.9 MB |
+
+Day 20 recorded 98.7 MB / 81.9 MB by the same measure. The growth since is
+the V2 dependencies added on this branch (`local_auth`,
+`flutter_secure_storage`, `crypto`, `http`), twenty locales of generated
+Dart, and a newer Flutter engine; no split-per-ABI build was run in this
+pass, so the per-ABI figures from Day 20 (31–39 MB) are not refreshed here.
+
+### Logcat — the whole device pass
+
+100k lines recorded across every flow in §9. Counts: `FATAL EXCEPTION` 0 ·
+`E/AndroidRuntime` (app) 0 · `E/flutter` 0 · `RenderFlex`/`overflowed` 0 ·
+`SQLiteException`/Drift 0 · Firebase/Auth/Firestore errors 0 ·
+notification, share, PDF, biometric, shader, localization errors 0 · memory
+pressure 0 · ANR 0. Benign noise separated out: uiautomator's own
+`AndroidRuntime` lines (the QA tooling), the Google app's Discover errors
+(a stray tap during QA), and **App Check debug-token exchange warnings**,
+which are the environment: `pm clear` gave this install a new debug token
+the Firebase console does not know. That same token is why live extraction
+returned "could not read this document" during the pass — the manual path
+was taken instead, and the Review screen was exercised through the fixture
+harness. Registering the token is a console action, not code.
+
+### Repository audit
+
+`git ls-files` holds no `.vscode`, keystore, `key.properties`, service
+account, audio, log, screenshot or temporary translation file
+(`lib/l10n/untranslated.json` is `{}` and is the gen-l10n completeness
+artefact). A secret-pattern grep over tracked files finds only the Firebase
+Android client key in `google-services.json` and `firebase_options.dart` —
+a public client identifier tracked since Day 6 and required to build, not a
+server credential — and the regex literals in the scanner itself. No App
+Check debug token anywhere. No provider request body, raw response or real
+voice clip exists in the tree.
+
+### Privacy audit (verified against code, not prose)
+
+Search, Sources, Goals, steps, reminders: local (JSON, Drift, alarms).
+Collections: not built. AI runs only from an explicit tap with a first-use
+disclosure per provider and a receipt written at send time. BYOK key in
+Keystore/Keychain via `SecretStore`, masked tail only. Firestore mirror:
+the same 16 fields as Day 8, owner-scoped rules. No document sync, no query
+analytics, no content analytics — the analytics catalogue is closed and
+parameter values are pinned.
 
 ## 11. External blockers, unchanged from Day 20
 
