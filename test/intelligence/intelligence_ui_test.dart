@@ -17,6 +17,7 @@ import 'package:action_app/features/extraction/domain/extraction_schema.dart';
 import 'package:action_app/features/intelligence/application/intelligence_context.dart';
 import 'package:action_app/features/intelligence/application/intelligence_providers.dart';
 import 'package:action_app/features/intelligence/domain/ai_request.dart';
+import 'package:action_app/features/intelligence/domain/tool_registry.dart';
 import 'package:action_app/features/intelligence/domain/ai_provider_config.dart';
 import 'package:action_app/features/settings/application/settings_providers.dart';
 import 'package:action_app/features/settings/data/system_settings_launcher.dart';
@@ -741,9 +742,19 @@ void main() {
       expect(all, isNot(contains('never leaves your device')));
     });
 
-    test('says which tools genuinely stay local', () {
+    test('says which tools genuinely stay local, and names all of them', () {
+      // The sentence once counted "two tools"; the registry has four local
+      // tools now. It names them instead of counting, and this holds that
+      // every local tool in the registry is named — a fifth local tool
+      // must be added to the sentence, not silently left out of it.
       final all = privacyDataMapIn(AppL10nEn()).expand((g) => g.lines).join(' ');
-      expect(all, contains('Two tools never send anything'));
+      expect(all, contains('never send anything at all'));
+      expect(all, contains('hiding sensitive details'));
+      expect(all, contains('checking where a file came from'));
+      expect(all, contains('finding credentials'));
+      expect(all, contains('inspecting a link'));
+      expect(ToolRegistry.local.length, 4,
+          reason: 'a new local tool needs a place in the privacy sentence');
     });
   });
 
