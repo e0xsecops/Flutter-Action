@@ -65,7 +65,46 @@ abstract final class PreferenceKeys {
   /// no titles, amounts or dates.
   static const pendingCloudDeletion = 'pending_cloud_deletion_v1';
 
+  /// Whether App Lock is on, and how long Action may be away first.
+  static const appLockEnabled = 'app_lock_enabled_v1';
+  static const appLockDelay = 'app_lock_delay_v1';
+
+  /// Whether Android is asked to block screenshots, screen recording and the
+  /// recent-apps preview.
+  static const screenPrivacyEnabled = 'screen_privacy_enabled_v1';
+
+  /// Whether a reminder shows the Action's title or a generic line.
+  static const privateNotifications = 'private_notifications_v1';
+
+  /// The language tag the user picked, or absent for "follow the system".
+  /// One of the tags in `AppLocales.all`; anything else reads as absent.
+  static const languageTag = 'language_tag_v1';
+
+  /// The writing system the on-device text recogniser is set to read, or
+  /// absent for "follow the app's language". One of the tags in `OcrScript`.
+  static const ocrScript = 'ocr_script_v1';
+
   /// Everything a "delete my data" wipe clears. [pendingCloudDeletion] is
   /// absent on purpose; see above.
+  ///
+  /// The four protection settings are absent on purpose too, and for a
+  /// different reason: they are not data *about* the user, they are how the
+  /// user asked to be protected. Silently switching someone's App Lock off as
+  /// a side effect of clearing their Actions would be a security regression
+  /// performed without asking, and there is nothing private about the fact
+  /// that a lock is on.
+  ///
+  /// [languageTag] is absent for a third reason: clearing it would hand the
+  /// user back an app in a language they may not read, as a side effect of
+  /// deleting their Actions. Appearance recovers itself — someone who wanted
+  /// dark mode can see the switch. Someone whose Bengali just became English
+  /// has to find a settings screen written in English to get it back. There is
+  /// no privacy gain to weigh against that: which language a phone is held in
+  /// is already the device's own setting.
+  ///
+  /// [ocrScript] is absent on the same grounds. It says which writing system
+  /// the recogniser is loaded for — a capability the user configured, not a
+  /// fact about them — and resetting it would leave someone who reads Hindi
+  /// photographing Hindi letters that silently come back empty.
   static const clearedOnDelete = <String>[onboardingCompleted, themeMode];
 }

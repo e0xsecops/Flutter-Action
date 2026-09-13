@@ -1,6 +1,7 @@
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 import '../domain/ocr_result.dart';
+import '../domain/ocr_script.dart';
 import '../domain/text_normalizer.dart';
 
 /// Thrown when recognition could not run at all — a missing file, an
@@ -18,6 +19,46 @@ class OcrFailure implements Exception {
   String toString() => 'OcrFailure($message)';
 }
 
+/// Why a capture could not be read, in the two ways that reach a stored record.
+///
+/// **Why the enum and the sentence both exist.** Both messages end up in
+/// `SourceItem.failureReason`, which is a plain string on disk. It is written
+/// once, at capture time, and a record captured while the phone was in Spanish
+/// must not still be Spanish after the user switches to Arabic — so what gets
+/// stored stays the canonical English, and this maps it back to a case a screen
+/// can ask for in the reader's language.
+///
+/// [forStoredMessage] is what makes that work for rows that already exist: it
+/// recognises the English Action itself wrote, and returns null for anything
+/// else so the caller shows what was stored rather than dropping it.
+enum CaptureReadFailure {
+  /// Recognition could not run at all — a missing file, an unreadable buffer,
+  /// a platform failure. Deliberately not "found no text", which is a
+  /// successful read of a photo of a wall and has its own copy.
+  recognitionDidNotRun('Text recognition could not run.'),
+
+  /// An image format this device's decoder does not handle. The bytes are
+  /// kept, so the capture survives and can still be typed in by hand.
+  imageFormatUnreadable("That image format couldn't be read on this device.");
+
+  const CaptureReadFailure(this.canonicalMessage);
+
+  /// The exact English written to storage. The widget tests assert these
+  /// strings and [forStoredMessage] matches against them, so the two cannot be
+  /// allowed to drift — which is why both call sites read them from here
+  /// rather than repeating a literal.
+  final String canonicalMessage;
+
+  /// The case [stored] came from, or null when Action did not write it.
+  static CaptureReadFailure? forStoredMessage(String? stored) {
+    if (stored == null) return null;
+    for (final failure in values) {
+      if (failure.canonicalMessage == stored) return failure;
+    }
+    return null;
+  }
+}
+
 /// On-device text recognition.
 ///
 /// Behind an interface so tests run against fixed transcripts: ML Kit needs a
@@ -32,15 +73,42 @@ abstract interface class OcrService {
 /// Google ML Kit, running entirely on the device. No network call is made and
 /// no capture leaves the handset during recognition.
 class MlKitOcrService implements OcrService {
-  MlKitOcrService({TextRecognizer? recognizer})
-      : _recognizer =
-            recognizer ?? TextRecognizer(script: TextRecognitionScript.latin);
+  MlKitOcrService({
+    this.script = OcrScript.latin,
+    TextRecognizer? recognizer,
+  }) : _recognizer = recognizer ?? TextRecognizer(script: _mlKit(script));
+
+  /// The writing system this instance was built to read.
+  ///
+  /// One recogniser per instance rather than one per call: constructing a
+  /// `TextRecognizer` loads a model, and doing that on every capture would put
+  /// the load on the path the user is waiting on. The provider rebuilds the
+  /// service when the preference changes, which moves the cost to the moment
+  /// the user changes the setting.
+  final OcrScript script;
 
   final TextRecognizer _recognizer;
 
-  /// Recorded on every result so that changing recogniser or script later is
-  /// visible in the stored data instead of silently shifting output.
-  static const engineName = 'mlkit_text_v2_latin';
+  /// The plugin's enum, which misspells Devanagari. Mapped here rather than
+  /// adopting the typo into the domain.
+  static TextRecognitionScript _mlKit(OcrScript script) => switch (script) {
+        OcrScript.latin => TextRecognitionScript.latin,
+        OcrScript.chinese => TextRecognitionScript.chinese,
+        OcrScript.devanagari => TextRecognitionScript.devanagiri,
+        OcrScript.japanese => TextRecognitionScript.japanese,
+        OcrScript.korean => TextRecognitionScript.korean,
+      };
+
+  /// Recorded on every result so that a capture read with one model is
+  /// distinguishable later from one read with another — which matters because
+  /// the two can legitimately disagree about the same image, and a stored
+  /// transcript with no record of what produced it cannot be re-examined.
+  ///
+  /// Latin yields `mlkit_text_v2_latin`, which is deliberately the exact
+  /// string every capture stored before scripts were selectable already
+  /// carries: those rows stay correct rather than becoming unattributed.
+  static String engineNameFor(OcrScript script) =>
+      'mlkit_text_v2_${script.engineSuffix}';
 
   @override
   Future<OcrOutcome> recognize(String imagePath) async {
@@ -52,7 +120,10 @@ class MlKitOcrService implements OcrService {
         InputImage.fromFilePath(imagePath),
       );
     } on Object catch (error) {
-      throw OcrFailure('Text recognition could not run.', cause: error);
+      throw OcrFailure(
+        CaptureReadFailure.recognitionDidNotRun.canonicalMessage,
+        cause: error,
+      );
     }
 
     final lines = <OcrLine>[];
@@ -81,7 +152,7 @@ class MlKitOcrService implements OcrService {
       rawText: recognized.text,
       normalizedText: normalizeOcrText(recognized.text),
       lines: lines,
-      engine: engineName,
+      engine: engineNameFor(script),
       processedAt: startedAt,
       durationMs: DateTime.now().difference(startedAt).inMilliseconds,
     );

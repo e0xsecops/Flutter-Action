@@ -83,6 +83,10 @@ class ExtractionInput {
   EvidenceSourceKind get evidenceSourceKind => switch (sourceType) {
         SourceType.pastedText => EvidenceSourceKind.pastedText,
         SourceType.photo || SourceType.gallery => EvidenceSourceKind.ocrText,
+        // A document's text is read by the provider, not on this device, so
+        // there is no local copy for an offset to point into. `unknown` is the
+        // honest kind: evidence for a document is a quote and nothing more.
+        SourceType.document => EvidenceSourceKind.unknown,
       };
 
   /// Builds the extraction view of a capture.

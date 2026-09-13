@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:action_app/features/capture/data/image_format.dart';
+import 'package:action_app/features/capture/data/image_metadata.dart';
 import 'package:action_app/features/capture/data/image_normalizer.dart';
 import 'package:action_app/features/capture/data/source_file_store.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -245,11 +246,24 @@ void main() {
       final upright = img.Image(width: 500, height: 400);
       img.fill(upright, color: img.ColorRgb8(210, 210, 210));
       upright.exif.imageIfd.orientation = 1;
-      final source = img.encodeJpg(upright, quality: 90);
+      final source = Uint8List.fromList(img.encodeJpg(upright, quality: 90));
 
       final result = normalizeImageSync(NormalizeRequest(bytes: source));
 
-      expect(result.bytes, equals(source), reason: 'nothing needed doing');
+      // This used to assert byte-identity with the source. It cannot any
+      // more, because metadata is now stripped from every capture — this
+      // fixture has an EXIF segment and that segment is gone. The property
+      // the test was written to protect is untouched and is what is asserted
+      // instead: the pixels were not re-encoded. Comparing against the
+      // stripped source proves exactly that, since the strip only removes
+      // container segments and never touches the compressed scan.
+      expect(
+        result.bytes,
+        equals(stripImageMetadata(source).bytes),
+        reason: 'nothing needed doing beyond removing the metadata',
+      );
+      expect(result.wasResized, isFalse);
+      expect(result.metadataBytesRemoved, greaterThan(0));
     });
 
     test('is deterministic - the same input gives byte-identical output', () {

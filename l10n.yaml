@@ -1,0 +1,17 @@
+# Localization configuration.
+#
+# `output-dir` is a real directory under lib/ rather than the synthetic
+# package: the generated class is imported by ~50 files, and a synthetic
+# import that only exists after a build step makes the analyzer disagree with
+# the compiler on a clean checkout. Generated output is committed for the same
+# reason the Drift output is.
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-dir: lib/l10n/gen
+output-localization-file: app_l10n.dart
+output-class: AppL10n
+# A missing key falls back to English rather than returning null, so a locale
+# that is mid-translation renders English for that string instead of blank.
+nullable-getter: false
+# Written on every generation; the localization completeness test reads it.
+untranslated-messages-file: lib/l10n/untranslated.json

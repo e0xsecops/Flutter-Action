@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/router.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../../l10n/gen/app_l10n.dart';
 import '../application/onboarding_controller.dart';
 import 'onboarding_art.dart';
 import '../../../core/analytics/app_analytics.dart';
@@ -37,10 +38,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     super.dispose();
   }
 
-  bool get _isLast => _page == _pages.length - 1;
+  bool get _isLast => _page == _pageCount - 1;
 
   void _goTo(int page, {required bool animate}) {
-    if (page < 0 || page >= _pages.length) return;
+    if (page < 0 || page >= _pageCount) return;
     if (animate) {
       _pageController.animateToPage(
         page,
@@ -72,6 +73,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
+    // Rebuilt with the bundle rather than held as a constant, so a language
+    // change while the flow is open changes the words under the reader.
+    final pages = _pagesFor(l10n);
     // Respect the platform's reduced-motion setting: paging still works and
     // still changes the screen, it just stops sliding.
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
@@ -90,7 +95,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             children: [
               _TopBar(
                 page: _page,
-                total: _pages.length,
+                total: pages.length,
                 // Skip appears only once the user has seen what the product
                 // is — offering it on screen one is offering to leave before
                 // anything has been said — and disappears again on the last,
@@ -101,9 +106,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               Expanded(
                 child: PageView.builder(
                   controller: _pageController,
-                  itemCount: _pages.length,
+                  itemCount: pages.length,
                   onPageChanged: (i) => setState(() => _page = i),
-                  itemBuilder: (context, i) => _PageView(page: _pages[i]),
+                  itemBuilder: (context, i) => _PageView(page: pages[i]),
                 ),
               ),
               Padding(
@@ -117,7 +122,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   onPressed: _isLast
                       ? _finish
                       : () => _goTo(_page + 1, animate: !reduceMotion),
-                  child: Text(_isLast ? 'Start using Action' : 'Continue'),
+                  child: Text(
+                    _isLast ? l10n.onboardingStart : l10n.commonContinue,
+                  ),
                 ),
               ),
             ],
@@ -141,8 +148,10 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Space.page, Space.md, Space.sm, 0),
+      padding:
+          const EdgeInsetsDirectional.fromSTEB(Space.page, Space.md, Space.sm, 0),
       child: Row(
         children: [
           _Progress(page: page, total: total),
@@ -153,7 +162,7 @@ class _TopBar extends StatelessWidget {
             height: 48,
             child: onSkip == null
                 ? null
-                : TextButton(onPressed: onSkip, child: const Text('Skip')),
+                : TextButton(onPressed: onSkip, child: Text(l10n.commonSkip)),
           ),
         ],
       ),
@@ -172,8 +181,9 @@ class _Progress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final l10n = AppL10n.of(context);
     return Semantics(
-      label: 'Step ${page + 1} of $total',
+      label: l10n.onboardingProgressSemantics(page + 1, total),
       liveRegion: true,
       child: ExcludeSemantics(
         child: Row(
@@ -186,7 +196,7 @@ class _Progress extends StatelessWidget {
                     ? Duration.zero
                     : Motion.base,
                 curve: Motion.standard,
-                margin: const EdgeInsets.only(right: Space.xs),
+                margin: const EdgeInsetsDirectional.only(end: Space.xs),
                 height: 4,
                 width: i == page ? 24 : 12,
                 decoration: BoxDecoration(
@@ -333,7 +343,14 @@ class _OnboardingPage {
   final List<String> points;
 }
 
-/// The words themselves.
+/// How many screens there are.
+///
+/// Held separately from the copy because the flow's shape is not a property
+/// of any language: paging, bounds and the progress bars all need the count
+/// before there is a bundle to build the words from.
+const _pageCount = 4;
+
+/// The words themselves, in the reader's language.
 ///
 /// Screen four is the one that matters most and the one most easily got
 /// wrong. Every claim on it was checked against `cloudPayloadFor`, the
@@ -341,44 +358,45 @@ class _OnboardingPage {
 /// written. It does not say "everything stays on your device", because that
 /// is not true the moment a document is sent to be read; and it does not say
 /// "backup", because nothing here can restore anything.
-const _pages = <_OnboardingPage>[
-  _OnboardingPage(
-    title: 'Turn information into action',
-    body:
-        'Add a screenshot, a photo or text you have been sent. Action reads '
-        'it and works out what it is asking you to do.',
-    art: CaptureToActionArt(),
-  ),
-  _OnboardingPage(
-    title: 'Nothing is saved until you confirm it',
-    body:
-        'Action shows you what it found and the words it came from. You fix '
-        'anything that is wrong. Until you confirm, it is a suggestion — not '
-        'a fact, and not an Action.',
-    art: ReviewArt(),
-  ),
-  _OnboardingPage(
-    title: 'Stay on top of what matters',
-    body:
-        'Needs Attention brings forward what is overdue or close. Every '
-        'Action keeps its next step, its progress and any reminder you set '
-        'for it.',
-    art: TrackingArt(),
-  ),
-  _OnboardingPage(
-    title: 'Where your information lives',
-    body: 'Worth knowing before you start:',
-    art: PrivacyArt(),
-    points: [
-      'Your Actions, captures, reminders and searches are stored on this '
-          'device. Search and reminders work without a connection.',
-      'When you ask Action to read something, that content is sent to the AI '
-          'service that interprets it.',
-      'A short record of a confirmed Action — its title, dates, amount and '
-          'suggested step — may be saved to the cloud under an anonymous ID '
-          'for this device. Your captures, steps and reminders are not.',
-      'That record is not a backup. It cannot restore anything to a new '
-          'device.',
-    ],
-  ),
-];
+///
+/// Each of those claims is a SAFETY-annotated key in the ARB, and the
+/// annotation is what carries the reasoning above into the other nineteen
+/// languages — a translator who shortens "not a fact, and not an Action" or
+/// helpfully adds "everything stays on your device" would undo all of it.
+List<_OnboardingPage> _pagesFor(AppL10n l10n) {
+  final pages = <_OnboardingPage>[
+    _OnboardingPage(
+      title: l10n.onboardingCaptureTitle,
+      body: l10n.onboardingCaptureBody,
+      art: const CaptureToActionArt(),
+    ),
+    _OnboardingPage(
+      title: l10n.onboardingReviewTitle,
+      body: l10n.onboardingReviewBody,
+      art: const ReviewArt(),
+    ),
+    _OnboardingPage(
+      title: l10n.onboardingTrackingTitle,
+      body: l10n.onboardingTrackingBody,
+      art: const TrackingArt(),
+    ),
+    _OnboardingPage(
+      // The same sentence as the Settings row that leads to the full privacy
+      // screen, deliberately: this page is the short version of that one.
+      title: l10n.settingsWhereInfoLives,
+      body: l10n.onboardingPrivacyBody,
+      art: const PrivacyArt(),
+      points: [
+        l10n.onboardingPrivacyOnDevice,
+        l10n.onboardingPrivacySentToRead,
+        l10n.onboardingPrivacyCloud,
+        l10n.onboardingPrivacyNotBackup,
+      ],
+    ),
+  ];
+  assert(
+    pages.length == _pageCount,
+    'The copy and the page count have drifted apart.',
+  );
+  return pages;
+}

@@ -6,18 +6,28 @@ import '../../../app/router.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../application/capture_controller.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 /// Paste-and-analyse. The editor is the whole screen: no card, no border, no
 /// competing affordances, because the only thing to do here is put text in.
 class PasteTextScreen extends ConsumerStatefulWidget {
-  const PasteTextScreen({super.key});
+  const PasteTextScreen({super.key, this.initialText});
+
+  /// Text handed in from elsewhere — a share from another app.
+  ///
+  /// It arrives in the field rather than being turned straight into a capture,
+  /// so the user sees what Action received and can edit or abandon it. A share
+  /// is someone else's decision until the person holding the phone agrees
+  /// with it.
+
+  final String? initialText;
 
   @override
   ConsumerState<PasteTextScreen> createState() => _PasteTextScreenState();
 }
 
 class _PasteTextScreenState extends ConsumerState<PasteTextScreen> {
-  final _controller = TextEditingController();
+  late final _controller = TextEditingController(text: widget.initialText);
   final _focus = FocusNode();
   bool _busy = false;
 
@@ -59,19 +69,20 @@ class _PasteTextScreenState extends ConsumerState<PasteTextScreen> {
       if (!mounted) return;
       setState(() => _busy = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Couldn't save that. Try again.")),
+        SnackBar(content: Text(AppL10n.of(context).previewSaveFailed)),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Paste text'),
+        title: Text(l10n.pasteTitle),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: _busy ? null : () => context.pop(),
@@ -98,9 +109,7 @@ class _PasteTextScreenState extends ConsumerState<PasteTextScreen> {
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
-                  hintText:
-                      'Paste the email, message, or notice you would rather not '
-                      'read through.',
+                  hintText: l10n.pasteHint,
                   hintStyle: text.bodyLarge?.copyWith(color: colors.textTertiary),
                 ),
               ),
@@ -120,10 +129,10 @@ class _PasteTextScreenState extends ConsumerState<PasteTextScreen> {
                 children: [
                   Text(
                     _length == 0
-                        ? 'Anything with a date, an amount, or a request works well.'
+                        ? l10n.pasteFootnote
                         : _canAnalyse
-                            ? 'Looks like enough to work with.'
-                            : 'A little more text will give a better result.',
+                            ? l10n.pasteEnough
+                            : l10n.pasteMore,
                     style: text.bodySmall?.copyWith(
                       color: _canAnalyse ? colors.success : colors.textTertiary,
                     ),
@@ -137,7 +146,7 @@ class _PasteTextScreenState extends ConsumerState<PasteTextScreen> {
                             height: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Continue'),
+                        : Text(l10n.commonContinue),
                   ),
                 ],
               ),

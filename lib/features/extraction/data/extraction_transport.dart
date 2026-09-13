@@ -66,10 +66,27 @@ enum ProviderFailureKind {
   const ProviderFailureKind(this.userMessage);
 
   /// Plain language. Shown to a person, so no status codes and no stack traces.
+  ///
+  /// Canonical English. It reaches the screen as a bare `String` — through
+  /// `Err(message)` and then `ExtractionFailed.message` — which is exactly why
+  /// it cannot be translated on the way: by the time `ErrorView` renders it,
+  /// the kind is gone. The translated sentence is
+  /// `ProviderFailureKindL10n.userMessageIn(l10n)` in
+  /// `lib/l10n/enum_labels.dart`, and reaching it requires the *kind* to
+  /// survive as far as the widget — see the note on
+  /// [ProviderTransportException].
   final String userMessage;
 }
 
 /// Thrown by an [ExtractionTransport] when no response could be obtained.
+///
+/// [kind] is the only thing that can carry a translatable failure to the
+/// screen. `FirebaseAiExtractionService` catches this and returns
+/// `Err(error.kind.userMessage, cause: error)`, so the exception itself does
+/// arrive at the review screen as `ExtractionFailed.cause` — a presentation
+/// layer that switches on `cause is ProviderTransportException` can call
+/// `kind.userMessageIn(l10n)` and fall back to the English `message` for the
+/// non-transport failures.
 class ProviderTransportException implements Exception {
   const ProviderTransportException(this.kind, {this.detail});
 

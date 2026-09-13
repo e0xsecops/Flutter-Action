@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
@@ -16,12 +17,18 @@ class HelpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     return SettingsPage(
-      title: 'Help',
+      title: l10n.helpTitle,
       slivers: [
-        SliverList.builder(
-          itemCount: helpEntries.length,
-          itemBuilder: (context, i) => _Entry(entry: helpEntries[i]),
+        Builder(
+          builder: (context) {
+            final entries = helpEntriesIn(AppL10n.of(context));
+            return SliverList.builder(
+              itemCount: entries.length,
+              itemBuilder: (context, i) => _Entry(entry: entries[i]),
+            );
+          },
         ),
       ],
     );
@@ -64,52 +71,16 @@ class _Entry extends StatelessWidget {
 /// only ever assert about the top of it. Copy this product must not contain —
 /// an invented support address, a promise of guaranteed delivery — has to be
 /// checked across every word, not just the visible ones.
-const helpEntries = <({String question, String answer})>[
-  (
-    question: 'What can I add?',
-    answer: 'A screenshot, a photo of a letter or bill, or text you paste in. '
-        'Anything with a date, an amount or a request works best.',
-  ),
-  (
-    question: 'Why does Action ask me to review?',
-    answer: 'Because a machine reading a document can misread it, and a '
-        'deadline that is quietly wrong is worse than no deadline at all. '
-        'Action shows what it found and the words it came from, and nothing '
-        'is saved until you confirm it.',
-  ),
-  (
-    question: 'Why do the results change if I try again?',
-    answer: 'The service that reads your document is not deterministic, so '
-        'the same capture can come back slightly differently. That is also '
-        'why the review step exists — you are the part that does not change.',
-  ),
-  (
-    question: 'Why was my reminder late?',
-    answer: 'Reminders are scheduled with Android, and Android decides '
-        'exactly when to deliver them. Battery saving, Doze and '
-        'manufacturer power settings can all delay one. Action never '
-        'promises a reminder to the minute.',
-  ),
-  (
-    question: 'Where is my data?',
-    answer: 'Almost all of it is on this device: your captures, Actions, '
-        'steps, reminders and searches. Two exceptions — the content you ask '
-        'Action to read is sent to the AI service that reads it, and a short '
-        'record of a confirmed Action may be stored in the cloud under an '
-        'anonymous ID. Privacy & data in Settings lists exactly what that '
-        'record contains.',
-  ),
-  (
-    question: 'Is this a backup?',
-    answer: 'No. The cloud record cannot be restored to a new device, and '
-        'there is no account to sign in to. If you uninstall Action or lose '
-        'this device, the data on it is gone.',
-  ),
-  (
-    question: 'How do I correct an Action?',
-    answer: 'Open it and edit any field — the title, the deadline, the '
-        'amount or the suggested next step. You can add, reorder, complete '
-        'and delete steps at any time. Editing an Action never asks the AI '
-        'service anything.',
-  ),
-];
+///
+/// A function of the bundle rather than a `const`, because the answers are
+/// now translated. The list is still one object a test can read end to end,
+/// in whichever language it asks for.
+List<({String question, String answer})> helpEntriesIn(AppL10n l10n) => [
+      (question: l10n.helpAddQuestion, answer: l10n.helpAddAnswer),
+      (question: l10n.helpReviewQuestion, answer: l10n.helpReviewAnswer),
+      (question: l10n.helpVaryQuestion, answer: l10n.helpVaryAnswer),
+      (question: l10n.helpLateQuestion, answer: l10n.helpLateAnswer),
+      (question: l10n.helpDataQuestion, answer: l10n.helpDataAnswer),
+      (question: l10n.helpBackupQuestion, answer: l10n.helpBackupAnswer),
+      (question: l10n.helpCorrectQuestion, answer: l10n.helpCorrectAnswer),
+    ];

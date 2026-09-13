@@ -1,5 +1,6 @@
 import 'package:action_app/design/app_theme.dart';
 import 'package:action_app/features/actions/application/action_providers.dart';
+import 'package:action_app/l10n/gen/app_l10n.dart';
 import 'package:action_app/features/actions/data/action_cloud_mirror.dart';
 import 'package:action_app/features/actions/data/actions_database.dart';
 import 'package:action_app/features/actions/data/auth_identity_service.dart';
@@ -60,7 +61,14 @@ Future<void> pumpSearch(
     initialLocation: '/search',
     routes: [
       GoRoute(path: '/', builder: (_, _) => const Scaffold(body: Text('home'))),
-      GoRoute(path: '/search', builder: (_, _) => const SearchScreen()),
+      GoRoute(
+        path: '/search',
+        // Search no longer carries its own Scaffold - the app shell owns it,
+        // along with the ambient background and the navigation bar. The
+        // harness supplies the same thing so the screen is mounted the way
+        // production mounts it.
+        builder: (_, _) => const Scaffold(body: SearchScreen()),
+      ),
       GoRoute(
         path: '/action/:id',
         builder: (_, state) =>
@@ -85,6 +93,8 @@ Future<void> pumpSearch(
         notificationSchedulerProvider.overrideWithValue(_scheduler),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: AppL10n.localizationsDelegates,
+        supportedLocales: AppL10n.supportedLocales,
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),
         themeMode: themeMode,
@@ -131,7 +141,7 @@ void main() {
       (tester) async {
     await pumpSearch(tester);
 
-    expect(find.text('Search your actions and captures'), findsOneWidget);
+    expect(find.text('YOU CAN SEARCH'), findsOneWidget);
     expect(find.textContaining('Nothing you type here leaves it'),
         findsOneWidget);
     // Autofocus: arriving here is already the intent.
@@ -244,7 +254,7 @@ void main() {
     await tester.tap(find.byTooltip('Clear'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Search your actions and captures'), findsOneWidget);
+    expect(find.text('YOU CAN SEARCH'), findsOneWidget);
     expect(find.text('Northgate Water invoice'), findsNothing);
   });
 
@@ -394,12 +404,15 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  searchTest('back returns to where you came from', (tester) async {
+  searchTest('offers no back control, because it is a destination',
+      (tester) async {
     await pumpSearch(tester);
 
-    await tester.tap(find.byTooltip('Back'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('home'), findsOneWidget);
+    // V2 made Search one of the shell's four destinations rather than a screen
+    // pushed from Home. There is nothing to pop, so a back arrow would either
+    // do nothing or eject the user from a tab they deliberately chose; leaving
+    // is the navigation bar's job. Asserted so nobody re-adds a dead arrow.
+    expect(find.byTooltip('Back'), findsNothing);
+    expect(find.byIcon(Icons.arrow_back), findsNothing);
   });
 }

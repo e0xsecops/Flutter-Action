@@ -12,6 +12,7 @@ import 'package:action_app/features/capture/application/capture_controller.dart'
 import 'package:action_app/features/capture/data/source_store.dart';
 import 'package:action_app/features/capture/domain/source_item.dart';
 import 'package:action_app/features/extraction/domain/extraction_schema.dart';
+import 'package:action_app/l10n/gen/app_l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -88,7 +89,10 @@ Future<void> pumpDetail(
   final router = GoRouter(
     initialLocation: '/action/$id',
     routes: [
-      GoRoute(path: '/', builder: (_, _) => const Scaffold(body: Text('home'))),
+      GoRoute(
+        path: '/',
+        builder: (_, _) => const Scaffold(body: Text('home')),
+      ),
       GoRoute(
         path: '/action/:id',
         builder: (_, state) =>
@@ -106,13 +110,19 @@ Future<void> pumpDetail(
       overrides: [
         actionsDatabaseProvider.overrideWithValue(_db),
         authIdentityServiceProvider.overrideWithValue(const _NoIdentity()),
-        actionCloudMirrorProvider.overrideWithValue(const NoopActionCloudMirror()),
-        sourceStoreProvider.overrideWith((ref) async => _MemSourceStore(sources)),
+        actionCloudMirrorProvider.overrideWithValue(
+          const NoopActionCloudMirror(),
+        ),
+        sourceStoreProvider.overrideWith(
+          (ref) async => _MemSourceStore(sources),
+        ),
         appClockProvider.overrideWithValue(() => testNow),
         // No widget test ever reaches an Android notification API.
         notificationSchedulerProvider.overrideWithValue(_scheduler),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: AppL10n.localizationsDelegates,
+        supportedLocales: AppL10n.supportedLocales,
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),
         themeMode: themeMode,
@@ -124,11 +134,7 @@ Future<void> pumpDetail(
 }
 
 /// Opens a step's overflow menu and taps one of its entries.
-Future<void> tapStepMenu(
-  WidgetTester tester,
-  int index,
-  String entry,
-) async {
+Future<void> tapStepMenu(WidgetTester tester, int index, String entry) async {
   await tester.tap(find.byTooltip('Step options').at(index));
   await tester.pumpAndSettle();
   await tester.tap(find.text(entry).last);
@@ -157,15 +163,18 @@ void main() {
 
   // ------------------------------------------------------------- the page --
 
-  detailTest('shows what to do, when it matters, and where it came from',
-      (tester) async {
-    await seed(sampleAction(
-      'a1',
-      title: 'Pay the Riverford Energy bill',
-      dueAt: ActionDue(DateTime(2026, 8, 30)),
-      amount: gbp('96.40'),
-      steps: [sampleStep('s1', title: 'Read the bill')],
-    ));
+  detailTest('shows what to do, when it matters, and where it came from', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        title: 'Pay the Riverford Energy bill',
+        dueAt: ActionDue(DateTime(2026, 8, 30)),
+        amount: gbp('96.40'),
+        steps: [sampleStep('s1', title: 'Read the bill')],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     expect(find.text('Pay the Riverford Energy bill'), findsOneWidget);
@@ -175,16 +184,18 @@ void main() {
     expect(find.text('96.40 GBP'), findsOneWidget);
   });
 
-  detailTest('an unknown id gets a real not-found state, not a bounce home',
-      (tester) async {
+  detailTest('an unknown id gets a real not-found state, not a bounce home', (
+    tester,
+  ) async {
     await pumpDetail(tester, id: 'does-not-exist');
 
     expect(find.text('That action is no longer here'), findsOneWidget);
     expect(find.text('home'), findsNothing);
   });
 
-  detailTest('a deep link to a stored Action resolves after a cold start',
-      (tester) async {
+  detailTest('a deep link to a stored Action resolves after a cold start', (
+    tester,
+  ) async {
     // Nothing navigated here: the route was entered directly by id.
     await seed(sampleAction('deep-1', title: 'Renew the passport'));
     await pumpDetail(tester, id: 'deep-1');
@@ -194,12 +205,15 @@ void main() {
 
   // ------------------------------------------------- next best action --
 
-  detailTest('with no steps, the reviewed suggestion is the next move',
-      (tester) async {
-    await seed(sampleAction('a1').withEdits(
-      updatedAt: testNow,
-      recommendedNextStep: 'Call the billing team',
-    ));
+  detailTest('with no steps, the reviewed suggestion is the next move', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction('a1').withEdits(
+        updatedAt: testNow,
+        recommendedNextStep: 'Call the billing team',
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     expect(find.text('NEXT'), findsOneWidget);
@@ -209,11 +223,16 @@ void main() {
   });
 
   detailTest('the first outstanding step is the one offered', (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('s1', title: 'Already done', order: 0, isCompleted: true),
-      sampleStep('s2', title: 'Do this next', order: 1),
-      sampleStep('s3', title: 'Then this', order: 2),
-    ]));
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('s1', title: 'Already done', order: 0, isCompleted: true),
+          sampleStep('s2', title: 'Do this next', order: 1),
+          sampleStep('s3', title: 'Then this', order: 2),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     // Once in the NEXT block, once in the chain.
@@ -221,12 +240,18 @@ void main() {
     expect(find.text('Mark step done'), findsOneWidget);
   });
 
-  detailTest('marking the offered step done advances to the following one',
-      (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('s1', title: 'First', order: 0),
-      sampleStep('s2', title: 'Second', order: 1),
-    ]));
+  detailTest('marking the offered step done advances to the following one', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('s1', title: 'First', order: 0),
+          sampleStep('s2', title: 'Second', order: 1),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     await tester.tap(find.text('Mark step done'));
@@ -248,13 +273,19 @@ void main() {
     expect(find.textContaining('of 0 done'), findsNothing);
   });
 
-  detailTest('progress counts what is done against the whole chain',
-      (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('s1', order: 0, isCompleted: true),
-      sampleStep('s2', order: 1),
-      sampleStep('s3', order: 2),
-    ]));
+  detailTest('progress counts what is done against the whole chain', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('s1', order: 0, isCompleted: true),
+          sampleStep('s2', order: 1),
+          sampleStep('s3', order: 2),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     expect(find.text('1 of 3 done'), findsOneWidget);
@@ -291,11 +322,17 @@ void main() {
     expect(button.onPressed, isNull, reason: 'an invisible step is not a step');
   });
 
-  detailTest('a step can be renamed without losing its identity',
-      (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('s1', title: 'Old name', order: 0, isCompleted: true),
-    ]));
+  detailTest('a step can be renamed without losing its identity', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('s1', title: 'Old name', order: 0, isCompleted: true),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     await tapStepMenu(tester, 0, 'Edit step');
@@ -310,8 +347,9 @@ void main() {
     expect(step.isCompleted, isTrue, reason: 'a rename is not a reset');
   });
 
-  detailTest('tapping a step checks it, and tapping again reopens it',
-      (tester) async {
+  detailTest('tapping a step checks it, and tapping again reopens it', (
+    tester,
+  ) async {
     await seed(sampleAction('a1', steps: [sampleStep('s1', title: 'Do it')]));
     await pumpDetail(tester, id: 'a1');
 
@@ -326,8 +364,9 @@ void main() {
     expect(step.completedAt, isNull);
   });
 
-  detailTest('deleting a step asks first, and keeps it if declined',
-      (tester) async {
+  detailTest('deleting a step asks first, and keeps it if declined', (
+    tester,
+  ) async {
     await seed(sampleAction('a1', steps: [sampleStep('s1', title: 'Keep me')]));
     await pumpDetail(tester, id: 'a1');
 
@@ -340,10 +379,15 @@ void main() {
   });
 
   detailTest('a confirmed delete removes the step', (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('s1', title: 'Goes', order: 0),
-      sampleStep('s2', title: 'Stays', order: 1),
-    ]));
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('s1', title: 'Goes', order: 0),
+          sampleStep('s2', title: 'Stays', order: 1),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     await tapStepMenu(tester, 0, 'Delete step');
@@ -353,32 +397,47 @@ void main() {
     expect((await _repo.getById('a1'))!.steps.map((s) => s.title), ['Stays']);
   });
 
-  detailTest('a step can be moved up, and the new order is what persists',
-      (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('A', title: 'A', order: 0),
-      sampleStep('B', title: 'B', order: 1),
-      sampleStep('C', title: 'C', order: 2),
-    ]));
+  detailTest('a step can be moved up, and the new order is what persists', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('A', title: 'A', order: 0),
+          sampleStep('B', title: 'B', order: 1),
+          sampleStep('C', title: 'C', order: 2),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     await tapStepMenu(tester, 2, 'Move up');
 
-    expect((await _repo.getById('a1'))!.steps.map((s) => s.id),
-        ['A', 'C', 'B']);
+    expect((await _repo.getById('a1'))!.steps.map((s) => s.id), [
+      'A',
+      'C',
+      'B',
+    ]);
   });
 
-  detailTest('a step can be dragged to a new position by its handle',
-      (tester) async {
+  detailTest('a step can be dragged to a new position by its handle', (
+    tester,
+  ) async {
     // Dragging lifts the row into an Overlay, which is OUTSIDE the Scaffold's
     // Material. A row containing ink (the checkbox) therefore needs the list
     // to decorate its drag proxy, or the gesture throws instead of moving
     // anything. Only a real drag exercises that path.
-    await seed(sampleAction('a1', steps: [
-      sampleStep('A', title: 'Step A', order: 0),
-      sampleStep('B', title: 'Step B', order: 1),
-      sampleStep('C', title: 'Step C', order: 2),
-    ]));
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('A', title: 'Step A', order: 0),
+          sampleStep('B', title: 'Step B', order: 1),
+          sampleStep('C', title: 'Step C', order: 2),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     final handles = find.byIcon(Icons.drag_handle);
@@ -395,19 +454,31 @@ void main() {
     await gesture.up();
     await tester.pumpAndSettle();
 
-    expect(tester.takeException(), isNull,
-        reason: 'the drag must not throw while the row is in the overlay');
-    expect((await _repo.getById('a1'))!.steps.map((s) => s.id),
-        ['C', 'A', 'B']);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'the drag must not throw while the row is in the overlay',
+    );
+    expect((await _repo.getById('a1'))!.steps.map((s) => s.id), [
+      'C',
+      'A',
+      'B',
+    ]);
   });
 
-  detailTest('a completion travels with its step across a drag',
-      (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('A', title: 'Step A', order: 0),
-      sampleStep('B', title: 'Step B', order: 1, isCompleted: true),
-      sampleStep('C', title: 'Step C', order: 2),
-    ]));
+  detailTest('a completion travels with its step across a drag', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('A', title: 'Step A', order: 0),
+          sampleStep('B', title: 'Step B', order: 1, isCompleted: true),
+          sampleStep('C', title: 'Step C', order: 2),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     final handles = find.byIcon(Icons.drag_handle);
@@ -424,16 +495,25 @@ void main() {
 
     final steps = (await _repo.getById('a1'))!.steps;
     expect(steps.map((s) => s.id), ['C', 'A', 'B']);
-    expect(steps.singleWhere((s) => s.isCompleted).id, 'B',
-        reason: 'completion belongs to the step, not to the position');
+    expect(
+      steps.singleWhere((s) => s.isCompleted).id,
+      'B',
+      reason: 'completion belongs to the step, not to the position',
+    );
   });
 
-  detailTest('the first step offers no Move up, the last no Move down',
-      (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('A', title: 'A', order: 0),
-      sampleStep('B', title: 'B', order: 1),
-    ]));
+  detailTest('the first step offers no Move up, the last no Move down', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [
+          sampleStep('A', title: 'A', order: 0),
+          sampleStep('B', title: 'B', order: 1),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     await tester.tap(find.byTooltip('Step options').first);
@@ -444,26 +524,34 @@ void main() {
 
   // -------------------------------------------------------- completion --
 
-  detailTest('checking every step does NOT quietly complete the Action',
-      (tester) async {
+  detailTest('checking every step does NOT quietly complete the Action', (
+    tester,
+  ) async {
     await seed(sampleAction('a1', steps: [sampleStep('s1', title: 'Only')]));
     await pumpDetail(tester, id: 'a1');
 
     await tester.tap(find.text('Mark step done'));
     await tester.pumpAndSettle();
 
-    expect((await _repo.getById('a1'))!.status, ActionStatus.active,
-        reason: 'finishing is the user\'s decision');
+    expect(
+      (await _repo.getById('a1'))!.status,
+      ActionStatus.active,
+      reason: 'finishing is the user\'s decision',
+    );
     // It offers, rather than decides.
     expect(find.text('ALL STEPS DONE'), findsOneWidget);
     expect(find.text('Complete this action'), findsOneWidget);
   });
 
-  detailTest('the offer to finish completes it only when accepted',
-      (tester) async {
-    await seed(sampleAction('a1', steps: [
-      sampleStep('s1', title: 'Only', isCompleted: true),
-    ]));
+  detailTest('the offer to finish completes it only when accepted', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        steps: [sampleStep('s1', title: 'Only', isCompleted: true)],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     await tester.tap(find.text('Complete this action'));
@@ -472,14 +560,17 @@ void main() {
     expect((await _repo.getById('a1'))!.status, ActionStatus.completed);
   });
 
-  detailTest('a completed Action reads calmly and can be reopened',
-      (tester) async {
-    await seed(sampleAction(
-      'a1',
-      status: ActionStatus.completed,
-      completedAt: testNow,
-      steps: [sampleStep('s1', title: 'Was done', isCompleted: true)],
-    ));
+  detailTest('a completed Action reads calmly and can be reopened', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        status: ActionStatus.completed,
+        completedAt: testNow,
+        steps: [sampleStep('s1', title: 'Was done', isCompleted: true)],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     expect(find.textContaining('Completed'), findsWidgets);
@@ -492,12 +583,16 @@ void main() {
     final action = (await _repo.getById('a1'))!;
     expect(action.status, ActionStatus.active);
     expect(action.completedAt, isNull);
-    expect(action.steps.single.isCompleted, isTrue,
-        reason: 'reopening does not un-do work already done');
+    expect(
+      action.steps.single.isCompleted,
+      isTrue,
+      reason: 'reopening does not un-do work already done',
+    );
   });
 
-  detailTest('the whole Action can be completed from the bottom bar',
-      (tester) async {
+  detailTest('the whole Action can be completed from the bottom bar', (
+    tester,
+  ) async {
     await seed(sampleAction('a1'));
     await pumpDetail(tester, id: 'a1');
 
@@ -539,8 +634,9 @@ void main() {
     expect(due.isDateOnly, isTrue);
   });
 
-  detailTest('an impossible date is refused rather than rolled forward',
-      (tester) async {
+  detailTest('an impossible date is refused rather than rolled forward', (
+    tester,
+  ) async {
     await seed(sampleAction('a1'));
     await pumpDetail(tester, id: 'a1');
 
@@ -551,13 +647,23 @@ void main() {
     await tester.tap(find.text('Use this date'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('not a real date'), findsOneWidget);
-    expect((await _repo.getById('a1'))!.dueAt, isNull,
-        reason: 'February 30th must not become March 2nd');
+    // The deadline editor and the extraction review screen now share one
+    // sentence for a date that is not a date (reviewBadDate), rather than
+    // wording the same refusal twice. Matched case-insensitively so the
+    // assertion is about the refusal rather than about where the sentence
+    // happens to start.
+    expect(
+      find.textContaining(RegExp('not a real date', caseSensitive: false)),
+      findsOneWidget,
+    );
+    expect(
+      (await _repo.getById('a1'))!.dueAt,
+      isNull,
+      reason: 'February 30th must not become March 2nd',
+    );
   });
 
-  detailTest('an amount round-trips through exact minor units',
-      (tester) async {
+  detailTest('an amount round-trips through exact minor units', (tester) async {
     await seed(sampleAction('a1', category: ActionCategory.payment));
     await pumpDetail(tester, id: 'a1');
 
@@ -584,41 +690,50 @@ void main() {
     await tester.tap(find.text('Save amount'));
     await tester.pumpAndSettle();
 
-    expect(find.widgetWithText(FilledButton, 'Save amount'), findsOneWidget,
-        reason: 'the sheet stays open on a rejected value');
-    expect((await _repo.getById('a1'))!.amount!.amountMinor, 1000,
-        reason: 'the stored amount is untouched');
+    expect(
+      find.widgetWithText(FilledButton, 'Save amount'),
+      findsOneWidget,
+      reason: 'the sheet stays open on a rejected value',
+    );
+    expect(
+      (await _repo.getById('a1'))!.amount!.amountMinor,
+      1000,
+      reason: 'the stored amount is untouched',
+    );
   });
 
-  detailTest('a fact is not repeated as a worse copy of the canonical row',
-      (tester) async {
+  detailTest('a fact is not repeated as a worse copy of the canonical row', (
+    tester,
+  ) async {
     // The device found this: "Deadline 21 Sep" followed by "Payment Due Date
     // 2026-09-21" is the same commitment twice, in a worse format.
-    await seed(sampleAction(
-      'a1',
-      dueAt: ActionDue(DateTime(2026, 9, 21)),
-      amount: gbp('58.20'),
-      facts: const [
-        ActionFactItem(
-          key: 'payment_due_date',
-          label: 'Payment Due Date',
-          value: '2026-09-21',
-          editedByUser: false,
-        ),
-        ActionFactItem(
-          key: 'amount_due',
-          label: 'Amount Due',
-          value: '58.20',
-          editedByUser: false,
-        ),
-        ActionFactItem(
-          key: 'reference',
-          label: 'Customer Reference',
-          value: '55-9012-7',
-          editedByUser: false,
-        ),
-      ],
-    ));
+    await seed(
+      sampleAction(
+        'a1',
+        dueAt: ActionDue(DateTime(2026, 9, 21)),
+        amount: gbp('58.20'),
+        facts: const [
+          ActionFactItem(
+            key: 'payment_due_date',
+            label: 'Payment Due Date',
+            value: '2026-09-21',
+            editedByUser: false,
+          ),
+          ActionFactItem(
+            key: 'amount_due',
+            label: 'Amount Due',
+            value: '58.20',
+            editedByUser: false,
+          ),
+          ActionFactItem(
+            key: 'reference',
+            label: 'Customer Reference',
+            value: '55-9012-7',
+            editedByUser: false,
+          ),
+        ],
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     expect(find.text('21 Sep'), findsOneWidget);
@@ -681,59 +796,63 @@ void main() {
     expect(find.text('Add first step'), findsOneWidget);
   });
 
-  detailTest('an Action you typed yourself says so, and claims no doubt',
-      (tester) async {
-    await seed(sampleAction(
-      'a1',
-      sourceId: null,
-      origin: ActionOrigin.manual,
-      urgency: ActionUrgency.unknown,
-    ));
+  detailTest('an Action you typed yourself says so, and claims no doubt', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction(
+        'a1',
+        sourceId: null,
+        origin: ActionOrigin.manual,
+        urgency: ActionUrgency.unknown,
+      ),
+    );
     await pumpDetail(tester, id: 'a1');
 
     expect(find.text('Created by you'), findsOneWidget);
     expect(find.textContaining('Not sure'), findsNothing);
   });
 
-  detailTest('typing the details yourself does not hide the capture behind it',
-      (tester) async {
-    // The device found this: an Action entered by hand FROM a letter still
-    // came from that letter, and both facts are true at once.
-    await seed(sampleAction(
-      'a1',
-      sourceId: 'src-1',
-      origin: ActionOrigin.manual,
-    ));
-    await pumpDetail(
-      tester,
-      id: 'a1',
-      sources: [
-        SourceItem(
-          id: 'src-1',
-          type: SourceType.pastedText,
-          capturedAt: DateTime(2026, 8, 18),
-          pastedText: 'Riverford Energy statement',
-          state: SourceProcessingState.ready,
-        ),
-      ],
+  detailTest(
+    'typing the details yourself does not hide the capture behind it',
+    (tester) async {
+      // The device found this: an Action entered by hand FROM a letter still
+      // came from that letter, and both facts are true at once.
+      await seed(
+        sampleAction('a1', sourceId: 'src-1', origin: ActionOrigin.manual),
+      );
+      await pumpDetail(
+        tester,
+        id: 'a1',
+        sources: [
+          SourceItem(
+            id: 'src-1',
+            type: SourceType.pastedText,
+            capturedAt: DateTime(2026, 8, 18),
+            pastedText: 'Riverford Energy statement',
+            state: SourceProcessingState.ready,
+          ),
+        ],
+      );
+
+      expect(find.text('Created by you'), findsOneWidget);
+      expect(find.text('View source'), findsOneWidget);
+    },
+  );
+
+  detailTest('a hand-typed Action whose capture was deleted says so plainly', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction('a1', sourceId: 'deleted', origin: ActionOrigin.manual),
     );
-
-    expect(find.text('Created by you'), findsOneWidget);
-    expect(find.text('View source'), findsOneWidget);
-  });
-
-  detailTest('a hand-typed Action whose capture was deleted says so plainly',
-      (tester) async {
-    await seed(sampleAction(
-      'a1',
-      sourceId: 'deleted',
-      origin: ActionOrigin.manual,
-    ));
     await pumpDetail(tester, id: 'a1');
 
     expect(find.text('Created by you'), findsOneWidget);
-    expect(find.text('The original capture is no longer available.'),
-        findsOneWidget);
+    expect(
+      find.text('The original capture is no longer available.'),
+      findsOneWidget,
+    );
     expect(find.text('View source'), findsNothing);
   });
 
@@ -764,12 +883,10 @@ void main() {
     expect(find.text('Add reminder'), findsOneWidget);
   });
 
-  detailTest('a deadline turns into offers that show their real clock time',
-      (tester) async {
-    await seed(sampleAction(
-      'a1',
-      dueAt: ActionDue(DateTime(2026, 8, 30)),
-    ));
+  detailTest('a deadline turns into offers that show their real clock time', (
+    tester,
+  ) async {
+    await seed(sampleAction('a1', dueAt: ActionDue(DateTime(2026, 8, 30))));
     await pumpDetail(tester, id: 'a1');
 
     await tester.tap(find.text('Add reminder'));
@@ -784,8 +901,9 @@ void main() {
     expect(find.textContaining('You will be reminded on'), findsOneWidget);
   });
 
-  detailTest('setting a reminder schedules it and says so honestly',
-      (tester) async {
+  detailTest('setting a reminder schedules it and says so honestly', (
+    tester,
+  ) async {
     await seed(sampleAction('a1', title: 'Pay the bill'));
     await pumpDetail(tester, id: 'a1');
 
@@ -822,8 +940,9 @@ void main() {
     expect(find.byIcon(Icons.notifications_active_outlined), findsNWidgets(2));
   });
 
-  detailTest('refusing notification permission never claims a reminder is on',
-      (tester) async {
+  detailTest('refusing notification permission never claims a reminder is on', (
+    tester,
+  ) async {
     _scheduler
       ..allowed = false
       ..grantOnRequest = false;
@@ -832,23 +951,31 @@ void main() {
 
     await addReminder(tester);
 
-    expect(_scheduler.scheduleLog, isEmpty,
-        reason: 'nothing may be armed without permission');
+    expect(
+      _scheduler.scheduleLog,
+      isEmpty,
+      reason: 'nothing may be armed without permission',
+    );
     // Kept, and labelled for exactly what it is — never as active.
     expect(find.text('Saved, but notifications are off'), findsOneWidget);
     expect(find.byIcon(Icons.notifications_off_outlined), findsOneWidget);
     expect(find.byIcon(Icons.notifications_active_outlined), findsNothing);
   });
 
-  detailTest('permission is never requested just for opening the screen',
-      (tester) async {
+  detailTest('permission is never requested just for opening the screen', (
+    tester,
+  ) async {
     _scheduler.allowed = false;
     await seed(sampleAction('a1'));
     await pumpDetail(tester, id: 'a1');
 
-    expect(_scheduler.permissionRequests, 0,
-        reason: 'asking before the user wants anything is how apps get '
-            'notifications turned off forever');
+    expect(
+      _scheduler.permissionRequests,
+      0,
+      reason:
+          'asking before the user wants anything is how apps get '
+          'notifications turned off forever',
+    );
   });
 
   detailTest('a platform refusal is shown, not hidden', (tester) async {
@@ -874,10 +1001,16 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Set reminder'));
     await tester.pumpAndSettle();
 
-    expect(_scheduler.scheduled, hasLength(1),
-        reason: 'rescheduling replaces the alarm rather than adding one');
-    expect(_scheduler.scheduled.keys.single, firstId,
-        reason: 'and it keeps the same platform id');
+    expect(
+      _scheduler.scheduled,
+      hasLength(1),
+      reason: 'rescheduling replaces the alarm rather than adding one',
+    );
+    expect(
+      _scheduler.scheduled.keys.single,
+      firstId,
+      reason: 'and it keeps the same platform id',
+    );
   });
 
   detailTest('removing a reminder cancels the alarm too', (tester) async {
@@ -894,8 +1027,9 @@ void main() {
     expect(find.text('No reminders yet.'), findsOneWidget);
   });
 
-  detailTest('the limit is explained rather than silently enforced',
-      (tester) async {
+  detailTest('the limit is explained rather than silently enforced', (
+    tester,
+  ) async {
     await seed(sampleAction('a1'));
     // Seeded straight into the store: this test is about what a full Action
     // looks like, not about driving the sheet five times.
@@ -910,14 +1044,20 @@ void main() {
     }
     await pumpDetail(tester, id: 'a1');
 
-    expect(find.textContaining('the most reminders one action can have'),
-        findsOneWidget);
-    expect(find.text('Add reminder'), findsNothing,
-        reason: 'offering a sixth only to refuse it would be worse');
+    expect(
+      find.textContaining('the most reminders one action can have'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Add reminder'),
+      findsNothing,
+      reason: 'offering a sixth only to refuse it would be worse',
+    );
   });
 
-  detailTest('completing an Action withdraws its future reminders',
-      (tester) async {
+  detailTest('completing an Action withdraws its future reminders', (
+    tester,
+  ) async {
     await seed(sampleAction('a1'));
     await pumpDetail(tester, id: 'a1');
     await addReminder(tester);
@@ -926,13 +1066,17 @@ void main() {
     await tester.tap(find.text('Mark action complete'));
     await tester.pumpAndSettle();
 
-    expect(_scheduler.scheduled, isEmpty,
-        reason: 'a finished obligation should stop nudging');
+    expect(
+      _scheduler.scheduled,
+      isEmpty,
+      reason: 'a finished obligation should stop nudging',
+    );
     expect(find.text('No reminders yet.'), findsOneWidget);
   });
 
-  detailTest('reopening does not bring cancelled reminders back',
-      (tester) async {
+  detailTest('reopening does not bring cancelled reminders back', (
+    tester,
+  ) async {
     await seed(sampleAction('a1'));
     await pumpDetail(tester, id: 'a1');
     await addReminder(tester);
@@ -946,21 +1090,21 @@ void main() {
     expect(_scheduler.scheduled, isEmpty);
   });
 
-  detailTest('a completed Action does not invite new reminders',
-      (tester) async {
-    await seed(sampleAction(
-      'a1',
-      status: ActionStatus.completed,
-      completedAt: testNow,
-    ));
+  detailTest('a completed Action does not invite new reminders', (
+    tester,
+  ) async {
+    await seed(
+      sampleAction('a1', status: ActionStatus.completed, completedAt: testNow),
+    );
     await pumpDetail(tester, id: 'a1');
 
     expect(find.text('REMINDERS'), findsOneWidget);
     expect(find.text('Add reminder'), findsNothing);
   });
 
-  detailTest('changing the deadline leaves existing reminders where they are',
-      (tester) async {
+  detailTest('changing the deadline leaves existing reminders where they are', (
+    tester,
+  ) async {
     await seed(sampleAction('a1', dueAt: ActionDue(DateTime(2026, 8, 30))));
     await pumpDetail(tester, id: 'a1');
     await addReminder(tester, preset: '1 day before');
@@ -973,9 +1117,13 @@ void main() {
     await tester.tap(find.text('Use this date'));
     await tester.pumpAndSettle();
 
-    expect(_scheduler.scheduled.values.single.scheduledAt, agreed,
-        reason: 'a reminder is a time the user agreed to; moving the deadline '
-            'must not silently move it');
+    expect(
+      _scheduler.scheduled.values.single.scheduledAt,
+      agreed,
+      reason:
+          'a reminder is a time the user agreed to; moving the deadline '
+          'must not silently move it',
+    );
   });
 
   detailTest('reminders render in dark theme', (tester) async {
@@ -989,8 +1137,7 @@ void main() {
 
   // ------------------------------------------------------------ shell --
 
-  detailTest('archiving asks first and then leaves the screen',
-      (tester) async {
+  detailTest('archiving asks first and then leaves the screen', (tester) async {
     await seed(sampleAction('a1'));
     await pumpDetail(tester, id: 'a1');
 
@@ -1014,11 +1161,13 @@ void main() {
   });
 
   detailTest('renders in dark theme', (tester) async {
-    await seed(sampleAction(
-      'a1',
-      title: 'Pay the bill',
-      steps: [sampleStep('s1', title: 'Read it')],
-    ));
+    await seed(
+      sampleAction(
+        'a1',
+        title: 'Pay the bill',
+        steps: [sampleStep('s1', title: 'Read it')],
+      ),
+    );
     await pumpDetail(tester, id: 'a1', themeMode: ThemeMode.dark);
 
     expect(find.text('Pay the bill'), findsOneWidget);
@@ -1035,11 +1184,14 @@ void main() {
 
     final dpr = tester.view.devicePixelRatio;
     final keyboardTop =
-        tester.view.physicalSize.height / dpr - tester.view.viewInsets.bottom / dpr;
+        tester.view.physicalSize.height / dpr -
+        tester.view.viewInsets.bottom / dpr;
     // Both the field being typed into and the button that commits it have to
     // stay above the keyboard, or the sheet is unusable on a real phone.
-    expect(tester.getRect(find.byType(TextField)).bottom,
-        lessThanOrEqualTo(keyboardTop));
+    expect(
+      tester.getRect(find.byType(TextField)).bottom,
+      lessThanOrEqualTo(keyboardTop),
+    );
     expect(
       tester.getRect(find.widgetWithText(FilledButton, 'Add step')).bottom,
       lessThanOrEqualTo(keyboardTop),

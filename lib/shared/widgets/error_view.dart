@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../design/tokens/colors.dart';
 import '../../design/tokens/dimens.dart';
+import '../../l10n/gen/app_l10n.dart';
 
 /// Failure state with a way forward.
 ///
@@ -64,14 +65,14 @@ class ErrorView extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh_rounded, size: 20),
-                label: const Text('Try again'),
+                label: Text(AppL10n.of(context).commonRetry),
               ),
             ],
             if (onManualEntry != null) ...[
               const SizedBox(height: Space.sm),
               TextButton(
                 onPressed: onManualEntry,
-                child: const Text('Enter it manually'),
+                child: Text(AppL10n.of(context).errorEnterManually),
               ),
             ],
           ],

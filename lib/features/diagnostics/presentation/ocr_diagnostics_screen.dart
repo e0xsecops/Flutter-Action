@@ -9,9 +9,12 @@ import 'package:path_provider/path_provider.dart';
 import '../../../app/router.dart';
 import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
+import '../../actions/application/action_providers.dart';
+import '../../actions/data/drift_action_repository.dart';
 import '../../capture/application/capture_controller.dart';
 import '../../capture/data/image_normalizer.dart';
 import '../fixture_evaluation.dart';
+import '../scale_fixtures.dart';
 
 /// Debug-only harness that runs the synthetic fixture corpus through the real
 /// pipeline — normalisation plus on-device ML Kit — and reports what happened.
@@ -182,6 +185,8 @@ class _OcrDiagnosticsScreenState extends ConsumerState<OcrDiagnosticsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(Space.page),
         children: [
+          const _SeedPanel(),
+          const SizedBox(height: Space.xl),
           FilledButton(
             onPressed: _running ? null : _run,
             child: Text(_running ? 'Running $_progress…' : 'Run fixture corpus'),
@@ -314,6 +319,89 @@ class _ReportRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Seeds the device with the synthetic corpus the performance tests measure,
+/// so Today, Library, Search and the Cockpit can be looked at — and profiled —
+/// with 5, 50 or 500 Actions instead of the handful a tester creates by hand.
+///
+/// Local only: the rows go straight into the database with no outbox entry,
+/// so nothing synthetic is ever mirrored to Firestore. The ids all start with
+/// `scale-action-`, which is how Clear finds them again.
+class _SeedPanel extends ConsumerStatefulWidget {
+  const _SeedPanel();
+
+  @override
+  ConsumerState<_SeedPanel> createState() => _SeedPanelState();
+}
+
+class _SeedPanelState extends ConsumerState<_SeedPanel> {
+  static const _idPrefix = 'scale-action-';
+  String? _status;
+  bool _busy = false;
+
+  DriftActionRepository get _repository =>
+      DriftActionRepository(ref.read(actionsDatabaseProvider));
+
+  Future<void> _seed(int count) async {
+    setState(() => _busy = true);
+    try {
+      final inserted = await _repository.seedLocalOnly(
+        ScaleFixtures.syntheticActions(count, at: DateTime.now().toUtc()),
+      );
+      setState(() => _status =
+          'Seeded $inserted synthetic Actions (local only, never mirrored).');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _clear() async {
+    setState(() => _busy = true);
+    try {
+      final removed = await _repository.deleteSeeded(idPrefix: _idPrefix);
+      setState(() => _status = 'Removed $removed synthetic Actions.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Synthetic Actions (debug only)', style: text.titleSmall),
+        const SizedBox(height: Space.xs),
+        Text(
+          'Seeds the performance corpus into this device. Nothing synthetic '
+          'is mirrored to the cloud.',
+          style: text.bodySmall,
+        ),
+        const SizedBox(height: Space.sm),
+        Wrap(
+          spacing: Space.sm,
+          runSpacing: Space.sm,
+          children: [
+            for (final count in const [1, 5, 50, 500])
+              OutlinedButton(
+                onPressed: _busy ? null : () => _seed(count),
+                child: Text('Seed $count'),
+              ),
+            OutlinedButton(
+              onPressed: _busy ? null : _clear,
+              child: const Text('Clear synthetic'),
+            ),
+          ],
+        ),
+        if (_status != null) ...[
+          const SizedBox(height: Space.sm),
+          Text(_status!, style: text.bodySmall),
+        ],
+      ],
     );
   }
 }

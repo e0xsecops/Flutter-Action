@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android 12+ form of "do not copy this app's data anywhere".
+
+    `android:allowBackup="false"` in the manifest covers cloud backup on every
+    version. This file covers the other half that flag does not: device-to-device
+    transfer when someone sets up a new phone from an old one.
+
+    Why exclude everything rather than curate a list. The privacy screen tells
+    the user, in as many words, that there is no way to restore Action to a new
+    device and that losing this installation loses the anonymous ID with it.
+    Auto Backup silently copying the database, the capture files and the
+    preferences to their Google account would make that statement false — and it
+    is the kind of false that only shows up when someone is surprised by their
+    old data reappearing.
+
+    The AI provider key is a separate case and is already excluded by being in
+    the Keystore rather than in app storage.
+
+    If a real backup feature is ever built, it belongs here as an explicit,
+    disclosed choice — not as an Android default nobody decided on.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+        <exclude domain="device_root" />
+        <exclude domain="device_file" />
+        <exclude domain="device_database" />
+        <exclude domain="device_sharedpref" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+        <exclude domain="device_root" />
+        <exclude domain="device_file" />
+        <exclude domain="device_database" />
+        <exclude domain="device_sharedpref" />
+    </device-transfer>
+</data-extraction-rules>

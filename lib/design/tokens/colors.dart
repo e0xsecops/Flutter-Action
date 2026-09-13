@@ -86,7 +86,12 @@ class AppColors extends ThemeExtension<AppColors> {
     borderStrong: Color(0xFFCFD2DB),
     textPrimary: Color(0xFF12141A),
     textSecondary: Color(0xFF5B6070),
-    textTertiary: Color(0xFF8A8FA0),
+    // Darkened at V2. The old value (0xFF8A8FA0) measured 2.88:1 against the
+    // app's own near-white surfaces, well under the 4.5:1 that text carrying
+    // information needs — and this token carries dates, counts and section
+    // eyebrows, none of which are decoration. 0xFF686E82 measures 4.66:1 and
+    // is still clearly a third step below secondary.
+    textTertiary: Color(0xFF686E82),
     brand: Color(0xFF2563EB),
     brandPressed: Color(0xFF1D4FD8),
     brandSubtle: Color(0xFFEFF4FF),
@@ -94,11 +99,11 @@ class AppColors extends ThemeExtension<AppColors> {
     urgencyCritical: Color(0xFFB42318),
     urgencyImportant: Color(0xFFB54708),
     urgencyNormal: Color(0xFF5B6070),
-    urgencyLow: Color(0xFF8A8FA0),
+    urgencyLow: Color(0xFF686E82),
     confidenceConfirmed: Color(0xFF0F766E),
     confidenceHigh: Color(0xFF1D4FD8),
     confidenceReview: Color(0xFF6D28D9),
-    confidenceMissing: Color(0xFF8A8FA0),
+    confidenceMissing: Color(0xFF686E82),
     danger: Color(0xFFB42318),
     success: Color(0xFF0F766E),
   );
@@ -111,7 +116,10 @@ class AppColors extends ThemeExtension<AppColors> {
     borderStrong: Color(0xFF333944),
     textPrimary: Color(0xFFF2F3F6),
     textSecondary: Color(0xFFA2A8B8),
-    textTertiary: Color(0xFF6E7482),
+    // Lightened for the same reason the light one was darkened: 0xFF6E7482
+    // measured 3.69:1 against the dark ambient field. 0xFF7C8394 measures
+    // 4.51:1.
+    textTertiary: Color(0xFF7C8394),
     brand: Color(0xFF6090FA),
     brandPressed: Color(0xFF93B4FD),
     brandSubtle: Color(0xFF16233D),
@@ -119,11 +127,11 @@ class AppColors extends ThemeExtension<AppColors> {
     urgencyCritical: Color(0xFFF97066),
     urgencyImportant: Color(0xFFFDB022),
     urgencyNormal: Color(0xFFA2A8B8),
-    urgencyLow: Color(0xFF6E7482),
+    urgencyLow: Color(0xFF7C8394),
     confidenceConfirmed: Color(0xFF2DD4BF),
     confidenceHigh: Color(0xFF60A5FA),
     confidenceReview: Color(0xFFA78BFA),
-    confidenceMissing: Color(0xFF6E7482),
+    confidenceMissing: Color(0xFF7C8394),
     danger: Color(0xFFF97066),
     success: Color(0xFF2DD4BF),
   );

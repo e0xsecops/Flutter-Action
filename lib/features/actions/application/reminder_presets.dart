@@ -1,10 +1,36 @@
 import '../domain/action_item.dart';
 
+/// Which offer a preset is, independent of the words for it.
+///
+/// The words live in `lib/l10n/enum_labels.dart` for the same reason every
+/// other enum's do: a `const` field cannot depend on the locale, and this
+/// layer has no `BuildContext` to ask. Keeping the canonical English on the
+/// preset as well means a domain test can assert an offer without pumping a
+/// widget tree.
+enum ReminderPresetKind {
+  inOneHour,
+  tomorrowMorning,
+  nextWeek,
+  onTheDay,
+  oneDayBefore,
+  oneWeekBefore,
+  atTheDeadline,
+  oneHourBefore,
+}
+
 /// A reminder time the app offers, with the words it offers it in.
 final class ReminderPreset {
-  const ReminderPreset({required this.label, required this.at});
+  const ReminderPreset({
+    required this.kind,
+    required this.label,
+    required this.at,
+  });
 
-  /// What the row says, e.g. "1 day before". Never the only thing shown —
+  /// Which offer this is. What a person reads comes from
+  /// `ReminderPresetKindL10n.labelIn`.
+  final ReminderPresetKind kind;
+
+  /// Canonical English, e.g. "1 day before". Never the only thing shown —
   /// the resolved date and time are always displayed next to it, because a
   /// relative phrase alone hides which clock time was chosen.
   final String label;
@@ -31,12 +57,14 @@ List<ReminderPreset> reminderPresetsFor(ActionItem action, DateTime now) {
 
   if (due == null) {
     presets.addAll([
-      ReminderPreset(label: 'In 1 hour', at: now.add(const Duration(hours: 1))),
+      ReminderPreset(kind: ReminderPresetKind.inOneHour, label: 'In 1 hour', at: now.add(const Duration(hours: 1))),
       ReminderPreset(
+        kind: ReminderPresetKind.tomorrowMorning,
         label: 'Tomorrow morning',
         at: _morning(now.add(const Duration(days: 1))),
       ),
       ReminderPreset(
+        kind: ReminderPresetKind.nextWeek,
         label: 'Next week',
         at: _morning(now.add(const Duration(days: 7))),
       ),
@@ -46,12 +74,14 @@ List<ReminderPreset> reminderPresetsFor(ActionItem action, DateTime now) {
     // at the suggested hour.
     final day = due.wallClock;
     presets.addAll([
-      ReminderPreset(label: 'On the day', at: _morning(day)),
+      ReminderPreset(kind: ReminderPresetKind.onTheDay, label: 'On the day', at: _morning(day)),
       ReminderPreset(
+        kind: ReminderPresetKind.oneDayBefore,
         label: '1 day before',
         at: _morning(day.subtract(const Duration(days: 1))),
       ),
       ReminderPreset(
+        kind: ReminderPresetKind.oneWeekBefore,
         label: '1 week before',
         at: _morning(day.subtract(const Duration(days: 7))),
       ),
@@ -59,12 +89,14 @@ List<ReminderPreset> reminderPresetsFor(ActionItem action, DateTime now) {
   } else {
     final at = due.wallClock;
     presets.addAll([
-      ReminderPreset(label: 'At the deadline', at: at),
+      ReminderPreset(kind: ReminderPresetKind.atTheDeadline, label: 'At the deadline', at: at),
       ReminderPreset(
+        kind: ReminderPresetKind.oneHourBefore,
         label: '1 hour before',
         at: at.subtract(const Duration(hours: 1)),
       ),
       ReminderPreset(
+        kind: ReminderPresetKind.oneDayBefore,
         label: '1 day before',
         at: at.subtract(const Duration(days: 1)),
       ),

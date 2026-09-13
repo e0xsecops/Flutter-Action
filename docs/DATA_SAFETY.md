@@ -90,9 +90,19 @@ codebase's control, which is stated rather than glossed.
 
 None of the following is uploaded anywhere.
 
+**Image metadata is removed at intake, not at export.** A photograph carries
+the coordinates where it was taken, the second it was taken, and the make and
+model of the handset. Action strips these before storing the capture, which
+also means they are absent from the file when a capture is later sent to the
+user's own AI provider. The removal is a container edit rather than a
+re-encode, so the compressed pixels are bit-identical and the small text OCR
+depends on is not degraded. Verified in `test/capture/image_metadata_test.dart`
+on the passthrough, resize and PNG paths.
+
+
 | Data | Where |
 | --- | --- |
-| Captured images | App-private storage, `DirectorySourceFileStore` |
+| Captured images | App-private storage, `DirectorySourceFileStore`. Stored **without EXIF, XMP, IPTC or PNG text metadata** — the GPS fix, capture time and device make/model a camera writes into a photo are removed by `image_metadata.dart` before the file is saved, on every path through the normalizer |
 | Pasted text and OCR output | `sources.json`, app-private |
 | Actions, steps, facts | SQLite via Drift (`actions.sqlite`), app-private |
 | Reminders and their platform alarm ids | Same database |

@@ -9,6 +9,7 @@ import '../../../design/tokens/colors.dart';
 import '../../../design/tokens/dimens.dart';
 import '../application/capture_controller.dart';
 import '../domain/source_item.dart';
+import '../../../l10n/gen/app_l10n.dart';
 
 class PreviewArgs {
   const PreviewArgs({required this.path, required this.type});
@@ -61,18 +62,19 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
       if (!mounted) return;
       setState(() => _busy = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Couldn't save that. Try again.")),
+        SnackBar(content: Text(AppL10n.of(context).previewSaveFailed)),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
     final colors = context.colors;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Check the capture'),
+        title: Text(l10n.previewTitle),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: _busy ? null : () => context.pop(),
@@ -100,7 +102,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                 fit: BoxFit.contain,
                 errorBuilder: (_, _, _) => Center(
                   child: Text(
-                    "That image couldn't be opened.",
+                    l10n.previewImageFailed,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -115,7 +117,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
               Space.md,
             ),
             child: Text(
-              'Make sure the text is readable and nothing important is cut off.',
+              l10n.previewHint,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
@@ -134,7 +136,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: _busy ? null : _retake,
-                      child: const Text('Retake'),
+                      child: Text(l10n.previewRetake),
                     ),
                   ),
                   const SizedBox(width: Space.md),
@@ -148,7 +150,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                               height: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Continue'),
+                          : Text(l10n.commonContinue),
                     ),
                   ),
                 ],

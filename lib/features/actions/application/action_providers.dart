@@ -10,6 +10,9 @@ import '../data/auth_identity_service.dart';
 import '../data/drift_action_repository.dart';
 import '../data/drift_reminder_repository.dart';
 import '../data/flutter_local_notification_scheduler.dart';
+import '../../../core/security/protection_providers.dart';
+import '../../../l10n/gen/app_l10n.dart';
+import '../../capture/application/ocr_script_controller.dart';
 import '../data/notification_scheduler.dart';
 import '../domain/action_item.dart';
 import '../domain/action_reminder.dart';
@@ -135,8 +138,18 @@ final deviceTimeZoneProvider = Provider<DeviceTimeZone>((_) => DeviceTimeZone())
 
 /// The platform seam. Tests override this with a fake, so no widget or unit
 /// test ever reaches an Android notification API.
+///
+/// The bundle is handed over as a callback, not a value, and the callback uses
+/// `ref.read` rather than `ref.watch` on purpose. A notification channel is
+/// registered with Android once and a scheduler owns platform state, so
+/// rebuilding this provider every time the language changes would be the wrong
+/// answer to the right problem. Reading at call time gives the reminder the
+/// language the user is in *now* without the object being replaced underneath
+/// the reminders it has already scheduled.
 final notificationSchedulerProvider = Provider<NotificationScheduler>((ref) {
-  return FlutterLocalNotificationScheduler();
+  return FlutterLocalNotificationScheduler(
+    l10n: () => lookupAppL10n(ref.read(effectiveLocaleProvider)),
+  );
 });
 
 final actionReminderRepositoryProvider = Provider<ActionReminderRepository>(
@@ -149,6 +162,11 @@ final reminderServiceProvider = Provider<ReminderService>((ref) {
     scheduler: ref.watch(notificationSchedulerProvider),
     clock: ref.watch(appClockProvider),
     timeZoneId: () => ref.read(deviceTimeZoneProvider).id,
+    // Read at arming time, not watched: re-creating the service every time the
+    // setting changed would tear down nothing useful, and a reminder being
+    // armed right now should use the answer as it stands right now.
+    privateNotifications: () =>
+        ref.read(protectionSettingsProvider).privateNotifications,
   );
 });
 
@@ -158,6 +176,8 @@ final reminderReconcilerProvider = Provider<ReminderReconciler>((ref) {
     actions: ref.watch(actionRepositoryProvider),
     scheduler: ref.watch(notificationSchedulerProvider),
     clock: ref.watch(appClockProvider),
+    privateNotifications: () =>
+        ref.read(protectionSettingsProvider).privateNotifications,
   );
 });
 

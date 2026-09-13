@@ -57,9 +57,25 @@ abstract final class AppTheme {
         scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: text.titleMedium,
-        systemOverlayStyle: brightness == Brightness.dark
-            ? SystemUiOverlayStyle.light
-            : SystemUiOverlayStyle.dark,
+        // Written out rather than using SystemUiOverlayStyle.light/.dark.
+        // Both of those constants hardcode an opaque black
+        // `systemNavigationBarColor` *and* light navigation-bar icons — so in
+        // the light theme, on a device using three-button navigation, the app
+        // was asking for light icons against a light surface. Under Android
+        // 16's enforced edge-to-edge the black is a deprecated no-op, but the
+        // icon brightness is not.
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: brightness,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness:
+              brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+          // Let the OS draw its own scrim behind the bar rather than painting
+          // a colour under it, which is the part Android 16 ignores.
+          systemNavigationBarContrastEnforced: true,
+        ),
       ),
 
       // Flat, hairline-bounded. Shadows are reserved for things that genuinely
@@ -163,11 +179,17 @@ abstract final class AppTheme {
         shape: const RoundedRectangleBorder(borderRadius: Radii.rMd),
       ),
 
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
-        },
-      ),
+      // Deliberately NOT overridden any more.
+      //
+      // This used to pin Android to `FadeForwardsPageTransitionsBuilder`, which
+      // reads like a tasteful choice and quietly cost the app predictive back.
+      // Flutter's Android default is `PredictiveBackPageTransitionsBuilder`,
+      // which renders *the same* fade-forwards animation going forward and adds
+      // the back-gesture peek — and FadeForwards is precisely the fallback that
+      // builder degrades to where predictive back is unavailable. So the
+      // override kept the fallback and threw away the feature, on an app that
+      // targets API 36 where the system enables predictive back by default.
+      // Inheriting the default is both the fix and the smaller diff.
     );
   }
 }

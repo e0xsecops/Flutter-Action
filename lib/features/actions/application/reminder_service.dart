@@ -1,4 +1,5 @@
 import '../data/notification_scheduler.dart';
+import 'reminder_presentation.dart';
 import '../domain/action_reminder.dart';
 import '../domain/action_reminder_repository.dart';
 
@@ -51,12 +52,19 @@ class ReminderService {
     required this._scheduler,
     required this._clock,
     required this._timeZoneId,
-  });
+    bool Function()? privateNotifications,
+  }) : _private = privateNotifications ?? _notPrivate;
 
   final ActionReminderRepository _reminders;
   final NotificationScheduler _scheduler;
   final DateTime Function() _clock;
   final String Function() _timeZoneId;
+
+  /// Read at arming time rather than injected as a value, so a reminder
+  /// created after the setting changed uses the current answer.
+  final bool Function() _private;
+
+  static bool _notPrivate() => false;
 
   Future<ReminderOutcome> create({
     required String actionId,
@@ -126,7 +134,7 @@ class ReminderService {
       await _scheduler.schedule(
         platformNotificationId: reminder.platformNotificationId,
         actionId: reminder.actionId,
-        title: title,
+        title: reminderBody(title, private: _private()),
         scheduledAt: reminder.scheduledAt,
         timeZoneId: reminder.timeZoneId,
       );
