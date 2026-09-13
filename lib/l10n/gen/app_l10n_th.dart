@@ -91,7 +91,7 @@ class AppL10nTh extends AppL10n {
   String get navLibrary => 'คลัง';
 
   @override
-  String get navIntelligence => 'อินเทลลิเจนซ์';
+  String get navIntelligence => 'ปัญญา';
 
   @override
   String get navSearch => 'ค้นหา';

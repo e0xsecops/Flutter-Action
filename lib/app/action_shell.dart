@@ -138,39 +138,116 @@ class _ActionNavBar extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(Space.md, 0, Space.md, Space.sm),
         child: SafeArea(
           top: false,
-          child: GlassSurface(
-            borderRadius: Radii.rXl,
-            intensity: GlassIntensity.strong,
-            padding: const EdgeInsets.symmetric(
-              horizontal: Space.xs,
-              vertical: Space.xs,
-            ),
-            child: Row(
-              children: [
-                for (var i = 0; i < shellDestinations.length; i++) ...[
-                  Expanded(
-                    child: _NavItem(
-                      destination: shellDestinations[i],
-                      selected: navigationShell.currentIndex == i,
-                      onTap: () => _go(context, i),
-                    ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final labelScale = _labelScaleThatFits(
+                context,
+                barWidth: constraints.maxWidth,
+              );
+              return MediaQuery.withClampedTextScaling(
+                maxScaleFactor: labelScale,
+                child: GlassSurface(
+                  borderRadius: Radii.rXl,
+                  intensity: GlassIntensity.strong,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Space.xs,
+                    vertical: Space.xs,
                   ),
-                  // Capture sits between Library and Intelligence — the middle
-                  // of the bar and the middle of the loop: you have looked at
-                  // what is there, and now you add to it.
-                  if (i == 1)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: Space.xs),
-                      child: _CaptureControl(colors: colors),
-                    ),
-                ],
-              ],
-            ),
+                  child: Row(
+                    children: [
+                      for (var i = 0; i < shellDestinations.length; i++) ...[
+                        Expanded(
+                          child: _NavItem(
+                            destination: shellDestinations[i],
+                            selected: navigationShell.currentIndex == i,
+                            onTap: () => _go(context, i),
+                          ),
+                        ),
+                        // Capture sits between Library and Intelligence — the
+                        // middle of the bar and the middle of the loop: you
+                        // have looked at what is there, and now you add to it.
+                        if (i == 1)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Space.xs,
+                            ),
+                            child: _CaptureControl(colors: colors),
+                          ),
+                      ],
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
     );
   }
+}
+
+/// The diameter of the Capture control, which the four labels share the bar
+/// with.
+const double _captureControlSize = 54;
+
+/// The text style every destination label is measured and drawn in. The
+/// selected weight is the wider of the two, so measuring in it means a label
+/// that fits when selected fits always.
+TextStyle _labelStyle(BuildContext context, {required bool selected}) {
+  return Theme.of(context).textTheme.labelSmall!
+      .copyWith(fontWeight: selected ? FontWeight.w600 : FontWeight.w500);
+}
+
+/// How far the labels may follow the system text size before the bar runs
+/// out of room.
+///
+/// **The problem this answers.** Four labels and the Capture control share a
+/// bar that is 360 logical pixels wide on the narrowest phones Action runs
+/// on, and the longest shipped labels — *Bibliothèque*, *Библиотека* — fill
+/// their slot at the default size with nothing to spare. Let them scale with
+/// the system setting and the first "Large" step ellipsizes eight languages
+/// at once; refuse to scale them at all and the setting is silently ignored
+/// on the most-read small text in the app.
+///
+/// **What it does instead.** Each label is measured, unscaled, in the wider of
+/// its two weights, and the bar finds the largest scale at which the widest
+/// one still fits its slot. The labels then follow the system setting up to
+/// that scale and hold there. The floor is the default size: the bar never
+/// draws a label smaller than it would at 100%, so a label that does not fit
+/// even at the default size ellipsizes — and `test/l10n/nav_label_fit_test.dart`
+/// fails, which is the correct outcome for a label that is simply too long.
+///
+/// Measured for the current language only, on each layout of the bar, with
+/// four `TextPainter` layouts. The bar lays out on a tab change and on a
+/// language change, not on scroll.
+double _labelScaleThatFits(BuildContext context, {required double barWidth}) {
+  final requested = MediaQuery.textScalerOf(context).scale(1);
+  if (requested <= 1) return 1;
+
+  // The slot a label gets: the bar less the glass's own inset, the Capture
+  // control and its gutters, shared four ways.
+  final slot =
+      (barWidth - Space.xs * 2 - _captureControlSize - Space.xs * 2) /
+      shellDestinations.length;
+  if (slot <= 0) return 1;
+
+  final l10n = AppL10n.of(context);
+  final style = _labelStyle(context, selected: true);
+  final direction = Directionality.of(context);
+  var fits = requested;
+  for (final destination in shellDestinations) {
+    final painter = TextPainter(
+      text: TextSpan(text: destination.label(l10n), style: style),
+      textDirection: direction,
+      maxLines: 1,
+    )..layout();
+    final unscaled = painter.width;
+    painter.dispose();
+    if (unscaled <= 0) continue;
+    final allowed = slot / unscaled;
+    if (allowed < fits) fits = allowed;
+  }
+  return fits.clamp(1.0, requested).toDouble();
 }
 
 class _NavItem extends StatelessWidget {
@@ -187,7 +264,6 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final text = Theme.of(context).textTheme;
     final label = destination.label(AppL10n.of(context));
     // Secondary, not tertiary. A navigation label is the most important small
     // text in the app — it is how someone knows where they are and where they
@@ -231,10 +307,10 @@ class _NavItem extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: text.labelSmall?.copyWith(
-                    color: tint,
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                  ),
+                  style: _labelStyle(
+                    context,
+                    selected: selected,
+                  ).copyWith(color: tint),
                 ),
               ],
             ),

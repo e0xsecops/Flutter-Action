@@ -89,6 +89,21 @@ empty. Nothing throws when the bundle is loaded.
    genuinely that much denser) fails. Blunt and deliberately generous — it
    catches a two-claim sentence that came back carrying one.
 
+**`nav_label_fit_test.dart` — geometric.**
+The bottom navigation labels are rendered through the production router and
+shell, in the fonts the QA device draws them with (Roboto and the Noto faces
+Android falls back to, subsetted under `test/fonts/`), at 360, 393 and 412
+logical pixels, in both themes, and the label's own paragraph is asked whether
+it ellipsized. This exists because the Japanese Intelligence tab shipped as
+「インテリジ…」 and no test could have caught it: the test font draws every
+code point one em wide, so a character budget would have failed Thai and passed
+Japanese. On its first run the test found a second defect of the same kind —
+the Thai label ellipsized at 360 dp — and showed that eight languages
+ellipsized at Android's first "Large" text step. The Thai label was shortened
+to ปัญญา; the bar now lets its labels follow the system text size only as far
+as the bar has room, never below the default size, and the test holds every
+language at 115% and 200%.
+
 **`language_switching_test.dart` — behavioural.**
 The picker offers all twenty plus System, names each language in itself,
 switches without a restart, reaches the rest of the app, mirrors the layout on
@@ -113,6 +128,37 @@ and that English remains the reference wherever the exact wording matters —
 privacy, security, and what Action will and will not claim.
 
 ---
+
+## Where human review stands, and what that means for release
+
+As of 2026-09-14 the position is unchanged and is stated here so it is not
+inferred from the amount of machinery above: **the nineteen model-drafted
+languages have been validated functionally and semantically, and none has been
+read by a native speaker.**
+
+What "validated" covers, concretely: every key present with every placeholder
+and plural intact; the safety meanings below held by the distinctness, token,
+brand-versus-noun, reassurance-word and clause-survival checks; the tool
+results, the Security centre, Privacy, Help, Action Detail and its sheets
+localized end to end; Arabic and Urdu mirroring verified on the emulator; a
+Japanese Link Inspector run verified word by word on the device; the
+navigation labels measured in the device's fonts in all twenty languages.
+
+What it does not cover: register, idiom, and whether a sentence a native
+reader meets on the Security centre reads as a careful product or as a
+translation. That is the review a person does, and it has not happened.
+
+**Recommendation.** A native-speaker read of each language before public
+production rollout, with the privacy- and security-critical strings first —
+the 350 keys marked SAFETY in the ARB, and above all the sentences listed
+under *The meanings that may never drift*. Until then the picker's
+`languageDraftNote` stays, and English remains the reference wherever the
+exact wording matters.
+
+**This does not block the V2 visual review.** Nothing in a design pass
+depends on a translation's register, and the truncation class of defect is
+now held by a test rather than by a reviewer. It blocks a public launch claim
+of twenty *reviewed* languages, which the product does not make.
 
 ## The meanings that may never drift
 
