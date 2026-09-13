@@ -501,9 +501,12 @@ class _TopAction extends ConsumerWidget {
     final l10n = AppL10n.of(context);
     final next = _next;
 
+    // The localized forms, as the cards use. The English-only ones exist
+    // for logs and tests; on the device the hero was the one place saying
+    // "OVERDUE · 22 DAYS" in the middle of a Bengali screen.
     final badge = decision == null
         ? null
-        : TriageLabels.badge(decision!, item, now);
+        : TriageLabels.badgeIn(l10n, decision!, item, now);
     final tone = switch (decision?.primaryReason) {
       TriageReason.overdue => colors.urgencyCritical,
       TriageReason.dueToday ||
@@ -535,13 +538,23 @@ class _TopAction extends ConsumerWidget {
                 children: [
                   if (badge != null)
                     Semantics(
-                      label: TriageLabels.semanticLabel(decision!, item, now),
+                      label: TriageLabels.semanticLabelIn(
+                        l10n,
+                        decision!,
+                        item,
+                        now,
+                      ),
                       button: true,
                       child: InkWell(
                         onTap: () => ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              TriageLabels.explanation(decision!, item, now),
+                              TriageLabels.explanationIn(
+                                l10n,
+                                decision!,
+                                item,
+                                now,
+                              ),
                             ),
                           ),
                         ),

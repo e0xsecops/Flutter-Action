@@ -311,30 +311,21 @@ class _Segments extends StatelessWidget {
   final Map<LibrarySegment, int> counts;
   final ValueChanged<LibrarySegment> onChanged;
 
+  /// Above this text scale the four labels no longer share the bar four
+  /// ways: at 200% "Bibliothek"'s segments read "A… 425 · Erf… 1 · Ziele 1 ·
+  /// Er… 76" and Bengali lost its first label altogether. The bar then lets
+  /// each segment take the width its label needs and scrolls sideways,
+  /// which keeps every word whole and every segment reachable.
+  static const _scrollAbove = 1.3;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final text = Theme.of(context).textTheme;
+    final scrolls =
+        MediaQuery.textScalerOf(context).scale(1) > _scrollAbove;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        Space.page,
-        0,
-        Space.page,
-        Space.lg,
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(Space.xxs),
-        decoration: BoxDecoration(
-          color: colors.surfaceSunken,
-          borderRadius: Radii.rMd,
-          border: Border.all(color: colors.border, width: Strokes.hairline),
-        ),
-        child: Row(
-          children: [
-            for (final option in LibrarySegment.values)
-              Expanded(
-                child: Semantics(
+    Widget buildSegment(LibrarySegment option) => Semantics(
                   button: true,
                   selected: option == segment,
                   child: InkWell(
@@ -366,18 +357,33 @@ class _Segments extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Flexible(
-                            child: Text(
+                          // In the scrolling bar the label takes the width
+                          // it needs; in the shared bar it yields to its
+                          // slot. A Flexible in an unbounded Row is an error,
+                          // not a layout.
+                          if (scrolls)
+                            Text(
                               option.labelIn(AppL10n.of(context)),
                               maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                               style: text.labelLarge?.copyWith(
                                 color: option == segment
                                     ? colors.textPrimary
                                     : colors.textSecondary,
                               ),
+                            )
+                          else
+                            Flexible(
+                              child: Text(
+                                option.labelIn(AppL10n.of(context)),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: text.labelLarge?.copyWith(
+                                  color: option == segment
+                                      ? colors.textPrimary
+                                      : colors.textSecondary,
+                                ),
+                              ),
                             ),
-                          ),
                           if ((counts[option] ?? 0) > 0) ...[
                             const SizedBox(width: Space.xs),
                             Text(
@@ -391,11 +397,43 @@ class _Segments extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-              ),
-          ],
-        ),
+                );
+
+    final bar = Container(
+      padding: const EdgeInsets.all(Space.xxs),
+      decoration: BoxDecoration(
+        color: colors.surfaceSunken,
+        borderRadius: Radii.rMd,
+        border: Border.all(color: colors.border, width: Strokes.hairline),
       ),
+      child: Row(
+        mainAxisSize: scrolls ? MainAxisSize.min : MainAxisSize.max,
+        children: [
+          for (final option in LibrarySegment.values)
+            if (scrolls)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Space.xs),
+                child: buildSegment(option),
+              )
+            else
+              Expanded(child: buildSegment(option)),
+        ],
+      ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Space.page,
+        0,
+        Space.page,
+        Space.lg,
+      ),
+      child: scrolls
+          ? SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: bar,
+            )
+          : bar,
     );
   }
 }

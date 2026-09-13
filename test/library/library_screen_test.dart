@@ -19,6 +19,7 @@ import 'package:action_app/features/capture/application/capture_controller.dart'
 import 'package:action_app/features/capture/data/ocr_service.dart';
 import 'package:action_app/l10n/gen/app_l10n_en.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -101,6 +102,23 @@ ActionItem _overdue(String id, ActionStatus status, {required String title}) {
   );
 }
 
+/// Every segment label, drawn whole. Ellipsis is the framework's way of
+/// saying a label did not fit, and the segment bar had four of them at 200%.
+void expectSegmentsWhole(WidgetTester tester) {
+  for (final label in [
+    _l10n.librarySegmentActions,
+    _l10n.librarySegmentCaptures,
+    _l10n.librarySegmentGoals,
+    _l10n.librarySegmentDone,
+  ]) {
+    final paragraph = tester.renderObject<RenderParagraph>(
+      find.descendant(of: find.text(label), matching: find.byType(RichText)),
+    );
+    expect(paragraph.didExceedMaxLines, isFalse,
+        reason: '"$label" is cut short in the segment bar');
+  }
+}
+
 void main() {
   setUp(() {
     _db = memoryDatabase();
@@ -133,6 +151,53 @@ void main() {
       // The segment count is the open count, not "everything but done".
       expect(find.text('1'), findsWidgets);
       expect(find.text('2'), findsWidgets);
+    });
+  });
+
+  group('the segment bar at large text', () {
+    libraryTest('keeps every label whole at 200%', (tester) async {
+      // Seen on the device: at 200% the four equal slots read
+      // "A… 425 · Erf… 1 · Ziele 1 · Er… 76", and Bengali lost its first
+      // label entirely. Above 130% the bar scrolls instead of squeezing.
+      tester.platformDispatcher.textScaleFactorTestValue = 2.0;
+      try {
+        await _repo.create(_overdue('open', ActionStatus.active, title: 'Renew'));
+        await pumpLibrary(tester);
+        expect(tester.takeException(), isNull);
+        expectSegmentsWhole(tester);
+        expect(
+          find.ancestor(
+            of: find.text(_l10n.librarySegmentCaptures),
+            matching: find.byType(SingleChildScrollView),
+          ),
+          findsOneWidget,
+        );
+        // The far segment is still reachable: drag the bar and tap it.
+        await tester.drag(find.text(_l10n.librarySegmentActions),
+            const Offset(-400, 0));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(_l10n.librarySegmentDone));
+        await tester.pumpAndSettle();
+        expect(find.text(_l10n.libraryNoDoneTitle), findsOneWidget);
+      } finally {
+        tester.platformDispatcher.clearTextScaleFactorTestValue();
+      }
+    });
+
+    libraryTest('still shares the bar four ways at the default size',
+        (tester) async {
+      // Whether the labels fit their quarter cannot be judged in the test
+      // font, where every glyph is an em square; what can be held is that
+      // the bar is the shared one and not the scrolling one.
+      await pumpLibrary(tester);
+      expect(
+        find.ancestor(
+          of: find.text(_l10n.librarySegmentCaptures),
+          matching: find.byType(SingleChildScrollView),
+        ),
+        findsNothing,
+      );
+      expect(tester.takeException(), isNull);
     });
   });
 
