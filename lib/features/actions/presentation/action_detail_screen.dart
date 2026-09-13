@@ -418,7 +418,10 @@ class _Loaded extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: _NextBlock(action: action, state: state),
               ),
-              SliverToBoxAdapter(child: _KeyFacts(action: action, state: state)),
+              // The chain directly under NEXT, because NEXT is the chain's
+              // first open step: the block says what to do, the list beneath
+              // it shows where that sits. The facts follow — they are what
+              // the Action is about, not what to do about it.
               SliverToBoxAdapter(
                 child: _ChainHeader(progress: progress, hasSteps: steps.isNotEmpty),
               ),
@@ -467,6 +470,7 @@ class _Loaded extends ConsumerWidget {
                 SliverToBoxAdapter(
                   child: _AddStepButton(onAdd: () => state._addStep(action)),
                 ),
+              SliverToBoxAdapter(child: _KeyFacts(action: action, state: state)),
               SliverToBoxAdapter(
                 child: _Reminders(action: action, state: state),
               ),

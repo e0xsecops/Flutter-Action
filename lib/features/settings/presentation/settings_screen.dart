@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -165,6 +166,20 @@ class SettingsScreen extends ConsumerWidget {
               label: l10n.settingsVersion,
               value: version.value ?? '—',
             ),
+            // Debug builds only, and English only: the diagnostics harness is
+            // a developer's tool (fixture corpus, synthetic seeding), never a
+            // product surface, so it gets no key in the twenty languages. The
+            // router does not register the route in release, so this row
+            // could not reach anything there even if it were shown.
+            if (kDebugMode)
+              SettingsRow(
+                label: 'Diagnostics (debug build)',
+                description: 'Fixture corpus, extraction harness, synthetic '
+                    'Actions for QA.',
+                icon: Icons.science_outlined,
+                tint: colors.textTertiary,
+                onTap: () => context.push(Routes.diagnostics),
+              ),
           ],
         ),
       ],

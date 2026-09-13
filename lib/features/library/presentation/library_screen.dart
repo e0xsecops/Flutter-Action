@@ -58,15 +58,18 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
     final sources = ref.watch(sourcesProvider).value ?? const <SourceItem>[];
     final now = ref.watch(appClockProvider)();
 
+    // Open means active. An archived Action is the user saying "stop showing
+    // me this", and listing it among the open ones — with an overdue line,
+    // since its deadline never stopped being in the past — was showing it
+    // twice over. It belongs with the finished things, marked as archived.
     final open = actions
-        .where((a) => a.status != ActionStatus.completed)
+        .where((a) => a.status == ActionStatus.active)
         .toList()
       ..sort(_byDueThenCreated);
     final done = actions
-        .where((a) => a.status == ActionStatus.completed)
+        .where((a) => a.status != ActionStatus.active)
         .toList()
-      ..sort((a, b) => (b.completedAt ?? b.updatedAt)
-          .compareTo(a.completedAt ?? a.updatedAt));
+      ..sort((a, b) => _settledAt(b).compareTo(_settledAt(a)));
 
     // Newest capture first: an inbox is read from the top.
     final goals = ref.watch(openGoalsProvider);
@@ -188,6 +191,11 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
     // the job, not the end, and the next thing to do is say more about it.
     context.push(Routes.goal(goal.id));
   }
+
+  /// When an Action stopped being open: completion, archiving, or — if a row
+  /// somehow carries neither stamp — its last change.
+  static DateTime _settledAt(ActionItem a) =>
+      a.completedAt ?? a.archivedAt ?? a.updatedAt;
 
   /// Soonest deadline first, then most recently created. An Action with no
   /// deadline is not urgent by omission, so it sorts after the dated ones

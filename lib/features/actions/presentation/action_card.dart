@@ -309,6 +309,11 @@ class ActionMetaLine extends StatelessWidget {
           relativeTime(l10n, item.completedAt ?? item.updatedAt),
         ),
       ));
+    } else if (item.status == ActionStatus.archived) {
+      // Archiving is "stop showing me this". Its deadline is still in the
+      // past, and counting the days since would be exactly the nagging the
+      // user asked to end.
+      parts.add(TextSpan(text: l10n.detailArchived));
     } else if (due != null && !suppressDue) {
       final startOfToday = DateTime(now.year, now.month, now.day);
       final overdue = due.wallClock.isBefore(startOfToday);
